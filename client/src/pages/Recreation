@@ -1,0 +1,15 @@
+// RecreationPage.js
+import React from 'react';
+
+function RecreationPage() {
+  return (
+    <div style={{ marginTop: '30px' }}>
+      <h2 style={{ color: '#1E40AF' }}>Student Center Information</h2>
+      <p><strong>Hours of Operation:</strong> Monday – Friday, 8:00 AM – 8:00 PM</p>
+      <p><strong>Phone:</strong> <a href="tel:7407536535">(740) 753-6535</a></p>
+      <p><strong>Email:</strong> <a href="mailto:studentcenter@hocking.edu">studentcenter@hocking.edu</a></p>
+    </div>
+  );
+}
+
+export default RecreationPage;

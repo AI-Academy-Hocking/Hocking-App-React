@@ -53,7 +53,7 @@ export default function Home() {
         </h2>
         <Card className="overflow-hidden">
           <img 
-            src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80" 
+            src="https://live.staticflickr.com/3743/13355963525_2afc7a542c_b.jpg" 
             alt="Hocking College Campus" 
             className="w-full h-48 object-cover" 
           />

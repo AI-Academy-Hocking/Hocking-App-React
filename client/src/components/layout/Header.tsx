@@ -22,7 +22,7 @@ export default function Header() {
             <SheetContent side="left" className="bg-primary text-white border-none w-64 p-0">
               <div className="p-4 border-b border-primary-light">
                 <img 
-                  src="https://www.hocking.edu/sites/all/themes/hocking/logo.png" 
+                  src="https://f.hubspotusercontent10.net/hubfs/2446169/Images/Athletics/Logos/HawkLogo%20vector%20copy.png" 
                   alt="Hocking College Logo" 
                   className="h-12" 
                 />
