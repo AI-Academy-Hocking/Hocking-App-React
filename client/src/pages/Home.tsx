@@ -5,6 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Event } from "@shared/schema";
+import HockingBackground from "../components/assets/HockingBackground.jpg";  
+
 
 export default function Home() {
   const { user } = useAuth();
@@ -53,7 +55,7 @@ export default function Home() {
         </h2>
         <Card className="overflow-hidden">
           <img 
-            src="https://live.staticflickr.com/3743/13355963525_2afc7a542c_b.jpg" 
+            src={HockingBackground}
             alt="Hocking College Campus" 
             className="w-full h-48 object-cover" 
           />

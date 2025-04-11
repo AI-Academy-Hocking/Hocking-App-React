@@ -69,7 +69,7 @@ export default function Login() {
         <CardContent className="p-0">
           <div className="text-center mb-8">
             <img 
-              src="file:///C:/Users/owens/Downloads/HawkLogo%20vector%20copy.webp" 
+              src="/client/src/components/assets/HockingLogo.png" 
               alt="Hocking College Logo" 
               className="h-16 mx-auto mb-4" 
             />

@@ -3,6 +3,7 @@ import express2 from "express";
 
 // server/routes.ts
 import { createServer } from "http";
+import { WebSocketServer, WebSocket } from "ws";
 
 // server/storage.ts
 var MemStorage = class {
@@ -10,17 +11,33 @@ var MemStorage = class {
   events;
   buildings;
   studentTools;
+  discussions;
+  comments;
+  safetyAlerts;
+  safetyResources;
   currentUserId;
   currentEventId;
   currentBuildingId;
+  currentDiscussionId;
+  currentCommentId;
+  currentSafetyAlertId;
+  currentSafetyResourceId;
   constructor() {
     this.users = /* @__PURE__ */ new Map();
     this.events = /* @__PURE__ */ new Map();
     this.buildings = /* @__PURE__ */ new Map();
     this.studentTools = /* @__PURE__ */ new Map();
+    this.discussions = /* @__PURE__ */ new Map();
+    this.comments = /* @__PURE__ */ new Map();
+    this.safetyAlerts = /* @__PURE__ */ new Map();
+    this.safetyResources = /* @__PURE__ */ new Map();
     this.currentUserId = 1;
     this.currentEventId = 1;
     this.currentBuildingId = 1;
+    this.currentDiscussionId = 1;
+    this.currentCommentId = 1;
+    this.currentSafetyAlertId = 1;
+    this.currentSafetyResourceId = 1;
     this.initializeSampleData();
   }
   // User operations
@@ -34,9 +51,39 @@ var MemStorage = class {
   }
   async createUser(insertUser) {
     const id = this.currentUserId++;
-    const user = { ...insertUser, id };
+    const user = {
+      ...insertUser,
+      id,
+      name: insertUser.name || null,
+      email: insertUser.email || null,
+      isGuest: insertUser.isGuest !== void 0 ? insertUser.isGuest : null,
+      lat: null,
+      lng: null,
+      isLocationShared: false,
+      lastLocationUpdate: null
+    };
     this.users.set(id, user);
     return user;
+  }
+  async updateUserLocation(userId, locationUpdate) {
+    const user = await this.getUser(userId);
+    if (!user) {
+      return void 0;
+    }
+    const updatedUser = {
+      ...user,
+      lat: locationUpdate.lat,
+      lng: locationUpdate.lng,
+      isLocationShared: locationUpdate.isLocationShared !== void 0 ? locationUpdate.isLocationShared : user.isLocationShared,
+      lastLocationUpdate: /* @__PURE__ */ new Date()
+    };
+    this.users.set(userId, updatedUser);
+    return updatedUser;
+  }
+  async getSharedLocations() {
+    return Array.from(this.users.values()).filter(
+      (user) => user.isLocationShared && user.lat !== null && user.lng !== null
+    );
   }
   // Event operations
   async getEvents() {
@@ -47,7 +94,11 @@ var MemStorage = class {
   }
   async createEvent(insertEvent) {
     const id = this.currentEventId++;
-    const event = { ...insertEvent, id };
+    const event = {
+      ...insertEvent,
+      id,
+      description: insertEvent.description || null
+    };
     this.events.set(id, event);
     return event;
   }
@@ -75,176 +126,417 @@ var MemStorage = class {
     this.studentTools.set(tool.id, tool);
     return tool;
   }
+  // Discussion operations
+  async getDiscussions() {
+    return Array.from(this.discussions.values());
+  }
+  async getDiscussion(id) {
+    return this.discussions.get(id);
+  }
+  async createDiscussion(insertDiscussion) {
+    const id = this.currentDiscussionId++;
+    const discussion = {
+      ...insertDiscussion,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      isPinned: insertDiscussion.isPinned || false,
+      category: insertDiscussion.category || "general"
+    };
+    this.discussions.set(id, discussion);
+    return discussion;
+  }
+  async getDiscussionsByCategory(category) {
+    return Array.from(this.discussions.values()).filter(
+      (discussion) => discussion.category === category
+    );
+  }
+  // Comment operations
+  async getComments(discussionId) {
+    return Array.from(this.comments.values()).filter(
+      (comment) => comment.discussionId === discussionId && comment.parentId === null
+    );
+  }
+  async getCommentReplies(commentId) {
+    return Array.from(this.comments.values()).filter(
+      (comment) => comment.parentId === commentId
+    );
+  }
+  async createComment(insertComment) {
+    const id = this.currentCommentId++;
+    const comment = {
+      ...insertComment,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      parentId: insertComment.parentId || null
+    };
+    this.comments.set(id, comment);
+    return comment;
+  }
+  async getUserComments(userId) {
+    return Array.from(this.comments.values()).filter(
+      (comment) => comment.authorId === userId
+    );
+  }
+  // Safety Alert operations
+  async getSafetyAlerts() {
+    return Array.from(this.safetyAlerts.values());
+  }
+  async getActiveSafetyAlerts() {
+    const now = /* @__PURE__ */ new Date();
+    return Array.from(this.safetyAlerts.values()).filter(
+      (alert) => alert.isActive && (alert.endDate === null || alert.endDate > now)
+    );
+  }
+  async getSafetyAlert(id) {
+    return this.safetyAlerts.get(id);
+  }
+  async createSafetyAlert(insertAlert) {
+    const id = this.currentSafetyAlertId++;
+    const alert = {
+      ...insertAlert,
+      id,
+      startDate: insertAlert.startDate || /* @__PURE__ */ new Date(),
+      endDate: insertAlert.endDate || null,
+      isActive: insertAlert.isActive !== void 0 ? insertAlert.isActive : true,
+      location: insertAlert.location || null
+    };
+    this.safetyAlerts.set(id, alert);
+    return alert;
+  }
+  // Safety Resource operations
+  async getSafetyResources() {
+    return Array.from(this.safetyResources.values()).sort((a, b) => (a.order || 999) - (b.order || 999));
+  }
+  async getSafetyResourcesByCategory(category) {
+    return Array.from(this.safetyResources.values()).filter((resource) => resource.category === category).sort((a, b) => (a.order || 999) - (b.order || 999));
+  }
+  async getSafetyResource(id) {
+    return this.safetyResources.get(id);
+  }
+  async createSafetyResource(insertResource) {
+    const id = this.currentSafetyResourceId++;
+    const resource = {
+      ...insertResource,
+      id,
+      phoneNumber: insertResource.phoneNumber || null,
+      url: insertResource.url || null,
+      icon: insertResource.icon || null,
+      order: insertResource.order || 0
+    };
+    this.safetyResources.set(id, resource);
+    return resource;
+  }
   // Initialize with sample data
-  initializeSampleData() {
-    this.createUser({
-      username: "admin@hocking.edu",
-      password: "adminpassword",
+  async initializeSampleData() {
+    await this.createUser({
+      username: "admin",
+      password: "password",
       isGuest: false,
       name: "Admin User",
       email: "admin@hocking.edu"
     });
-    this.createUser({
-      username: "student@hocking.edu",
-      password: "studentpassword",
+    await this.createUser({
+      username: "student",
+      password: "password",
       isGuest: false,
       name: "Student User",
       email: "student@hocking.edu"
     });
-    this.createEvent({
+    await this.createEvent({
       title: "Fall Festival",
       description: "Annual celebration with food, games, and activities for students and faculty.",
       date: "2023-10-15",
       time: "12:00 PM - 4:00 PM",
       location: "Student Center"
     });
-    this.createEvent({
+    await this.createEvent({
       title: "Career Fair",
       description: "Meet with employers from around the region for internship and job opportunities.",
       date: "2023-10-20",
       time: "10:00 AM - 2:00 PM",
       location: "Main Hall"
     });
-    this.createEvent({
+    await this.createEvent({
       title: "Registration Deadline",
       description: "Last day to register for Spring semester classes without late fees.",
       date: "2023-11-05",
       time: "11:59 PM",
       location: "For Spring Semester"
     });
-    this.createBuilding({
+    await this.createBuilding({
       name: "Main Hall",
       description: "Administrative offices, classrooms",
       category: "academic",
       lat: 39.5274,
       lng: -82.4156
     });
-    this.createBuilding({
+    await this.createBuilding({
       name: "Student Center",
       description: "Dining, recreation, student services",
       category: "dining",
       lat: 39.528,
       lng: -82.415
     });
-    this.createBuilding({
+    await this.createBuilding({
       name: "Davidson Hall",
       description: "Science labs, lecture halls",
       category: "academic",
       lat: 39.5268,
       lng: -82.4162
     });
-    this.createBuilding({
+    await this.createBuilding({
       name: "Library",
       description: "Books, study spaces, computer labs",
       category: "academic",
       lat: 39.5265,
       lng: -82.4145
     });
-    this.createBuilding({
+    await this.createBuilding({
       name: "Recreation Center",
       description: "Gym, pool, fitness classes",
       category: "housing",
       lat: 39.529,
       lng: -82.417
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "course-schedule",
       name: "Course Schedule",
       description: "View your current classes",
       category: "academic",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "grades",
       name: "Grades",
       description: "Check your academic performance",
       category: "academic",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "advising",
       name: "Advising",
       description: "Connect with your advisor",
       category: "academic",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "academic-history",
       name: "Academic History",
       description: "View your transcript",
       category: "academic",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "graduation",
       name: "Graduation",
       description: "Track degree requirements",
       category: "academic",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "financial-aid",
       name: "Financial Aid",
       description: "View and manage your financial aid",
       category: "financial",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "billing",
       name: "Billing",
       description: "Pay tuition and view statements",
       category: "financial",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "scholarships",
       name: "Scholarships",
       description: "Apply for available scholarships",
       category: "financial",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "campus-resources",
       name: "Campus Resources",
       description: "Access campus services",
       category: "resources",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "health-services",
       name: "Health Services",
       description: "Schedule health appointments",
       category: "resources",
       url: "#"
     });
-    this.createStudentTool({
+    await this.createStudentTool({
       id: "career-services",
       name: "Career Services",
       description: "Job search and career planning",
       category: "resources",
       url: "#"
     });
+    const discussion1 = await this.createDiscussion({
+      title: "Tips for new students",
+      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
+      authorId: 1,
+      category: "general",
+      isPinned: true
+    });
+    const discussion2 = await this.createDiscussion({
+      title: "Study group for Biology 101",
+      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
+      authorId: 2,
+      category: "academic"
+    });
+    const discussion3 = await this.createDiscussion({
+      title: "Campus food recommendations",
+      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
+      authorId: 1,
+      category: "social"
+    });
+    await this.createComment({
+      content: "Always check Rate My Professor before signing up for classes!",
+      authorId: 2,
+      discussionId: discussion1.id,
+      parentId: null
+    });
+    const comment1 = await this.createComment({
+      content: "Get involved in campus clubs early - it's the best way to make friends!",
+      authorId: 1,
+      discussionId: discussion1.id,
+      parentId: null
+    });
+    await this.createComment({
+      content: "I totally agree! I joined the hiking club and met my best friends there.",
+      authorId: 2,
+      discussionId: discussion1.id,
+      parentId: comment1.id
+    });
+    await this.createComment({
+      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
+      authorId: 1,
+      discussionId: discussion2.id,
+      parentId: null
+    });
+    await this.createComment({
+      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
+      authorId: 2,
+      discussionId: discussion3.id,
+      parentId: null
+    });
+    await this.createSafetyAlert({
+      title: "Weather Alert: Winter Storm Warning",
+      content: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
+      severity: "warning",
+      startDate: /* @__PURE__ */ new Date(),
+      isActive: true,
+      location: "All Campus"
+    });
+    await this.createSafetyAlert({
+      title: "Planned Power Outage: Davidson Hall",
+      content: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
+      severity: "info",
+      startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1e3),
+      // 2 days from now
+      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1e3),
+      // 3 days from now
+      isActive: true,
+      location: "Davidson Hall"
+    });
+    await this.createSafetyResource({
+      title: "Campus Police",
+      description: "24/7 emergency assistance and security services",
+      category: "emergency",
+      phoneNumber: "740-753-6598",
+      icon: "shield",
+      order: 1
+    });
+    await this.createSafetyResource({
+      title: "Emergency Notification System",
+      description: "Sign up for emergency text alerts",
+      category: "emergency",
+      url: "#",
+      icon: "bell",
+      order: 2
+    });
+    await this.createSafetyResource({
+      title: "Health Center",
+      description: "Medical services for students",
+      category: "health",
+      phoneNumber: "740-753-6487",
+      url: "#",
+      icon: "first-aid",
+      order: 3
+    });
+    await this.createSafetyResource({
+      title: "Counseling Services",
+      description: "Confidential mental health support",
+      category: "health",
+      phoneNumber: "740-753-6789",
+      url: "#",
+      icon: "heart-pulse",
+      order: 4
+    });
+    await this.createSafetyResource({
+      title: "Campus Escort Service",
+      description: "Safe accompaniment across campus after dark",
+      category: "security",
+      phoneNumber: "740-753-6123",
+      icon: "footprints",
+      order: 5
+    });
+    await this.createSafetyResource({
+      title: "Anonymous Tip Line",
+      description: "Report suspicious activity anonymously",
+      category: "security",
+      phoneNumber: "740-753-7890",
+      url: "#",
+      icon: "eye-off",
+      order: 6
+    });
+    await this.createSafetyResource({
+      title: "Weather Updates",
+      description: "Local weather forecasts and alerts",
+      category: "weather",
+      url: "https://weather.gov",
+      icon: "cloud",
+      order: 7
+    });
+    await this.createSafetyResource({
+      title: "Emergency Procedures",
+      description: "Step-by-step guides for emergency situations",
+      category: "emergency",
+      url: "#",
+      icon: "file-text",
+      order: 8
+    });
   }
 };
 var storage = new MemStorage();
 
 // shared/schema.ts
-import { pgTable, text, serial, boolean, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 var users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   isGuest: boolean("is_guest").default(false),
   name: text("name"),
-  email: text("email")
+  email: text("email"),
+  // Location fields for user on campus map
+  lat: doublePrecision("lat"),
+  lng: doublePrecision("lng"),
+  isLocationShared: boolean("is_location_shared").default(false),
+  lastLocationUpdate: timestamp("last_location_update")
 });
 var insertUserSchema = createInsertSchema(users).omit({
   id: true
@@ -284,6 +576,70 @@ var studentTools = pgTable("student_tools", {
   url: text("url").notNull()
 });
 var insertStudentToolSchema = createInsertSchema(studentTools);
+var discussions = pgTable("discussions", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  authorId: integer("author_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  category: text("category").default("general"),
+  // general, academic, social, etc.
+  isPinned: boolean("is_pinned").default(false)
+});
+var insertDiscussionSchema = createInsertSchema(discussions).omit({
+  id: true,
+  createdAt: true
+});
+var comments = pgTable("comments", {
+  id: serial("id").primaryKey(),
+  content: text("content").notNull(),
+  authorId: integer("author_id").notNull(),
+  discussionId: integer("discussion_id").notNull(),
+  parentId: integer("parent_id"),
+  // For nested replies, null means top-level comment
+  createdAt: timestamp("created_at").defaultNow()
+});
+var insertCommentSchema = createInsertSchema(comments).omit({
+  id: true,
+  createdAt: true
+});
+var locationUpdateSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+  isLocationShared: z.boolean().optional()
+});
+var safetyAlerts = pgTable("safety_alerts", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  severity: text("severity").notNull(),
+  // critical, warning, info
+  startDate: timestamp("start_date").defaultNow().notNull(),
+  endDate: timestamp("end_date"),
+  // null means indefinite
+  isActive: boolean("is_active").default(true),
+  location: text("location")
+  // Optional affected location
+});
+var insertSafetyAlertSchema = createInsertSchema(safetyAlerts).omit({
+  id: true
+});
+var safetyResources = pgTable("safety_resources", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(),
+  // emergency, health, security, weather, contact
+  phoneNumber: text("phone_number"),
+  url: text("url"),
+  icon: text("icon"),
+  // Icon name for UI
+  order: integer("order").default(0)
+  // For sorting
+});
+var insertSafetyResourceSchema = createInsertSchema(safetyResources).omit({
+  id: true
+});
 
 // server/routes.ts
 import { ZodError } from "zod";
@@ -443,7 +799,277 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+  app2.post("/api/users/:id/location", async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+      const locationData = locationUpdateSchema.parse(req.body);
+      const updatedUser = await storage.updateUserLocation(userId, locationData);
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      broadcastLocationUpdate();
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.status(200).json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error updating user location:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/locations/shared", async (_req, res) => {
+    try {
+      const sharedLocations = await storage.getSharedLocations();
+      const locationsWithoutPasswords = sharedLocations.map((user) => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+      res.status(200).json(locationsWithoutPasswords);
+    } catch (error) {
+      console.error("Error fetching shared locations:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/discussions", async (req, res) => {
+    try {
+      const category = req.query.category;
+      let discussions2;
+      if (category && category !== "all") {
+        discussions2 = await storage.getDiscussionsByCategory(category);
+      } else {
+        discussions2 = await storage.getDiscussions();
+      }
+      const discussionsWithAuthor = await Promise.all(discussions2.map(async (discussion) => {
+        const author = await storage.getUser(discussion.authorId);
+        let authorInfo = { id: discussion.authorId, username: "Unknown" };
+        if (author) {
+          const { password, ...userWithoutPassword } = author;
+          authorInfo = { ...userWithoutPassword };
+        }
+        return { ...discussion, author: authorInfo };
+      }));
+      res.status(200).json(discussionsWithAuthor);
+    } catch (error) {
+      console.error("Error fetching discussions:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/discussions/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid discussion ID" });
+      }
+      const discussion = await storage.getDiscussion(id);
+      if (!discussion) {
+        return res.status(404).json({ message: "Discussion not found" });
+      }
+      const author = await storage.getUser(discussion.authorId);
+      let authorInfo = { id: discussion.authorId, username: "Unknown" };
+      if (author) {
+        const { password, ...userWithoutPassword } = author;
+        authorInfo = { ...userWithoutPassword };
+      }
+      res.status(200).json({ ...discussion, author: authorInfo });
+    } catch (error) {
+      console.error("Error fetching discussion:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/discussions", async (req, res) => {
+    try {
+      const discussionData = insertDiscussionSchema.parse(req.body);
+      const newDiscussion = await storage.createDiscussion(discussionData);
+      const author = await storage.getUser(newDiscussion.authorId);
+      let authorInfo = { id: newDiscussion.authorId, username: "Unknown" };
+      if (author) {
+        const { password, ...userWithoutPassword } = author;
+        authorInfo = { ...userWithoutPassword };
+      }
+      res.status(201).json({ ...newDiscussion, author: authorInfo });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error creating discussion:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/discussions/:id/comments", async (req, res) => {
+    try {
+      const discussionId = parseInt(req.params.id);
+      if (isNaN(discussionId)) {
+        return res.status(400).json({ message: "Invalid discussion ID" });
+      }
+      const comments2 = await storage.getComments(discussionId);
+      const commentsWithDetails = await Promise.all(comments2.map(async (comment) => {
+        const author = await storage.getUser(comment.authorId);
+        let authorInfo = { id: comment.authorId, username: "Unknown" };
+        if (author) {
+          const { password, ...userWithoutPassword } = author;
+          authorInfo = { ...userWithoutPassword };
+        }
+        const replies = await storage.getCommentReplies(comment.id);
+        const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
+          const replyAuthor = await storage.getUser(reply.authorId);
+          let replyAuthorInfo = { id: reply.authorId, username: "Unknown" };
+          if (replyAuthor) {
+            const { password, ...userWithoutPassword } = replyAuthor;
+            replyAuthorInfo = { ...userWithoutPassword };
+          }
+          return { ...reply, author: replyAuthorInfo };
+        }));
+        return { ...comment, author: authorInfo, replies: repliesWithAuthor };
+      }));
+      res.status(200).json(commentsWithDetails);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/discussions/:id/comments", async (req, res) => {
+    try {
+      const discussionId = parseInt(req.params.id);
+      if (isNaN(discussionId)) {
+        return res.status(400).json({ message: "Invalid discussion ID" });
+      }
+      const commentData = insertCommentSchema.parse({
+        ...req.body,
+        discussionId
+      });
+      const newComment = await storage.createComment(commentData);
+      const author = await storage.getUser(newComment.authorId);
+      let authorInfo = { id: newComment.authorId, username: "Unknown" };
+      if (author) {
+        const { password, ...userWithoutPassword } = author;
+        authorInfo = { ...userWithoutPassword };
+      }
+      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error creating comment:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/safety/alerts", async (req, res) => {
+    try {
+      const activeOnly = req.query.active === "true";
+      const alerts = activeOnly ? await storage.getActiveSafetyAlerts() : await storage.getSafetyAlerts();
+      res.status(200).json(alerts);
+    } catch (error) {
+      console.error("Error fetching safety alerts:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/safety/alerts/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid alert ID" });
+      }
+      const alert = await storage.getSafetyAlert(id);
+      if (!alert) {
+        return res.status(404).json({ message: "Safety alert not found" });
+      }
+      res.status(200).json(alert);
+    } catch (error) {
+      console.error("Error fetching safety alert:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/safety/alerts", async (req, res) => {
+    try {
+      const alertData = insertSafetyAlertSchema.parse(req.body);
+      const newAlert = await storage.createSafetyAlert(alertData);
+      res.status(201).json(newAlert);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error creating safety alert:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/safety/resources", async (req, res) => {
+    try {
+      const category = req.query.category;
+      const resources = category ? await storage.getSafetyResourcesByCategory(category) : await storage.getSafetyResources();
+      res.status(200).json(resources);
+    } catch (error) {
+      console.error("Error fetching safety resources:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/safety/resources/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid resource ID" });
+      }
+      const resource = await storage.getSafetyResource(id);
+      if (!resource) {
+        return res.status(404).json({ message: "Safety resource not found" });
+      }
+      res.status(200).json(resource);
+    } catch (error) {
+      console.error("Error fetching safety resource:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.post("/api/safety/resources", async (req, res) => {
+    try {
+      const resourceData = insertSafetyResourceSchema.parse(req.body);
+      const newResource = await storage.createSafetyResource(resourceData);
+      res.status(201).json(newResource);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error creating safety resource:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
   const httpServer = createServer(app2);
+  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+  wss.on("connection", (socket) => {
+    console.log("WebSocket client connected");
+    socket.on("message", async (message) => {
+      try {
+        console.log("Received message:", message.toString());
+      } catch (error) {
+        console.error("Error processing WebSocket message:", error);
+      }
+    });
+    socket.on("close", () => {
+      console.log("WebSocket client disconnected");
+    });
+  });
+  async function broadcastLocationUpdate() {
+    const sharedLocations = await storage.getSharedLocations();
+    const sanitizedLocations = sharedLocations.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+    wss.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify({
+          type: "location_update",
+          data: sanitizedLocations
+        }));
+      }
+    });
+  }
   return httpServer;
 }
 
@@ -598,10 +1224,10 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
-  const port = 5e3;
+  const port = 3e3;
   server.listen({
     port,
-    host: "0.0.0.0",
+    host: "0.0.0.0"
   }, () => {
     log(`serving on port ${port}`);
   });
