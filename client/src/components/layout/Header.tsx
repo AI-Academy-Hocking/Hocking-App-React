@@ -13,7 +13,12 @@ export default function Header() {
   return (
     <header className="bg-primary text-white p-4 shadow-md">
       <div className="flex justify-between items-center">
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
+          <img 
+            src={HockingLogo} 
+            alt="Hocking College Logo" 
+            className="h-8 w-auto"
+          />
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" className="md:hidden mr-2 p-1 text-white hover:bg-primary-light">
