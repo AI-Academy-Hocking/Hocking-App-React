@@ -1,6 +1,6 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/lib/auth";
-import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import { Home, Dumbbell, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
 
 export default function Sidebar() {
   const [location] = useLocation();
@@ -16,6 +16,7 @@ export default function Sidebar() {
     { path: "/dining", label: "Dining Hall", icon: UtensilsCrossed },
     { path: "/discussions", label: "Discussions", icon: MessageSquare },
     { path: "/safety", label: "Campus Safety", icon: Shield },
+    { path: "/recreation", label: "Recreation", icon: Dumbbell },
   ];
 
   return (
