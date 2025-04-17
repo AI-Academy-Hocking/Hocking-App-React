@@ -4,15 +4,17 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
+import HockingLogo from "../assets/HockingLogo.png";  
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-primary text-white p-4 shadow-md">
+    <header className="bg-gray-100 text-gray-800 p-4 shadow-md">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
+        
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" className="md:hidden mr-2 p-1 text-white hover:bg-primary-light">
@@ -22,9 +24,9 @@ export default function Header() {
             <SheetContent side="left" className="bg-primary text-white border-none w-64 p-0">
               <div className="p-4 border-b border-primary-light">
                 <img 
-                  src="https://f.hubspotusercontent10.net/hubfs/2446169/Images/Athletics/Logos/HawkLogo%20vector%20copy.png" 
+                  src={HockingLogo} 
                   alt="Hocking College Logo" 
-                  className="h-12" 
+                  className="h-12 w-auto object-contain" 
                 />
               </div>
               
