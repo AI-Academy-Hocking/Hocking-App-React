@@ -6,6 +6,7 @@ import { useToast } from "../hooks/use-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import HockingLogo from "../components/assets/HockingLogo.png";
 import {
   Form,
   FormControl,
@@ -69,7 +70,7 @@ export default function Login() {
         <CardContent className="p-0">
           <div className="text-center mb-8">
             <img 
-              src="/client/src/components/assets/HockingLogo.png" 
+              src={HockingLogo}  
               alt="Hocking College Logo" 
               className="h-16 mx-auto mb-4" 
             />

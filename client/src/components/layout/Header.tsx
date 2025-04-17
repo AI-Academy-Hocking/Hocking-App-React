@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
+import HockingLogo from "@/components/assets/HockingLogo.png";  
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -22,7 +23,7 @@ export default function Header() {
             <SheetContent side="left" className="bg-primary text-white border-none w-64 p-0">
               <div className="p-4 border-b border-primary-light">
                 <img 
-                  src="https://f.hubspotusercontent10.net/hubfs/2446169/Images/Athletics/Logos/HawkLogo%20vector%20copy.png" 
+                  src={HockingLogo} 
                   alt="Hocking College Logo" 
                   className="h-12" 
                 />
