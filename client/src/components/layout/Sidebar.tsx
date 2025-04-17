@@ -1,6 +1,8 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { Home, Dumbbell, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import HockingLogo from "../assets/HockingLogo.png";
+
 
 export default function Sidebar() {
   const [location] = useLocation();
