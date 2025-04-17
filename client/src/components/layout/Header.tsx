@@ -11,7 +11,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-primary text-white p-4 shadow-md">
+    <header className="bg-gray-100 text-gray-800 p-4 shadow-md">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <img 
