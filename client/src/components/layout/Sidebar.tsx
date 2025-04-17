@@ -1,6 +1,8 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import HockingLogo from "../assets/HockingLogo.png";
+
 
 export default function Sidebar() {
   const [location] = useLocation();
@@ -19,10 +21,10 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="hidden md:flex flex-col w-64 bg-primary text-white h-full">
+    <div className="hidden md:flex flex-col w-64 bg-gray-100 text-gray-800 h-full">
       <div className="p-4 border-b border-primary-light">
         <img 
-          src="https://www.hocking.edu/sites/all/themes/hocking/logo.png" 
+          src={HockingLogo} 
           alt="Hocking College Logo" 
           className="h-12" 
         />
