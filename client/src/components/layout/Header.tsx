@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
-import HockingLogo from "../assets/HockingLogo.png";  
+import HockingLogo from "@/components/assets/HockingLogo.png";  
 
 export default function Header() {
   const { user, logout } = useAuth();
