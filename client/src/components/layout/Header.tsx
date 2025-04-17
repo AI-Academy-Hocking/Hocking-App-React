@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
-import HockingLogo from "@/components/assets/HockingLogo.png";  
+import HockingLogo from "../assets/HockingLogo.png";  
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -25,7 +25,7 @@ export default function Header() {
                 <img 
                   src={HockingLogo} 
                   alt="Hocking College Logo" 
-                  className="h-12" 
+                  className="h-12 w-auto object-contain" 
                 />
               </div>
               
