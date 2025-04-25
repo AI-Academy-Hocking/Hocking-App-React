@@ -1,5 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin } from "lucide-react";
+import HawksNest from "../components/assets/HawksNest.webp";
+import DiamondDawgs from "../components/assets/DiamondDawgs.jpeg";
+import Rhapsody from "../components/assets/rhapsody.jpg";
+
 
 export default function DiningHall() {
   return (
@@ -288,7 +292,7 @@ export default function DiningHall() {
               <div className="flex flex-col h-full">
                 <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
                   <div className="w-full h-full flex items-center justify-center bg-primary/5">
-                    <MapPin className="h-10 w-10 text-primary/40" />
+                    <img src={HawksNest} alt="Hawks Nest" className="w-full h-full object-cover" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Hawks Nest Dining Hall</h3>
@@ -309,7 +313,7 @@ export default function DiningHall() {
               <div className="flex flex-col h-full">
                 <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
                   <div className="w-full h-full flex items-center justify-center bg-primary/5">
-                    <MapPin className="h-10 w-10 text-primary/40" />
+                    <img src={DiamondDawgs} alt="Diamond Dawgz" className="w-full h-full object-cover" />
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Diamond Dawgz</h3>
