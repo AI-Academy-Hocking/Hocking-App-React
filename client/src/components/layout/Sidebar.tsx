@@ -22,7 +22,7 @@ export default function Sidebar() {
     <div className="hidden md:flex flex-col w-64 bg-primary text-white h-full">
       <div className="p-4 border-b border-primary-light">
         <img 
-          src="client\src\components\assets\Hocking_logo_Full_Color_RGB.webp" 
+          src={HockingLogo}
           alt="Hocking College Logo" 
           className="h-12" 
         />
