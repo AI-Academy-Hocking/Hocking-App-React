@@ -17,7 +17,8 @@ function RecreationPage() {
             <Clock className="h-5 w-5 text-neutral-dark flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-medium">Hours of Operation</p>
-              <p className="text-neutral-dark">Monday – Friday, 8:00 AM – 8:00 PM</p>
+              <p className="text-neutral-dark">Monday – Friday, 8:00 AM – 10:00 PM</p>
+              <p className="text-neutral-dark">Saturday & Sunday, 11:00 AM – 8:00 PM</p>
             </div>
           </div>
           

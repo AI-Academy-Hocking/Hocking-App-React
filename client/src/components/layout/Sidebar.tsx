@@ -1,19 +1,7 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/lib/auth";
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import { Home, Dumbbell, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
 import HockingLogo from "../assets/HockingLogo.png";
-
-
-=======
-import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
-import HockingLogo from "../assets/HockingLogo.png";
->>>>>>> Stashed changes
-=======
-import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
-import HockingLogo from "../assets/HockingLogo.png";
->>>>>>> Stashed changes
 export default function Sidebar() {
   const [location] = useLocation();
   const { logout } = useAuth();

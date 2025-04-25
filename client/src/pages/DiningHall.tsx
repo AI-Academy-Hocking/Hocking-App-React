@@ -47,21 +47,19 @@ export default function DiningHall() {
                   <tr>
                     <th className="py-3 px-4 text-left font-semibold">Days</th>
                     <th className="py-3 px-4 text-left font-semibold">Breakfast</th>
-                    <th className="py-3 px-4 text-left font-semibold">Lunch</th>
                     <th className="py-3 px-4 text-left font-semibold">Dinner</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-200">
                   <tr>
                     <td className="py-3 px-4 font-medium">Monday - Friday</td>
-                    <td className="py-3 px-4">7:00 AM - 9:30 AM</td>
-                    <td className="py-3 px-4">11:00 AM - 2:00 PM</td>
-                    <td className="py-3 px-4">5:00 PM - 8:00 PM</td>
+                    <td className="py-3 px-4">7:00 AM - 10:00 AM</td>
+                    <td className="py-3 px-4">10:30 AM - 7:00 PM</td>
                   </tr>
                   <tr>
                     <td className="py-3 px-4 font-medium">Saturday - Sunday</td>
-                    <td className="py-3 px-4" colSpan={2}>Brunch: 10:00 AM - 1:00 PM</td>
-                    <td className="py-3 px-4">5:00 PM - 7:00 PM</td>
+                    <td className="py-3 px-4" colSpan={2}>11:00 AM - 1:00 PM</td>
+                    <td className="py-3 px-4">11:00 AM - 5:00 PM</td>
                   </tr>
                 </tbody>
               </table>
@@ -90,7 +88,7 @@ export default function DiningHall() {
                   </li>
                   <li className="flex items-start">
                     <span className="inline-flex mr-2 mt-1">•</span>
-                    <span>$100 in Hawk Dollars per semester</span>
+                    <span>$100 in Hawk Bucks per semester</span>
                   </li>
                 </ul>
                 <p className="text-sm text-neutral-500">Perfect for residential students</p>
@@ -275,8 +273,8 @@ export default function DiningHall() {
             <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
               <h4 className="font-medium mb-2">Special Accommodations</h4>
               <p className="text-neutral-600">
-                For specific dietary accommodations or concerns, please contact our Dining Services Manager at
-                <a href="mailto:dining@hocking.edu" className="text-primary hover:underline ml-1">dining@hocking.edu</a> or call (740) 753-6000.
+                For specific dietary accommodations or concerns, please contact Janet M.Smith
+                <a href="mailto:dining@hocking.edu" className="text-primary hover:underline ml-1">smithj28721@hocking.edu</a> or call (740) 753-6000.
               </p>
             </div>
           </div>
@@ -293,19 +291,17 @@ export default function DiningHall() {
                     <MapPin className="h-10 w-10 text-primary/40" />
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Main Dining Hall</h3>
+                <h3 className="text-xl font-semibold mb-2">Hawks Nest Dining Hall</h3>
                 <p className="text-neutral-600 mb-4">
                   Our primary dining facility offering a wide variety of food options, including 
-                  made-to-order stations, salad bar, grill, and international cuisine.
+                  Grab-and-go and pre made meals,including subs,sandwiches, and salads.
                 </p>
                 <ul className="space-y-1 text-neutral-600 mb-4">
                   <li className="flex items-start text-sm">
                     <span className="font-medium w-20">Location:</span>
-                    <span>Student Center, First Floor</span>
+                    <span>John Light, second Floor</span>
                   </li>
                   <li className="flex items-start text-sm">
-                    <span className="font-medium w-20">Phone:</span>
-                    <span>(740) 555-1234</span>
                   </li>
                 </ul>
               </div>
@@ -316,41 +312,41 @@ export default function DiningHall() {
                     <MapPin className="h-10 w-10 text-primary/40" />
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Café Express</h3>
+                <h3 className="text-xl font-semibold mb-2">Diamond Dawgz</h3>
                 <p className="text-neutral-600 mb-4">
-                  A convenient grab-and-go option featuring coffee, espresso drinks, pre-made sandwiches, 
-                  salads, snacks, and pastries.
+                  A convient spot for a quick hotdog,burger, fries or some chicken tenders, or enoy a refreshing milkshake and icecream.
+
                 </p>
                 <ul className="space-y-1 text-neutral-600 mb-4">
                   <li className="flex items-start text-sm">
                     <span className="font-medium w-20">Location:</span>
-                    <span>Library, Ground Floor</span>
+                    <span>185 W canal St Nelsonville,OH 45764</span>
                   </li>
                   <li className="flex items-start text-sm">
                     <span className="font-medium w-20">Phone:</span>
-                    <span>(740) 555-5678</span>
+                    <span>(740) 753-6100</span>
                   </li>
                 </ul>
               </div>
             </div>
             
             <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-              <h3 className="font-medium mb-2">Campus Food Truck Schedule</h3>
+              <h3 className="font-medium mb-2">Rhapsody Restaunt</h3>
               <p className="text-neutral-600 mb-2">
-                Our campus food truck rotates locations throughout the week:
+                Rhapsody is a student ran restaunt that offers a causual fine dinning expirence with live music every friday and saturday.
               </p>
               <ul className="space-y-1 text-sm">
                 <li className="flex items-start">
-                  <span className="font-medium w-20">Mon & Wed:</span>
-                  <span>Outside North Hall (11 AM - 2 PM)</span>
+                  <span className="font-medium w-20">Sunday - Tuesday :</span>
+                  <span>(closed)</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="font-medium w-20">Tue & Thu:</span>
-                  <span>Near the Nature Center (11 AM - 2 PM)</span>
+                  <span className="font-medium w-20">wednesday & Thursday:</span>
+                  <span>(5:00 PM - 9:00 PM)</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="font-medium w-20">Friday:</span>
-                  <span>Campus Quad (11 AM - 3 PM)</span>
+                  <span className="font-medium w-20">Friday & Saturday:</span>
+                  <span> (5:00 PM - 9:00 PM)</span>
                 </li>
               </ul>
             </div>
