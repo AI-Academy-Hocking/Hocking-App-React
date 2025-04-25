@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin } from "lucide-react";
 import HawksNest from "../components/assets/HawksNest.webp";
 import DiamondDawgs from "../components/assets/DiamondDawgs.jpeg";
-import Rhapsody from "../components/assets/rhapsody.jpg";
+import Rhapsody from "../components/assets/rhapsody.webp";
 
 
 export default function DiningHall() {
@@ -287,7 +287,7 @@ export default function DiningHall() {
         <TabsContent value="locations" className="mt-6">
           <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
             <h2 className="text-2xl font-semibold mb-4 text-primary">Campus Dining Locations</h2>
-            
+          </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col h-full">
                 <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
@@ -334,25 +334,33 @@ export default function DiningHall() {
               </div>
             </div>
             
-            <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
-              <h3 className="font-medium mb-2">Rhapsody Restaunt</h3>
+            <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col md:flex-row items-start gap-4">
+            <div className="flex-1">
+              <h3 className="font-medium mb-2">Rhapsody Restaurant</h3>
               <p className="text-neutral-600 mb-2">
-                Rhapsody is a student ran restaunt that offers a causual fine dinning expirence with live music every friday and saturday.
+                Rhapsody is a student-run restaurant that offers a casual fine dining experience with live music every Friday and Saturday.
               </p>
               <ul className="space-y-1 text-sm">
                 <li className="flex items-start">
-                  <span className="font-medium w-20">Sunday - Tuesday :</span>
-                  <span>(closed)</span>
+                  <span className="font-medium w-32">Sunday - Tuesday:</span>
+                  <span>(Closed)</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="font-medium w-20">wednesday & Thursday:</span>
+                  <span className="font-medium w-32">Wednesday & Thursday:</span>
                   <span>(5:00 PM - 9:00 PM)</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="font-medium w-20">Friday & Saturday:</span>
-                  <span> (5:00 PM - 9:00 PM)</span>
+                  <span className="font-medium w-32">Friday & Saturday:</span>
+                  <span>(5:00 PM - 9:00 PM)</span>
                 </li>
               </ul>
+            </div>
+            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200">
+              <img 
+                src={Rhapsody} 
+                alt="Rhapsody Restaurant" 
+                className="w-full h-full object-cover" 
+              />
             </div>
           </div>
         </TabsContent>
