@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Event } from "@shared/schema";
-import HockingBackground from "../components/assets/HockingBackground.jpg";  
+import HockingBackground from "../components/assets/Campus.jpeg";  
 
 
 export default function Home() {
