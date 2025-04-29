@@ -14,6 +14,8 @@ import DiscussionDetail from "./pages/DiscussionDetail";
 import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
+import RecreationPage from "./pages/Recreation";
+
 
 function Router() {
   const [location] = useLocation();
@@ -46,6 +48,7 @@ function Router() {
           {(params) => <DiscussionDetail params={params} />}
         </Route>
         <Route path="/safety" component={CampusSafety} />
+        <Route path="/recreation" component={RecreationPage} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
