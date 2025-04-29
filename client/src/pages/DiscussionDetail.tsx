@@ -189,7 +189,10 @@ function CommentCard({ comment, level = 0 }: { comment: Comment; level?: number 
         <div className="flex-1">
           <div className="bg-muted p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-medium">{comment.author?.name || comment.author?.username}</span>
+              <span className="font-medium">
+                {comment.author?.name || comment.author?.username}
+                {comment.author?.isGuest ? " (Guest)" : ""}
+              </span>
               <span className="text-xs text-neutral-500">{formatDate(comment.createdAt)}</span>
             </div>
             <p className="text-sm">{comment.content}</p>

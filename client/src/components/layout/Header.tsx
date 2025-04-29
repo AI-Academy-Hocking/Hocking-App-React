@@ -13,13 +13,7 @@ export default function Header() {
   return (
     <header className="bg-gray-100 text-gray-800 p-4 shadow-md">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <img
-            src={HockingLogo}
-            alt="Hocking College Logo"
-            className="h-8 w-auto"
-          />
-        </div>
+        <div className="flex-1"></div>
 
         <div className="flex items-center">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -95,7 +89,7 @@ export default function Header() {
           </Sheet>
           <h1 className="text-xl font-heading font-bold">Hocking College</h1>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             className="hover:bg-primary-light p-2 rounded-full"
@@ -104,10 +98,15 @@ export default function Header() {
           </Button>
           <Button
             variant="ghost"
-            className="hover:bg-primary-light p-2 rounded-full ml-2"
+            className="hover:bg-primary-light p-2 rounded-full"
           >
             <User className="h-5 w-5" />
           </Button>
+          <img
+            src={HockingLogo}
+            alt="Hocking College Logo"
+            className="h-8 w-auto ml-2"
+          />
         </div>
       </div>
     </header>

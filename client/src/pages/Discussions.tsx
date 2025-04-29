@@ -169,7 +169,7 @@ function DiscussionCard({ discussion }: { discussion: Discussion }) {
       <CardFooter className="pt-2 text-xs text-neutral-500 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <UserCircle className="h-4 w-4" />
-          <span>{discussion.author?.name || discussion.author?.username || "Unknown"}</span>
+          <span>{discussion.author?.name || discussion.author?.username || "Unknown"} {discussion.author?.isGuest ? "(Guest)" : ""}</span>
           <span className="w-1 h-1 rounded-full bg-neutral-300" />
           <Calendar className="h-4 w-4" />
           <span>{formatDate(discussion.createdAt)}</span>
@@ -404,6 +404,11 @@ export default function Discussions() {
         <div>
           <h1 className="text-2xl font-bold">Student Discussions</h1>
           <p className="text-neutral-500">Connect with other students at Hocking College</p>
+          {user?.isGuest && (
+            <p className="text-sm text-orange-600 mt-1">
+              Sign in with your account to create discussions and participate in conversations
+            </p>
+          )}
         </div>
         
         {user && !user.isGuest && <NewDiscussionForm />}
