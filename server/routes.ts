@@ -21,16 +21,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Username and password are required" });
       }
       
-      const user = await storage.getUserByUsername(username);
+      // For development, create a mock user with the provided credentials
+      const mockUser = {
+        id: 1,
+        username,
+        name: username,
+        isGuest: false
+      };
       
-      if (!user || user.password !== password) {
-        return res.status(401).json({ message: "Invalid username or password" });
-      }
-      
-      // Don't send password in response
-      const { password: _, ...userWithoutPassword } = user;
-      
-      res.status(200).json(userWithoutPassword);
+      res.status(200).json(mockUser);
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "Internal server error" });
