@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userData = await response.json();
       setUser(userData);
       setIsAuthenticated(true);
-      setLocation('/home');
+      window.location.href = '/home';
     } catch (error) {
       console.error('Login error:', error);
       throw error;
