@@ -506,11 +506,27 @@ export default function Discussions() {
         </TabsContent>
         
         <TabsContent value="my-activity">
-          <Card>
-            <CardContent className="py-12 text-center">
-              <p className="text-neutral-500">Coming soon: View your discussions and comments.</p>
-            </CardContent>
-          </Card>
+          {user && (
+            <div className="space-y-6">
+              {discussionsQuery.data?.filter(d => d.authorId === user.id).length === 0 ? (
+                <Card>
+                  <CardContent className="py-12 text-center">
+                    <p className="text-neutral-500">You haven't posted any discussions in this session yet.</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                <>
+                  <h3 className="text-lg font-medium">Your Discussions</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {discussionsQuery.data?.filter(d => d.authorId === user.id)
+                      .map(discussion => (
+                        <DiscussionCard key={discussion.id} discussion={discussion} />
+                      ))}
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

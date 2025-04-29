@@ -431,6 +431,9 @@ export default function DiscussionDetail({ params }: { params: { id: string } })
       url: `/api/discussions/${discussionId}/comments`
     }),
     enabled: !!discussionId,
+  // This will ensure comments are cached and available in the session
+  staleTime: Infinity,
+  cacheTime: Infinity,
   });
   
   // Handle invalid ID or not found
