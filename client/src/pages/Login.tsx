@@ -107,7 +107,7 @@ export default function Login() {
                     <FormControl>
                       <Input 
                         type="password" 
-                        placeholder="••••••••" 
+                        placeholder="enter password" 
                         {...field} 
                         disabled={isLoading}
                       />

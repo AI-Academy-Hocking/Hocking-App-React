@@ -189,7 +189,10 @@ function CommentCard({ comment, level = 0 }: { comment: Comment; level?: number 
         <div className="flex-1">
           <div className="bg-muted p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-medium">{comment.author?.name || comment.author?.username}</span>
+              <span className="font-medium">
+                {comment.author?.name || comment.author?.username}
+                {comment.author?.isGuest ? " (Guest)" : ""}
+              </span>
               <span className="text-xs text-neutral-500">{formatDate(comment.createdAt)}</span>
             </div>
             <p className="text-sm">{comment.content}</p>
@@ -428,6 +431,9 @@ export default function DiscussionDetail({ params }: { params: { id: string } })
       url: `/api/discussions/${discussionId}/comments`
     }),
     enabled: !!discussionId,
+  // This will ensure comments are cached and available in the session
+  staleTime: Infinity,
+  cacheTime: Infinity,
   });
   
   // Handle invalid ID or not found
