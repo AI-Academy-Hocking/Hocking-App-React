@@ -282,7 +282,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           authorInfo = { ...userWithoutPassword };
         }
         
-        return { ...discussion, author: authorInfo };
+        const comments = await storage.getComments(discussion.id);
+        const commentCount = comments ? comments.length : 0;
+        
+        return { ...discussion, author: authorInfo, commentCount };
       }));
       
       res.status(200).json(discussionsWithAuthor);

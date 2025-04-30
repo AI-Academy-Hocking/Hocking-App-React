@@ -176,7 +176,7 @@ function DiscussionCard({ discussion }: { discussion: Discussion }) {
         </div>
         <div className="flex items-center gap-1">
           <MessageCircle className="h-4 w-4" />
-          <span>{discussionsQuery.data?.find(d => d.id === discussion.id)?.commentCount || 0} replies</span>
+          <span>{discussion.commentCount || 0} replies</span>
         </div>
       </CardFooter>
     </Card>
