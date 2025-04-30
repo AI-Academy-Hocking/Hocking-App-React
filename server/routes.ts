@@ -349,6 +349,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Comment routes
+  // Get all comments for a user
+  app.get("/api/comments", async (req: Request, res: Response) => {
+    try {
+      const comments = await storage.getAllComments();
+      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
+        const author = await storage.getUser(comment.authorId);
+        let authorInfo = { id: comment.authorId, username: "Unknown" };
+        
+        if (author) {
+          const { password, ...userWithoutPassword } = author;
+          authorInfo = { ...userWithoutPassword };
+        }
+        
+        const discussion = await storage.getDiscussion(comment.discussionId);
+        return { 
+          ...comment, 
+          author: authorInfo,
+          discussionTitle: discussion?.title || "Unknown Discussion"
+        };
+      }));
+      
+      res.status(200).json(commentsWithDetails);
+    } catch (error) {
+      console.error("Error fetching all comments:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   app.get("/api/discussions/:id/comments", async (req: Request, res: Response) => {
     try {
       const discussionId = parseInt(req.params.id);

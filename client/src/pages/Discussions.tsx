@@ -176,7 +176,7 @@ function DiscussionCard({ discussion }: { discussion: Discussion }) {
         </div>
         <div className="flex items-center gap-1">
           <MessageCircle className="h-4 w-4" />
-          <span>0 replies</span>
+          <span>{discussionsQuery.data?.find(d => d.id === discussion.id)?.commentCount || 0} replies</span>
         </div>
       </CardFooter>
     </Card>
@@ -373,7 +373,17 @@ function NewDiscussionForm() {
 // Main Discussions Page Component
 export default function Discussions() {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [activityFilter, setActivityFilter] = useState("discussions");
   const { user } = useAuth();
+  
+  // Query for comments
+  const commentsQuery = useQuery({
+    queryKey: ["/api/comments"],
+    queryFn: getQueryFn<Comment[]>({
+      on401: "returnNull",
+      url: "/api/comments"
+    }),
+  });
   
   const discussionsQuery = useQuery({
     queryKey: ["/api/discussions", activeCategory],
@@ -508,21 +518,73 @@ export default function Discussions() {
         <TabsContent value="my-activity">
           {user && (
             <div className="space-y-6">
-              {discussionsQuery.data?.filter(d => d.authorId === user.id).length === 0 ? (
-                <Card>
-                  <CardContent className="py-12 text-center">
-                    <p className="text-neutral-500">You haven't posted any discussions in this session yet.</p>
-                  </CardContent>
-                </Card>
-              ) : (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setActivityFilter('discussions')}
+                  className={activityFilter === 'discussions' ? 'bg-primary text-white' : ''}
+                >
+                  My Discussions
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setActivityFilter('comments')}
+                  className={activityFilter === 'comments' ? 'bg-primary text-white' : ''}
+                >
+                  My Comments
+                </Button>
+              </div>
+
+              {activityFilter === 'discussions' && (
                 <>
-                  <h3 className="text-lg font-medium">Your Discussions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {discussionsQuery.data?.filter(d => d.authorId === user.id)
-                      .map(discussion => (
-                        <DiscussionCard key={discussion.id} discussion={discussion} />
-                      ))}
-                  </div>
+                  {discussionsQuery.data?.filter(d => d.authorId === user.id).length === 0 ? (
+                    <Card>
+                      <CardContent className="py-12 text-center">
+                        <p className="text-neutral-500">You haven't posted any discussions in this session yet.</p>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <>
+                      <h3 className="text-lg font-medium">Your Discussions</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {discussionsQuery.data?.filter(d => d.authorId === user.id)
+                          .map(discussion => (
+                            <DiscussionCard key={discussion.id} discussion={discussion} />
+                          ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              )}
+
+              {activityFilter === 'comments' && (
+                <>
+                  {commentsQuery.data?.filter(c => c.authorId === user.id).length === 0 ? (
+                    <Card>
+                      <CardContent className="py-12 text-center">
+                        <p className="text-neutral-500">You haven't made any comments in this session yet.</p>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <>
+                      <h3 className="text-lg font-medium">Your Comments</h3>
+                      <div className="space-y-4">
+                        {commentsQuery.data?.filter(c => c.authorId === user.id)
+                          .map(comment => (
+                            <Card key={comment.id}>
+                              <CardContent className="py-4">
+                                <p className="text-sm text-neutral-600">{comment.content}</p>
+                                <p className="text-xs text-neutral-500 mt-2">
+                                  Posted in discussion: {comment.discussionTitle}
+                                </p>
+                              </CardContent>
+                            </Card>
+                          ))}
+                      </div>
+                    </>
+                  )}
                 </>
               )}
             </div>

@@ -233,6 +233,10 @@ export class MemStorage implements IStorage {
   }
   
   // Comment operations
+  async getAllComments(): Promise<Comment[]> {
+    return this.comments;
+  }
+
   async getComments(discussionId: number): Promise<Comment[]> {
     return Array.from(this.comments.values()).filter(
       (comment) => comment.discussionId === discussionId && comment.parentId === null
