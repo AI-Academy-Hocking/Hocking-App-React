@@ -249,15 +249,11 @@ export default function CampusSafety() {
               </div>
               <div>
                 <h4 className="font-medium text-blue-800">Health Center</h4>
-                <a href="tel:740-753-6487" className="text-blue-700">740-753-6487</a>
+                <a href="tel:740-753-3591" className="text-blue-700">740-753-3591</a>
               </div>
               <div>
-                <h4 className="font-medium text-blue-800">Counseling Services</h4>
-                <a href="tel:740-753-6789" className="text-blue-700">740-753-6789</a>
-              </div>
-              <div>
-                <h4 className="font-medium text-blue-800">Campus Security</h4>
-                <a href="tel:740-753-1234" className="text-blue-700">740-753-1234</a>
+                <h4 className="font-medium text-blue-800">Nelsonville Police Department</h4>
+                <a href="tel:740-753-1922" className="text-blue-700">740-753-1922</a>
               </div>
             </div>
           </div>
