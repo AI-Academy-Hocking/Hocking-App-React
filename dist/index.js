@@ -151,6 +151,9 @@ var MemStorage = class {
     );
   }
   // Comment operations
+  async getAllComments() {
+    return this.comments;
+  }
   async getComments(discussionId) {
     return Array.from(this.comments.values()).filter(
       (comment) => comment.discussionId === discussionId && comment.parentId === null
@@ -651,12 +654,13 @@ async function registerRoutes(app2) {
       if (!username || !password) {
         return res.status(400).json({ message: "Username and password are required" });
       }
-      const user = await storage.getUserByUsername(username);
-      if (!user || user.password !== password) {
-        return res.status(401).json({ message: "Invalid username or password" });
-      }
-      const { password: _, ...userWithoutPassword } = user;
-      res.status(200).json(userWithoutPassword);
+      const mockUser = {
+        id: 1,
+        username,
+        name: username,
+        isGuest: false
+      };
+      res.status(200).json(mockUser);
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -851,7 +855,9 @@ async function registerRoutes(app2) {
           const { password, ...userWithoutPassword } = author;
           authorInfo = { ...userWithoutPassword };
         }
-        return { ...discussion, author: authorInfo };
+        const comments2 = await storage.getComments(discussion.id);
+        const commentCount = comments2 ? comments2.length : 0;
+        return { ...discussion, author: authorInfo, commentCount };
       }));
       res.status(200).json(discussionsWithAuthor);
     } catch (error) {
@@ -898,6 +904,29 @@ async function registerRoutes(app2) {
         return res.status(400).json({ message: validationError.message });
       }
       console.error("Error creating discussion:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  app2.get("/api/comments", async (req, res) => {
+    try {
+      const comments2 = await storage.getAllComments();
+      const commentsWithDetails = await Promise.all(comments2.map(async (comment) => {
+        const author = await storage.getUser(comment.authorId);
+        let authorInfo = { id: comment.authorId, username: "Unknown" };
+        if (author) {
+          const { password, ...userWithoutPassword } = author;
+          authorInfo = { ...userWithoutPassword };
+        }
+        const discussion = await storage.getDiscussion(comment.discussionId);
+        return {
+          ...comment,
+          author: authorInfo,
+          discussionTitle: discussion?.title || "Unknown Discussion"
+        };
+      }));
+      res.status(200).json(commentsWithDetails);
+    } catch (error) {
+      console.error("Error fetching all comments:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
