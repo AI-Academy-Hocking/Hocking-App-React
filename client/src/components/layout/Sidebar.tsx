@@ -20,7 +20,7 @@ export default function Sidebar() {
 
   return (
     <div className="hidden md:flex flex-col w-64 bg-gray-100 text-gray-800 h-full">
-      <div className="p-4 border-b border-primary-light">
+      <div className="p-4 border-b border-primary-light bg-blue-500">
         <img 
           src={HockingLogo}
           alt="Hocking College Logo" 
