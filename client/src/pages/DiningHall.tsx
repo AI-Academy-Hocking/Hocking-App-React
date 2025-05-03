@@ -18,29 +18,36 @@ export default function DiningHall() {
         Explore our campus dining options, meal plans, weekly menus, and more.
       </p>
       
-      <Tabs defaultValue="hours" className="mb-8">
-        <TabsList className="w-full md:w-auto grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-0">
-          <TabsTrigger value="hours" className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
-            <span>Hours</span>
-          </TabsTrigger>
-          <TabsTrigger value="meal-plans" className="flex items-center gap-1">
-            <CreditCard className="h-4 w-4" />
-            <span>Meal Plans</span>
-          </TabsTrigger>
-          <TabsTrigger value="menu" className="flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
-            <span>Weekly Menu</span>
-          </TabsTrigger>
-          <TabsTrigger value="dietary" className="flex items-center gap-1">
-            <Info className="h-4 w-4" />
-            <span>Dietary Info</span>
-          </TabsTrigger>
-          <TabsTrigger value="locations" className="flex items-center gap-1">
-            <MapPin className="h-4 w-4" />
-            <span>Locations</span>
-          </TabsTrigger>
-        </TabsList>
+      <Tabs>
+      <TabsList
+        className="w-full md:w-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2"
+        aria-label="Dining Options Tabs"
+      >
+        <TabsTrigger value="hours" className="flex items-center justify-center gap-1 p-2 rounded-md hover:bg-blue-100">
+          <Clock className="h-4 w-4" />
+          <span>Hours</span>
+        </TabsTrigger>
+      
+        <TabsTrigger value="meal-plans" className="flex items-center justify-center gap-1 p-2 rounded-md hover:bg-blue-100">
+          <CreditCard className="h-4 w-4" />
+          <span>Meal Plans</span>
+        </TabsTrigger>
+      
+        <TabsTrigger value="menu" className="flex items-center justify-center gap-1 p-2 rounded-md hover:bg-blue-100">
+          <Calendar className="h-4 w-4" />
+          <span>Weekly Menu</span>
+        </TabsTrigger>
+      
+        <TabsTrigger value="dietary" className="flex items-center justify-center gap-1 p-2 rounded-md hover:bg-blue-100">
+          <Info className="h-4 w-4" />
+          <span>Dietary Info</span>
+        </TabsTrigger>
+      
+        <TabsTrigger value="locations" className="flex items-center justify-center gap-1 p-2 rounded-md hover:bg-blue-100">
+          <MapPin className="h-4 w-4" />
+          <span>Locations</span>
+        </TabsTrigger>
+      </TabsList>
         
         <TabsContent value="hours" className="mt-6">
           <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
