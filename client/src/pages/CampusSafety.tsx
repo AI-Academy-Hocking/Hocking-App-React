@@ -222,7 +222,7 @@ export default function CampusSafety() {
                       )}
                       {resource.url && (
                         <a
-                          href={resource.url}
+                          href={resource.url?.startsWith("http") ? resource.url : `https://www.hocking.edu${resource.url}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
