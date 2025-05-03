@@ -95,6 +95,9 @@ export default function CalendarPage() {
                 onNavigate={setDate}
                 views={["month", "week", "day"]}
                 tooltipAccessor={(event) => event.title}
+                formats={{
+                  weekdayFormat: (date) => format(date, "EEEE"), // Full day name (e.g., "Monday")
+                }}
               />
             </div>
           </CardContent>
