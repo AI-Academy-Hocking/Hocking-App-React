@@ -56,6 +56,32 @@ export default function Sidebar() {
           <span>Log Out</span>
         </button>
       </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+        <div className="border border-neutral-200 rounded-lg p-5">
+          <h3 className="text-lg font-semibold mb-3">Standard Plan</h3>
+          <p className="text-neutral-600 mb-4">
+            The Standard Plan is perfect for students who live on campus and want access to meals throughout the week.
+          </p>
+          <ul className="space-y-1 text-neutral-600">
+            <li>Unlimited meals</li>
+            <li>$100 dining dollars</li>
+            <li>Cost: $1,200 per semester</li>
+          </ul>
+        </div>
+
+        <div className="border border-neutral-200 rounded-lg p-5">
+          <h3 className="text-lg font-semibold mb-3">Premium Plan</h3>
+          <p className="text-neutral-600 mb-4">
+            The Premium Plan offers additional dining dollars for students who want more flexibility.
+          </p>
+          <ul className="space-y-1 text-neutral-600">
+            <li>Unlimited meals</li>
+            <li>$200 dining dollars</li>
+            <li>Cost: $1,500 per semester</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
