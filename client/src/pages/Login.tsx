@@ -6,7 +6,6 @@ import { useToast } from "../hooks/use-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import HockingLogo from "../components/assets/HockingLogo.png";
 import {
   Form,
   FormControl,
@@ -70,7 +69,7 @@ export default function Login() {
         <CardContent className="p-0">
           <div className="text-center mb-8">
             <img 
-              src={HockingLogo}  
+              src="client\src\components\assets\Hocking_logo_Full_Color_RGB.webp" 
               alt="Hocking College Logo" 
               className="h-16 mx-auto mb-4" 
             />
@@ -107,7 +106,7 @@ export default function Login() {
                     <FormControl>
                       <Input 
                         type="password" 
-                        placeholder="enter password" 
+                        placeholder="••••••••" 
                         {...field} 
                         disabled={isLoading}
                       />

@@ -20,7 +20,7 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="bg-white text-black border-none w-64 p-0">
-              <div className="p-4 border-b border-gray-200">
+              <div className="p-4 border-b border-gray-200 bg-white">
                 <img 
                   src="client\src\components\assets\Hocking_logo_Full_Color_RGB.webp" 
                   alt="Hocking College Logo" 
