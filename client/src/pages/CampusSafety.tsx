@@ -244,7 +244,7 @@ export default function CampusSafety() {
             <Separator className="bg-blue-200 my-3" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <h4 className="font-medium text-blue-800">Campus Police</h4>
+                <h4 className="font-medium text-blue-800">Campus Security</h4>
                 <a href="tel:740-753-6598" className="text-blue-700">740-753-6598</a>
               </div>
               <div>
