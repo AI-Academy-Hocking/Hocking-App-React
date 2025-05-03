@@ -27,7 +27,7 @@ export default function DiningHall() {
           onChange={(e) => setSelectedTab(e.target.value)}
           className="p-2 border border-neutral-300 rounded-md w-full md:w-auto"
         >
-          <option value="hours">Hours</option>
+          <option value="hours">Hours Of Operation</option>
           <option value="meal-plans">Meal Plans</option>
           <option value="menu">Weekly Menu</option>
           <option value="dietary">Dietary Info</option>
@@ -281,83 +281,80 @@ export default function DiningHall() {
       {selectedTab === "locations" && (
         <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
           <h2 className="text-2xl font-semibold mb-4 text-primary">Campus Dining Locations</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="flex flex-col h-full">
+              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
+                <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                  <img src={HawksNest} alt="Hawks Nest" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Hawks Nest Dining Hall</h3>
+              <p className="text-neutral-600 mb-4">
+                Our primary dining facility offering a wide variety of food options, including 
+                Grab-and-go and pre-made meals, including subs, sandwiches, and salads.
+              </p>
+              <ul className="space-y-1 text-neutral-600 mb-4">
+                <li className="flex items-start text-sm">
+                  <span className="font-medium w-20">Location:</span>
+                  <span>John Light, second Floor</span>
+                </li>
+              </ul>
+            </div>
+      
+            <div className="flex flex-col h-full">
+              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
+                <div className="w-full h-full flex items-center justify-center bg-primary/5">
+                  <img src={DiamondDawgs} alt="Diamond Dawgz" className="w-full h-full object-cover" />
+                </div>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Diamond Dawgz</h3>
+              <p className="text-neutral-600 mb-4">
+                A convenient spot for a quick hotdog, burger, fries, or some chicken tenders, or enjoy a refreshing milkshake and ice cream.
+              </p>
+              <ul className="space-y-1 text-neutral-600 mb-4">
+                <li className="flex items-start text-sm">
+                  <span className="font-medium w-20">Location:</span>
+                  <span>185 W Canal St Nelsonville, OH 45764</span>
+                </li>
+                <li className="flex items-start text-sm">
+                  <span className="font-medium w-20">Phone:</span>
+                  <span>(740) 753-6100</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+      
+          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col md:flex-row items-start gap-4">
+            <div className="flex-1">
+              <h3 className="font-medium mb-2">Rhapsody Restaurant</h3>
+              <p className="text-neutral-600 mb-2">
+                Rhapsody is a student-run restaurant that offers a casual fine dining experience with live music every Friday and Saturday.
+              </p>
+              <ul className="space-y-1 text-sm">
+                <li className="flex items-start">
+                  <span className="font-medium w-32">Sunday - Tuesday:</span>
+                  <span>(Closed)</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="font-medium w-32">Wednesday & Thursday:</span>
+                  <span>(5:00 PM - 9:00 PM)</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="font-medium w-32">Friday & Saturday:</span>
+                  <span>(5:00 PM - 9:00 PM)</span>
+                </li>
+              </ul>
+            </div>
+            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200">
+              <img 
+                src={Rhapsody} 
+                alt="Rhapsody Restaurant" 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+          </div>
         </div>
       )}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="flex flex-col h-full">
-            <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
-              <div className="w-full h-full flex items-center justify-center bg-primary/5">
-                <img src={HawksNest} alt="Hawks Nest" className="w-full h-full object-cover" />
-              </div>
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Hawks Nest Dining Hall</h3>
-            <p className="text-neutral-600 mb-4">
-              Our primary dining facility offering a wide variety of food options, including 
-              Grab-and-go and pre made meals,including subs,sandwiches, and salads.
-            </p>
-            <ul className="space-y-1 text-neutral-600 mb-4">
-              <li className="flex items-start text-sm">
-                <span className="font-medium w-20">Location:</span>
-                <span>John Light, second Floor</span>
-              </li>
-              <li className="flex items-start text-sm">
-              </li>
-            </ul>
-          </div>
-          
-          <div className="flex flex-col h-full">
-            <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
-              <div className="w-full h-full flex items-center justify-center bg-primary/5">
-                <img src={DiamondDawgs} alt="Diamond Dawgz" className="w-full h-full object-cover" />
-              </div>
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Diamond Dawgz</h3>
-            <p className="text-neutral-600 mb-4">
-              A convient spot for a quick hotdog,burger, fries or some chicken tenders, or enoy a refreshing milkshake and icecream.
-
-            </p>
-            <ul className="space-y-1 text-neutral-600 mb-4">
-              <li className="flex items-start text-sm">
-                <span className="font-medium w-20">Location:</span>
-                <span>185 W canal St Nelsonville,OH 45764</span>
-              </li>
-              <li className="flex items-start text-sm">
-                <span className="font-medium w-20">Phone:</span>
-                <span>(740) 753-6100</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        
-        <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col md:flex-row items-start gap-4">
-        <div className="flex-1">
-          <h3 className="font-medium mb-2">Rhapsody Restaurant</h3>
-          <p className="text-neutral-600 mb-2">
-            Rhapsody is a student-run restaurant that offers a casual fine dining experience with live music every Friday and Saturday.
-          </p>
-          <ul className="space-y-1 text-sm">
-            <li className="flex items-start">
-              <span className="font-medium w-32">Sunday - Tuesday:</span>
-              <span>(Closed)</span>
-            </li>
-            <li className="flex items-start">
-              <span className="font-medium w-32">Wednesday & Thursday:</span>
-              <span>(5:00 PM - 9:00 PM)</span>
-            </li>
-            <li className="flex items-start">
-              <span className="font-medium w-32">Friday & Saturday:</span>
-              <span>(5:00 PM - 9:00 PM)</span>
-            </li>
-          </ul>
-        </div>
-        <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200">
-          <img 
-            src={Rhapsody} 
-            alt="Rhapsody Restaurant" 
-            className="w-full h-full object-cover" 
-          />
-        </div>
-      </div>
     </div>
   );
 }
