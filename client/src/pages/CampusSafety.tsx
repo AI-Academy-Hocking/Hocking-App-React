@@ -255,6 +255,18 @@ export default function CampusSafety() {
                 <h4 className="font-medium text-blue-800">Nelsonville Police Department</h4>
                 <a href="tel:740-753-1922" className="text-blue-700">740-753-1922</a>
               </div>
+              <div>
+                <h4 className="font-medium text-blue-800">Anonymous Tip Line</h4>
+                <a
+                  href="https://www.hocking.edu/campus-safety#reports"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Visit Website
+                </a>
+              </div>
             </div>
           </div>
         </TabsContent>
