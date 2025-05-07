@@ -4,9 +4,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
-import HockingLogo from "../assets/HockingLogo.png";
-import "../styles/globals.css";
-import './styles/globals.css';
+import HawkLogo from "../assets/Hawklogo.png";
+
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -33,9 +32,9 @@ export default function Header() {
             >
               <div className="p-4 border-b border-primary-light">
                 <img
-                  src={HockingLogo}
+                  src={HawkLogo}
                   alt="Hocking College Logo"
-                  className="h-12 w-auto object-contain"
+                  className="h-12"
                 />
               </div>
 
@@ -106,11 +105,6 @@ export default function Header() {
           >
             <User className="h-5 w-5" />
           </Button>
-          <img
-            src={HockingLogo}
-            alt="Hocking College Logo"
-            className="h-8 w-auto ml-2"
-          />
         </div>
       </div>
     </header>

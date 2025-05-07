@@ -15,7 +15,7 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
-
+import './styles/globals.css';
 
 function Router() {
   const [location] = useLocation();
