@@ -5,17 +5,15 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
 import HockingLogo from "../assets/HockingLogo.png";
+import "../styles/globals.css";
+import './styles/globals.css';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-<<<<<<< Updated upstream
-    <header className="bg-gray-100 text-gray-800 p-4 shadow-md">
-=======
 <header className="bg-yellow-500 text-blue-800 p-4 shadow-md">
->>>>>>> Stashed changes
       <div className="flex justify-between items-center">
         <div className="flex-1"></div>
 
@@ -91,7 +89,9 @@ export default function Header() {
               </div>
             </SheetContent>
           </Sheet>
-          <h1 className="text-xl font-heading font-bold">Hocking College</h1>
+          <h1 className="text-xl font-heading font-bold text-white outlined-text">
+            Hocking College
+          </h1>
         </div>
         <div className="flex items-center gap-4">
           <Button
