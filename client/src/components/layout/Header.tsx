@@ -14,7 +14,7 @@ export default function Header() {
 <<<<<<< Updated upstream
     <header className="bg-gray-100 text-gray-800 p-4 shadow-md">
 =======
-    <header className="bg-blue-500 text-white p-4 shadow-md">
+<header className="bg-yellow-500 text-blue-800 p-4 shadow-md">
 >>>>>>> Stashed changes
       <div className="flex justify-between items-center">
         <div className="flex-1"></div>
