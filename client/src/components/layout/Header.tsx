@@ -34,7 +34,7 @@ export default function Header() {
                 <img
                   src={HawkLogo}
                   alt="Hocking College Logo"
-                  className="h-12"
+                  className="h-16 w-auto object-contain"
                 />
               </div>
 
