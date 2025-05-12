@@ -15,6 +15,9 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
+import LibraryPage from "./pages/Library";
+import OnlineLearningPage from "./pages/OnlineLearning";
+import StudentOrganizationsPage from "./pages/StudentOrganizations";
 
 
 function Router() {
@@ -49,6 +52,9 @@ function Router() {
         </Route>
         <Route path="/safety" component={CampusSafety} />
         <Route path="/recreation" component={RecreationPage} />
+        <Route path="/library" component={LibraryPage} />
+        <Route path="/online-learning" component={OnlineLearningPage} />
+        <Route path="/student-organizations" component={StudentOrganizationsPage} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

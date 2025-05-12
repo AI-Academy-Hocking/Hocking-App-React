@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { StudentTool } from "@shared/schema";
+import { Link } from "wouter";
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -39,12 +40,12 @@ export default function StudentTools() {
 
   // Quick links for bottom section
   const quickLinks = [
-    { id: 'library', label: 'Library', icon: LibraryBig },
-    { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone },
-    { id: 'student-organizations', label: 'Student Organizations', icon: Users },
-    { id: 'recreation', label: 'Recreation', icon: Dumbbell },
-    { id: 'dining', label: 'Dining', icon: Utensils },
-    { id: 'events', label: 'Events', icon: Calendar },
+    { id: 'library', label: 'Library', icon: LibraryBig, path: '/library' },
+    { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
+    { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
+    { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
+    { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
+    { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
   ];
 
   return (
@@ -130,14 +131,14 @@ export default function StudentTools() {
         <h2 className="text-xl font-heading font-semibold mb-4">Quick Links</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {quickLinks.map((link) => (
-            <a 
+            <Link 
               key={link.id} 
-              href="#" 
+              href={link.path}
               className="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold">{link.label}</span>
-            </a>
+            </Link>
           ))}
         </div>
       </section>
