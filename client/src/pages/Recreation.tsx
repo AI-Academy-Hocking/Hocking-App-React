@@ -8,6 +8,15 @@ function RecreationPage() {
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold text-primary mb-6">Recreation & Student Center</h1>
       
+      <Card className="overflow-hidden mb-6">
+        <div className="h-48 w-full bg-gray-200 flex items-center justify-center border-b">
+          <div className="text-center p-4">
+            <p className="text-gray-500">Recreation Center Image</p>
+            <p className="text-sm text-gray-400">Upload an image to showcase the Recreation Center</p>
+          </div>
+        </div>
+      </Card>
+      
       <Card className="mb-6">
         <CardHeader className="bg-primary-light/10">
           <CardTitle className="text-xl text-primary">Student Center Information</CardTitle>
