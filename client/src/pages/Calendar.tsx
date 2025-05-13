@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Event } from "@shared/schema";
+import { gapi } from "gapi-script";
 
 const locales = {
   "en-US": enUS,
@@ -22,27 +23,61 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+const CLIENT_ID = "1036288758884-urd6mf6id8ul2ke8rvde56qi0770fo4a.apps.googleusercontent.com";
+const API_KEY = "AIzaSyA2x4Azi6mg7XFxAFftaQPBUmlwq1dEDvA";
+const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string | undefined;
+  time: string;
+  end: string | undefined;
+  location: string;
+  description: string;
+}
+
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
-  
-  const { data: events, isLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events'],
+  const [googleEvents, setGoogleEvents] = useState<CalendarEvent[]>([]);
+  const { data: localEvents, isLoading } = useQuery<Event[]>({
+    queryKey: ["/api/events"],
   });
 
+  // Fetch Google Calendar events on component mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const events = await fetchGoogleCalendarEvents();
+        setGoogleEvents(events); // Pass the events directly
+      } catch (error) {
+        console.error("Error fetching Google Calendar events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // Combine local events and Google Calendar events
+  const combinedEvents = [
+    ...(localEvents || []),
+    ...googleEvents,
+  ];
+
   // Format events for the BigCalendar
-  const formattedEvents = events?.map(event => ({
+  const formattedEvents = combinedEvents.map((event) => ({
     title: event.title,
-    start: new Date(event.date + 'T' + event.time.split(' - ')[0]),
-    end: new Date(event.date + 'T' + (event.time.split(' - ')[1] || event.time.split(' - ')[0])),
+    start: new Date((event.date || "") + "T" + (event.time?.split(" - ")[0] || "00:00")),
+    end: new Date((event.date || "") + "T" + (event.time?.split(" - ")[1] || "23:59")),
     resource: { location: event.location, description: event.description },
-  })) || [];
+  }));
 
   // Format date for display
-  const formatEventDate = (date: string) => {
-    const eventDate = new Date(date);
+  const formatEventDate = (date: string | undefined) => {
+    const eventDate = new Date(date ?? "1970-01-01"); // Fallback for undefined date
     return {
-      month: eventDate.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
-      day: eventDate.getDate()
+      month: eventDate.toLocaleString("en-US", { month: "short" }).toUpperCase(),
+      day: eventDate.getDate(),
     };
   };
 
@@ -124,8 +159,8 @@ export default function CalendarPage() {
             </div>
           ) : (
             <ul className="divide-y divide-neutral-light">
-              {events && events.length > 0 ? (
-                events.map((event) => {
+              {combinedEvents.length > 0 ? (
+                combinedEvents.map((event) => {
                   const { month, day } = formatEventDate(event.date);
                   return (
                     <li key={event.id} className="p-4">
@@ -153,51 +188,37 @@ export default function CalendarPage() {
     </div>
   );
 }
-import { useEffect } from "react";
-import { gapi } from "gapi-script";
 
-const CLIENT_ID = "1036288758884-urd6mf6id8ul2ke8rvde56qi0770fo4a.apps.googleusercontent.com";
-const API_KEY = "AIzaSyA2x4Azi6mg7XFxAFftaQPBUmlwq1dEDvA";
-const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
-
-export function GoogleCalendar() {
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        scope: SCOPES,
-      });
-    }
-    gapi.load("client:auth2", start);
-  }, []);
-
-  const handleAuthClick = () => {
-    gapi.auth2.getAuthInstance().signIn();
-  };
-
-  const handleSignOutClick = () => {
-    gapi.auth2.getAuthInstance().signOut();
-  };
-
-  return (
-    <div>
-      <button onClick={handleAuthClick}>Sign in with Google</button>
-      <button onClick={handleSignOutClick}>Sign out</button>
-    </div>
-  );
-}
-const fetchEvents = async () => {
+const fetchGoogleCalendarEvents = async () => {
   const response = await gapi.client.calendar.events.list({
-    calendarId: "primary",
-    timeMin: new Date().toISOString(),
+    calendarId: "primary", // Fetch events from the user's primary calendar
+    timeMin: new Date().toISOString(), // Only fetch future events
     showDeleted: false,
     singleEvents: true,
     maxResults: 10,
     orderBy: "startTime",
   });
 
-  const events = response.result.items;
-  console.log(events);
+  const events = response.result.items || [];
+  return events.map((event) => ({
+    id: event.id!,
+    title: event.summary || "No Title",
+    date: event.start?.dateTime || event.start?.date,
+    time: event.start?.dateTime
+      ? `${new Date(event.start.dateTime).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        })} - ${
+          event.end?.dateTime
+            ? new Date(event.end.dateTime).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "Unknown End Time"
+        }`
+      : "All Day",
+    end: event.end?.dateTime,
+    location: event.location || "No Location",
+    description: event.description || "No Description",
+  }));
 };
-// Removed duplicate import and unused code
