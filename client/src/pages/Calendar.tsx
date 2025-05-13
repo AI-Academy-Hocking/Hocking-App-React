@@ -191,7 +191,7 @@ export default function CalendarPage() {
 
 const fetchGoogleCalendarEvents = async () => {
   const response = await gapi.client.calendar.events.list({
-    calendarId: "primary", // Fetch events from the user's primary calendar
+    calendarId: "c_bdfbce4d1083b9ce63634af03adc5df285e99b0124f589c8344ebb2a2f821784@group.calendar.google.com", // Fetch events from the user's primary calendar
     timeMin: new Date().toISOString(), // Only fetch future events
     showDeleted: false,
     singleEvents: true,
