@@ -27,8 +27,8 @@ function RecreationPage() {
             <Clock className="h-5 w-5 text-neutral-dark flex-shrink-0 mt-0.5" />
             <div>
               <p className="font-medium">Hours of Operation</p>
-              <p className="text-neutral-dark">Monday – Friday, 8:00 AM – 10:00 PM</p>
-              <p className="text-neutral-dark">Saturday & Sunday, 11:00 AM – 8:00 PM</p>
+              <p className="text-neutral-dark">Monday – Friday: 8:00 AM – 10:00 PM</p>
+              <p className="text-neutral-dark">Saturday & Sunday: 11:00 AM – 8:00 PM</p>
             </div>
           </div>
           
@@ -58,9 +58,13 @@ function RecreationPage() {
           <ul className="list-disc list-inside space-y-2 pl-2">
             <li>Full-size gymnasium</li>
             <li>Fitness center with cardio and strength equipment</li>
-            <li>Student lounge with TV and gaming areas</li>
+            <li>Student lounge with TV and recreational games</li>
             <li>Study spaces and meeting rooms</li>
             <li>Outdoor recreation equipment rentals</li>
+            <li>indoor pool and diving board</li>
+              <li>Rock climbing wall</li>
+              <li>indoor track</li>
+            
           </ul>
         </CardContent>
       </Card>
