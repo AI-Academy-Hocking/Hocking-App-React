@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Phone, Mail, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import studentCenterImage from "@/components/assets/studentCenter.jpg"; // Import the image
 
 function RecreationPage() {
   return (
@@ -10,10 +10,11 @@ function RecreationPage() {
       
       <Card className="overflow-hidden mb-6">
         <div className="h-48 w-full bg-gray-200 flex items-center justify-center border-b">
-          <div className="text-center p-4">
-            <p className="text-gray-500">Recreation Center Image</p>
-            <p className="text-sm text-gray-400">Upload an image to showcase the Recreation Center</p>
-          </div>
+          <img 
+            src={studentCenterImage} 
+            alt="Recreation Center" 
+            className="w-full h-full object-cover" 
+          />
         </div>
       </Card>
       
