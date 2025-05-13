@@ -142,47 +142,7 @@ export default function CalendarPage() {
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4">Upcoming Events</h2>
         <Card>
-          {isLoading ? (
-            <div className="divide-y divide-neutral-light">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="p-4">
-                  <div className="flex items-start">
-                    <Skeleton className="h-16 w-12 rounded mr-4" />
-                    <div className="space-y-2 flex-1">
-                      <Skeleton className="h-4 w-1/2" />
-                      <Skeleton className="h-3 w-1/3" />
-                      <Skeleton className="h-3 w-2/3" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <ul className="divide-y divide-neutral-light">
-              {combinedEvents.length > 0 ? (
-                combinedEvents.map((event) => {
-                  const { month, day } = formatEventDate(event.date);
-                  return (
-                    <li key={event.id} className="p-4">
-                      <div className="flex items-start">
-                        <div className="flex-shrink-0 bg-primary-light text-white rounded p-2 text-center mr-4">
-                          <div className="text-sm font-bold">{month}</div>
-                          <div className="text-xl font-bold">{day}</div>
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{event.title}</h3>
-                          <p className="text-sm text-neutral-dark">{event.time} - {event.location}</p>
-                          <p className="text-sm mt-1">{event.description}</p>
-                        </div>
-                      </div>
-                    </li>
-                  );
-                })
-              ) : (
-                <li className="p-4 text-center text-neutral-dark">No upcoming events</li>
-              )}
-            </ul>
-          )}
+          <div className="p-4 text-center text-neutral-dark">No events to display.</div>
         </Card>
       </section>
     </div>
