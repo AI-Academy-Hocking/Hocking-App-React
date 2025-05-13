@@ -153,3 +153,51 @@ export default function CalendarPage() {
     </div>
   );
 }
+import { useEffect } from "react";
+import { gapi } from "gapi-script";
+
+const CLIENT_ID = "1036288758884-urd6mf6id8ul2ke8rvde56qi0770fo4a.apps.googleusercontent.com";
+const API_KEY = "AIzaSyA2x4Azi6mg7XFxAFftaQPBUmlwq1dEDvA";
+const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+
+export function GoogleCalendar() {
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        apiKey: API_KEY,
+        clientId: CLIENT_ID,
+        scope: SCOPES,
+      });
+    }
+    gapi.load("client:auth2", start);
+  }, []);
+
+  const handleAuthClick = () => {
+    gapi.auth2.getAuthInstance().signIn();
+  };
+
+  const handleSignOutClick = () => {
+    gapi.auth2.getAuthInstance().signOut();
+  };
+
+  return (
+    <div>
+      <button onClick={handleAuthClick}>Sign in with Google</button>
+      <button onClick={handleSignOutClick}>Sign out</button>
+    </div>
+  );
+}
+const fetchEvents = async () => {
+  const response = await gapi.client.calendar.events.list({
+    calendarId: "primary",
+    timeMin: new Date().toISOString(),
+    showDeleted: false,
+    singleEvents: true,
+    maxResults: 10,
+    orderBy: "startTime",
+  });
+
+  const events = response.result.items;
+  console.log(events);
+};
+// Removed duplicate import and unused code
