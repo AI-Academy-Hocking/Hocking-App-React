@@ -23,7 +23,7 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const CLIENT_ID = "1036288758884-urd6mf6id8ul2ke8rvde56qi0770fo4a.apps.googleusercontent.com";
+const CLIENT_ID = "1036288758884-u7tsvfmhgfmkmgrveqo1b5es73e9jmpe.apps.googleusercontent.com";
 const API_KEY = "AIzaSyA2x4Azi6mg7XFxAFftaQPBUmlwq1dEDvA";
 const SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
 
