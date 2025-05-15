@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import calendarRouter from "./routes/calendar";
+import calendarRouter from "./src/routes/calendar";
 import { 
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, locationUpdateSchema, 
@@ -581,7 +581,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   wss.on('connection', (socket: WebSocket) => {
     console.log('WebSocket client connected');
     
-    socket.on('message', async (message: WebSocket.Data) => {
+    socket.on('message', async (message: string | Buffer | ArrayBuffer | Buffer[]) => {
       try {
         // Parse and process location updates from clients if needed
         console.log('Received message:', message.toString());

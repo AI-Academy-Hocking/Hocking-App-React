@@ -1,13 +1,28 @@
 {
   "name": "@shared/schema",
   "version": "1.0.0",
-  "main": "./schema.ts",
-  "types": "./schema.ts",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./schema.ts",
-      "types": "./schema.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
+  },
+  "scripts": {
+    "build": "tsc && tsc --project tsconfig.cjs.json --outDir dist --module CommonJS --declaration false",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.1",
+    "mysql2": "^3.14.1",
+    "sqlite3": "^5.1.7",
+    "zod": "^3.24.4"
   }
-} 
+}
