@@ -1,13 +1,36 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Removed @tailwind directives because Tailwind CSS is not configured or not being used */
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+ :root {
+  --color-primary: #0057b8;      /* Hocking's main blue */
+  --color-secondary: #ffd600;    /* Yellow accent */
+  --color-background: #ffffff;   /* Light mode background */
+  --color-text: #003366;         /* Dark blue text */
+  --color-accent: #00b86b;       /* Green accent */
+  --color-border: #e0e0e0;       /* Optional: light border */
+}
 
-  body {
-    @apply font-sans antialiased bg-background text-foreground;
-  }
+[data-theme="dark"], .dark {
+  --color-background: #003366;   /* Dark blue background */
+  --color-text: #ffffff;         /* White text */
+  border-color: var(--color-border);
+}
+
+
+body {
+  font-family: var(--font-sans, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+a, .accent {
+  color: var(--color-accent);
+}
+.button-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+.button-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
 }
