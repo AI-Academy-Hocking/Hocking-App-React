@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import calendarRouter from "./src/routes/calendar";
+import calendarRouter from "./routes/calendar";
 import { 
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, locationUpdateSchema, 
@@ -578,10 +578,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up WebSocket server for real-time location updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   
-  wss.on('connection', (socket) => {
+  wss.on('connection', (socket: WebSocket) => {
     console.log('WebSocket client connected');
     
-    socket.on('message', async (message) => {
+    socket.on('message', async (message: WebSocket.Data) => {
       try {
         // Parse and process location updates from clients if needed
         console.log('Received message:', message.toString());
@@ -606,7 +606,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
     
     // Broadcast to all connected clients
-    wss.clients.forEach(client => {
+    wss.clients.forEach((client: WebSocket) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify({
           type: 'location_update',
