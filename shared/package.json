@@ -1,7 +1,13 @@
 {
   "name": "@shared/schema",
   "version": "1.0.0",
-  "main": "schema.ts",
-  "types": "schema.ts",
-  "type": "module"
+  "main": "./schema.ts",
+  "types": "./schema.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./schema.ts",
+      "types": "./schema.ts"
+    }
+  }
 } 
