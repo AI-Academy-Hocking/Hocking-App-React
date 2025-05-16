@@ -234,7 +234,7 @@ export class MemStorage implements IStorage {
   
   // Comment operations
   async getAllComments(): Promise<Comment[]> {
-    return this.comments;
+    return Array.from(this.comments.values());
   }
 
   async getComments(discussionId: number): Promise<Comment[]> {

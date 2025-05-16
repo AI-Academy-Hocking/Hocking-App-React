@@ -4,12 +4,11 @@ import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { enUS } from "date-fns/locale";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "../components/ui/skeleton";
 import { Event } from "@shared/schema";
-import ical from 'ical';
 
 const locales = {
   "en-US": enUS,
@@ -23,7 +22,6 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-// Replace this with your calendar's iCal URL
 const CALENDAR_URL = "/api/calendar/events";
 
 interface CalendarEvent {
@@ -38,7 +36,8 @@ interface CalendarEvent {
 
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
-  const [googleEvents, setGoogleEvents] = useState<CalendarEvent[]>([]);
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const { data: localEvents, isLoading } = useQuery<Event[]>({
     queryKey: ["/api/events"],
   });
@@ -47,42 +46,20 @@ export default function CalendarPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        console.log('Fetching events from:', CALENDAR_URL);
+        setError(null);
         const response = await fetch(CALENDAR_URL);
-        console.log('Response status:', response.status);
         
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Error response:', errorText);
-          throw new Error(`Failed to fetch calendar events: ${response.status} ${response.statusText}`);
-        }
-        
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-          console.error('Invalid content type:', contentType);
-          throw new Error('Invalid response format - expected JSON');
+          const errorData = await response.json();
+          throw new Error(errorData.details || `Failed to fetch calendar events: ${response.status}`);
         }
         
         const events = await response.json();
-        console.log('Received events:', events.length);
-        console.log('Sample event:', events[0]); // Log the first event for debugging
-        
-        // Validate and transform events
-        const validEvents = events.map((event: any) => ({
-          id: event.id || String(Math.random()),
-          title: event.title || "No Title",
-          date: event.date || new Date().toISOString(),
-          time: event.time || "00:00 - 23:59",
-          end: event.end || event.date || new Date().toISOString(),
-          location: event.location || "No Location",
-          description: event.description || "No Description",
-        }));
-        
-        console.log('Processed events:', validEvents.length);
-        setGoogleEvents(validEvents);
+        setCalendarEvents(events);
       } catch (error) {
         console.error("Error fetching calendar events:", error);
-        setGoogleEvents([]);
+        setError(error instanceof Error ? error.message : "Failed to fetch calendar events");
+        setCalendarEvents([]);
       }
     };
 
@@ -96,11 +73,11 @@ export default function CalendarPage() {
       title: event.title,
       date: event.date,
       time: event.time,
-      end: event.date, // Use date as end if no end time specified
+      end: event.date,
       location: event.location,
       description: event.description || ""
     })),
-    ...googleEvents,
+    ...calendarEvents,
   ];
 
   // Format events for the BigCalendar
@@ -108,7 +85,6 @@ export default function CalendarPage() {
     const startDate = new Date(event.date || "");
     const endDate = new Date(event.end || event.date || "");
     
-    // Safely handle time string
     let startHours = 0, startMinutes = 0, endHours = 23, endMinutes = 59;
     
     if (event.time) {
@@ -129,7 +105,6 @@ export default function CalendarPage() {
       }
     }
     
-    // Set the time on the dates
     startDate.setHours(startHours, startMinutes);
     endDate.setHours(endHours, endMinutes);
     
@@ -144,8 +119,6 @@ export default function CalendarPage() {
     };
   });
 
-  console.log('Formatted events:', formattedEvents.length);
-
   // Navigate between months
   const handlePreviousMonth = () => {
     const newDate = new Date(date);
@@ -159,12 +132,32 @@ export default function CalendarPage() {
     setDate(newDate);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <section>
+          <h2 className="text-xl font-heading font-semibold mb-4">Academic Calendar</h2>
+          <Card>
+            <CardContent className="p-4">
+              <Skeleton className="h-[500px] w-full" />
+            </CardContent>
+          </Card>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4">Academic Calendar</h2>
         <Card>
           <CardContent className="p-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
+              </div>
+            )}
             <div className="flex justify-between items-center mb-4">
               <Button 
                 variant="ghost" 
