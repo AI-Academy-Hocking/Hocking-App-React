@@ -4,7 +4,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
-import HawkLogo from "../assets/Hawklogo.png";
 
 
 export default function Header() {
@@ -31,11 +30,7 @@ export default function Header() {
               className="bg-primary text-white border-none w-64 p-0"
             >
               <div className="p-4 border-b border-primary-light">
-                <img
-                  src={HawkLogo}
-                  alt="Hocking College Logo"
-                  className="h-16 w-auto object-contain"
-                />
+                <img src="/Hawklogo.png" alt="Hocking College Logo" className="h-10 w-auto object-contain mr-2" />
               </div>
 
               <nav className="p-4">
