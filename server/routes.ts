@@ -578,10 +578,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up WebSocket server for real-time location updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   
-  wss.on('connection', (socket) => {
+  wss.on('connection', (socket: WebSocket) => {
     console.log('WebSocket client connected');
     
-    socket.on('message', async (message) => {
+    socket.on('message', async (message: string | Buffer | ArrayBuffer | Buffer[]) => {
       try {
         // Parse and process location updates from clients if needed
         console.log('Received message:', message.toString());
@@ -606,7 +606,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
     
     // Broadcast to all connected clients
-    wss.clients.forEach(client => {
+    wss.clients.forEach((client: WebSocket) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify({
           type: 'location_update',

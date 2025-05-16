@@ -2,6 +2,16 @@ import { Router } from 'express';
 import ical from 'ical';
 import fetch from 'node-fetch';
 
+type CalendarEvent = {
+  type: 'VEVENT';
+  uid?: string;
+  summary?: string;
+  start?: Date;
+  end?: Date;
+  location?: string;
+  description?: string;
+};
+
 const router = Router();
 
 const CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
@@ -54,15 +64,29 @@ router.get('/events', async (req, res) => {
     
     const events = Object.values(parsedEvents)
       .filter(event => event.type === 'VEVENT')
-      .map(event => ({
-        id: event.uid || String(Math.random()),
-        title: event.summary || "No Title",
-        date: event.start?.toISOString() || new Date().toISOString(),
-        time: `${event.start?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) || "00:00"} - ${event.end?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) || "23:59"}`,
-        end: event.end?.toISOString() || event.start?.toISOString() || new Date().toISOString(),
-        location: event.location || "No Location",
-        description: event.description || "No Description",
-      }));
+      .map(event => {
+        const startTime = (event as any).start?.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }) || "00:00";
+        
+        const endTime = (event as any).end?.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        }) || "23:59";
+
+        return {
+          id: (event as any).uid || String(Math.random()),
+          title: (event as any).summary || "No Title",
+          date: (event as any).start?.toISOString() || new Date().toISOString(),
+          time: `${startTime} - ${endTime}`,
+          end: (event as any).end?.toISOString() || (event as any).start?.toISOString() || new Date().toISOString(),
+          location: (event as any).location || "No Location",
+          description: (event as any).description || "No Description",
+        };
+      });
 
     console.log('Successfully parsed events:', events.length);
     res.json(events);

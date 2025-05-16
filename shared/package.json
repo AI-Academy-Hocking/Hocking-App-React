@@ -8,19 +8,21 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.cjs"
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc --project tsconfig.cjs.json --outDir dist --module CommonJS --declaration false",
     "dev": "tsc --watch"
   },
-  "dependencies": {
-    "drizzle-orm": "^0.29.3",
-    "drizzle-zod": "^0.5.1",
-    "zod": "^3.22.4"
-  },
   "devDependencies": {
-    "typescript": "^5.3.3"
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.1",
+    "mysql2": "^3.14.1",
+    "sqlite3": "^5.1.7",
+    "zod": "^3.24.4"
   }
-} 
+}
