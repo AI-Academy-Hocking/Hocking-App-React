@@ -4,23 +4,21 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
-
+import HawkLogo from '/HawkLogo.png';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-<header className="bg-yellow-500 text-blue-800 p-4 shadow-md">
+    <header className="bg-yellow-500 text-blue-800 p-4 shadow-md">
       <div className="flex justify-between items-center">
-        <div className="flex-1"></div>
-
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
-                className="md:hidden mr-2 p-1 text-white hover:bg-primary-light"
+                className="md:hidden p-1 text-white hover:bg-primary-light"
               >
                 <Menu className="h-6 w-6" />
               </Button>
@@ -30,7 +28,11 @@ export default function Header() {
               className="bg-primary text-white border-none w-64 p-0"
             >
               <div className="p-4 border-b border-primary-light">
-                <img src="/Hawklogo.png" alt="Hocking College Logo" className="h-10 w-auto object-contain mr-2" />
+                <img 
+                  src={HawkLogo} 
+                  alt="Hocking College Logo" 
+                  className="h-8 w-auto object-contain" 
+                />
               </div>
 
               <nav className="p-4">
@@ -83,10 +85,16 @@ export default function Header() {
               </div>
             </SheetContent>
           </Sheet>
+          <img 
+            src={HawkLogo} 
+            alt="Hocking College Logo" 
+            className="h-8 w-auto object-contain" 
+          />
           <h1 className="text-xl font-heading font-bold text-white outlined-text">
             Hocking College
           </h1>
         </div>
+
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
