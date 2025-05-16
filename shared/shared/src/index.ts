@@ -123,6 +123,13 @@ export interface LocationUpdate {
   isLocationShared?: boolean;
 }
 
+// Location update schema
+export const locationUpdateSchema = z.object({
+  lat: z.string(),
+  lng: z.string(),
+  isLocationShared: z.boolean().optional()
+});
+
 // Zod schemas
 export const insertUserSchema = createInsertSchema(users);
 export const selectUserSchema = createSelectSchema(users);
