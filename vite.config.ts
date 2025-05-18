@@ -26,11 +26,13 @@ export default defineConfig({
       "@shared": path.resolve(__dirname, "shared"),
       "@assets": path.resolve(__dirname, "attached_assets"),
     },
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
   },
   root: path.resolve(__dirname, "client"),
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
+    sourcemap: true
   },
   optimizeDeps: {
     include: ['@sinclair/typebox'],

@@ -112,8 +112,8 @@ export type InsertComment = z.infer<typeof insertCommentSchema>;
 
 // Location update schema
 export const locationUpdateSchema = z.object({
-  lat: z.number(),
-  lng: z.number(),
+  lat: z.string().transform(val => parseFloat(val)),
+  lng: z.string().transform(val => parseFloat(val)),
   isLocationShared: z.boolean().optional(),
 });
 

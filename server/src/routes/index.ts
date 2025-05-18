@@ -1,8 +1,8 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { WebSocketServer, WebSocket } from "ws";
-import { storage } from "./storage";
-import calendarRouter from "./src/routes/calendar";
+import { WebSocketServer, WebSocket as WS } from "ws";
+import { storage } from "../storage";
+import calendarRouter from "./calendar";
 import { 
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, 
@@ -17,14 +17,46 @@ import { z } from "zod";
 
 // Define the location update schema here since we can't import it directly
 const locationUpdateSchema = z.object({
-  lat: z.string(),
-  lng: z.string(),
+  lat: z.number(),
+  lng: z.number(),
   isLocationShared: z.boolean().optional(),
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   const wss = new WebSocketServer({ server: httpServer });
+
+  // Store connected clients
+  const clients = new Set<WS>();
+
+  // Handle WebSocket connections
+  wss.on('connection', (ws: WS) => {
+    clients.add(ws);
+
+    ws.on('close', () => {
+      clients.delete(ws);
+    });
+  });
+
+  // Function to broadcast location updates to all connected clients
+  async function broadcastLocationUpdate() {
+    const sharedLocations = await storage.getSharedLocations();
+    const message = JSON.stringify({
+      type: 'location_update',
+      locations: sharedLocations.map(user => ({
+        id: user.id,
+        lat: user.lat,
+        lng: user.lng,
+        isLocationShared: user.isLocationShared
+      }))
+    });
+
+    clients.forEach(client => {
+      if (client.readyState === WS.OPEN) {
+        client.send(message);
+      }
+    });
+  }
 
   // Register calendar routes
   app.use("/api/calendar", calendarRouter);
@@ -620,52 +652,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Set up WebSocket server for real-time location updates
-  wss.on('connection', (socket: WebSocket) => {
-    console.log('WebSocket client connected');
-    
-    socket.on('message', async (message: string | Buffer | ArrayBuffer | Buffer[]) => {
-      try {
-        const data = JSON.parse(message.toString());
-        if (data.type === 'location_update' && typeof data.userId === 'number') {
-          const locationData = locationUpdateSchema.parse(data.data);
-          await storage.updateUserLocation(data.userId, {
-            lat: locationData.lat,
-            lng: locationData.lng,
-            isLocationShared: locationData.isLocationShared
-          });
-          await broadcastLocationUpdate();
-        }
-      } catch (error) {
-        console.error('Error processing WebSocket message:', error);
-      }
-    });
-    
-    socket.on('close', () => {
-      console.log('WebSocket client disconnected');
-    });
-  });
-  
-  // Broadcast location updates to all connected clients
-  async function broadcastLocationUpdate() {
-    const sharedLocations = await storage.getSharedLocations();
-    
-    // Remove sensitive info like passwords
-    const sanitizedLocations = sharedLocations.map(user => {
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
-    });
-    
-    // Broadcast to all connected clients
-    wss.clients.forEach((client: WebSocket) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({
-          type: 'location_update',
-          data: sanitizedLocations
-        }));
-      }
-    });
-  }
-  
   return httpServer;
 }

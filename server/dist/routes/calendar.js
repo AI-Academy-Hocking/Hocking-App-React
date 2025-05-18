@@ -48,16 +48,25 @@ router.get('/events', async (req, res) => {
         const events = Object.values(parsedEvents)
             .filter(event => event.type === 'VEVENT')
             .map(event => {
-            var _a, _b, _c, _d, _e;
-            return ({
+            const startTime = event.start?.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            }) || "00:00";
+            const endTime = event.end?.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            }) || "23:59";
+            return {
                 id: event.uid || String(Math.random()),
                 title: event.summary || "No Title",
-                date: ((_a = event.start) === null || _a === void 0 ? void 0 : _a.toISOString()) || new Date().toISOString(),
-                time: `${((_b = event.start) === null || _b === void 0 ? void 0 : _b.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })) || "00:00"} - ${((_c = event.end) === null || _c === void 0 ? void 0 : _c.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })) || "23:59"}`,
-                end: ((_d = event.end) === null || _d === void 0 ? void 0 : _d.toISOString()) || ((_e = event.start) === null || _e === void 0 ? void 0 : _e.toISOString()) || new Date().toISOString(),
+                date: event.start?.toISOString() || new Date().toISOString(),
+                time: `${startTime} - ${endTime}`,
+                end: event.end?.toISOString() || event.start?.toISOString() || new Date().toISOString(),
                 location: event.location || "No Location",
                 description: event.description || "No Description",
-            });
+            };
         });
         console.log('Successfully parsed events:', events.length);
         res.json(events);

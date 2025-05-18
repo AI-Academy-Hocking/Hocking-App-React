@@ -45,6 +45,7 @@ export interface IStorage {
   getCommentReplies(commentId: number): Promise<Comment[]>;
   createComment(comment: InsertComment): Promise<Comment>;
   getUserComments(userId: number): Promise<Comment[]>;
+  getAllComments(): Promise<Comment[]>;
   
   // Safety Alert operations
   getSafetyAlerts(): Promise<SafetyAlert[]>;

@@ -62,11 +62,13 @@ exports.default = (0, vite_1.defineConfig)({
             "@shared": path_1.default.resolve(__dirname, "shared"),
             "@assets": path_1.default.resolve(__dirname, "attached_assets"),
         },
+        extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
     },
     root: path_1.default.resolve(__dirname, "client"),
     build: {
         outDir: path_1.default.resolve(__dirname, "dist/public"),
         emptyOutDir: true,
+        sourcemap: true
     },
     optimizeDeps: {
         include: ['@sinclair/typebox'],
