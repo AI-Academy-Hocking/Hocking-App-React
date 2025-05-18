@@ -105,19 +105,18 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username.toLowerCase() === username.toLowerCase(),
-    );
+    return Array.from(this.users.values()).find(user => user.username === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { 
-      ...insertUser, 
-      id, 
-      name: insertUser.name || null,
-      email: insertUser.email || null,
-      isGuest: insertUser.isGuest !== undefined ? insertUser.isGuest : null,
+    const user: User = {
+      id,
+      username: insertUser.username,
+      password: insertUser.password,
+      name: insertUser.name ?? null,
+      email: insertUser.email ?? null,
+      isGuest: insertUser.isGuest ?? null,
       lat: null,
       lng: null,
       isLocationShared: false,
@@ -138,9 +137,7 @@ export class MemStorage implements IStorage {
       ...user,
       lat: locationUpdate.lat,
       lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared !== undefined 
-        ? locationUpdate.isLocationShared 
-        : user.isLocationShared,
+      isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
       lastLocationUpdate: new Date()
     };
     
@@ -165,10 +162,13 @@ export class MemStorage implements IStorage {
   
   async createEvent(insertEvent: InsertEvent): Promise<Event> {
     const id = this.currentEventId++;
-    const event: Event = { 
-      ...insertEvent, 
-      id, 
-      description: insertEvent.description || null 
+    const event: Event = {
+      id,
+      date: insertEvent.date,
+      title: insertEvent.title,
+      description: insertEvent.description ?? null,
+      time: insertEvent.time,
+      location: insertEvent.location
     };
     this.events.set(id, event);
     return event;
@@ -185,7 +185,14 @@ export class MemStorage implements IStorage {
   
   async createBuilding(insertBuilding: InsertBuilding): Promise<Building> {
     const id = this.currentBuildingId++;
-    const building: Building = { ...insertBuilding, id };
+    const building: Building = {
+      id,
+      name: insertBuilding.name,
+      lat: insertBuilding.lat,
+      lng: insertBuilding.lng,
+      description: insertBuilding.description ?? null,
+      category: insertBuilding.category
+    };
     this.buildings.set(id, building);
     return building;
   }
@@ -216,11 +223,13 @@ export class MemStorage implements IStorage {
   async createDiscussion(insertDiscussion: InsertDiscussion): Promise<Discussion> {
     const id = this.currentDiscussionId++;
     const discussion: Discussion = {
-      ...insertDiscussion,
       id,
+      title: insertDiscussion.title,
+      content: insertDiscussion.content,
+      authorId: insertDiscussion.authorId ?? null,
       createdAt: new Date(),
-      isPinned: insertDiscussion.isPinned || false,
-      category: insertDiscussion.category || "general"
+      isPinned: insertDiscussion.isPinned ?? false,
+      category: insertDiscussion.category ?? "general"
     };
     this.discussions.set(id, discussion);
     return discussion;
@@ -252,10 +261,12 @@ export class MemStorage implements IStorage {
   async createComment(insertComment: InsertComment): Promise<Comment> {
     const id = this.currentCommentId++;
     const comment: Comment = {
-      ...insertComment,
       id,
+      discussionId: insertComment.discussionId,
+      authorId: insertComment.authorId,
+      content: insertComment.content,
       createdAt: new Date(),
-      parentId: insertComment.parentId || null
+      parentId: insertComment.parentId ?? null
     };
     this.comments.set(id, comment);
     return comment;
@@ -287,12 +298,14 @@ export class MemStorage implements IStorage {
   async createSafetyAlert(insertAlert: InsertSafetyAlert): Promise<SafetyAlert> {
     const id = this.currentSafetyAlertId++;
     const alert: SafetyAlert = {
-      ...insertAlert,
       id,
-      startDate: insertAlert.startDate || new Date(),
-      endDate: insertAlert.endDate || null,
-      isActive: insertAlert.isActive !== undefined ? insertAlert.isActive : true,
-      location: insertAlert.location || null
+      title: insertAlert.title,
+      content: insertAlert.content,
+      severity: insertAlert.severity,
+      startDate: insertAlert.startDate ?? new Date(),
+      endDate: insertAlert.endDate ?? null,
+      isActive: insertAlert.isActive ?? true,
+      location: insertAlert.location ?? null
     };
     this.safetyAlerts.set(id, alert);
     return alert;
@@ -317,12 +330,14 @@ export class MemStorage implements IStorage {
   async createSafetyResource(insertResource: InsertSafetyResource): Promise<SafetyResource> {
     const id = this.currentSafetyResourceId++;
     const resource: SafetyResource = {
-      ...insertResource,
       id,
-      phoneNumber: insertResource.phoneNumber || null,
-      url: insertResource.url || null,
-      icon: insertResource.icon || null,
-      order: insertResource.order || 0
+      title: insertResource.title,
+      description: insertResource.description,
+      category: insertResource.category,
+      url: insertResource.url ?? null,
+      phoneNumber: insertResource.phoneNumber ?? null,
+      icon: insertResource.icon ?? null,
+      order: insertResource.order ?? 0
     };
     this.safetyResources.set(id, resource);
     return resource;

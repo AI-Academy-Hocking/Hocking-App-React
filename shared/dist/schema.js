@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.insertSafetyResourceSchema = exports.safetyResources = exports.insertSafetyAlertSchema = exports.safetyAlerts = exports.locationUpdateSchema = exports.insertCommentSchema = exports.comments = exports.insertDiscussionSchema = exports.discussions = exports.insertStudentToolSchema = exports.studentTools = exports.insertBuildingSchema = exports.buildings = exports.insertEventSchema = exports.events = exports.insertUserSchema = exports.users = void 0;
-var pg_core_1 = require("drizzle-orm/pg-core");
-var drizzle_zod_1 = require("drizzle-zod");
-var zod_1 = require("zod");
+const pg_core_1 = require("drizzle-orm/pg-core");
+const drizzle_zod_1 = require("drizzle-zod");
+const zod_1 = require("zod");
 // User schema
 exports.users = (0, pg_core_1.pgTable)("users", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
