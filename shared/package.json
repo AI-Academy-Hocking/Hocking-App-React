@@ -2,18 +2,19 @@
   "name": "@shared/schema",
   "version": "1.0.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/schema.js",
+  "types": "./dist/schema.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/schema.js",
+      "types": "./dist/schema.d.ts",
+      "default": "./dist/schema.js"
     }
   },
   "scripts": {
-    "build": "tsc && tsc --project tsconfig.cjs.json --outDir dist --module CommonJS --declaration false",
-    "dev": "tsc --watch"
+    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "dev": "tsc --watch",
+    "clean": "if exist dist rmdir /s /q dist"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

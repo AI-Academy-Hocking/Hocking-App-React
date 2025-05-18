@@ -1,19 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const cors_1 = __importDefault(require("cors"));
-const routes_1 = require("./routes");
-const app = (0, express_1.default)();
+import express from 'express';
+import cors from 'cors';
+import { registerRoutes } from './routes';
+const app = express();
 const port = process.env.PORT || 3001;
 // Middleware
-app.use((0, cors_1.default)());
-app.use(express_1.default.json());
-// Register all API routes
-(0, routes_1.registerRoutes)(app);
-// Start server
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+app.use(cors());
+app.use(express.json());
+// Register all API routes and start server
+registerRoutes(app).then(httpServer => {
+    httpServer.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
+}).catch(error => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
 });

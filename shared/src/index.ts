@@ -57,14 +57,14 @@ export const discussions = pgTable('discussions', {
 });
 
 // Comment schema (fixed circular reference)
-export const comments = pgTable('comments', {
+export const comments = pgTable('comments', (table: any) => ({
   id: serial('id').primaryKey(),
   content: text('content').notNull(),
   authorId: integer('author_id').references(() => users.id),
   discussionId: integer('discussion_id').references(() => discussions.id),
-  parentId: integer('parent_id'),
+  parentId: integer('parent_id').references(() => table.id),
   createdAt: timestamp('created_at').defaultNow()
-});
+}));
 
 // Safety Alert schema
 export const safetyAlerts = pgTable('safety_alerts', {

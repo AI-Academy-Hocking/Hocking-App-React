@@ -1,17 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const ical_1 = __importDefault(require("ical"));
-const node_fetch_1 = __importDefault(require("node-fetch"));
-const router = (0, express_1.Router)();
+import { Router } from 'express';
+import ical from 'ical';
+import fetch from 'node-fetch';
+const router = Router();
 const CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
 router.get('/events', async (req, res) => {
     try {
         console.log('Attempting to fetch calendar from URL:', CALENDAR_URL);
-        const response = await (0, node_fetch_1.default)(CALENDAR_URL, {
+        const response = await fetch(CALENDAR_URL, {
             headers: {
                 'Accept': 'text/calendar',
                 'User-Agent': 'Hocking-App/1.0'
@@ -41,7 +36,7 @@ router.get('/events', async (req, res) => {
                 details: 'The calendar URL may be incorrect or the calendar may not be publicly accessible'
             });
         }
-        const parsedEvents = ical_1.default.parseICS(icalData);
+        const parsedEvents = ical.parseICS(icalData);
         if (!parsedEvents) {
             throw new Error('Failed to parse calendar data');
         }
@@ -79,4 +74,4 @@ router.get('/events', async (req, res) => {
         });
     }
 });
-exports.default = router;
+export default router;

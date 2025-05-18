@@ -53,14 +53,14 @@ exports.discussions = (0, pg_core_1.pgTable)('discussions', {
     category: (0, pg_core_1.text)('category').default('general')
 });
 // Comment schema (fixed circular reference)
-exports.comments = (0, pg_core_1.pgTable)('comments', {
+exports.comments = (0, pg_core_1.pgTable)('comments', (table) => ({
     id: (0, pg_core_1.serial)('id').primaryKey(),
     content: (0, pg_core_1.text)('content').notNull(),
     authorId: (0, pg_core_1.integer)('author_id').references(() => exports.users.id),
     discussionId: (0, pg_core_1.integer)('discussion_id').references(() => exports.discussions.id),
-    parentId: (0, pg_core_1.integer)('parent_id'),
+    parentId: (0, pg_core_1.integer)('parent_id').references(() => table.id),
     createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow()
-});
+}));
 // Safety Alert schema
 exports.safetyAlerts = (0, pg_core_1.pgTable)('safety_alerts', {
     id: (0, pg_core_1.serial)('id').primaryKey(),
