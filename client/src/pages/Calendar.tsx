@@ -154,8 +154,8 @@ export default function CalendarPage() {
               className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 ${
                 activeCalendar === "academic" 
                   ? "bg-primary text-white border-primary shadow-md" 
-                  : "bg-white text-primary border-primary hover:bg-primary-light/20"
-              }`}
+                  : "bg-white text-primary border-primary"
+              } hover:opacity-90`}
               onClick={() => setActiveCalendar("academic")}
             >
               Academic Calendar
@@ -164,8 +164,8 @@ export default function CalendarPage() {
               className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 ${
                 activeCalendar === "activities" 
                   ? "bg-primary text-white border-primary shadow-md" 
-                  : "bg-white text-primary border-primary hover:bg-primary-light/20"
-              }`}
+                  : "bg-white text-primary border-primary"
+              } hover:opacity-90`}
               onClick={() => setActiveCalendar("activities")}
             >
               Student Activities
@@ -335,9 +335,15 @@ export default function CalendarPage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Academic Events */}
-          <Card>
-            <div className="p-3 bg-primary-light/10 border-b border-neutral-light">
+          <Card className={activeCalendar === "academic" ? "ring-2 ring-primary ring-offset-2" : ""}>
+            <div className="p-3 bg-primary-light/10 border-b border-neutral-light flex justify-between items-center">
               <h3 className="font-medium text-primary">Academic Calendar</h3>
+              <button 
+                onClick={() => setActiveCalendar("academic")}
+                className={`text-xs px-2 py-1 rounded ${activeCalendar === "academic" ? "bg-primary text-white" : "bg-white text-primary border border-primary"}`}
+              >
+                {activeCalendar === "academic" ? "Active" : "Set Active"}
+              </button>
             </div>
             {isLoading ? (
               <div className="divide-y divide-neutral-light">
@@ -409,9 +415,15 @@ export default function CalendarPage() {
           </Card>
 
           {/* Student Activities Events */}
-          <Card>
-            <div className="p-3 bg-primary-light/10 border-b border-neutral-light">
+          <Card className={activeCalendar === "activities" ? "ring-2 ring-primary ring-offset-2" : ""}>
+            <div className="p-3 bg-primary-light/10 border-b border-neutral-light flex justify-between items-center">
               <h3 className="font-medium text-primary">Student Activities</h3>
+              <button 
+                onClick={() => setActiveCalendar("activities")}
+                className={`text-xs px-2 py-1 rounded ${activeCalendar === "activities" ? "bg-primary text-white" : "bg-white text-primary border border-primary"}`}
+              >
+                {activeCalendar === "activities" ? "Active" : "Set Active"}
+              </button>
             </div>
             {isLoading ? (
               <div className="divide-y divide-neutral-light">
