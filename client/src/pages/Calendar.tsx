@@ -340,7 +340,11 @@ export default function CalendarPage() {
               <h3 className="font-medium text-primary">Academic Calendar</h3>
               <button 
                 onClick={() => setActiveCalendar("academic")}
-                className={`text-xs px-2 py-1 rounded ${activeCalendar === "academic" ? "bg-primary text-white" : "bg-white text-primary border border-primary"}`}
+                className={`text-xs px-2 py-1 rounded border-2 ${
+                  activeCalendar === "academic" 
+                    ? "ring-2 ring-primary-light ring-offset-2 bg-white text-primary border-primary" 
+                    : "bg-white text-primary border-primary"
+                } hover:bg-primary-light/10`}
               >
                 {activeCalendar === "academic" ? "Active" : "Set Active"}
               </button>
@@ -420,7 +424,11 @@ export default function CalendarPage() {
               <h3 className="font-medium text-primary">Student Activities</h3>
               <button 
                 onClick={() => setActiveCalendar("activities")}
-                className={`text-xs px-2 py-1 rounded ${activeCalendar === "activities" ? "bg-primary text-white" : "bg-white text-primary border border-primary"}`}
+                className={`text-xs px-2 py-1 rounded border-2 ${
+                  activeCalendar === "activities" 
+                    ? "ring-2 ring-primary-light ring-offset-2 bg-white text-primary border-primary" 
+                    : "bg-white text-primary border-primary"
+                } hover:bg-primary-light/10`}
               >
                 {activeCalendar === "activities" ? "Active" : "Set Active"}
               </button>
