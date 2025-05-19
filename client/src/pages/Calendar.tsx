@@ -151,21 +151,21 @@ export default function CalendarPage() {
             </div>
             <div className="flex gap-3">
             <button 
-              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-primary text-white border-primary shadow-md ${
+              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
                 activeCalendar === "academic" 
                   ? "ring-2 ring-primary-light ring-offset-2" 
                   : ""
-              } hover:opacity-90`}
+              } hover:bg-primary-light/10`}
               onClick={() => setActiveCalendar("academic")}
             >
               Academic Calendar
             </button>
             <button 
-              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-primary text-white border-primary shadow-md ${
+              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
                 activeCalendar === "activities" 
                   ? "ring-2 ring-primary-light ring-offset-2" 
                   : ""
-              } hover:opacity-90`}
+              } hover:bg-primary-light/10`}
               onClick={() => setActiveCalendar("activities")}
             >
               Student Activities
