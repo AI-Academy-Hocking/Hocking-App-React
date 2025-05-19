@@ -136,22 +136,22 @@ export default function CalendarPage() {
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-heading font-semibold">Calendar</h2>
-          <div className="flex border rounded-md overflow-hidden">
+          <div className="flex gap-3">
             <button 
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
                 activeCalendar === "academic" 
-                  ? "bg-primary text-white" 
-                  : "bg-white hover:bg-neutral-100"
+                  ? "bg-primary text-white border-2 border-primary shadow-md" 
+                  : "bg-white hover:bg-neutral-100 border border-neutral-200"
               }`}
               onClick={() => setActiveCalendar("academic")}
             >
               Academic Calendar
             </button>
             <button 
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
                 activeCalendar === "activities" 
-                  ? "bg-primary text-white" 
-                  : "bg-white hover:bg-neutral-100"
+                  ? "bg-primary text-white border-2 border-primary shadow-md" 
+                  : "bg-white hover:bg-neutral-100 border border-neutral-200"
               }`}
               onClick={() => setActiveCalendar("activities")}
             >
