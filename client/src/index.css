@@ -11,3 +11,10 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: #3b82f6;
+  --primary-light: #60a5fa;
+}
