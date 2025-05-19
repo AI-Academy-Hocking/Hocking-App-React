@@ -145,7 +145,11 @@ export default function CalendarPage() {
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-heading font-semibold">Calendar</h2>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-2">
+            <div className="text-sm font-medium text-neutral-dark text-right">
+              Calendar
+            </div>
+            <div className="flex gap-3">
             <button 
               className={`px-4 py-2 text-sm font-medium transition-colors rounded-md ${
                 activeCalendar === "academic" 
@@ -166,6 +170,7 @@ export default function CalendarPage() {
             >
               Student Activities
             </button>
+            </div>
           </div>
         </div>
         <Card>
