@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import ical from 'ical';
+import * as ical from 'ical';
 import fetch from 'node-fetch';
 
 type CalendarEvent = {
