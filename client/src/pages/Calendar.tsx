@@ -55,24 +55,33 @@ export default function CalendarPage() {
   }));
 
   // Filter events based on calendar type and date range
-  const filteredEvents = events
-    .filter(event => {
-      // In a real implementation, each event would have a 'calendarType' property
-      // For demo purposes, we'll split events based on their id to simulate different calendars
-      const isActivityEvent = event.id % 2 === 0; // Even IDs for activities, odd for academic
-      const matchesCalendarType = 
-        (activeCalendar === "activities" && isActivityEvent) || 
-        (activeCalendar === "academic" && !isActivityEvent);
-      
-      if (!matchesCalendarType) return false;
-      
-      const eventDate = new Date(event.date);
-      if (selectedDate) {
-        return isSameDay(eventDate, selectedDate);
-      }
-      return eventDate >= monthStart && eventDate <= monthEnd;
-    })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const getFilteredEvents = (calendarType: "academic" | "activities") => {
+    return events
+      .filter(event => {
+        // In a real implementation, each event would have a 'calendarType' property
+        // For demo purposes, we'll split events based on their id to simulate different calendars
+        const isActivityEvent = event.id % 2 === 0; // Even IDs for activities, odd for academic
+        const matchesCalendarType = 
+          (calendarType === "activities" && isActivityEvent) || 
+          (calendarType === "academic" && !isActivityEvent);
+        
+        if (!matchesCalendarType) return false;
+        
+        const eventDate = new Date(event.date);
+        if (selectedDate) {
+          return isSameDay(eventDate, selectedDate);
+        }
+        return eventDate >= monthStart && eventDate <= monthEnd;
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  };
+
+  // Get events for both calendar types
+  const academicEvents = getFilteredEvents("academic");
+  const activityEvents = getFilteredEvents("activities");
+  
+  // Use the active calendar to determine which events to show in the main view
+  const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
 
   // Format date for display
   const formatEventDate = (date: string) => {
@@ -305,7 +314,7 @@ export default function CalendarPage() {
           <h2 className="text-xl font-heading font-semibold">
             {selectedDate 
               ? `Events on ${format(selectedDate, 'MMMM d, yyyy')}` 
-              : `Upcoming ${activeCalendar === 'academic' ? 'Academic' : 'Student Activities'} Events`}
+              : `Upcoming Events`}
           </h2>
           {selectedDate && view === "month" && (
             <Button 
@@ -318,76 +327,155 @@ export default function CalendarPage() {
           )}
         </div>
         
-        <Card>
-          {isLoading ? (
-            <div className="divide-y divide-neutral-light">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="p-4">
-                  <div className="flex items-start">
-                    <Skeleton className="h-16 w-12 rounded mr-4" />
-                    <div className="space-y-2 flex-1">
-                      <Skeleton className="h-4 w-1/2" />
-                      <Skeleton className="h-3 w-1/3" />
-                      <Skeleton className="h-3 w-2/3" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Academic Events */}
+          <Card>
+            <div className="p-3 bg-primary-light/10 border-b border-neutral-light">
+              <h3 className="font-medium text-primary">Academic Calendar</h3>
+            </div>
+            {isLoading ? (
+              <div className="divide-y divide-neutral-light">
+                {[1, 2].map((i) => (
+                  <div key={i} className="p-4">
+                    <div className="flex items-start">
+                      <Skeleton className="h-16 w-12 rounded mr-4" />
+                      <div className="space-y-2 flex-1">
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-3 w-1/3" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div>
-              <ul className="divide-y divide-neutral-light">
-                {filteredEvents.length > 0 ? (
-                  filteredEvents.map((event) => {
-                    const { weekday, month, day } = formatEventDate(event.date);
-                    return (
-                      <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
-                        <div className="flex items-start">
-                          <div className="flex-shrink-0 mr-4">
-                            <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
-                              <div className="text-xs font-medium">{weekday}</div>
-                              <div className="text-sm font-bold">{month}</div>
-                              <div className="text-xl font-bold">{day}</div>
+                ))}
+              </div>
+            ) : (
+              <div className="max-h-[400px] overflow-y-auto">
+                <ul className="divide-y divide-neutral-light">
+                  {academicEvents.length > 0 ? (
+                    academicEvents.map((event) => {
+                      const { weekday, month, day } = formatEventDate(event.date);
+                      return (
+                        <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
+                          <div className="flex items-start">
+                            <div className="flex-shrink-0 mr-4">
+                              <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
+                                <div className="text-xs font-medium">{weekday}</div>
+                                <div className="text-sm font-bold">{month}</div>
+                                <div className="text-xl font-bold">{day}</div>
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex justify-between">
-                              <h3 className="font-semibold">{event.title}</h3>
-                              <Badge variant="outline" className="ml-2">
-                                {event.time}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center text-sm text-neutral-dark mt-1">
-                              {event.location && (
-                                <div className="flex items-center mr-3">
-                                  <MapPin className="h-4 w-4 mr-1" />
-                                  <span>{event.location}</span>
-                                </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between">
+                                <h3 className="font-semibold">{event.title}</h3>
+                                <Badge variant="outline" className="ml-2">
+                                  {event.time}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center text-sm text-neutral-dark mt-1">
+                                {event.location && (
+                                  <div className="flex items-center mr-3">
+                                    <MapPin className="h-4 w-4 mr-1" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                              </div>
+                              {event.description && (
+                                <p className="text-sm mt-2">{event.description}</p>
                               )}
                             </div>
-                            {event.description && (
-                              <p className="text-sm mt-2">{event.description}</p>
-                            )}
                           </div>
-                        </div>
-                      </li>
-                    );
-                  })
-                ) : (
-                  <li className="p-6 text-center">
-                    <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-neutral-light" />
-                    <p className="text-neutral-dark">No upcoming events</p>
-                    <p className="text-sm text-neutral-dark mt-1">
-                      {selectedDate 
-                        ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
-                        : 'Check back later for new events'}
-                    </p>
-                  </li>
-                )}
-              </ul>
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <li className="p-6 text-center">
+                      <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-neutral-light" />
+                      <p className="text-neutral-dark">No academic events</p>
+                      <p className="text-sm text-neutral-dark mt-1">
+                        {selectedDate 
+                          ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
+                          : 'Check back later for new events'}
+                      </p>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+          </Card>
+
+          {/* Student Activities Events */}
+          <Card>
+            <div className="p-3 bg-primary-light/10 border-b border-neutral-light">
+              <h3 className="font-medium text-primary">Student Activities</h3>
             </div>
-          )}
-        </Card>
+            {isLoading ? (
+              <div className="divide-y divide-neutral-light">
+                {[1, 2].map((i) => (
+                  <div key={i} className="p-4">
+                    <div className="flex items-start">
+                      <Skeleton className="h-16 w-12 rounded mr-4" />
+                      <div className="space-y-2 flex-1">
+                        <Skeleton className="h-4 w-1/2" />
+                        <Skeleton className="h-3 w-1/3" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="max-h-[400px] overflow-y-auto">
+                <ul className="divide-y divide-neutral-light">
+                  {activityEvents.length > 0 ? (
+                    activityEvents.map((event) => {
+                      const { weekday, month, day } = formatEventDate(event.date);
+                      return (
+                        <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
+                          <div className="flex items-start">
+                            <div className="flex-shrink-0 mr-4">
+                              <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
+                                <div className="text-xs font-medium">{weekday}</div>
+                                <div className="text-sm font-bold">{month}</div>
+                                <div className="text-xl font-bold">{day}</div>
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex justify-between">
+                                <h3 className="font-semibold">{event.title}</h3>
+                                <Badge variant="outline" className="ml-2">
+                                  {event.time}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center text-sm text-neutral-dark mt-1">
+                                {event.location && (
+                                  <div className="flex items-center mr-3">
+                                    <MapPin className="h-4 w-4 mr-1" />
+                                    <span>{event.location}</span>
+                                  </div>
+                                )}
+                              </div>
+                              {event.description && (
+                                <p className="text-sm mt-2">{event.description}</p>
+                              )}
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <li className="p-6 text-center">
+                      <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-neutral-light" />
+                      <p className="text-neutral-dark">No student activities</p>
+                      <p className="text-sm text-neutral-dark mt-1">
+                        {selectedDate 
+                          ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
+                          : 'Check back later for new events'}
+                      </p>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+          </Card>
+        </div>
       </section>
 
       <style jsx global>{`
