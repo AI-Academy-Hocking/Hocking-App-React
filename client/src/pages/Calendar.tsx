@@ -154,7 +154,7 @@ export default function CalendarPage() {
               className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 ${
                 activeCalendar === "academic" 
                   ? "bg-primary text-white border-primary shadow-md" 
-                  : "bg-white text-primary border-primary hover:bg-neutral-100"
+                  : "bg-white text-primary border-primary hover:bg-primary-light/20"
               }`}
               onClick={() => setActiveCalendar("academic")}
             >
@@ -164,7 +164,7 @@ export default function CalendarPage() {
               className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 ${
                 activeCalendar === "activities" 
                   ? "bg-primary text-white border-primary shadow-md" 
-                  : "bg-white text-primary border-primary hover:bg-neutral-100"
+                  : "bg-white text-primary border-primary hover:bg-primary-light/20"
               }`}
               onClick={() => setActiveCalendar("activities")}
             >
