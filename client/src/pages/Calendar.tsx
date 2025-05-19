@@ -184,9 +184,14 @@ export default function CalendarPage() {
               >
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-              <h3 className="font-semibold text-lg">
-                {format(date, 'MMMM yyyy')}
-              </h3>
+              <div className="text-center">
+                <h3 className="font-semibold text-lg">
+                  {format(date, 'MMMM yyyy')}
+                </h3>
+                <div className="text-sm text-primary font-medium">
+                  {activeCalendar === "academic" ? "Academic Calendar" : "Student Activities Calendar"}
+                </div>
+              </div>
               <Button 
                 variant="ghost" 
                 size="icon" 
