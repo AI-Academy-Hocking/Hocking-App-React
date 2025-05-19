@@ -162,6 +162,17 @@ export default function CalendarPage() {
               >
                 List View
               </Button>
+              {view === "list" && selectedDate && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setSelectedDate(null)}
+                  className="ml-auto flex items-center"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Back to All Events
+                </Button>
+              )}
             </div>
             
             {view === "month" && (
@@ -191,6 +202,14 @@ export default function CalendarPage() {
             
             {view === "list" && !isLoading && (
               <div className="border rounded-md p-2 h-[400px] overflow-auto">
+                {selectedDate && (
+                  <div className="mb-3 px-2 py-1 bg-primary-light/10 rounded flex items-center">
+                    <CalendarIcon className="h-4 w-4 mr-2 text-primary" />
+                    <span className="font-medium">
+                      {format(selectedDate, 'MMMM d, yyyy')}
+                    </span>
+                  </div>
+                )}
                 {Object.keys(groupedEvents).length > 0 ? (
                   Object.keys(groupedEvents).map(date => {
                     const { weekday, month, day } = formatEventDate(date);
@@ -248,7 +267,7 @@ export default function CalendarPage() {
           <h2 className="text-xl font-heading font-semibold">
             {selectedDate ? `Events on ${format(selectedDate, 'MMMM d, yyyy')}` : 'Upcoming Events'}
           </h2>
-          {selectedDate && (
+          {selectedDate && view === "month" && (
             <Button 
               variant="outline" 
               size="sm" 
