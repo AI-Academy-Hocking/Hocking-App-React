@@ -143,11 +143,11 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6">
       <section>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-heading font-semibold">Calendar</h2>
-          <div className="flex flex-col gap-2">
-            <div className="text-sm font-medium text-neutral-dark text-right">
-              Calendar
+        <div className="flex flex-col items-center mb-6">
+          <h2 className="text-xl font-heading font-semibold mb-4">Calendar</h2>
+          <div className="flex flex-col gap-2 items-center">
+            <div className="text-sm font-medium text-neutral-dark text-center mb-2">
+              Calendar Type
             </div>
             <div className="flex gap-3">
             <button 
