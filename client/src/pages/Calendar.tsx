@@ -247,6 +247,7 @@ export default function CalendarPage() {
                   }}
                   components={{
                     toolbar: () => null, // Hide the default toolbar
+                    event: () => <div className="event-dot" /> // Render a dot instead of event text
                   }}
                 />
               </div>
@@ -523,8 +524,24 @@ export default function CalendarPage() {
         }
         
         .rbc-event {
-          background-color: var(--primary-light);
-          border-radius: 4px;
+          background-color: transparent !important;
+          border: none !important;
+          box-shadow: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+        
+        .event-dot {
+          width: 8px;
+          height: 8px;
+          background-color: var(--primary);
+          border-radius: 50%;
+          margin: 2px auto;
+        }
+        
+        .rbc-event-content {
+          display: flex;
+          justify-content: center;
         }
         
         .rbc-date-cell > a {
