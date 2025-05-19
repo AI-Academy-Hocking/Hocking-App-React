@@ -348,11 +348,10 @@ export class MemStorage implements IStorage {
     });
     
     // Sample events
-    // Academic Calendar Events (odd IDs)
     await this.createEvent({
       title: "Fall Festival",
       description: "Annual celebration with food, games, and activities for students and faculty.",
-      date: "2025-05-22",
+      date: "2023-10-15",
       time: "12:00 PM - 4:00 PM",
       location: "Student Center",
     });
@@ -360,106 +359,17 @@ export class MemStorage implements IStorage {
     await this.createEvent({
       title: "Career Fair",
       description: "Meet with employers from around the region for internship and job opportunities.",
-      date: "2025-05-23",
+      date: "2023-10-20",
       time: "10:00 AM - 2:00 PM",
       location: "Main Hall",
     });
     
     await this.createEvent({
       title: "Registration Deadline",
-      description: "Last day to register for Fall semester classes without late fees.",
-      date: "2025-05-25",
+      description: "Last day to register for Spring semester classes without late fees.",
+      date: "2023-11-05",
       time: "11:59 PM",
-      location: "Online",
-    });
-
-    await this.createEvent({
-      title: "Final Exams Begin",
-      description: "First day of final examinations for Spring semester.",
-      date: "2025-05-28",
-      time: "8:00 AM - 8:00 PM",
-      location: "Various Locations",
-    });
-
-    await this.createEvent({
-      title: "Commencement Ceremony",
-      description: "Spring graduation ceremony for all departments.",
-      date: "2025-05-30",
-      time: "1:00 PM - 3:30 PM",
-      location: "Main Auditorium",
-    });
-
-    await this.createEvent({
-      title: "Summer Session Registration",
-      description: "Registration opens for summer courses.",
-      date: "2025-05-15",
-      time: "9:00 AM",
-      location: "Online",
-    });
-
-    await this.createEvent({
-      title: "Faculty Development Workshop",
-      description: "Professional development session for all faculty members.",
-      date: "2025-05-26",
-      time: "9:00 AM - 12:00 PM",
-      location: "Davidson Hall 305",
-    });
-
-    // Student Activities Events (even IDs)
-    await this.createEvent({
-      title: "Student Government Meeting",
-      description: "Weekly SGA meeting open to all students.",
-      date: "2025-05-20",
-      time: "5:00 PM - 6:30 PM",
-      location: "Student Center Room 202",
-    });
-
-    await this.createEvent({
-      title: "Campus Movie Night",
-      description: "Free movie screening of the latest blockbuster.",
-      date: "2025-05-21",
-      time: "8:00 PM - 10:30 PM",
-      location: "Outdoor Quad",
-    });
-
-    await this.createEvent({
-      title: "Intramural Soccer Finals",
-      description: "Championship match for the spring intramural soccer league.",
-      date: "2025-05-24",
-      time: "2:00 PM - 4:00 PM",
-      location: "Sports Field",
-    });
-
-    await this.createEvent({
-      title: "Art Club Exhibition",
-      description: "Showcase of student artwork from the semester.",
-      date: "2025-05-27",
-      time: "3:00 PM - 6:00 PM",
-      location: "Art Gallery",
-    });
-
-    await this.createEvent({
-      title: "Volunteer Day",
-      description: "Campus-wide day of service in the local community.",
-      date: "2025-05-18",
-      time: "10:00 AM - 3:00 PM",
-      location: "Meet at Student Center",
-    });
-
-    await this.createEvent({
-      title: "International Food Festival",
-      description: "Celebration of cuisines from around the world.",
-      date: "2025-05-29",
-      time: "5:30 PM - 8:00 PM",
-      location: "Dining Hall",
-    });
-
-    await this.createEvent({
-      title: "End of Year Bash",
-      description: "Celebration party for the end of the academic year with live music and activities.",
-      date: "2025-05-31",
-      time: "7:00 PM - 11:00 PM",
-      location: "Student Center Ballroom",
+      location: "For Spring Semester",
     });
     
     // Sample buildings
