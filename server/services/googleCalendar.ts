@@ -8,10 +8,13 @@ const calendar = google.calendar({
   auth: process.env.GOOGLE_API_KEY,
 });
 
-export async function getEvents(): Promise<Event[]> {
+export async function getEvents(calendarType?: string): Promise<Event[]> {
   try {
     // Calendar ID from your Google Calendar settings
-    const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';
+    // In a real implementation, you would use different calendar IDs for different calendar types
+    const calendarId = calendarType === 'activities' 
+      ? process.env.GOOGLE_ACTIVITIES_CALENDAR_ID 
+      : process.env.GOOGLE_CALENDAR_ID || 'primary';
 
     const response = await calendar.events.list({
       calendarId,

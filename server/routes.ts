@@ -65,12 +65,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Events routes
-  app.get("/api/events", async (_req: Request, res: Response) => {
+  app.get('/api/events', async (req, res) => {
     try {
-      const events = await getEvents();
-      res.status(200).json(events);
+      const calendarType = req.query.calendarType as string | undefined;
+      const events = await getEvents(calendarType);
+      res.json(events);
     } catch (error) {
-      console.error('Error getting events:', error);
+      console.error('Error fetching events:', error);
       res.status(500).json({ error: 'Failed to fetch events' });
     }
   });

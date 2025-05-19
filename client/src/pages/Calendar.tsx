@@ -29,9 +29,12 @@ export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
   
   const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events'],
+    queryKey: ['/api/events', activeCalendar],
+    // In a real app, you would fetch different events based on activeCalendar
+    // by adding a parameter to the API endpoint
   });
 
   // Get current month's start and end dates
@@ -51,14 +54,25 @@ export default function CalendarPage() {
     },
   }));
 
-  // Filter events for the current month or selected date
-  const filteredEvents = events.filter(event => {
-    const eventDate = new Date(event.date);
-    if (selectedDate) {
-      return isSameDay(eventDate, selectedDate);
-    }
-    return eventDate >= monthStart && eventDate <= monthEnd;
-  }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  // Filter events based on calendar type and date range
+  const filteredEvents = events
+    .filter(event => {
+      // In a real implementation, each event would have a 'calendarType' property
+      // For demo purposes, we'll split events based on their id to simulate different calendars
+      const isActivityEvent = event.id % 2 === 0; // Even IDs for activities, odd for academic
+      const matchesCalendarType = 
+        (activeCalendar === "activities" && isActivityEvent) || 
+        (activeCalendar === "academic" && !isActivityEvent);
+      
+      if (!matchesCalendarType) return false;
+      
+      const eventDate = new Date(event.date);
+      if (selectedDate) {
+        return isSameDay(eventDate, selectedDate);
+      }
+      return eventDate >= monthStart && eventDate <= monthEnd;
+    })
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   // Format date for display
   const formatEventDate = (date: string) => {
@@ -120,7 +134,31 @@ export default function CalendarPage() {
   return (
     <div className="space-y-6">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Academic Calendar</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-heading font-semibold">Calendar</h2>
+          <div className="flex border rounded-md overflow-hidden">
+            <button 
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeCalendar === "academic" 
+                  ? "bg-primary text-white" 
+                  : "bg-white hover:bg-neutral-100"
+              }`}
+              onClick={() => setActiveCalendar("academic")}
+            >
+              Academic Calendar
+            </button>
+            <button 
+              className={`px-4 py-2 text-sm font-medium transition-colors ${
+                activeCalendar === "activities" 
+                  ? "bg-primary text-white" 
+                  : "bg-white hover:bg-neutral-100"
+              }`}
+              onClick={() => setActiveCalendar("activities")}
+            >
+              Student Activities
+            </button>
+          </div>
+        </div>
         <Card>
           <CardContent className="p-4">
             <div className="flex justify-between items-center mb-4">
@@ -265,7 +303,9 @@ export default function CalendarPage() {
       <section>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-heading font-semibold">
-            {selectedDate ? `Events on ${format(selectedDate, 'MMMM d, yyyy')}` : 'Upcoming Events'}
+            {selectedDate 
+              ? `Events on ${format(selectedDate, 'MMMM d, yyyy')}` 
+              : `Upcoming ${activeCalendar === 'academic' ? 'Academic' : 'Student Activities'} Events`}
           </h2>
           {selectedDate && view === "month" && (
             <Button 
