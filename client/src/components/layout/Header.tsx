@@ -4,12 +4,17 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import { Link } from "wouter";
+<<<<<<< HEAD
+=======
+import HawkLogo from '/HawkLogo.png';
+>>>>>>> 7366f2d1ff3adf7b9ef6dbb7f45e89fabe8d5d65
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
+<<<<<<< HEAD
     <header className="bg-white text-black p-4 shadow-md">
       <div className="flex justify-between items-center">
         <div className="flex items-center">
@@ -25,6 +30,29 @@ export default function Header() {
                   src="client\src\components\assets\Hocking_logo_Full_Color_RGB.webp" 
                   alt="Hocking College Logo" 
                   className="h-12" 
+=======
+    <header className="bg-yellow-500 text-blue-800 p-4 shadow-md">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                className="md:hidden p-1 text-white hover:bg-primary-light"
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="bg-primary text-white border-none w-64 p-0"
+            >
+              <div className="p-4 border-b border-primary-light">
+                <img 
+                  src={HawkLogo} 
+                  alt="Hocking College Logo" 
+                  className="h-8 w-auto object-contain" 
+>>>>>>> 7366f2d1ff3adf7b9ef6dbb7f45e89fabe8d5d65
                 />
               </div>
               
@@ -76,10 +104,26 @@ export default function Header() {
               </div>
             </SheetContent>
           </Sheet>
-          <h1 className="text-xl font-heading font-bold">Hocking College</h1>
+          <img 
+            src={HawkLogo} 
+            alt="Hocking College Logo" 
+            className="h-8 w-auto object-contain" 
+          />
+          <h1 className="text-xl font-heading font-bold text-white outlined-text">
+            Hocking College
+          </h1>
         </div>
+<<<<<<< HEAD
         <div className="flex items-center">
           <Button variant="ghost" className="hover:bg-gray-100 p-2 rounded-full">
+=======
+
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            className="hover:bg-primary-light p-2 rounded-full"
+          >
+>>>>>>> 7366f2d1ff3adf7b9ef6dbb7f45e89fabe8d5d65
             <Bell className="h-5 w-5" />
           </Button>
           <Button variant="ghost" className="hover:bg-gray-100 p-2 rounded-full ml-2">

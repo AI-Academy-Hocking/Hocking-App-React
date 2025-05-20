@@ -15,10 +15,14 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
+<<<<<<< HEAD
 import LibraryPage from "./pages/Library";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 
+=======
+import './styles/globals.css';
+>>>>>>> 7366f2d1ff3adf7b9ef6dbb7f45e89fabe8d5d65
 
 function Router() {
   const [location] = useLocation();
