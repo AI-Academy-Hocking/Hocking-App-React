@@ -74,8 +74,8 @@ export default function Home() {
           {quickLinks.map((link, index) => (
             <Link key={index} href={link.href}>
               <a className="bg-yellow-500 hover:bg-yellow-600 rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition">
-                <link.icon className="text-white text-3xl mb-2 h-8 w-8 [text-shadow:_1px_1px_0_rgb(30_64_175)]" />
-                <span className="font-semibold text-white [text-shadow:_1px_1px_0_rgb(30_64_175)]">{link.label}</span>
+                <link.icon className="text-white text-3xl mb-2 h-8 w-8" stroke="#1e40af" strokeWidth={2.5} fill="#fff" />
+                <span className="font-semibold text-white">{link.label}</span>
               </a>
             </Link>
           ))}
