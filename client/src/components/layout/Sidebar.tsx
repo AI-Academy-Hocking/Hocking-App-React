@@ -54,7 +54,7 @@ export default function Sidebar() {
           className="flex items-center text-sm hover:text-gray-300 transition"
         >
           <LogOut className="mr-1 h-4 w-4" />
-          <span>Log Out</span>
+          <span>Return To Welcome Page</span>
         </button>
       </div>
     </div>
