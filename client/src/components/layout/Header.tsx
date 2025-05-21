@@ -11,7 +11,11 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
+<<<<<<< Updated upstream
     <header className="bg-yellow-500 text-blue-800 p-4 shadow-md">
+=======
+    <header className="bg-blue-500 text-white p-4 shadow-md">
+>>>>>>> Stashed changes
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
