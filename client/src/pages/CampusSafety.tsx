@@ -222,7 +222,7 @@ export default function CampusSafety() {
                       )}
                       {resource.url && (
                         <a
-                          href={resource.url}
+                          href={resource.url?.startsWith("http") ? resource.url : `https://www.hocking.edu${resource.url}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
@@ -244,20 +244,28 @@ export default function CampusSafety() {
             <Separator className="bg-blue-200 my-3" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <h4 className="font-medium text-blue-800">Campus Police</h4>
+                <h4 className="font-medium text-blue-800">Campus Security</h4>
                 <a href="tel:740-753-6598" className="text-blue-700">740-753-6598</a>
               </div>
               <div>
                 <h4 className="font-medium text-blue-800">Health Center</h4>
-                <a href="tel:740-753-6487" className="text-blue-700">740-753-6487</a>
+                <a href="tel:740-753-3591" className="text-blue-700">740-753-3591</a>
               </div>
               <div>
-                <h4 className="font-medium text-blue-800">Counseling Services</h4>
-                <a href="tel:740-753-6789" className="text-blue-700">740-753-6789</a>
+                <h4 className="font-medium text-blue-800">Nelsonville Police Department</h4>
+                <a href="tel:740-753-1922" className="text-blue-700">740-753-1922</a>
               </div>
               <div>
-                <h4 className="font-medium text-blue-800">Campus Security</h4>
-                <a href="tel:740-753-1234" className="text-blue-700">740-753-1234</a>
+                <h4 className="font-medium text-blue-800">Anonymous Tip Line</h4>
+                <a
+                  href="https://www.hocking.edu/campus-safety#reports"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Visit Website
+                </a>
               </div>
             </div>
           </div>

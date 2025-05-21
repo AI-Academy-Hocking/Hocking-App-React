@@ -6,7 +6,6 @@ import { useToast } from "../hooks/use-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import HockingLogo from "../components/assets/HockingLogo.png";
 import {
   Form,
   FormControl,
@@ -16,6 +15,7 @@ import {
   FormMessage,
 } from "../components/ui/form";
 import { Card, CardContent } from "../components/ui/card";
+import HockingLogo from "../components/assets/HockingLogo.png";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -70,7 +70,7 @@ export default function Login() {
         <CardContent className="p-0">
           <div className="text-center mb-8">
             <img 
-              src={HockingLogo}  
+              src="client\src\components\assets\HockingLogo.png" 
               alt="Hocking College Logo" 
               className="h-16 mx-auto mb-4" 
             />
@@ -107,7 +107,7 @@ export default function Login() {
                     <FormControl>
                       <Input 
                         type="password" 
-                        placeholder="enter password" 
+                        placeholder="••••••••" 
                         {...field} 
                         disabled={isLoading}
                       />

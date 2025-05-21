@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
+import calendarRouter from "./src/routes/calendar";
 import { 
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, locationUpdateSchema, 
@@ -12,6 +13,9 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Register calendar routes
+  app.use("/api/calendar", calendarRouter);
+
   // Auth routes
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {
