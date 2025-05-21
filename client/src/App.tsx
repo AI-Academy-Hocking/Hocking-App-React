@@ -19,6 +19,7 @@ import LibraryPage from "./pages/Library";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 
+import './styles/globals.css';
 
 function Router() {
   const [location] = useLocation();

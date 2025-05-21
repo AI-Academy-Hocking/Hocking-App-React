@@ -1,25 +1,73 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { WebSocketServer, WebSocket } from "ws";
-import { storage } from "./storage";
-import { 
-  insertUserSchema, insertEventSchema, insertBuildingSchema, 
-  insertStudentToolSchema, locationUpdateSchema, 
-  insertDiscussionSchema, insertCommentSchema,
-  insertSafetyAlertSchema, insertSafetyResourceSchema
+import { WebSocketServer, WebSocket as WS } from "ws";
+import { storage } from "../storage";
+import calendarRouter from "./calendar";
+import {
+  insertUserSchema,
+  insertEventSchema,
+  insertBuildingSchema,
+  insertStudentToolSchema,
+  insertDiscussionSchema,
+  insertCommentSchema,
+  insertSafetyAlertSchema,
+  insertSafetyResourceSchema,
+  type LocationUpdate,
+  type User,
 } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-import { getEvents } from './services/googleCalendar';
+
+import { getEvents } from "./pages/Calendar.tsx";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  const httpServer = createServer(app);
+  const wss = new WebSocketServer({ server: httpServer });
+
+  // Store connected clients
+  const clients = new Set<WS>();
+
+  // Handle WebSocket connections
+  wss.on("connection", (ws: WS) => {
+    clients.add(ws);
+
+    ws.on("close", () => {
+      clients.delete(ws);
+    });
+  });
+
+  // Function to broadcast location updates to all connected clients
+  async function broadcastLocationUpdate() {
+    const sharedLocations = await storage.getSharedLocations();
+    const message = JSON.stringify({
+      type: "location_update",
+      locations: sharedLocations.map((user) => ({
+        id: user.id,
+        lat: user.lat,
+        lng: user.lng,
+        isLocationShared: user.isLocationShared,
+      })),
+    });
+
+    clients.forEach((client) => {
+      if (client.readyState === WS.OPEN) {
+        client.send(message);
+      }
+    });
+  }
+
+  // Register calendar routes
+  app.use("/api/calendar", calendarRouter);
+
   // Auth routes
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;
 
       if (!username || !password) {
-        return res.status(400).json({ message: "Username and password are required" });
+        return res
+          .status(400)
+          .json({ message: "Username and password are required" });
       }
 
       // For development, create a mock user with the provided credentials
@@ -27,7 +75,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: 1,
         username,
         name: username,
-        isGuest: false
+        isGuest: false,
       };
 
       res.status(200).json(mockUser);
@@ -65,14 +113,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Events routes
-  app.get('/api/events', async (req, res) => {
+  app.get("/api/events", async (req, res) => {
     try {
       const calendarType = req.query.calendarType as string | undefined;
       const events = await getEvents(calendarType);
       res.json(events);
     } catch (error) {
-      console.error('Error fetching events:', error);
-      res.status(500).json({ error: 'Failed to fetch events' });
+      console.error("Error fetching events:", error);
+      res.status(500).json({ error: "Failed to fetch events" });
     }
   });
 
@@ -195,7 +243,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if tool ID already exists
       const existingTool = await storage.getStudentTool(toolData.id);
       if (existingTool) {
-        return res.status(409).json({ message: "Student tool ID already exists" });
+        return res
+          .status(409)
+          .json({ message: "Student tool ID already exists" });
       }
 
       const newTool = await storage.createStudentTool(toolData);
@@ -221,7 +271,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const locationData = locationUpdateSchema.parse(req.body);
-      const updatedUser = await storage.updateUserLocation(userId, locationData);
+
+      const updatedUser = await storage.updateUserLocation(
+        userId,
+        locationData,
+      );
 
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
@@ -250,7 +304,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sharedLocations = await storage.getSharedLocations();
 
       // Don't send passwords in response
-      const locationsWithoutPasswords = sharedLocations.map(user => {
+      const locationsWithoutPasswords = sharedLocations.map((user) => {
         const { password, ...userWithoutPassword } = user;
         return userWithoutPassword;
       });
@@ -268,27 +322,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const category = req.query.category as string;
       let discussions;
 
-      if (category && category !== 'all') {
+      if (category && category !== "all") {
         discussions = await storage.getDiscussionsByCategory(category);
       } else {
         discussions = await storage.getDiscussions();
       }
 
       // Fetch author info for each discussion
-      const discussionsWithAuthor = await Promise.all(discussions.map(async (discussion) => {
-        const author = await storage.getUser(discussion.authorId);
-        let authorInfo = { id: discussion.authorId, username: "Unknown" };
+      const discussionsWithAuthor = await Promise.all(
+        discussions.map(async (discussion) => {
+          const author = await storage.getUser(discussion.authorId);
+          let authorInfo = { id: discussion.authorId, username: "Unknown" };
 
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
+          if (author) {
+            const { password, ...userWithoutPassword } = author;
+            authorInfo = { ...userWithoutPassword };
+          }
 
-        const comments = await storage.getComments(discussion.id);
-        const commentCount = comments ? comments.length : 0;
+          const comments = await storage.getComments(discussion.id);
+          const commentCount = comments ? comments.length : 0;
 
-        return { ...discussion, author: authorInfo, commentCount };
-      }));
+          return { ...discussion, author: authorInfo, commentCount };
+        }),
+      );
 
       res.status(200).json(discussionsWithAuthor);
     } catch (error) {
@@ -312,6 +368,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Get author info
+
       const author = await storage.getUser(discussion.authorId);
       let authorInfo = { id: discussion.authorId, username: "Unknown" };
 
@@ -333,6 +390,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const newDiscussion = await storage.createDiscussion(discussionData);
 
       // Get author info
+
       const author = await storage.getUser(newDiscussion.authorId);
       let authorInfo = { id: newDiscussion.authorId, username: "Unknown" };
 
@@ -358,22 +416,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/comments", async (req: Request, res: Response) => {
     try {
       const comments = await storage.getAllComments();
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
+      const commentsWithDetails = await Promise.all(
+        comments.map(async (comment) => {
+          const author = await storage.getUser(comment.authorId);
+          let authorInfo = { id: comment.authorId, username: "Unknown" };
 
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
+          if (author) {
+            const { password, ...userWithoutPassword } = author;
+            authorInfo = { ...userWithoutPassword };
+          }
 
-        const discussion = await storage.getDiscussion(comment.discussionId);
-        return { 
-          ...comment, 
-          author: authorInfo,
-          discussionTitle: discussion?.title || "Unknown Discussion"
-        };
-      }));
+          const discussion = await storage.getDiscussion(comment.discussionId);
+          return {
+            ...comment,
+            author: authorInfo,
+            discussionTitle: discussion?.title || "Unknown Discussion",
+          };
+        }),
+      );
 
       res.status(200).json(commentsWithDetails);
     } catch (error) {
@@ -382,96 +442,115 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
+  app.get(
+    "/api/discussions/:id/comments",
+    async (req: Request, res: Response) => {
+      try {
+        const discussionId = parseInt(req.params.id);
 
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
+        if (isNaN(discussionId)) {
+          return res.status(400).json({ message: "Invalid discussion ID" });
+        }
+
+        // Get top-level comments for the discussion
+        const comments = await storage.getComments(discussionId);
+
+        // Fetch author info and replies for each comment
+        const commentsWithDetails = await Promise.all(
+          comments.map(async (comment) => {
+            // Get author info
+            const author = await storage.getUser(comment.authorId);
+            let authorInfo = { id: comment.authorId, username: "Unknown" };
+
+            if (author) {
+              const { password, ...userWithoutPassword } = author;
+              authorInfo = { ...userWithoutPassword };
+            }
+
+            // Get replies
+            const replies = await storage.getCommentReplies(comment.id);
+
+            // Get author info for each reply
+            const repliesWithAuthor = await Promise.all(
+              replies.map(async (reply) => {
+                const replyAuthor = await storage.getUser(reply.authorId);
+                let replyAuthorInfo = {
+                  id: reply.authorId,
+                  username: "Unknown",
+                };
+
+                if (replyAuthor) {
+                  const { password, ...userWithoutPassword } = replyAuthor;
+                  replyAuthorInfo = { ...userWithoutPassword };
+                }
+
+                return { ...reply, author: replyAuthorInfo };
+              }),
+            );
+
+            return {
+              ...comment,
+              author: authorInfo,
+              replies: repliesWithAuthor,
+            };
+          }),
+        );
+
+        res.status(200).json(commentsWithDetails);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+        res.status(500).json({ message: "Internal server error" });
       }
+    },
+  );
 
-      // Get top-level comments for the discussion
-      const comments = await storage.getComments(discussionId);
+  app.post(
+    "/api/discussions/:id/comments",
+    async (req: Request, res: Response) => {
+      try {
+        const discussionId = parseInt(req.params.id);
 
-      // Fetch author info and replies for each comment
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
+        if (isNaN(discussionId)) {
+          return res.status(400).json({ message: "Invalid discussion ID" });
+        }
+
+        const commentData = insertCommentSchema.parse({
+          ...req.body,
+          discussionId,
+        });
+
+        const newComment = await storage.createComment(commentData);
+
         // Get author info
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
+        const author = await storage.getUser(newComment.authorId);
+        let authorInfo = { id: newComment.authorId, username: "Unknown" };
 
         if (author) {
           const { password, ...userWithoutPassword } = author;
           authorInfo = { ...userWithoutPassword };
         }
 
-        // Get replies
-        const replies = await storage.getCommentReplies(comment.id);
+        res
+          .status(201)
+          .json({ ...newComment, author: authorInfo, replies: [] });
+      } catch (error) {
+        if (error instanceof ZodError) {
+          const validationError = fromZodError(error);
+          return res.status(400).json({ message: validationError.message });
+        }
 
-        // Get author info for each reply
-        const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-          const replyAuthor = await storage.getUser(reply.authorId);
-          let replyAuthorInfo = { id: reply.authorId, username: "Unknown" };
-
-          if (replyAuthor) {
-            const { password, ...userWithoutPassword } = replyAuthor;
-            replyAuthorInfo = { ...userWithoutPassword };
-          }
-
-          return { ...reply, author: replyAuthorInfo };
-        }));
-
-        return { ...comment, author: authorInfo, replies: repliesWithAuthor };
-      }));
-
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  app.post("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
+        console.error("Error creating comment:", error);
+        res.status(500).json({ message: "Internal server error" });
       }
-
-      const commentData = insertCommentSchema.parse({
-        ...req.body,
-        discussionId
-      });
-
-      const newComment = await storage.createComment(commentData);
-
-      // Get author info
-      const author = await storage.getUser(newComment.authorId);
-      let authorInfo = { id: newComment.authorId, username: "Unknown" };
-
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-
-      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-
-      console.error("Error creating comment:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
+    },
+  );
 
   // Safety Alert routes
   app.get("/api/safety/alerts", async (req: Request, res: Response) => {
     try {
       const activeOnly = req.query.active === "true";
-      const alerts = activeOnly 
-        ? await storage.getActiveSafetyAlerts() 
+      const alerts = activeOnly
+        ? await storage.getActiveSafetyAlerts()
         : await storage.getSafetyAlerts();
 
       res.status(200).json(alerts);
@@ -522,8 +601,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/safety/resources", async (req: Request, res: Response) => {
     try {
       const category = req.query.category as string;
-      const resources = category 
-        ? await storage.getSafetyResourcesByCategory(category) 
+      const resources = category
+        ? await storage.getSafetyResourcesByCategory(category)
         : await storage.getSafetyResources();
 
       res.status(200).json(resources);
@@ -574,22 +653,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
 
   // Set up WebSocket server for real-time location updates
-  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
 
-  wss.on('connection', (socket) => {
-    console.log('WebSocket client connected');
+  wss.on("connection", (socket) => {
+    console.log("WebSocket client connected");
 
-    socket.on('message', async (message) => {
+    socket.on("message", async (message) => {
       try {
         // Parse and process location updates from clients if needed
-        console.log('Received message:', message.toString());
+        console.log("Received message:", message.toString());
       } catch (error) {
-        console.error('Error processing WebSocket message:', error);
+        console.error("Error processing WebSocket message:", error);
       }
     });
 
-    socket.on('close', () => {
-      console.log('WebSocket client disconnected');
+    socket.on("close", () => {
+      console.log("WebSocket client disconnected");
     });
   });
 
@@ -598,18 +677,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const sharedLocations = await storage.getSharedLocations();
 
     // Remove sensitive info like passwords
-    const sanitizedLocations = sharedLocations.map(user => {
+    const sanitizedLocations = sharedLocations.map((user) => {
       const { password, ...userWithoutPassword } = user;
       return userWithoutPassword;
     });
 
     // Broadcast to all connected clients
-    wss.clients.forEach(client => {
+    wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({
-          type: 'location_update',
-          data: sanitizedLocations
-        }));
+        client.send(
+          JSON.stringify({
+            type: "location_update",
+            data: sanitizedLocations,
+          }),
+        );
       }
     });
   }

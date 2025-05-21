@@ -1,3 +1,10 @@
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+
 // server/index.ts
 import express2 from "express";
 
@@ -7,21 +14,6 @@ import { WebSocketServer, WebSocket } from "ws";
 
 // server/storage.ts
 var MemStorage = class {
-  users;
-  events;
-  buildings;
-  studentTools;
-  discussions;
-  comments;
-  safetyAlerts;
-  safetyResources;
-  currentUserId;
-  currentEventId;
-  currentBuildingId;
-  currentDiscussionId;
-  currentCommentId;
-  currentSafetyAlertId;
-  currentSafetyResourceId;
   constructor() {
     this.users = /* @__PURE__ */ new Map();
     this.events = /* @__PURE__ */ new Map();
@@ -152,7 +144,7 @@ var MemStorage = class {
   }
   // Comment operations
   async getAllComments() {
-    return this.comments;
+    return Array.from(this.comments.values());
   }
   async getComments(discussionId) {
     return Array.from(this.comments.values()).filter(
@@ -524,130 +516,86 @@ var MemStorage = class {
 };
 var storage = new MemStorage();
 
-// shared/schema.ts
-import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
-var users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  isGuest: boolean("is_guest").default(false),
-  name: text("name"),
-  email: text("email"),
-  // Location fields for user on campus map
-  lat: doublePrecision("lat"),
-  lng: doublePrecision("lng"),
-  isLocationShared: boolean("is_location_shared").default(false),
-  lastLocationUpdate: timestamp("last_location_update")
+// server/src/routes/calendar.ts
+import { Router } from "express";
+import ical from "ical";
+import fetch from "node-fetch";
+var router = Router();
+var CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+router.get("/events", async (req, res) => {
+  try {
+    console.log("Attempting to fetch calendar from URL:", CALENDAR_URL);
+    const response = await fetch(CALENDAR_URL, {
+      headers: {
+        "Accept": "text/calendar",
+        "User-Agent": "Hocking-App/1.0"
+      }
+    });
+    console.log("Calendar fetch response status:", response.status);
+    console.log("Calendar fetch response headers:", Object.fromEntries(response.headers.entries()));
+    if (response.status === 403) {
+      console.error("Calendar access forbidden - check calendar sharing settings");
+      return res.status(403).json({
+        error: "Calendar access forbidden",
+        details: "Please check calendar sharing settings and ensure the calendar is publicly accessible"
+      });
+    }
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Calendar fetch failed:", errorText);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const icalData = await response.text();
+    console.log("Received iCal data length:", icalData.length);
+    console.log("First 100 characters of iCal data:", icalData.substring(0, 100));
+    if (!icalData || icalData.includes("<!DOCTYPE")) {
+      console.error("Invalid calendar data received");
+      return res.status(400).json({
+        error: "Invalid calendar data",
+        details: "The calendar URL may be incorrect or the calendar may not be publicly accessible"
+      });
+    }
+    const parsedEvents = ical.parseICS(icalData);
+    if (!parsedEvents) {
+      throw new Error("Failed to parse calendar data");
+    }
+    const events = Object.values(parsedEvents).filter((event) => event.type === "VEVENT").map((event) => ({
+      id: event.uid || String(Math.random()),
+      title: event.summary || "No Title",
+      date: event.start?.toISOString() || (/* @__PURE__ */ new Date()).toISOString(),
+      time: `${event.start?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) || "00:00"} - ${event.end?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) || "23:59"}`,
+      end: event.end?.toISOString() || event.start?.toISOString() || (/* @__PURE__ */ new Date()).toISOString(),
+      location: event.location || "No Location",
+      description: event.description || "No Description"
+    }));
+    console.log("Successfully parsed events:", events.length);
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching calendar:", error);
+    res.status(500).json({
+      error: "Failed to fetch calendar events",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
 });
-var insertUserSchema = createInsertSchema(users).omit({
-  id: true
-});
-var events = pgTable("events", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description"),
-  date: text("date").notNull(),
-  // YYYY-MM-DD format
-  time: text("time").notNull(),
-  // HH:MM AM/PM - HH:MM AM/PM format
-  location: text("location").notNull()
-});
-var insertEventSchema = createInsertSchema(events).omit({
-  id: true
-});
-var buildings = pgTable("buildings", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  category: text("category").notNull(),
-  // academic, housing, dining, parking
-  lat: doublePrecision("lat").notNull(),
-  lng: doublePrecision("lng").notNull()
-});
-var insertBuildingSchema = createInsertSchema(buildings).omit({
-  id: true
-});
-var studentTools = pgTable("student_tools", {
-  id: text("id").primaryKey(),
-  // e.g., course-schedule, grades
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  category: text("category").notNull(),
-  // academic, financial, resources
-  url: text("url").notNull()
-});
-var insertStudentToolSchema = createInsertSchema(studentTools);
-var discussions = pgTable("discussions", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  category: text("category").default("general"),
-  // general, academic, social, etc.
-  isPinned: boolean("is_pinned").default(false)
-});
-var insertDiscussionSchema = createInsertSchema(discussions).omit({
-  id: true,
-  createdAt: true
-});
-var comments = pgTable("comments", {
-  id: serial("id").primaryKey(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  discussionId: integer("discussion_id").notNull(),
-  parentId: integer("parent_id"),
-  // For nested replies, null means top-level comment
-  createdAt: timestamp("created_at").defaultNow()
-});
-var insertCommentSchema = createInsertSchema(comments).omit({
-  id: true,
-  createdAt: true
-});
-var locationUpdateSchema = z.object({
-  lat: z.number(),
-  lng: z.number(),
-  isLocationShared: z.boolean().optional()
-});
-var safetyAlerts = pgTable("safety_alerts", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  severity: text("severity").notNull(),
-  // critical, warning, info
-  startDate: timestamp("start_date").defaultNow().notNull(),
-  endDate: timestamp("end_date"),
-  // null means indefinite
-  isActive: boolean("is_active").default(true),
-  location: text("location")
-  // Optional affected location
-});
-var insertSafetyAlertSchema = createInsertSchema(safetyAlerts).omit({
-  id: true
-});
-var safetyResources = pgTable("safety_resources", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  category: text("category").notNull(),
-  // emergency, health, security, weather, contact
-  phoneNumber: text("phone_number"),
-  url: text("url"),
-  icon: text("icon"),
-  // Icon name for UI
-  order: integer("order").default(0)
-  // For sorting
-});
-var insertSafetyResourceSchema = createInsertSchema(safetyResources).omit({
-  id: true
-});
+var calendar_default = router;
 
 // server/routes.ts
+import {
+  insertUserSchema,
+  insertEventSchema,
+  insertBuildingSchema,
+  insertStudentToolSchema,
+  locationUpdateSchema,
+  insertDiscussionSchema,
+  insertCommentSchema,
+  insertSafetyAlertSchema,
+  insertSafetyResourceSchema
+} from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 async function registerRoutes(app2) {
+  app2.use("/api/calendar", calendar_default);
   app2.post("/api/auth/login", async (req, res) => {
     try {
       const { username, password } = req.body;
@@ -687,8 +635,8 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/events", async (_req, res) => {
     try {
-      const events2 = await storage.getEvents();
-      res.status(200).json(events2);
+      const events = await storage.getEvents();
+      res.status(200).json(events);
     } catch (error) {
       console.error("Error fetching events:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -726,8 +674,8 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/buildings", async (_req, res) => {
     try {
-      const buildings2 = await storage.getBuildings();
-      res.status(200).json(buildings2);
+      const buildings = await storage.getBuildings();
+      res.status(200).json(buildings);
     } catch (error) {
       console.error("Error fetching buildings:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -842,21 +790,21 @@ async function registerRoutes(app2) {
   app2.get("/api/discussions", async (req, res) => {
     try {
       const category = req.query.category;
-      let discussions2;
+      let discussions;
       if (category && category !== "all") {
-        discussions2 = await storage.getDiscussionsByCategory(category);
+        discussions = await storage.getDiscussionsByCategory(category);
       } else {
-        discussions2 = await storage.getDiscussions();
+        discussions = await storage.getDiscussions();
       }
-      const discussionsWithAuthor = await Promise.all(discussions2.map(async (discussion) => {
+      const discussionsWithAuthor = await Promise.all(discussions.map(async (discussion) => {
         const author = await storage.getUser(discussion.authorId);
         let authorInfo = { id: discussion.authorId, username: "Unknown" };
         if (author) {
           const { password, ...userWithoutPassword } = author;
           authorInfo = { ...userWithoutPassword };
         }
-        const comments2 = await storage.getComments(discussion.id);
-        const commentCount = comments2 ? comments2.length : 0;
+        const comments = await storage.getComments(discussion.id);
+        const commentCount = comments ? comments.length : 0;
         return { ...discussion, author: authorInfo, commentCount };
       }));
       res.status(200).json(discussionsWithAuthor);
@@ -909,8 +857,8 @@ async function registerRoutes(app2) {
   });
   app2.get("/api/comments", async (req, res) => {
     try {
-      const comments2 = await storage.getAllComments();
-      const commentsWithDetails = await Promise.all(comments2.map(async (comment) => {
+      const comments = await storage.getAllComments();
+      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
         const author = await storage.getUser(comment.authorId);
         let authorInfo = { id: comment.authorId, username: "Unknown" };
         if (author) {
@@ -936,8 +884,8 @@ async function registerRoutes(app2) {
       if (isNaN(discussionId)) {
         return res.status(400).json({ message: "Invalid discussion ID" });
       }
-      const comments2 = await storage.getComments(discussionId);
-      const commentsWithDetails = await Promise.all(comments2.map(async (comment) => {
+      const comments = await storage.getComments(discussionId);
+      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
         const author = await storage.getUser(comment.authorId);
         let authorInfo = { id: comment.authorId, username: "Unknown" };
         if (author) {
@@ -1124,9 +1072,7 @@ var vite_config_default = defineConfig({
     runtimeErrorOverlay(),
     themePlugin(),
     ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-      await import("@replit/vite-plugin-cartographer").then(
-        (m) => m.cartographer()
-      )
+      __require("@replit/vite-plugin-cartographer").cartographer()
     ] : []
   ],
   resolve: {
@@ -1140,6 +1086,20 @@ var vite_config_default = defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true
+  },
+  optimizeDeps: {
+    include: ["@sinclair/typebox"],
+    esbuildOptions: {
+      target: "es2020",
+      supported: {
+        "top-level-await": true
+      }
+    }
+  },
+  server: {
+    fs: {
+      strict: false
+    }
   }
 });
 

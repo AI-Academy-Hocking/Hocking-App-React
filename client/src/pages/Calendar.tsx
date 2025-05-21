@@ -1,10 +1,12 @@
 
 import { useState, useEffect } from "react";
+
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
 import { enUS } from "date-fns/locale";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
@@ -12,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Event } from "@shared/schema";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+
 
 const locales = {
   "en-US": enUS,
@@ -25,8 +28,21 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+const CALENDAR_URL = "/api/calendar/events";
+
+interface CalendarEvent {
+  id: string;
+  title: string;
+  date: string | undefined;
+  time: string;
+  end: string | undefined;
+  location: string;
+  description: string;
+}
+
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
+
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
@@ -59,19 +75,17 @@ export default function CalendarPage() {
     return events
       .filter(event => {
         // In a real implementation, each event would have a 'calendarType' property
-        // For demo purposes, we'll split events based on their id to simulate different calendars
-        const isActivityEvent = event.id % 2 === 0; // Even IDs for activities, odd for academic
-        const matchesCalendarType = 
-          (calendarType === "activities" && isActivityEvent) || 
-          (calendarType === "academic" && !isActivityEvent);
+        // For now, we're using an empty array so no events will show
+        return false;
         
-        if (!matchesCalendarType) return false;
-        
+        // When you add real events, uncomment this code:
+        /*
         const eventDate = new Date(event.date);
         if (selectedDate) {
           return isSameDay(eventDate, selectedDate);
         }
         return eventDate >= monthStart && eventDate <= monthEnd;
+        */
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
@@ -90,8 +104,64 @@ export default function CalendarPage() {
       weekday: eventDate.toLocaleString('en-US', { weekday: 'short' }),
       month: eventDate.toLocaleString('en-US', { month: 'short' }),
       day: eventDate.getDate()
+
     };
-  };
+
+    fetchEvents();
+  }, []);
+
+  // Combine local events and calendar events
+  const combinedEvents = [
+    ...(localEvents || []).map(event => ({
+      id: String(event.id),
+      title: event.title,
+      date: event.date,
+      time: event.time,
+      end: event.date,
+      location: event.location,
+      description: event.description || ""
+    })),
+    ...calendarEvents,
+  ];
+
+  // Format events for the BigCalendar
+  const formattedEvents = combinedEvents.map((event) => {
+    const startDate = new Date(event.date || "");
+    const endDate = new Date(event.end || event.date || "");
+    
+    let startHours = 0, startMinutes = 0, endHours = 23, endMinutes = 59;
+    
+    if (event.time) {
+      const [startTime, endTime] = event.time.split(" - ");
+      if (startTime) {
+        const [hours, minutes] = startTime.split(":").map(Number);
+        if (!isNaN(hours) && !isNaN(minutes)) {
+          startHours = hours;
+          startMinutes = minutes;
+        }
+      }
+      if (endTime) {
+        const [hours, minutes] = endTime.split(":").map(Number);
+        if (!isNaN(hours) && !isNaN(minutes)) {
+          endHours = hours;
+          endMinutes = minutes;
+        }
+      }
+    }
+    
+    startDate.setHours(startHours, startMinutes);
+    endDate.setHours(endHours, endMinutes);
+    
+    return {
+      title: event.title || "Untitled Event",
+      start: startDate,
+      end: endDate,
+      resource: { 
+        location: event.location || "No Location", 
+        description: event.description || "No Description" 
+      },
+    };
+  });
 
   // Navigate between months
   const handlePreviousMonth = () => {
@@ -103,6 +173,7 @@ export default function CalendarPage() {
     setDate(addMonths(date, 1));
     setSelectedDate(null);
   };
+
 
   // Handle date selection
   const handleDateSelect = (slotInfo: any) => {
@@ -140,6 +211,7 @@ export default function CalendarPage() {
     return acc;
   }, {} as Record<string, Event[]>);
 
+
   return (
     <div className="space-y-6">
       <section>
@@ -175,6 +247,11 @@ export default function CalendarPage() {
         </div>
         <Card>
           <CardContent className="p-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+                {error}
+              </div>
+            )}
             <div className="flex justify-between items-center mb-4">
               <Button 
                 variant="ghost" 
@@ -201,6 +278,7 @@ export default function CalendarPage() {
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
+
 
             <div className="flex space-x-2 mb-4">
               <Button 
@@ -230,6 +308,7 @@ export default function CalendarPage() {
                   Back to All Events
                 </Button>
               )}
+
             </div>
             
             {view === "month" && (
@@ -319,6 +398,7 @@ export default function CalendarPage() {
           </CardContent>
         </Card>
       </section>
+
       
       <section>
         <div className="flex justify-between items-center mb-4">
@@ -583,6 +663,7 @@ export default function CalendarPage() {
           color: white;
         }
       `}</style>
+
     </div>
   );
 }
