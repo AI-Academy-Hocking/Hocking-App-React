@@ -1,20 +1,26 @@
-import { createServer } from "http";
-import { WebSocketServer, WebSocket as WS } from "ws";
-import { storage } from "../storage";
-import calendarRouter from "./calendar";
-import { insertUserSchema, insertEventSchema, insertBuildingSchema, insertStudentToolSchema, insertDiscussionSchema, insertCommentSchema, insertSafetyAlertSchema, insertSafetyResourceSchema } from "@shared/schema";
-import { ZodError } from "zod";
-import { fromZodError } from "zod-validation-error";
-import { z } from "zod";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerRoutes = registerRoutes;
+const http_1 = require("http");
+const ws_1 = require("ws");
+const storage_1 = require("../storage");
+const calendar_1 = __importDefault(require("./calendar"));
+const schema_1 = require("@shared/schema");
+const zod_1 = require("zod");
+const zod_validation_error_1 = require("zod-validation-error");
+const zod_2 = require("zod");
 // Define the location update schema here since we can't import it directly
-const locationUpdateSchema = z.object({
-    lat: z.number(),
-    lng: z.number(),
-    isLocationShared: z.boolean().optional(),
+const locationUpdateSchema = zod_2.z.object({
+    lat: zod_2.z.number(),
+    lng: zod_2.z.number(),
+    isLocationShared: zod_2.z.boolean().optional(),
 });
-export async function registerRoutes(app) {
-    const httpServer = createServer(app);
-    const wss = new WebSocketServer({ server: httpServer });
+async function registerRoutes(app) {
+    const httpServer = (0, http_1.createServer)(app);
+    const wss = new ws_1.WebSocketServer({ server: httpServer });
     // Store connected clients
     const clients = new Set();
     // Handle WebSocket connections
@@ -26,7 +32,7 @@ export async function registerRoutes(app) {
     });
     // Function to broadcast location updates to all connected clients
     async function broadcastLocationUpdate() {
-        const sharedLocations = await storage.getSharedLocations();
+        const sharedLocations = await storage_1.storage.getSharedLocations();
         const message = JSON.stringify({
             type: 'location_update',
             locations: sharedLocations.map(user => ({
@@ -37,13 +43,13 @@ export async function registerRoutes(app) {
             }))
         });
         clients.forEach(client => {
-            if (client.readyState === WS.OPEN) {
+            if (client.readyState === ws_1.WebSocket.OPEN) {
                 client.send(message);
             }
         });
     }
     // Register calendar routes
-    app.use("/api/calendar", calendarRouter);
+    app.use("/api/calendar", calendar_1.default);
     // Auth routes
     app.post("/api/auth/login", async (req, res) => {
         try {
@@ -67,20 +73,20 @@ export async function registerRoutes(app) {
     });
     app.post("/api/auth/register", async (req, res) => {
         try {
-            const userData = insertUserSchema.parse(req.body);
+            const userData = schema_1.insertUserSchema.parse(req.body);
             // Check if username already exists
-            const existingUser = await storage.getUserByUsername(userData.username);
+            const existingUser = await storage_1.storage.getUserByUsername(userData.username);
             if (existingUser) {
                 return res.status(409).json({ message: "Username already exists" });
             }
-            const newUser = await storage.createUser(userData);
+            const newUser = await storage_1.storage.createUser(userData);
             // Don't send password in response
             const { password, ...userWithoutPassword } = newUser;
             res.status(201).json(userWithoutPassword);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Registration error:", error);
@@ -90,7 +96,7 @@ export async function registerRoutes(app) {
     // Events routes
     app.get("/api/events", async (_req, res) => {
         try {
-            const events = await storage.getEvents();
+            const events = await storage_1.storage.getEvents();
             res.status(200).json(events);
         }
         catch (error) {
@@ -104,7 +110,7 @@ export async function registerRoutes(app) {
             if (isNaN(id)) {
                 return res.status(400).json({ message: "Invalid event ID" });
             }
-            const event = await storage.getEvent(id);
+            const event = await storage_1.storage.getEvent(id);
             if (!event) {
                 return res.status(404).json({ message: "Event not found" });
             }
@@ -117,13 +123,13 @@ export async function registerRoutes(app) {
     });
     app.post("/api/events", async (req, res) => {
         try {
-            const eventData = insertEventSchema.parse(req.body);
-            const newEvent = await storage.createEvent(eventData);
+            const eventData = schema_1.insertEventSchema.parse(req.body);
+            const newEvent = await storage_1.storage.createEvent(eventData);
             res.status(201).json(newEvent);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating event:", error);
@@ -133,7 +139,7 @@ export async function registerRoutes(app) {
     // Buildings routes
     app.get("/api/buildings", async (_req, res) => {
         try {
-            const buildings = await storage.getBuildings();
+            const buildings = await storage_1.storage.getBuildings();
             res.status(200).json(buildings);
         }
         catch (error) {
@@ -147,7 +153,7 @@ export async function registerRoutes(app) {
             if (isNaN(id)) {
                 return res.status(400).json({ message: "Invalid building ID" });
             }
-            const building = await storage.getBuilding(id);
+            const building = await storage_1.storage.getBuilding(id);
             if (!building) {
                 return res.status(404).json({ message: "Building not found" });
             }
@@ -160,13 +166,13 @@ export async function registerRoutes(app) {
     });
     app.post("/api/buildings", async (req, res) => {
         try {
-            const buildingData = insertBuildingSchema.parse(req.body);
-            const newBuilding = await storage.createBuilding(buildingData);
+            const buildingData = schema_1.insertBuildingSchema.parse(req.body);
+            const newBuilding = await storage_1.storage.createBuilding(buildingData);
             res.status(201).json(newBuilding);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating building:", error);
@@ -176,7 +182,7 @@ export async function registerRoutes(app) {
     // Student Tools routes
     app.get("/api/student-tools", async (_req, res) => {
         try {
-            const tools = await storage.getStudentTools();
+            const tools = await storage_1.storage.getStudentTools();
             res.status(200).json(tools);
         }
         catch (error) {
@@ -187,7 +193,7 @@ export async function registerRoutes(app) {
     app.get("/api/student-tools/:id", async (req, res) => {
         try {
             const id = req.params.id;
-            const tool = await storage.getStudentTool(id);
+            const tool = await storage_1.storage.getStudentTool(id);
             if (!tool) {
                 return res.status(404).json({ message: "Student tool not found" });
             }
@@ -200,18 +206,18 @@ export async function registerRoutes(app) {
     });
     app.post("/api/student-tools", async (req, res) => {
         try {
-            const toolData = insertStudentToolSchema.parse(req.body);
+            const toolData = schema_1.insertStudentToolSchema.parse(req.body);
             // Check if tool ID already exists
-            const existingTool = await storage.getStudentTool(toolData.id);
+            const existingTool = await storage_1.storage.getStudentTool(toolData.id);
             if (existingTool) {
                 return res.status(409).json({ message: "Student tool ID already exists" });
             }
-            const newTool = await storage.createStudentTool(toolData);
+            const newTool = await storage_1.storage.createStudentTool(toolData);
             res.status(201).json(newTool);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating student tool:", error);
@@ -226,7 +232,7 @@ export async function registerRoutes(app) {
                 return res.status(400).json({ message: "Invalid user ID" });
             }
             const locationData = locationUpdateSchema.parse(req.body);
-            const updatedUser = await storage.updateUserLocation(userId, {
+            const updatedUser = await storage_1.storage.updateUserLocation(userId, {
                 lat: locationData.lat,
                 lng: locationData.lng,
                 isLocationShared: locationData.isLocationShared
@@ -241,8 +247,8 @@ export async function registerRoutes(app) {
             res.status(200).json(userWithoutPassword);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error updating user location:", error);
@@ -251,7 +257,7 @@ export async function registerRoutes(app) {
     });
     app.get("/api/locations/shared", async (_req, res) => {
         try {
-            const sharedLocations = await storage.getSharedLocations();
+            const sharedLocations = await storage_1.storage.getSharedLocations();
             // Don't send passwords in response
             const locationsWithoutPasswords = sharedLocations.map(user => {
                 const { password, ...userWithoutPassword } = user;
@@ -270,20 +276,20 @@ export async function registerRoutes(app) {
             const category = req.query.category;
             let discussions;
             if (category && category !== 'all') {
-                discussions = await storage.getDiscussionsByCategory(category);
+                discussions = await storage_1.storage.getDiscussionsByCategory(category);
             }
             else {
-                discussions = await storage.getDiscussions();
+                discussions = await storage_1.storage.getDiscussions();
             }
             // Fetch author info for each discussion
             const discussionsWithAuthor = await Promise.all(discussions.map(async (discussion) => {
-                const author = discussion.authorId ? await storage.getUser(discussion.authorId) : null;
+                const author = discussion.authorId ? await storage_1.storage.getUser(discussion.authorId) : null;
                 let authorInfo = { id: discussion.authorId ?? 0, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
                 }
-                const comments = await storage.getComments(discussion.id);
+                const comments = await storage_1.storage.getComments(discussion.id);
                 const commentCount = comments ? comments.length : 0;
                 return { ...discussion, author: authorInfo, commentCount };
             }));
@@ -300,32 +306,32 @@ export async function registerRoutes(app) {
             if (isNaN(id)) {
                 return res.status(400).json({ message: "Invalid discussion ID" });
             }
-            const discussion = await storage.getDiscussion(id);
+            const discussion = await storage_1.storage.getDiscussion(id);
             if (!discussion) {
                 return res.status(404).json({ message: "Discussion not found" });
             }
             // Get author info
-            const author = discussion.authorId ? await storage.getUser(discussion.authorId) : null;
+            const author = discussion.authorId ? await storage_1.storage.getUser(discussion.authorId) : null;
             let authorInfo = { id: discussion.authorId ?? 0, username: "Unknown" };
             if (author) {
                 const { password, ...userWithoutPassword } = author;
                 authorInfo = { ...userWithoutPassword };
             }
             // Get comments for a discussion
-            const comments = await storage.getComments(discussion.id);
+            const comments = await storage_1.storage.getComments(discussion.id);
             const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
                 // Get author info
-                const author = comment.authorId ? await storage.getUser(comment.authorId) : null;
+                const author = comment.authorId ? await storage_1.storage.getUser(comment.authorId) : null;
                 let authorInfo = { id: comment.authorId ?? 0, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
                 }
                 // Get replies
-                const replies = await storage.getCommentReplies(comment.id);
+                const replies = await storage_1.storage.getCommentReplies(comment.id);
                 // Get author info for each reply
                 const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-                    const replyAuthor = reply.authorId ? await storage.getUser(reply.authorId) : null;
+                    const replyAuthor = reply.authorId ? await storage_1.storage.getUser(reply.authorId) : null;
                     let replyAuthorInfo = { id: reply.authorId ?? 0, username: "Unknown" };
                     if (replyAuthor) {
                         const { password, ...userWithoutPassword } = replyAuthor;
@@ -344,10 +350,10 @@ export async function registerRoutes(app) {
     });
     app.post("/api/discussions", async (req, res) => {
         try {
-            const discussionData = insertDiscussionSchema.parse(req.body);
-            const newDiscussion = await storage.createDiscussion(discussionData);
+            const discussionData = schema_1.insertDiscussionSchema.parse(req.body);
+            const newDiscussion = await storage_1.storage.createDiscussion(discussionData);
             // Get author info
-            const author = newDiscussion.authorId ? await storage.getUser(newDiscussion.authorId) : null;
+            const author = newDiscussion.authorId ? await storage_1.storage.getUser(newDiscussion.authorId) : null;
             let authorInfo = { id: newDiscussion.authorId ?? 0, username: "Unknown" };
             if (author) {
                 const { password, ...userWithoutPassword } = author;
@@ -356,8 +362,8 @@ export async function registerRoutes(app) {
             res.status(201).json({ ...newDiscussion, author: authorInfo });
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating discussion:", error);
@@ -368,15 +374,15 @@ export async function registerRoutes(app) {
     // Get all comments for a user
     app.get("/api/comments", async (req, res) => {
         try {
-            const comments = await storage.getAllComments();
+            const comments = await storage_1.storage.getAllComments();
             const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-                const author = comment.authorId ? await storage.getUser(comment.authorId) : null;
+                const author = comment.authorId ? await storage_1.storage.getUser(comment.authorId) : null;
                 let authorInfo = { id: comment.authorId ?? 0, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
                 }
-                const discussion = await storage.getDiscussion(comment.discussionId);
+                const discussion = await storage_1.storage.getDiscussion(comment.discussionId);
                 return {
                     ...comment,
                     author: authorInfo,
@@ -397,21 +403,21 @@ export async function registerRoutes(app) {
                 return res.status(400).json({ message: "Invalid discussion ID" });
             }
             // Get top-level comments for the discussion
-            const comments = await storage.getComments(discussionId);
+            const comments = await storage_1.storage.getComments(discussionId);
             // Fetch author info and replies for each comment
             const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
                 // Get author info
-                const author = comment.authorId ? await storage.getUser(comment.authorId) : null;
+                const author = comment.authorId ? await storage_1.storage.getUser(comment.authorId) : null;
                 let authorInfo = { id: comment.authorId ?? 0, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
                 }
                 // Get replies
-                const replies = await storage.getCommentReplies(comment.id);
+                const replies = await storage_1.storage.getCommentReplies(comment.id);
                 // Get author info for each reply
                 const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-                    const replyAuthor = reply.authorId ? await storage.getUser(reply.authorId) : null;
+                    const replyAuthor = reply.authorId ? await storage_1.storage.getUser(reply.authorId) : null;
                     let replyAuthorInfo = { id: reply.authorId ?? 0, username: "Unknown" };
                     if (replyAuthor) {
                         const { password, ...userWithoutPassword } = replyAuthor;
@@ -434,13 +440,13 @@ export async function registerRoutes(app) {
             if (isNaN(discussionId)) {
                 return res.status(400).json({ message: "Invalid discussion ID" });
             }
-            const commentData = insertCommentSchema.parse({
+            const commentData = schema_1.insertCommentSchema.parse({
                 ...req.body,
                 discussionId
             });
-            const newComment = await storage.createComment(commentData);
+            const newComment = await storage_1.storage.createComment(commentData);
             // Get author info for new comment
-            const commentAuthor = newComment.authorId ? await storage.getUser(newComment.authorId) : null;
+            const commentAuthor = newComment.authorId ? await storage_1.storage.getUser(newComment.authorId) : null;
             let commentAuthorInfo = { id: newComment.authorId ?? 0, username: "Unknown" };
             if (commentAuthor) {
                 const { password, ...userWithoutPassword } = commentAuthor;
@@ -449,8 +455,8 @@ export async function registerRoutes(app) {
             res.status(201).json({ ...newComment, author: commentAuthorInfo, replies: [] });
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating comment:", error);
@@ -462,8 +468,8 @@ export async function registerRoutes(app) {
         try {
             const activeOnly = req.query.active === "true";
             const alerts = activeOnly
-                ? await storage.getActiveSafetyAlerts()
-                : await storage.getSafetyAlerts();
+                ? await storage_1.storage.getActiveSafetyAlerts()
+                : await storage_1.storage.getSafetyAlerts();
             res.status(200).json(alerts);
         }
         catch (error) {
@@ -477,7 +483,7 @@ export async function registerRoutes(app) {
             if (isNaN(id)) {
                 return res.status(400).json({ message: "Invalid alert ID" });
             }
-            const alert = await storage.getSafetyAlert(id);
+            const alert = await storage_1.storage.getSafetyAlert(id);
             if (!alert) {
                 return res.status(404).json({ message: "Safety alert not found" });
             }
@@ -490,13 +496,13 @@ export async function registerRoutes(app) {
     });
     app.post("/api/safety/alerts", async (req, res) => {
         try {
-            const alertData = insertSafetyAlertSchema.parse(req.body);
-            const newAlert = await storage.createSafetyAlert(alertData);
+            const alertData = schema_1.insertSafetyAlertSchema.parse(req.body);
+            const newAlert = await storage_1.storage.createSafetyAlert(alertData);
             res.status(201).json(newAlert);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating safety alert:", error);
@@ -508,8 +514,8 @@ export async function registerRoutes(app) {
         try {
             const category = req.query.category;
             const resources = category
-                ? await storage.getSafetyResourcesByCategory(category)
-                : await storage.getSafetyResources();
+                ? await storage_1.storage.getSafetyResourcesByCategory(category)
+                : await storage_1.storage.getSafetyResources();
             res.status(200).json(resources);
         }
         catch (error) {
@@ -523,7 +529,7 @@ export async function registerRoutes(app) {
             if (isNaN(id)) {
                 return res.status(400).json({ message: "Invalid resource ID" });
             }
-            const resource = await storage.getSafetyResource(id);
+            const resource = await storage_1.storage.getSafetyResource(id);
             if (!resource) {
                 return res.status(404).json({ message: "Safety resource not found" });
             }
@@ -536,13 +542,13 @@ export async function registerRoutes(app) {
     });
     app.post("/api/safety/resources", async (req, res) => {
         try {
-            const resourceData = insertSafetyResourceSchema.parse(req.body);
-            const newResource = await storage.createSafetyResource(resourceData);
+            const resourceData = schema_1.insertSafetyResourceSchema.parse(req.body);
+            const newResource = await storage_1.storage.createSafetyResource(resourceData);
             res.status(201).json(newResource);
         }
         catch (error) {
-            if (error instanceof ZodError) {
-                const validationError = fromZodError(error);
+            if (error instanceof zod_1.ZodError) {
+                const validationError = (0, zod_validation_error_1.fromZodError)(error);
                 return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating safety resource:", error);
