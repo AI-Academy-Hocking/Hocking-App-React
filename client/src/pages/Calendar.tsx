@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { format, parse, startOfWeek, getDay } from "date-fns";
+import { format, parse, startOfWeek, getDay, format as formatDate } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Event } from "@shared/schema";
 import ical from 'ical';
@@ -36,12 +36,21 @@ interface CalendarEvent {
   description: string;
 }
 
+// Custom gutter header for day view to show abbreviated day of the week
+const CustomTimeGutterHeader = ({ date }: any) => (
+  <div className="text-base font-bold text-white text-center py-2">
+    {format(date, 'EEE')}
+  </div>
+);
+
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
   const [googleEvents, setGoogleEvents] = useState<CalendarEvent[]>([]);
+  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day'>('month');
   const { data: localEvents, isLoading } = useQuery<Event[]>({
     queryKey: ["/api/events"],
   });
+  const [openEventDay, setOpenEventDay] = useState<string | null>(null);
 
   // Fetch calendar events
   useEffect(() => {
@@ -159,12 +168,28 @@ export default function CalendarPage() {
     setDate(newDate);
   };
 
+  // Helper to get events for each day in the current week
+  const getEventsForWeek = (date: Date) => {
+    const start = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const day = new Date(start);
+      day.setDate(start.getDate() + i);
+      return day;
+    });
+    return days.map(day => ({
+      day,
+      events: formattedEvents.filter(event =>
+        event.start.toDateString() === day.toDateString()
+      ),
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4">Academic Calendar</h2>
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-4 bg-yellow-200">
             <div className="flex justify-between items-center mb-4">
               <Button 
                 variant="ghost" 
@@ -185,20 +210,76 @@ export default function CalendarPage() {
               </Button>
             </div>
             
-            <div className="h-[500px]">
-              <BigCalendar
-                localizer={localizer}
-                events={formattedEvents}
-                startAccessor="start"
-                endAccessor="end"
-                date={date}
-                onNavigate={setDate}
-                views={["month", "week", "day"]}
-                tooltipAccessor={(event: { title: string }) => event.title}
-                formats={{
-                  weekdayFormat: (date: Date) => format(date, "EEEE"),
-                }}
-              />
+            <div className="flex gap-2 mb-4 bg-yellow-200 p-2 rounded">
+              <Button variant={currentView === 'month' ? 'default' : 'outline'} className={currentView === 'month' ? '!bg-blue-800 !text-white' : ''} onClick={() => setCurrentView('month')}>Month</Button>
+              <Button variant={currentView === 'week' ? 'default' : 'outline'} className={currentView === 'week' ? '!bg-blue-800 !text-white' : ''} onClick={() => setCurrentView('week')}>Week</Button>
+              <Button variant={currentView === 'day' ? 'default' : 'outline'} className={currentView === 'day' ? '!bg-blue-800 !text-white' : ''} onClick={() => setCurrentView('day')}>Day</Button>
+            </div>
+            <div className="h-[500px] overflow-y-auto w-full">
+              {currentView === 'week' ? (
+                <div className="grid grid-rows-7 gap-2 h-full">
+                  {getEventsForWeek(date).map(({ day, events }) => {
+                    const dayKey = day.toISOString();
+                    const isOpen = openEventDay === dayKey;
+                    return (
+                      <div key={dayKey} className="border rounded p-2 flex flex-row items-stretch bg-white">
+                        <div className="font-semibold text-base w-1/4 h-full flex items-center justify-center bg-blue-800 text-white rounded mr-2">{format(day, 'EEE')}</div>
+                        <div className="h-full w-px bg-gray-300 mx-0" />
+                        <div className="font-semibold text-base w-1/3 h-full flex items-center justify-center">{format(day, 'MMM d')}</div>
+                        <div className="h-full w-px bg-gray-300 mx-0" />
+                        <div className="w-1/7 h-full flex items-center justify-end min-w-0 pl-4">
+                          {events.length === 0 ? (
+                            <div className="text-neutral-400 text-base text-center font-semibold">No events</div>
+                          ) : (
+                            <div className="relative flex flex-col items-end w-full">
+                              <button
+                                className="text-blue-700 underline text-base font-semibold text-center flex items-center gap-1 ml-4"
+                                onClick={() => setOpenEventDay(isOpen ? null : dayKey)}
+                              >
+                                Events
+                                <ChevronDown className={`inline h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                              </button>
+                              <div
+                                className={`absolute left-1/2 -translate-x-1/2 top-full bg-white border border-blue-200 rounded shadow p-2 z-10 min-w-[150px] transition-all duration-300 overflow-hidden ${isOpen ? 'opacity-100 max-h-60' : 'opacity-0 max-h-0 pointer-events-none'}`}
+                                style={{
+                                  transitionProperty: 'opacity, max-height',
+                                }}
+                              >
+                                {isOpen && events.map((event, idx) => {
+                                  const startTime = event.start ? formatDate(event.start, 'h:mm a') : '';
+                                  const endTime = event.end ? formatDate(event.end, 'h:mm a') : '';
+                                  return (
+                                    <div key={idx} className="mb-1 p-1 bg-yellow-100 rounded text-blue-900">
+                                      <div className="font-semibold text-base">{event.title}</div>
+                                      <div className="text-blue-800 font-semibold text-base">{startTime}{endTime && ` - ${endTime}`}</div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <BigCalendar
+                  localizer={localizer}
+                  events={formattedEvents}
+                  startAccessor="start"
+                  endAccessor="end"
+                  date={date}
+                  onNavigate={setDate}
+                  view={currentView}
+                  onView={setCurrentView as any}
+                  views={['month', 'week', 'day']}
+                  tooltipAccessor={(event: { title: string }) => event.title}
+                  formats={{
+                    weekdayFormat: (date: Date) => format(date, "EEE"),
+                  }}
+                />
+              )}
             </div>
           </CardContent>
         </Card>
