@@ -187,7 +187,7 @@ export default function CalendarPage() {
     <div className="space-y-6">
       <section>
         <div className="flex flex-col items-center mb-6">
-          <h2 className="text-2xl font-heading font-semibold mb-4">Calendar</h2>
+          <h2 className="text-3xl font-heading font-semibold mb-4">Calendar</h2>
           <div className="flex flex-col gap-2 items-center">
             <div className="text-sm font-medium text-neutral-dark text-center mb-2">
               Calendar Type
