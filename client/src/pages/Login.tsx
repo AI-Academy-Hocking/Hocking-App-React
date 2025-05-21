@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from "../components/ui/form";
 import { Card, CardContent } from "../components/ui/card";
+import HockingLogo from "../components/assets/HockingLogo.png";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -69,7 +70,7 @@ export default function Login() {
         <CardContent className="p-0">
           <div className="text-center mb-8">
             <img 
-              src="client\src\components\assets\Hocking_logo_Full_Color_RGB.webp" 
+              src="client\src\components\assets\HockingLogo.png" 
               alt="Hocking College Logo" 
               className="h-16 mx-auto mb-4" 
             />
