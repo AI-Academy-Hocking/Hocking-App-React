@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
@@ -7,13 +6,13 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { format, parse, startOfWeek, getDay, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
 import { enUS } from "date-fns/locale";
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Event } from "@shared/schema";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "../components/ui/skeleton";
+import { Event } from "../../../shared/schema";
+import { cn } from "../lib/utils";
+import { Badge } from "../components/ui/badge";
 
 
 const locales = {
@@ -42,10 +41,10 @@ interface CalendarEvent {
 
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
-
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
+  const [error, setError] = useState<string | null>(null);
   
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ['/api/events', activeCalendar],
@@ -58,17 +57,45 @@ export default function CalendarPage() {
   const monthEnd = endOfMonth(date);
 
   // Format events for the BigCalendar
-  const formattedEvents = events.map(event => ({
-    title: event.title,
-    start: new Date(event.date + 'T' + event.time.split(' - ')[0]),
-    end: new Date(event.date + 'T' + (event.time.split(' - ')[1] || event.time.split(' - ')[0])),
-    resource: { 
-      location: event.location, 
-      description: event.description,
-      id: event.id,
-      originalEvent: event
-    },
-  }));
+  const formattedEvents = events.map(event => {
+    const startDate = new Date(event.date);
+    const endDate = new Date(event.date); // Use same date for end if not specified
+    
+    let startHours = 0, startMinutes = 0, endHours = 23, endMinutes = 59;
+    
+    if (event.time) {
+      const [startTime, endTime] = event.time.split(" - ");
+      if (startTime) {
+        const [hours, minutes] = startTime.split(":").map(Number);
+        if (!isNaN(hours) && !isNaN(minutes)) {
+          startHours = hours;
+          startMinutes = minutes;
+        }
+      }
+      if (endTime) {
+        const [hours, minutes] = endTime.split(":").map(Number);
+        if (!isNaN(hours) && !isNaN(minutes)) {
+          endHours = hours;
+          endMinutes = minutes;
+        }
+      }
+    }
+    
+    startDate.setHours(startHours, startMinutes);
+    endDate.setHours(endHours, endMinutes);
+    
+    return {
+      title: event.title || "Untitled Event",
+      start: startDate,
+      end: endDate,
+      resource: { 
+        location: event.location || "No Location", 
+        description: event.description || "No Description",
+        id: event.id,
+        originalEvent: event
+      },
+    };
+  });
 
   // Filter events based on calendar type and date range
   const getFilteredEvents = (calendarType: "academic" | "activities") => {
@@ -104,64 +131,8 @@ export default function CalendarPage() {
       weekday: eventDate.toLocaleString('en-US', { weekday: 'short' }),
       month: eventDate.toLocaleString('en-US', { month: 'short' }),
       day: eventDate.getDate()
-
     };
-
-    fetchEvents();
-  }, []);
-
-  // Combine local events and calendar events
-  const combinedEvents = [
-    ...(localEvents || []).map(event => ({
-      id: String(event.id),
-      title: event.title,
-      date: event.date,
-      time: event.time,
-      end: event.date,
-      location: event.location,
-      description: event.description || ""
-    })),
-    ...calendarEvents,
-  ];
-
-  // Format events for the BigCalendar
-  const formattedEvents = combinedEvents.map((event) => {
-    const startDate = new Date(event.date || "");
-    const endDate = new Date(event.end || event.date || "");
-    
-    let startHours = 0, startMinutes = 0, endHours = 23, endMinutes = 59;
-    
-    if (event.time) {
-      const [startTime, endTime] = event.time.split(" - ");
-      if (startTime) {
-        const [hours, minutes] = startTime.split(":").map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          startHours = hours;
-          startMinutes = minutes;
-        }
-      }
-      if (endTime) {
-        const [hours, minutes] = endTime.split(":").map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          endHours = hours;
-          endMinutes = minutes;
-        }
-      }
-    }
-    
-    startDate.setHours(startHours, startMinutes);
-    endDate.setHours(endHours, endMinutes);
-    
-    return {
-      title: event.title || "Untitled Event",
-      start: startDate,
-      end: endDate,
-      resource: { 
-        location: event.location || "No Location", 
-        description: event.description || "No Description" 
-      },
-    };
-  });
+  };
 
   // Navigate between months
   const handlePreviousMonth = () => {
@@ -216,32 +187,36 @@ export default function CalendarPage() {
     <div className="space-y-6">
       <section>
         <div className="flex flex-col items-center mb-6">
-          <h2 className="text-xl font-heading font-semibold mb-4">Calendar</h2>
+          <h2 className="text-2xl font-heading font-semibold mb-4">Calendar</h2>
           <div className="flex flex-col gap-2 items-center">
             <div className="text-sm font-medium text-neutral-dark text-center mb-2">
               Calendar Type
             </div>
             <div className="flex gap-3">
-            <button 
-              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
-                activeCalendar === "academic" 
-                  ? "ring-2 ring-primary-light ring-offset-2" 
-                  : ""
-              } hover:bg-primary-light/10`}
-              onClick={() => setActiveCalendar("academic")}
-            >
-              Academic Calendar
-            </button>
-            <button 
-              className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
-                activeCalendar === "activities" 
-                  ? "ring-2 ring-primary-light ring-offset-2" 
-                  : ""
-              } hover:bg-primary-light/10`}
-              onClick={() => setActiveCalendar("activities")}
-            >
-              Student Activities
-            </button>
+              <Button 
+                variant={activeCalendar === "academic" ? "default" : "ghost"}
+                size="default"
+                onClick={() => setActiveCalendar("academic")}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
+                  activeCalendar === "academic" 
+                    ? "ring-2 ring-primary-light ring-offset-2" 
+                    : ""
+                } hover:bg-primary-light/10`}
+              >
+                Academic Calendar
+              </Button>
+              <Button 
+                variant={activeCalendar === "activities" ? "default" : "ghost"}
+                size="default"
+                onClick={() => setActiveCalendar("activities")}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
+                  activeCalendar === "activities" 
+                    ? "ring-2 ring-primary-light ring-offset-2" 
+                    : ""
+                } hover:bg-primary-light/10`}
+              >
+                Student Activities
+              </Button>
             </div>
           </div>
         </div>
@@ -282,16 +257,16 @@ export default function CalendarPage() {
 
             <div className="flex space-x-2 mb-4">
               <Button 
-                variant={view === "month" ? "default" : "outline"} 
-                size="sm" 
+                variant={view === "month" ? "default" : "ghost"} 
+                size="default" 
                 onClick={() => setView("month")}
                 aria-pressed={view === "month"}
               >
                 Month View
               </Button>
               <Button 
-                variant={view === "list" ? "default" : "outline"} 
-                size="sm" 
+                variant={view === "list" ? "default" : "ghost"} 
+                size="default" 
                 onClick={() => setView("list")}
                 aria-pressed={view === "list"}
               >
@@ -299,8 +274,8 @@ export default function CalendarPage() {
               </Button>
               {view === "list" && selectedDate && (
                 <Button 
-                  variant="outline" 
-                  size="sm" 
+                  variant="ghost" 
+                  size="default" 
                   onClick={() => setSelectedDate(null)}
                   className="ml-auto flex items-center"
                 >
@@ -409,8 +384,8 @@ export default function CalendarPage() {
           </h2>
           {selectedDate && view === "month" && (
             <Button 
-              variant="outline" 
-              size="sm" 
+              variant="ghost" 
+              size="default" 
               onClick={() => setSelectedDate(null)}
             >
               View All Events
@@ -589,7 +564,7 @@ export default function CalendarPage() {
         </div>
       </section>
 
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .rbc-month-view {
           border-radius: 8px;
           overflow: hidden;
@@ -662,7 +637,7 @@ export default function CalendarPage() {
           background-color: var(--primary);
           color: white;
         }
-      `}</style>
+      ` }} />
 
     </div>
   );
