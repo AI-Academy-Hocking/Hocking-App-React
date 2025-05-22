@@ -62,3 +62,14 @@ function Router() {
     </MainLayout>
   );
 }
+export default App;
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router />
+        <Toaster />
+      </AuthProvider>
+    </QueryClientProvider>
+  );
+}
