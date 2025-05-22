@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -42,12 +41,48 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    const [ripples, setRipples] = React.useState<Array<{ x: number; y: number; id: number }>>([])
+
+    const addRipple = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const button = e.currentTarget
+      const rect = button.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      const id = Date.now()
+
+      setRipples((prevRipples) => [...prevRipples, { x, y, id }])
+
+      // Remove ripple after animation completes
+      setTimeout(() => {
+        setRipples((prevRipples) => prevRipples.filter((ripple) => ripple.id !== id))
+      }, 600)
+    }
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          "relative overflow-hidden"
+        )}
         ref={ref}
+        onClick={addRipple}
         {...props}
-      />
+      >
+        {props.children}
+        {ripples.map((ripple) => (
+          <span
+            key={ripple.id}
+            className="absolute block rounded-full bg-white/20 animate-ripple"
+            style={{
+              left: ripple.x,
+              top: ripple.y,
+              width: "100px",
+              height: "100px",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        ))}
+      </Comp>
     )
   }
 )

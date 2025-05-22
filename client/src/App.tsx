@@ -19,8 +19,9 @@ import LibraryPage from "./pages/Library";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import './index.css';
-
 import './styles/globals.css';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Button } from "@/components/ui/button";
 
 function Router() {
   const [location] = useLocation();
@@ -31,37 +32,56 @@ function Router() {
   // If we're on the login page, don't wrap with MainLayout
   if (isLoginPage) {
     return (
-      <Switch>
-        <Route path="/" component={Login} />
-        <Route path="/login" component={Login} />
-        <Route component={NotFound} />
-      </Switch>
+      <TransitionGroup>
+        <CSSTransition
+          key={location}
+          timeout={300}
+          classNames="page-transition"
+          in={true}
+        >
+          <Switch>
+            <Route path="/" component={Login} />
+            <Route path="/login" component={Login} />
+            <Route component={NotFound} />
+          </Switch>
+        </CSSTransition>
+      </TransitionGroup>
     );
   }
 
   // For all other pages, wrap with MainLayout
   return (
     <MainLayout>
-      <Switch>
-        <Route path="/home" component={Home} />
-        <Route path="/calendar" component={Calendar} />
-        <Route path="/tools" component={StudentTools} />
-        <Route path="/maps" component={Maps} />
-        <Route path="/dining" component={DiningHall} />
-        <Route path="/discussions" component={Discussions} />
-        <Route path="/discussions/:id">
-          {(params) => <DiscussionDetail params={params} />}
-        </Route>
-        <Route path="/safety" component={CampusSafety} />
-        <Route path="/recreation" component={RecreationPage} />
-        <Route path="/library" component={LibraryPage} />
-        <Route path="/online-learning" component={OnlineLearningPage} />
-        <Route path="/student-organizations" component={StudentOrganizationsPage} />
-        <Route component={NotFound} />
-      </Switch>
+      <TransitionGroup>
+        <CSSTransition
+          key={location}
+          timeout={300}
+          classNames="page-transition"
+          in={true}
+        >
+          <Switch>
+            <Route path="/home" component={Home} />
+            <Route path="/calendar" component={Calendar} />
+            <Route path="/tools" component={StudentTools} />
+            <Route path="/maps" component={Maps} />
+            <Route path="/dining" component={DiningHall} />
+            <Route path="/discussions" component={Discussions} />
+            <Route path="/discussions/:id">
+              {(params) => <DiscussionDetail params={params} />}
+            </Route>
+            <Route path="/safety" component={CampusSafety} />
+            <Route path="/recreation" component={RecreationPage} />
+            <Route path="/library" component={LibraryPage} />
+            <Route path="/online-learning" component={OnlineLearningPage} />
+            <Route path="/student-organizations" component={StudentOrganizationsPage} />
+            <Route component={NotFound} />
+          </Switch>
+        </CSSTransition>
+      </TransitionGroup>
     </MainLayout>
   );
 }
+
 export default App;
 function App() {
   return (
