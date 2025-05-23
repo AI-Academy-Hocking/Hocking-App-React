@@ -1,0 +1,135 @@
+.rbc-month-view {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 0 0 1px #1e40af, 0 0 5px #1e40af, 0 0 10px #1e40af;
+  background-color: #dbeafe;
+}
+
+.rbc-header {
+  padding: 0;
+  background-color: #dbeafe !important;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid #1e40af;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  color: #1e40af;
+}
+
+.rbc-header.rbc-today {
+  background-color: #1e40af !important;
+  color: white;
+}
+
+.rbc-header + .rbc-header {
+  border-left: none;
+}
+
+.rbc-date-cell {
+  padding: 0;
+  text-align: center;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.rbc-day-bg {
+  background-color: #dbeafe;
+  border: 1px solid #1e40af;
+  flex: 1;
+  min-width: 0;
+}
+
+.rbc-row {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.rbc-row-content {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.rbc-month-row {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid #1e40af;
+}
+
+.rbc-date-cell > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.rbc-day-bg.selected-day {
+  background-color: var(--primary-light);
+  border-radius: 50%;
+}
+
+.rbc-day-bg.today-date {
+  position: relative;
+}
+
+.rbc-day-bg.has-events:before {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary);
+  border-radius: 50%;
+}
+
+.rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.event-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  margin: 2px auto;
+}
+
+.rbc-event-content {
+  display: flex;
+  justify-content: center;
+}
+
+.rbc-day-bg.rbc-today {
+  background-color: #eab308;
+}
+
+.rbc-date-cell.rbc-today > a {
+  color: #1e40af;
+  background-color: #eab308;
+  font-weight: bold;
+} 

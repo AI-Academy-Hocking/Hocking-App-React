@@ -2,25 +2,19 @@ import { createServer } from "http";
 import { WebSocketServer, WebSocket as WS } from "ws";
 import { storage } from "../storage";
 import calendarRouter from "./calendar";
-import { insertUserSchema, insertEventSchema, insertBuildingSchema, insertStudentToolSchema, insertDiscussionSchema, insertCommentSchema, insertSafetyAlertSchema, insertSafetyResourceSchema } from "@shared/schema";
+import { insertUserSchema, insertEventSchema, insertBuildingSchema, insertStudentToolSchema, insertDiscussionSchema, insertCommentSchema, insertSafetyAlertSchema, insertSafetyResourceSchema, } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-import { z } from "zod";
-// Define the location update schema here since we can't import it directly
-const locationUpdateSchema = z.object({
-    lat: z.number(),
-    lng: z.number(),
-    isLocationShared: z.boolean().optional(),
-});
+import { getEvents } from "./pages/Calendar.tsx";
 export async function registerRoutes(app) {
     const httpServer = createServer(app);
     const wss = new WebSocketServer({ server: httpServer });
     // Store connected clients
     const clients = new Set();
     // Handle WebSocket connections
-    wss.on('connection', (ws) => {
+    wss.on("connection", (ws) => {
         clients.add(ws);
-        ws.on('close', () => {
+        ws.on("close", () => {
             clients.delete(ws);
         });
     });
@@ -28,15 +22,15 @@ export async function registerRoutes(app) {
     async function broadcastLocationUpdate() {
         const sharedLocations = await storage.getSharedLocations();
         const message = JSON.stringify({
-            type: 'location_update',
-            locations: sharedLocations.map(user => ({
+            type: "location_update",
+            locations: sharedLocations.map((user) => ({
                 id: user.id,
                 lat: user.lat,
                 lng: user.lng,
-                isLocationShared: user.isLocationShared
-            }))
+                isLocationShared: user.isLocationShared,
+            })),
         });
-        clients.forEach(client => {
+        clients.forEach((client) => {
             if (client.readyState === WS.OPEN) {
                 client.send(message);
             }
@@ -49,14 +43,16 @@ export async function registerRoutes(app) {
         try {
             const { username, password } = req.body;
             if (!username || !password) {
-                return res.status(400).json({ message: "Username and password are required" });
+                return res
+                    .status(400)
+                    .json({ message: "Username and password are required" });
             }
             // For development, create a mock user with the provided credentials
             const mockUser = {
                 id: 1,
                 username,
                 name: username,
-                isGuest: false
+                isGuest: false,
             };
             res.status(200).json(mockUser);
         }
@@ -88,14 +84,15 @@ export async function registerRoutes(app) {
         }
     });
     // Events routes
-    app.get("/api/events", async (_req, res) => {
+    app.get("/api/events", async (req, res) => {
         try {
-            const events = await storage.getEvents();
-            res.status(200).json(events);
+            const calendarType = req.query.calendarType;
+            const events = await getEvents(calendarType);
+            res.json(events);
         }
         catch (error) {
             console.error("Error fetching events:", error);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(500).json({ error: "Failed to fetch events" });
         }
     });
     app.get("/api/events/:id", async (req, res) => {
@@ -204,7 +201,9 @@ export async function registerRoutes(app) {
             // Check if tool ID already exists
             const existingTool = await storage.getStudentTool(toolData.id);
             if (existingTool) {
-                return res.status(409).json({ message: "Student tool ID already exists" });
+                return res
+                    .status(409)
+                    .json({ message: "Student tool ID already exists" });
             }
             const newTool = await storage.createStudentTool(toolData);
             res.status(201).json(newTool);
@@ -226,11 +225,7 @@ export async function registerRoutes(app) {
                 return res.status(400).json({ message: "Invalid user ID" });
             }
             const locationData = locationUpdateSchema.parse(req.body);
-            const updatedUser = await storage.updateUserLocation(userId, {
-                lat: locationData.lat,
-                lng: locationData.lng,
-                isLocationShared: locationData.isLocationShared
-            });
+            const updatedUser = await storage.updateUserLocation(userId, locationData);
             if (!updatedUser) {
                 return res.status(404).json({ message: "User not found" });
             }
@@ -253,7 +248,7 @@ export async function registerRoutes(app) {
         try {
             const sharedLocations = await storage.getSharedLocations();
             // Don't send passwords in response
-            const locationsWithoutPasswords = sharedLocations.map(user => {
+            const locationsWithoutPasswords = sharedLocations.map((user) => {
                 const { password, ...userWithoutPassword } = user;
                 return userWithoutPassword;
             });
@@ -269,7 +264,7 @@ export async function registerRoutes(app) {
         try {
             const category = req.query.category;
             let discussions;
-            if (category && category !== 'all') {
+            if (category && category !== "all") {
                 discussions = await storage.getDiscussionsByCategory(category);
             }
             else {
@@ -277,8 +272,8 @@ export async function registerRoutes(app) {
             }
             // Fetch author info for each discussion
             const discussionsWithAuthor = await Promise.all(discussions.map(async (discussion) => {
-                const author = discussion.authorId ? await storage.getUser(discussion.authorId) : null;
-                let authorInfo = { id: discussion.authorId ?? 0, username: "Unknown" };
+                const author = await storage.getUser(discussion.authorId);
+                let authorInfo = { id: discussion.authorId, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
@@ -305,37 +300,13 @@ export async function registerRoutes(app) {
                 return res.status(404).json({ message: "Discussion not found" });
             }
             // Get author info
-            const author = discussion.authorId ? await storage.getUser(discussion.authorId) : null;
-            let authorInfo = { id: discussion.authorId ?? 0, username: "Unknown" };
+            const author = await storage.getUser(discussion.authorId);
+            let authorInfo = { id: discussion.authorId, username: "Unknown" };
             if (author) {
                 const { password, ...userWithoutPassword } = author;
                 authorInfo = { ...userWithoutPassword };
             }
-            // Get comments for a discussion
-            const comments = await storage.getComments(discussion.id);
-            const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-                // Get author info
-                const author = comment.authorId ? await storage.getUser(comment.authorId) : null;
-                let authorInfo = { id: comment.authorId ?? 0, username: "Unknown" };
-                if (author) {
-                    const { password, ...userWithoutPassword } = author;
-                    authorInfo = { ...userWithoutPassword };
-                }
-                // Get replies
-                const replies = await storage.getCommentReplies(comment.id);
-                // Get author info for each reply
-                const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-                    const replyAuthor = reply.authorId ? await storage.getUser(reply.authorId) : null;
-                    let replyAuthorInfo = { id: reply.authorId ?? 0, username: "Unknown" };
-                    if (replyAuthor) {
-                        const { password, ...userWithoutPassword } = replyAuthor;
-                        replyAuthorInfo = { ...userWithoutPassword };
-                    }
-                    return { ...reply, author: replyAuthorInfo };
-                }));
-                return { ...comment, author: authorInfo, replies: repliesWithAuthor };
-            }));
-            res.status(200).json({ ...discussion, author: authorInfo, comments: commentsWithDetails });
+            res.status(200).json({ ...discussion, author: authorInfo });
         }
         catch (error) {
             console.error("Error fetching discussion:", error);
@@ -347,8 +318,8 @@ export async function registerRoutes(app) {
             const discussionData = insertDiscussionSchema.parse(req.body);
             const newDiscussion = await storage.createDiscussion(discussionData);
             // Get author info
-            const author = newDiscussion.authorId ? await storage.getUser(newDiscussion.authorId) : null;
-            let authorInfo = { id: newDiscussion.authorId ?? 0, username: "Unknown" };
+            const author = await storage.getUser(newDiscussion.authorId);
+            let authorInfo = { id: newDiscussion.authorId, username: "Unknown" };
             if (author) {
                 const { password, ...userWithoutPassword } = author;
                 authorInfo = { ...userWithoutPassword };
@@ -370,8 +341,8 @@ export async function registerRoutes(app) {
         try {
             const comments = await storage.getAllComments();
             const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-                const author = comment.authorId ? await storage.getUser(comment.authorId) : null;
-                let authorInfo = { id: comment.authorId ?? 0, username: "Unknown" };
+                const author = await storage.getUser(comment.authorId);
+                let authorInfo = { id: comment.authorId, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
@@ -380,7 +351,7 @@ export async function registerRoutes(app) {
                 return {
                     ...comment,
                     author: authorInfo,
-                    discussionTitle: discussion?.title || "Unknown Discussion"
+                    discussionTitle: discussion?.title || "Unknown Discussion",
                 };
             }));
             res.status(200).json(commentsWithDetails);
@@ -401,8 +372,8 @@ export async function registerRoutes(app) {
             // Fetch author info and replies for each comment
             const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
                 // Get author info
-                const author = comment.authorId ? await storage.getUser(comment.authorId) : null;
-                let authorInfo = { id: comment.authorId ?? 0, username: "Unknown" };
+                const author = await storage.getUser(comment.authorId);
+                let authorInfo = { id: comment.authorId, username: "Unknown" };
                 if (author) {
                     const { password, ...userWithoutPassword } = author;
                     authorInfo = { ...userWithoutPassword };
@@ -411,15 +382,22 @@ export async function registerRoutes(app) {
                 const replies = await storage.getCommentReplies(comment.id);
                 // Get author info for each reply
                 const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-                    const replyAuthor = reply.authorId ? await storage.getUser(reply.authorId) : null;
-                    let replyAuthorInfo = { id: reply.authorId ?? 0, username: "Unknown" };
+                    const replyAuthor = await storage.getUser(reply.authorId);
+                    let replyAuthorInfo = {
+                        id: reply.authorId,
+                        username: "Unknown",
+                    };
                     if (replyAuthor) {
                         const { password, ...userWithoutPassword } = replyAuthor;
                         replyAuthorInfo = { ...userWithoutPassword };
                     }
                     return { ...reply, author: replyAuthorInfo };
                 }));
-                return { ...comment, author: authorInfo, replies: repliesWithAuthor };
+                return {
+                    ...comment,
+                    author: authorInfo,
+                    replies: repliesWithAuthor,
+                };
             }));
             res.status(200).json(commentsWithDetails);
         }
@@ -436,17 +414,19 @@ export async function registerRoutes(app) {
             }
             const commentData = insertCommentSchema.parse({
                 ...req.body,
-                discussionId
+                discussionId,
             });
             const newComment = await storage.createComment(commentData);
-            // Get author info for new comment
-            const commentAuthor = newComment.authorId ? await storage.getUser(newComment.authorId) : null;
-            let commentAuthorInfo = { id: newComment.authorId ?? 0, username: "Unknown" };
-            if (commentAuthor) {
-                const { password, ...userWithoutPassword } = commentAuthor;
-                commentAuthorInfo = { ...userWithoutPassword };
+            // Get author info
+            const author = await storage.getUser(newComment.authorId);
+            let authorInfo = { id: newComment.authorId, username: "Unknown" };
+            if (author) {
+                const { password, ...userWithoutPassword } = author;
+                authorInfo = { ...userWithoutPassword };
             }
-            res.status(201).json({ ...newComment, author: commentAuthorInfo, replies: [] });
+            res
+                .status(201)
+                .json({ ...newComment, author: authorInfo, replies: [] });
         }
         catch (error) {
             if (error instanceof ZodError) {
@@ -549,5 +529,42 @@ export async function registerRoutes(app) {
             res.status(500).json({ message: "Internal server error" });
         }
     });
+    // Create HTTP server
+    const httpServer = createServer(app);
+    // Set up WebSocket server for real-time location updates
+    const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
+    wss.on("connection", (socket) => {
+        console.log("WebSocket client connected");
+        socket.on("message", async (message) => {
+            try {
+                // Parse and process location updates from clients if needed
+                console.log("Received message:", message.toString());
+            }
+            catch (error) {
+                console.error("Error processing WebSocket message:", error);
+            }
+        });
+        socket.on("close", () => {
+            console.log("WebSocket client disconnected");
+        });
+    });
+    // Broadcast location updates to all connected clients
+    async function broadcastLocationUpdate() {
+        const sharedLocations = await storage.getSharedLocations();
+        // Remove sensitive info like passwords
+        const sanitizedLocations = sharedLocations.map((user) => {
+            const { password, ...userWithoutPassword } = user;
+            return userWithoutPassword;
+        });
+        // Broadcast to all connected clients
+        wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({
+                    type: "location_update",
+                    data: sanitizedLocations,
+                }));
+            }
+        });
+    }
     return httpServer;
 }

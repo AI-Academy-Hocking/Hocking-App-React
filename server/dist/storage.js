@@ -233,28 +233,7 @@ export class MemStorage {
             name: "Student User",
             email: "student@hocking.edu",
         });
-        // Sample events
-        await this.createEvent({
-            title: "Fall Festival",
-            description: "Annual celebration with food, games, and activities for students and faculty.",
-            date: "2023-10-15",
-            time: "12:00 PM - 4:00 PM",
-            location: "Student Center",
-        });
-        await this.createEvent({
-            title: "Career Fair",
-            description: "Meet with employers from around the region for internship and job opportunities.",
-            date: "2023-10-20",
-            time: "10:00 AM - 2:00 PM",
-            location: "Main Hall",
-        });
-        await this.createEvent({
-            title: "Registration Deadline",
-            description: "Last day to register for Spring semester classes without late fees.",
-            date: "2023-11-05",
-            time: "11:59 PM",
-            location: "For Spring Semester",
-        });
+        // No sample events - removed
         // Sample buildings
         await this.createBuilding({
             name: "Main Hall",
