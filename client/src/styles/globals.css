@@ -8,20 +8,24 @@
 /* Page transition classes */
 .page-transition-enter {
   opacity: 0;
+  transform: translateY(20px);
 }
 
 .page-transition-enter-active {
   opacity: 1;
-  transition: opacity 300ms ease-in;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
 }
 
 .page-transition-exit {
   opacity: 1;
+  transform: translateY(0);
 }
 
 .page-transition-exit-active {
   opacity: 0;
-  transition: opacity 300ms ease-out;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
 }
 
 /* Ripple animation */
@@ -191,3 +195,80 @@ a, .accent {
 .active\:bg-primary-dark:active { background-color: var(--color-primary-dark); }
 .active\:bg-secondary-dark:active { background-color: var(--color-secondary-dark); }
 .active\:bg-accent-dark:active { background-color: var(--color-accent-dark); }
+
+/* Card Hover Animations */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Hover Effects */
+.button-hover {
+  transition: all 0.2s ease;
+}
+
+.button-hover:hover {
+  transform: scale(1.05);
+}
+
+/* List Item Animations */
+.list-item-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.list-item-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Fade In Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Scale In Animation */
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Slide In Animation */
+.slide-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
