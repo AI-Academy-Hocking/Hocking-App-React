@@ -2,6 +2,7 @@ import { useAuth } from "../lib/auth";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { Card, CardContent } from "../components/ui/card";
+import hockingLogo from "../components/assets/HockingLogo.png";
 
 export default function Login() {
   const { guestLogin } = useAuth();
@@ -32,7 +33,7 @@ export default function Login() {
           <div className="text-center space-y-6">
             <div>
               <img 
-                src="client\src\components\assets\HockingLogo.png" 
+                src={hockingLogo}
                 alt="Hocking College Logo" 
                 className="h-20 mx-auto mb-6" 
               />
