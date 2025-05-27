@@ -1,8 +1,15 @@
-import React from "react";
+
 import { useLocation, Link } from "wouter";
 import { useAuth } from "../../lib/auth";
-import { Home, Dumbbell, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
-import HockingLogo from "./assets/HockingLogo.png";
+import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import HockingLogo from "../../assets/HawkLogo.png";
+import { LucideIcon } from "lucide-react";
+
+interface NavItem {
+  path: string;
+  label: string;
+  icon: LucideIcon;
+}
 
 export default function Sidebar() {
   const [location] = useLocation();
@@ -10,7 +17,7 @@ export default function Sidebar() {
 
   const isActive = (path: string) => location === path;
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { path: "/home", label: "Home", icon: Home },
     { path: "/calendar", label: "Calendar", icon: CalendarDays },
     { path: "/tools", label: "Student Tools", icon: Wrench },
@@ -34,15 +41,14 @@ export default function Sidebar() {
         <ul>
           {navItems.map((item) => (
             <li key={item.path} className="mb-2">
-              <Link href={item.path}>
-                <a 
-                  className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition ${
-                    isActive(item.path) ? 'bg-gray-700' : ''
-                  }`}
-                >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  <span>{item.label}</span>
-                </a>
+              <Link 
+                href={item.path}
+                className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition ${
+                  isActive(item.path) ? 'bg-gray-700' : ''
+                }`}
+              >
+                <item.icon className="mr-3 h-5 w-5" />
+                <span>{item.label}</span>
               </Link>
             </li>
           ))}
