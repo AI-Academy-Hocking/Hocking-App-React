@@ -47,7 +47,7 @@ export default function Login() {
                 onClick={handleGuestLogin}
                 className="w-full bg-primary text-black py-3 text-lg rounded-lg font-semibold hover:bg-primary-dark transition shadow-md border-2 border-black"
               >
-                Enter Campus Portal
+                Enter Home Page
               </Button>
             </div>
           </div>
