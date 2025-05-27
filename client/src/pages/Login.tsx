@@ -26,8 +26,18 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen relative overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/src/components/assets/campus-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/50" /> {/* Overlay for better text readability */}
+      <Card className="w-full max-w-md p-8 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10">
         <CardContent className="p-0">
           <div className="text-center space-y-6">
             <div>
