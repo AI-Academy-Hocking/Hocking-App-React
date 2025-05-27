@@ -17,6 +17,14 @@ export default function Login() {
     });
   };
 
+  const handleHomeNavigation = () => {
+    guestLogin();
+    toast({
+      title: "Welcome Guest",
+      description: "You are now logged in as a guest",
+    });
+  };
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen bg-gray-100">
       <Card className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
@@ -29,7 +37,7 @@ export default function Login() {
                 className="h-20 mx-auto mb-6" 
               />
               <h1 className="text-3xl font-bold text-primary mb-3">Welcome to Hocking College</h1>
-              <p className="text-lg text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
+              <p className="text-base text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
             </div>
             
             <div className="pt-4 space-y-3">
@@ -45,6 +53,7 @@ export default function Login() {
                 <Button 
                   type="button" 
                   variant="ghost"
+                  onClick={handleHomeNavigation}
                   className="w-full py-3 text-lg rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
                 >
                   <Home className="h-5 w-5" />
