@@ -2,6 +2,8 @@ import { useAuth } from "../lib/auth";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { Card, CardContent } from "../components/ui/card";
+import { Link } from "wouter";
+import { Home } from "lucide-react";
 
 export default function Login() {
   const { guestLogin } = useAuth();
@@ -30,7 +32,7 @@ export default function Login() {
               <p className="text-lg text-neutral-dark">Your gateway to campus resources and information</p>
             </div>
             
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
               <Button 
                 type="button" 
                 onClick={handleGuestLogin}
@@ -38,6 +40,17 @@ export default function Login() {
               >
                 Enter Campus Portal
               </Button>
+
+              <Link href="/home">
+                <Button 
+                  type="button" 
+                  variant="outline"
+                  className="w-full py-3 text-lg rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
+                >
+                  <Home className="h-5 w-5" />
+                  Go to Home Page
+                </Button>
+              </Link>
             </div>
           </div>
         </CardContent>
