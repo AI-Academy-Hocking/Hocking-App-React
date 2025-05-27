@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import StyleExample from "../components/StyleExample";
-
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -183,7 +181,6 @@ export default function CalendarPage() {
 
   return (
     <div className="space-y-6">
-      <StyleExample />
       <div className="space-y-6 bg-blue-800 p-6 rounded-lg border-4 border-yellow-500 shadow-[0_0_0_1px_#eab308,0_0_2px_#eab308,0_0_4px_#eab308,0_0_6px_#eab308,0_0_8px_#eab308,0_0_10px_#eab308,0_0_20px_#eab308,0_0_30px_#eab308,0_0_40px_#eab308]">
         <section>
           <div className="flex flex-col items-center mb-6">

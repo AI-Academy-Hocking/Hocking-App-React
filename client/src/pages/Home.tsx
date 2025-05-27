@@ -5,7 +5,7 @@ import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
 import { useAuth } from "../lib/auth";
-import HockingBackground from "../components/assets/Campus.jpeg";  
+// import HockingBackground from "../components/assets/Campus.jpeg";
 
 // Define a local Event type for type safety
 export type Event = {
@@ -56,17 +56,18 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full min-h-screen">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">
+        <h2 className="text-xl font-heading font-semibold mb-4 text-white [text-shadow:_-1px_-1px_0_#eab308,_1px_-1px_0_#eab308,_-1px_1px_0_#eab308,_1px_1px_0_#eab308]">
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}
         </h2>
-        <Card className="overflow-hidden">
-          <img 
+        <Card className="overflow-hidden rounded-lg shadow-[0_0_0_2px_#eab308,0_0_10px_#eab308] hover:shadow-[0_0_0_2px_#eab308,0_0_15px_#eab308] transition">
+          {/* Remove the image since HockingBackground is not available */}
+          {/* <img 
             src={HockingBackground}
             alt="Hocking College Campus" 
             className="w-full h-48 object-cover" 
-          />
+          /> */}
           <CardContent className="p-4">
             <p className="text-neutral-dark">
               Explore all that Hocking College has to offer. Access your student resources, 
@@ -77,13 +78,13 @@ export default function Home() {
       </section>
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Quick Access</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-white [text-shadow:_-1px_-1px_0_#eab308,_1px_-1px_0_#eab308,_-1px_1px_0_#eab308,_1px_1px_0_#eab308]">Quick Access</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {quickLinks.map((link, index) => (
             <Link key={index} href={link.href}>
-              <a className="bg-white hover:bg-gray-50 rounded-lg shadow-[0_0_0_2px_#eab308,0_0_10px_#eab308] p-4 flex flex-col items-center text-center hover:shadow-[0_0_0_2px_#eab308,0_0_15px_#eab308] transition">
+              <a className="bg-blue-100 hover:bg-blue-200 rounded-lg border-2 border-white shadow-[0_0_10px_2px_white,0_0_0_2px_white] p-4 flex flex-col items-center text-center transition">
                 <link.icon className="text-primary text-3xl mb-2 h-8 w-8" stroke="#1e40af" strokeWidth={2.5} fill="#fff" />
-                <span className="font-semibold text-primary">{link.label}</span>
+                <span className="font-semibold" style={{ color: '#1e40af' }}>{link.label}</span>
               </a>
             </Link>
           ))}
@@ -91,8 +92,8 @@ export default function Home() {
       </section>
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Upcoming Events</h2>
-        <Card>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-white [text-shadow:_-1px_-1px_0_#eab308,_1px_-1px_0_#eab308,_-1px_1px_0_#eab308,_1px_1px_0_#eab308]">Upcoming Events</h2>
+        <Card className="rounded-lg border-2 border-white bg-white shadow-[0_0_16px_4px_white]">
           {eventsLoading ? (
             <div className="divide-y divide-neutral-light">
               {[1, 2, 3].map((i) => (
@@ -108,12 +109,12 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <ul className="divide-y divide-neutral-light">
+            <ul className="divide-y divide-neutral-light bg-transparent">
               {events && events.length > 0 ? (
                 events.slice(0, 3).map((event) => {
                   const { month, day } = formatEventDate(event.date);
                   return (
-                    <li key={event.id} className="p-4">
+                    <li key={event.id} className="p-4 bg-transparent">
                       <div className="flex items-start">
                         <div className="flex-shrink-0 bg-primary-light text-white rounded p-2 text-center mr-4">
                           <div className="text-sm font-bold">{month}</div>
@@ -128,11 +129,11 @@ export default function Home() {
                   );
                 })
               ) : (
-                <li className="p-4 text-center text-neutral-dark">No upcoming events</li>
+                <li className="p-4 text-center bg-[linear-gradient(to_bottom,#facc15_0%,#facc15_40%,#e0f2fe_100%)] text-neutral-dark rounded-t-lg">No upcoming events</li>
               )}
             </ul>
           )}
-          <div className="p-3 border-t border-neutral-light">
+          <div className="p-3 bg-blue-100 rounded-b-lg">
             <Link href="/calendar">
               <a className="text-primary hover:text-primary-dark text-sm font-semibold flex items-center justify-center">
                 View Full Calendar

@@ -1,8 +1,9 @@
-import { Router } from 'express';
+import express from 'express';
 import * as ical from 'ical';
 import fetch from 'node-fetch';
-const router = Router();
+const router = express.Router();
 const CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+// GET /api/calendar/events
 router.get('/events', async (req, res) => {
     try {
         console.log('Attempting to fetch calendar from URL:', CALENDAR_URL);

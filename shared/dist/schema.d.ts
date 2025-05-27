@@ -191,8 +191,8 @@ export declare const insertUserSchema: z.ZodObject<Omit<{
     username: string;
     password: string;
     name?: string | null | undefined;
-    isGuest?: boolean | null | undefined;
     email?: string | null | undefined;
+    isGuest?: boolean | null | undefined;
     lat?: number | null | undefined;
     lng?: number | null | undefined;
     isLocationShared?: boolean | null | undefined;
@@ -201,8 +201,8 @@ export declare const insertUserSchema: z.ZodObject<Omit<{
     username: string;
     password: string;
     name?: string | null | undefined;
-    isGuest?: boolean | null | undefined;
     email?: string | null | undefined;
+    isGuest?: boolean | null | undefined;
     lat?: number | null | undefined;
     lng?: number | null | undefined;
     isLocationShared?: boolean | null | undefined;

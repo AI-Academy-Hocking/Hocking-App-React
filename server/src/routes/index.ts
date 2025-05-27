@@ -14,24 +14,43 @@ import {
   insertSafetyResourceSchema,
   type LocationUpdate,
   type User,
-} from "@shared/schema";
-import { ZodError } from "zod";
-import { fromZodError } from "zod-validation-error";
+} from "../../shared/src";
+import { z } from "zod";
+import { ZodError } from "zod-validation-error";
 
-import { getEvents } from "./pages/Calendar.tsx";
+// Define locationUpdateSchema
+const locationUpdateSchema = z.object({
+  lat: z.string(),
+  lng: z.string(),
+  isLocationShared: z.boolean().optional()
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Create HTTP server
   const httpServer = createServer(app);
-  const wss = new WebSocketServer({ server: httpServer });
+
+  // Set up WebSocket server for real-time location updates
+  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
 
   // Store connected clients
   const clients = new Set<WS>();
 
   // Handle WebSocket connections
   wss.on("connection", (ws: WS) => {
+    console.log("WebSocket client connected");
     clients.add(ws);
 
+    ws.on("message", async (message) => {
+      try {
+        // Parse and process location updates from clients if needed
+        console.log("Received message:", message.toString());
+      } catch (error) {
+        console.error("Error processing WebSocket message:", error);
+      }
+    });
+
     ws.on("close", () => {
+      console.log("WebSocket client disconnected");
       clients.delete(ws);
     });
   });
@@ -39,14 +58,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Function to broadcast location updates to all connected clients
   async function broadcastLocationUpdate() {
     const sharedLocations = await storage.getSharedLocations();
+    
+    // Remove sensitive info like passwords
+    const sanitizedLocations = sharedLocations.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+
     const message = JSON.stringify({
       type: "location_update",
-      locations: sharedLocations.map((user) => ({
-        id: user.id,
-        lat: user.lat,
-        lng: user.lng,
-        isLocationShared: user.isLocationShared,
-      })),
+      locations: sanitizedLocations,
     });
 
     clients.forEach((client) => {
@@ -115,8 +136,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Events routes
   app.get("/api/events", async (req, res) => {
     try {
-      const calendarType = req.query.calendarType as string | undefined;
-      const events = await getEvents(calendarType);
+      const events = await storage.getEvents();
       res.json(events);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -648,52 +668,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-
-  // Create HTTP server
-  const httpServer = createServer(app);
-
-  // Set up WebSocket server for real-time location updates
-  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
-
-  wss.on("connection", (socket) => {
-    console.log("WebSocket client connected");
-
-    socket.on("message", async (message) => {
-      try {
-        // Parse and process location updates from clients if needed
-        console.log("Received message:", message.toString());
-      } catch (error) {
-        console.error("Error processing WebSocket message:", error);
-      }
-    });
-
-    socket.on("close", () => {
-      console.log("WebSocket client disconnected");
-    });
-  });
-
-  // Broadcast location updates to all connected clients
-  async function broadcastLocationUpdate() {
-    const sharedLocations = await storage.getSharedLocations();
-
-    // Remove sensitive info like passwords
-    const sanitizedLocations = sharedLocations.map((user) => {
-      const { password, ...userWithoutPassword } = user;
-      return userWithoutPassword;
-    });
-
-    // Broadcast to all connected clients
-    wss.clients.forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(
-          JSON.stringify({
-            type: "location_update",
-            data: sanitizedLocations,
-          }),
-        );
-      }
-    });
-  }
 
   return httpServer;
 }
