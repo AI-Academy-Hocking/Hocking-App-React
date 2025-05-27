@@ -24,12 +24,12 @@ export default function Login() {
           <div className="text-center space-y-6">
             <div>
               <img 
-                src="client\src\components\assets\Hocking_logo_Full_Color_RGB.webp" 
+                src="client\src\components\assets\HockingLogo.png" 
                 alt="Hocking College Logo" 
                 className="h-20 mx-auto mb-6" 
               />
               <h1 className="text-3xl font-bold text-primary mb-3">Welcome to Hocking College</h1>
-              <p className="text-lg text-neutral-dark">Your gateway to campus resources and information</p>
+              <p className="text-lg text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
             </div>
             
             <div className="pt-4 space-y-3">
@@ -44,7 +44,7 @@ export default function Login() {
               <Link href="/home">
                 <Button 
                   type="button" 
-                  variant="outline"
+                  variant="ghost"
                   className="w-full py-3 text-lg rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
                 >
                   <Home className="h-5 w-5" />
