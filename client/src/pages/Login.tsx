@@ -28,7 +28,7 @@ export default function Login() {
         <source src="/src/components/assets/campus-video.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-black/50" /> {/* Overlay for better text readability */}
-      <Card className="w-full max-w-md p-8 bg-gray-100/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10">
+      <Card className="w-full max-w-md p-8 bg-gray-100/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10 border border-black">
         <CardContent className="p-0">
           <div className="text-center space-y-6">
             <div>
@@ -45,7 +45,7 @@ export default function Login() {
               <Button 
                 type="button" 
                 onClick={handleGuestLogin}
-                className="w-full bg-primary text-black py-3 text-lg rounded-lg font-semibold hover:bg-primary-dark transition shadow-md border-2 border-black"
+                className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
               >
                 Enter Home Page
               </Button>
