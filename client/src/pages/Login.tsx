@@ -28,7 +28,7 @@ export default function Login() {
         <source src="/src/components/assets/campus-video.mp4" type="video/mp4" />
       </video>
       <div className="absolute inset-0 bg-black/50" /> {/* Overlay for better text readability */}
-      <Card className="w-full max-w-md p-8 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10">
+      <Card className="w-full max-w-md p-8 bg-gray-100/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10">
         <CardContent className="p-0">
           <div className="text-center space-y-6">
             <div>
