@@ -2,22 +2,12 @@ import { useAuth } from "../lib/auth";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { Card, CardContent } from "../components/ui/card";
-import { Link } from "wouter";
-import { Home } from "lucide-react";
 
 export default function Login() {
   const { guestLogin } = useAuth();
   const { toast } = useToast();
 
   const handleGuestLogin = () => {
-    guestLogin();
-    toast({
-      title: "Welcome Guest",
-      description: "You are now logged in as a guest",
-    });
-  };
-
-  const handleHomeNavigation = () => {
     guestLogin();
     toast({
       title: "Welcome Guest",
@@ -50,26 +40,14 @@ export default function Login() {
               <p className="text-base text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
             </div>
             
-            <div className="pt-4 space-y-3">
+            <div className="pt-4">
               <Button 
                 type="button" 
                 onClick={handleGuestLogin}
-                className="w-full bg-primary text-white py-3 text-lg rounded-lg font-semibold hover:bg-primary-dark transition shadow-md"
+                className="w-full bg-primary text-black py-3 text-lg rounded-lg font-semibold hover:bg-primary-dark transition shadow-md border-2 border-black"
               >
                 Enter Campus Portal
               </Button>
-
-              <Link href="/home">
-                <Button 
-                  type="button" 
-                  variant="ghost"
-                  onClick={handleHomeNavigation}
-                  className="w-full py-3 text-lg rounded-lg font-semibold hover:bg-gray-100 transition flex items-center justify-center gap-2"
-                >
-                  <Home className="h-5 w-5" />
-                  Go to Home Page
-                </Button>
-              </Link>
             </div>
           </div>
         </CardContent>
