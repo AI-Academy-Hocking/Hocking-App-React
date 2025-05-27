@@ -18,6 +18,7 @@ import RecreationPage from "./pages/Recreation";
 import LibraryPage from "./pages/Library";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
+import ProgramDetails from "./pages/ProgramDetails";
 
 import './styles/globals.css';
 
@@ -56,6 +57,7 @@ function Router() {
         <Route path="/library" component={LibraryPage} />
         <Route path="/online-learning" component={OnlineLearningPage} />
         <Route path="/student-organizations" component={StudentOrganizationsPage} />
+        <Route path="/programs/:id" component={ProgramDetails} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
