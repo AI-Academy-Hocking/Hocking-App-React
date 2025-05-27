@@ -176,15 +176,15 @@ export default function CampusSafety() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-medium text-blue-800 mb-2">Emergency Contact</h4>
+                  <h4 className="font-medium text-blue-800 mb-2">Contact</h4>
                   <a href="tel:740-753-6598" className="flex items-center gap-2 text-blue-700 hover:text-blue-900">
                     <PhoneCall className="h-4 w-4" />
-                    911
+                    740-753-6598
                   </a>
                 </div>
                 <div>
                   <h4 className="font-medium text-blue-800 mb-2">Location</h4>
-                  <p className="text-blue-700">Hocking college police department</p>
+                  <p className="text-blue-700">Hocking College Safety Department</p>
                 </div>
               </div>
             </CardContent>
@@ -192,8 +192,7 @@ export default function CampusSafety() {
 
           <div className="flex flex-wrap gap-2 mb-4">
             <Button
-              variant={resourceCategory === "all" ? "default" : "outline"}
-              size="sm"
+              variant={resourceCategory === "all" ? "default" : "ghost"}
               onClick={() => setResourceCategory("all")}
               className="rounded-full"
             >
@@ -202,8 +201,7 @@ export default function CampusSafety() {
             {categories.map((category) => (
               <Button
                 key={category}
-                variant={resourceCategory === category ? "default" : "outline"}
-                size="sm"
+                variant={resourceCategory === category ? "default" : "ghost"}
                 onClick={() => setResourceCategory(category)}
                 className="rounded-full"
               >
