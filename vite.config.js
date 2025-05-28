@@ -36,52 +36,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const vite_1 = require("vite");
-const plugin_react_1 = __importDefault(require("@vitejs/plugin-react"));
-const vite_plugin_shadcn_theme_json_1 = __importDefault(require("@replit/vite-plugin-shadcn-theme-json"));
-const path_1 = __importStar(require("path"));
-const vite_plugin_runtime_error_modal_1 = __importDefault(require("@replit/vite-plugin-runtime-error-modal"));
-const url_1 = require("url");
-const __filename = (0, url_1.fileURLToPath)(import.meta.url);
-const __dirname = (0, path_1.dirname)(__filename);
-exports.default = (0, vite_1.defineConfig)({
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import shadcnThemeJson from '@replit/vite-plugin-shadcn-theme-json';
+import runtimeErrorModal from '@replit/vite-plugin-runtime-error-modal';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default defineConfig({
     plugins: [
-        (0, plugin_react_1.default)(),
-        (0, vite_plugin_runtime_error_modal_1.default)(),
-        (0, vite_plugin_shadcn_theme_json_1.default)(),
-        ...(process.env.NODE_ENV !== "production" &&
-            process.env.REPL_ID !== undefined
-            ? [
-                require("@replit/vite-plugin-cartographer").cartographer(),
-            ]
-            : []),
+        react(),
+        runtimeErrorModal(),
+        shadcnThemeJson(),
     ],
     resolve: {
         alias: {
-            "@": path_1.default.resolve(__dirname, "client", "src"),
-            "@shared": path_1.default.resolve(__dirname, "shared"),
-            "@assets": path_1.default.resolve(__dirname, "attached_assets"),
+            '@': dirname(__dirname) + '/client/src',
+            '@shared': dirname(__dirname) + '/shared',
+            '@assets': dirname(__dirname) + '/attached_assets',
         },
-        extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
     },
-    root: path_1.default.resolve(__dirname, "client"),
     build: {
-        outDir: path_1.default.resolve(__dirname, "dist/public"),
+        outDir: 'dist',
         emptyOutDir: true,
-        sourcemap: true
     },
-    optimizeDeps: {
-        include: ['@sinclair/typebox'],
-        esbuildOptions: {
-            target: 'es2020',
-            supported: {
-                'top-level-await': true
-            }
-        }
-    },
-    server: {
-        fs: {
-            strict: false
-        }
-    }
 });

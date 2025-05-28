@@ -1,4 +1,4 @@
-const express = require('express');
+import express, { Express } from 'express';
 const cors = require('cors');
 const { registerRoutes } = require('./routes');
 
@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Register all routes
-registerRoutes(app).then((server) => {
+registerRoutes(app).then((server: Express) => {
   server.listen(port, () => {
     console.log(`Server running on port ${port}`);
   });

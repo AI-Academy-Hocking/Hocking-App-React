@@ -56,7 +56,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full min-h-screen">
+    <div className="min-h-screen bg-blue-800 scale-90">
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-white [text-shadow:_-1px_-1px_0_#eab308,_1px_-1px_0_#eab308,_-1px_1px_0_#eab308,_1px_1px_0_#eab308]">
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}

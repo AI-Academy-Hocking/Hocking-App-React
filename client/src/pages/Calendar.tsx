@@ -180,8 +180,8 @@ export default function CalendarPage() {
 
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-6 bg-blue-800 p-6 rounded-lg border-4 border-yellow-500 shadow-[0_0_0_1px_#eab308,0_0_2px_#eab308,0_0_4px_#eab308,0_0_6px_#eab308,0_0_8px_#eab308,0_0_10px_#eab308,0_0_20px_#eab308,0_0_30px_#eab308,0_0_40px_#eab308]">
+    <div className="min-h-screen bg-blue-800 py-8 flex justify-center">
+      <div className="w-full px-4 space-y-6 bg-blue-800 p-6 rounded-xl shadow-lg">
         <section>
           <div className="flex flex-col items-center mb-6">
             <h2 className="text-3xl font-heading font-semibold mb-4 text-white [text-shadow:_-1px_-1px_0_#eab308,_1px_-1px_0_#eab308,_-1px_1px_0_#eab308,_1px_1px_0_#eab308]">Calendar</h2>
@@ -198,7 +198,7 @@ export default function CalendarPage() {
                   }`}
                   onClick={() => setActiveCalendar("academic")}
                 >
-                  Academic Calendar
+                  Academic
                 </button>
                 <button 
                   className={`px-4 py-2 text-sm font-medium transition-colors rounded-md bg-white text-blue-800 ${
@@ -208,7 +208,7 @@ export default function CalendarPage() {
                   }`}
                   onClick={() => setActiveCalendar("activities")}
                 >
-                  Student Activities
+                  Activities
                 </button>
               </div>
             </div>
@@ -389,156 +389,28 @@ export default function CalendarPage() {
                   onClick={() => setActiveCalendar("academic")}
                   className={`text-xs px-2 py-1 rounded border-2 bg-blue-800 text-white border-blue-800 hover:bg-blue-900`}
                 >
-                  {activeCalendar === "academic" ? "Active" : "Set Active"}
+                  View All
                 </button>
               </div>
-              {isLoading ? (
-                <div className="divide-y divide-neutral-light">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="p-4">
-                      <div className="flex items-start">
-                        <Skeleton className="h-16 w-12 rounded mr-4" />
-                        <div className="space-y-2 flex-1">
-                          <Skeleton className="h-4 w-1/2" />
-                          <Skeleton className="h-3 w-1/3" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="max-h-[400px] overflow-y-auto">
-                  <ul className="divide-y divide-neutral-light">
-                    {academicEvents.length > 0 ? (
-                      academicEvents.map((event) => {
-                        const { weekday, month, day } = formatEventDate(event.date);
-                        return (
-                          <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
-                            <div className="flex items-start">
-                              <div className="flex-shrink-0 mr-4">
-                                <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
-                                  <div className="text-xs font-medium">{weekday}</div>
-                                  <div className="text-sm font-bold">{month}</div>
-                                  <div className="text-xl font-bold">{day}</div>
-                                </div>
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex justify-between">
-                                  <h3 className="font-semibold">{event.title}</h3>
-                                  <Badge variant="outline" className="ml-2">
-                                    {event.time}
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center text-sm text-neutral-dark mt-1">
-                                  {event.location && (
-                                    <div className="flex items-center mr-3">
-                                      <MapPin className="h-4 w-4 mr-1" />
-                                      <span>{event.location}</span>
-                                    </div>
-                                  )}
-                                </div>
-                                {event.description && (
-                                  <p className="text-sm mt-2">{event.description}</p>
-                                )}
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      })
-                    ) : (
-                      <li className="p-6 text-center bg-blue-200 rounded-b-lg">
-                        <CalendarIcon className="h-20 w-20 mx-auto mb-3 text-[#1e40af]" />
-                        <p className="font-semibold text-[#1e40af] text-xl">No academic events</p>
-                        <p className="text-base font-semibold text-[#1e40af] mt-1">
-                          {selectedDate 
-                            ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
-                            : 'Check back later for new events'}
-                        </p>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
+              <CardContent className="p-4">
+                {/* Academic events content */}
+              </CardContent>
             </Card>
 
-            {/* Student Activities Events */}
+            {/* Activity Events */}
             <Card className="border border-white rounded-lg shadow-[0_0_0_2px_white,0_0_10px_white,0_0_20px_white]">
               <div className="p-3 bg-[linear-gradient(to_bottom,#eab308_0%,#eab308_60%,#bfdbfe_100%)] flex justify-between items-center rounded-t-lg">
-                <h3 className="font-medium text-white [text-shadow:_-1px_-1px_0_#1e40af,_1px_-1px_0_#1e40af,_-1px_1px_0_#1e40af,_1px_1px_0_#1e40af]">Student Activities</h3>
+                <h3 className="font-medium text-white [text-shadow:_-1px_-1px_0_#1e40af,_1px_-1px_0_#1e40af,_-1px_1px_0_#1e40af,_1px_1px_0_#1e40af]">Activity Calendar</h3>
                 <button 
                   onClick={() => setActiveCalendar("activities")}
                   className={`text-xs px-2 py-1 rounded border-2 bg-blue-800 text-white border-blue-800 hover:bg-blue-900`}
                 >
-                  {activeCalendar === "activities" ? "Active" : "Set Active"}
+                  View All
                 </button>
               </div>
-              {isLoading ? (
-                <div className="divide-y divide-neutral-light">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="p-4">
-                      <div className="flex items-start">
-                        <Skeleton className="h-16 w-12 rounded mr-4" />
-                        <div className="space-y-2 flex-1">
-                          <Skeleton className="h-4 w-1/2" />
-                          <Skeleton className="h-3 w-1/3" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="max-h-[400px] overflow-y-auto">
-                  <ul className="divide-y divide-neutral-light">
-                    {activityEvents.length > 0 ? (
-                      activityEvents.map((event) => {
-                        const { weekday, month, day } = formatEventDate(event.date);
-                        return (
-                          <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
-                            <div className="flex items-start">
-                              <div className="flex-shrink-0 mr-4">
-                                <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
-                                  <div className="text-xs font-medium">{weekday}</div>
-                                  <div className="text-sm font-bold">{month}</div>
-                                  <div className="text-xl font-bold">{day}</div>
-                                </div>
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex justify-between">
-                                  <h3 className="font-semibold">{event.title}</h3>
-                                  <Badge variant="outline" className="ml-2">
-                                    {event.time}
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center text-sm text-neutral-dark mt-1">
-                                  {event.location && (
-                                    <div className="flex items-center mr-3">
-                                      <MapPin className="h-4 w-4 mr-1" />
-                                      <span>{event.location}</span>
-                                    </div>
-                                  )}
-                                </div>
-                                {event.description && (
-                                  <p className="text-sm mt-2">{event.description}</p>
-                                )}
-                              </div>
-                            </div>
-                          </li>
-                        );
-                      })
-                    ) : (
-                      <li className="p-6 text-center bg-blue-200 rounded-b-lg">
-                        <CalendarIcon className="h-20 w-20 mx-auto mb-3 text-[#1e40af]" />
-                        <p className="font-semibold text-[#1e40af] text-xl">No student activities</p>
-                        <p className="text-base font-semibold text-[#1e40af] mt-1">
-                          {selectedDate 
-                            ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
-                            : 'Check back later for new events'}
-                        </p>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
+              <CardContent className="p-4">
+                {/* Activity events content */}
+              </CardContent>
             </Card>
           </div>
         </section>

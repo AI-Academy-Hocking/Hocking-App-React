@@ -1,4 +1,7 @@
-export class MemStorage {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.storage = exports.MemStorage = void 0;
+class MemStorage {
     constructor() {
         this.users = new Map();
         this.events = new Map();
@@ -494,4 +497,5 @@ export class MemStorage {
         });
     }
 }
-export const storage = new MemStorage();
+exports.MemStorage = MemStorage;
+exports.storage = new MemStorage();

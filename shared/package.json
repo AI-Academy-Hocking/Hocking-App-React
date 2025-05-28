@@ -1,14 +1,13 @@
 {
   "name": "@shared/schema",
   "version": "1.0.0",
-  "type": "module",
   "main": "./dist/schema.js",
   "types": "./dist/schema.d.ts",
   "exports": {
     ".": {
+      "require": "./dist/schema.js",
       "import": "./dist/schema.js",
-      "types": "./dist/schema.d.ts",
-      "default": "./dist/schema.js"
+      "types": "./dist/schema.d.ts"
     }
   },
   "scripts": {

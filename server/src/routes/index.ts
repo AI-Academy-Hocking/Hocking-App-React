@@ -14,9 +14,9 @@ import {
   insertSafetyResourceSchema,
   type LocationUpdate,
   type User,
-} from "../../shared/src";
-import { z } from "zod";
-import { ZodError } from "zod-validation-error";
+} from "@shared/schema";
+import { z, ZodError } from 'zod';
+import { fromZodError } from 'zod-validation-error';
 
 // Define locationUpdateSchema
 const locationUpdateSchema = z.object({
@@ -125,7 +125,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Registration error:", error);
@@ -173,7 +173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error creating event:", error);
@@ -221,7 +221,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error creating building:", error);
@@ -273,7 +273,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error creating student tool:", error);
@@ -290,7 +290,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid user ID" });
       }
 
-      const locationData = locationUpdateSchema.parse(req.body);
+      const locationData = {
+        lat: parseFloat(req.body.lat),
+        lng: parseFloat(req.body.lng),
+        isLocationShared: req.body.isLocationShared
+      };
 
       const updatedUser = await storage.updateUserLocation(
         userId,
@@ -311,7 +315,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error updating user location:", error);
@@ -423,7 +427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error creating discussion:", error);
@@ -556,7 +560,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } catch (error) {
         if (error instanceof ZodError) {
           const validationError = fromZodError(error);
-          return res.status(400).json({ message: validationError.message });
+          return res.status(400).json({ error: validationError.message });
         }
 
         console.error("Error creating comment:", error);
@@ -609,7 +613,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error creating safety alert:", error);
@@ -661,7 +665,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
+        return res.status(400).json({ error: validationError.message });
       }
 
       console.error("Error creating safety resource:", error);
