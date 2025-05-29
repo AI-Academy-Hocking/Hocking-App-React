@@ -510,65 +510,6 @@ export class MemStorage implements IStorage {
       url: "#",
     });
     
-    // Sample discussions
-    const discussion1 = await this.createDiscussion({
-      title: "Tips for new students",
-      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
-      authorId: 1,
-      category: "general",
-      isPinned: true
-    });
-    
-    const discussion2 = await this.createDiscussion({
-      title: "Study group for Biology 101",
-      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
-      authorId: 2,
-      category: "academic"
-    });
-    
-    const discussion3 = await this.createDiscussion({
-      title: "Campus food recommendations",
-      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
-      authorId: 1,
-      category: "social"
-    });
-    
-    // Sample comments
-    await this.createComment({
-      content: "Always check Rate My Professor before signing up for classes!",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    
-    const comment1 = await this.createComment({
-      content: "Get involved in campus clubs early - it's the best way to make friends!",
-      authorId: 1,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    
-    await this.createComment({
-      content: "I totally agree! I joined the hiking club and met my best friends there.",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: comment1.id
-    });
-    
-    await this.createComment({
-      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
-      authorId: 1,
-      discussionId: discussion2.id,
-      parentId: null
-    });
-    
-    await this.createComment({
-      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
-      authorId: 2,
-      discussionId: discussion3.id,
-      parentId: null
-    });
-    
     // Sample safety alerts
     await this.createSafetyAlert({
       title: "Weather Alert: Winter Storm Warning",

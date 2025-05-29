@@ -60,22 +60,6 @@ export const studentTools = pgTable("student_tools", {
 
 export const insertStudentToolSchema = createInsertSchema(studentTools);
 
-// Discussions schema
-export const discussions = pgTable("discussions", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  category: text("category").default("general"), // general, academic, social, etc.
-  isPinned: boolean("is_pinned").default(false),
-});
-
-export const insertDiscussionSchema = createInsertSchema(discussions).omit({
-  id: true,
-  createdAt: true,
-});
-
 // Comments schema
 export const comments = pgTable("comments", {
   id: serial("id").primaryKey(),
@@ -103,9 +87,6 @@ export type InsertBuilding = z.infer<typeof insertBuildingSchema>;
 
 export type StudentTool = typeof studentTools.$inferSelect;
 export type InsertStudentTool = z.infer<typeof insertStudentToolSchema>;
-
-export type Discussion = typeof discussions.$inferSelect;
-export type InsertDiscussion = z.infer<typeof insertDiscussionSchema>;
 
 export type Comment = typeof comments.$inferSelect;
 export type InsertComment = z.infer<typeof insertCommentSchema>;

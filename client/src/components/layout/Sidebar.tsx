@@ -14,7 +14,6 @@ export default function Sidebar() {
     { path: "/tools", label: "Student Tools", icon: Wrench },
     { path: "/maps", label: "Maps & Directions", icon: Map },
     { path: "/dining", label: "Dining Hall", icon: UtensilsCrossed },
-    { path: "/discussions", label: "Discussions", icon: MessageSquare },
     { path: "/safety", label: "Campus Safety", icon: Shield },
   ];
 

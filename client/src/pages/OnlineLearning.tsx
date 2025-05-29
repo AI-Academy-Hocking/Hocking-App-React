@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Laptop, HelpCircle, BookOpen, Video, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +12,7 @@ function OnlineLearningPage() {
           <CardTitle className="text-xl text-primary">Canvas Learning Management System</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 pt-4">
-          <p>Canvas is Hocking College's online learning platform. Access your course materials, submit assignments, participate in discussions, and view grades.</p>
+          <p>Canvas is Hocking College's online learning platform. Access your course materials, submit assignments, and view grades.</p>
           
           <div className="flex items-start gap-3 mt-4">
             <Laptop className="h-5 w-5 text-neutral-dark flex-shrink-0 mt-0.5" />
