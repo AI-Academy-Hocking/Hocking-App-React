@@ -28,7 +28,7 @@ export default function ProgramDetails() {
     queryKey: ['program', programId],
     queryFn: async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/programs/${programId}`);
+        const response = await fetch(`http://localhost:3000/api/programs/${programId}`);
         if (!response.ok) {
           console.error('Program fetch failed:', await response.text());
           throw new Error('Program not found');
