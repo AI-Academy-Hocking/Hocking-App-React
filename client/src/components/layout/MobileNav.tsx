@@ -12,7 +12,6 @@ export default function MobileNav() {
     { path: "/tools", label: "Student Tools", icon: Wrench },
     { path: "/maps", label: "Maps", icon: Map },
     { path: "/dining", label: "Dining", icon: UtensilsCrossed },
-    { path: "/discussions", label: "Discuss", icon: MessageSquare },
     { path: "/safety", label: "Safety", icon: Shield },
   ];
 

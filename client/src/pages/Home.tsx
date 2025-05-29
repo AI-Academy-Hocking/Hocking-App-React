@@ -7,6 +7,8 @@ import { useAuth } from "@/lib/auth";
 import { Event } from "@shared/schema";
 import HockingBackground from "../components/assets/Campus.jpeg";  
 import ProgramDropdown from "@/components/ProgramDropdown";
+import { Button } from "@/components/ui/button";
+
 
 export default function Home() {
   const { user } = useAuth();
@@ -144,6 +146,30 @@ export default function Home() {
           </div>
         </Card>
       </section>
+
+      <div className="p-8 space-y-8">
+        <h1 className="text-2xl font-bold mb-6">Button Examples with Ripple Effect</h1>
+        
+        <div className="space-y-4">
+          <div className="space-x-4">
+            <Button variant="default">Default Button</Button>
+            <Button variant="secondary">Secondary Button</Button>
+            <Button variant="destructive">Destructive Button</Button>
+          </div>
+
+          <div className="space-x-4">
+            <Button variant="outline">Outline Button</Button>
+            <Button variant="ghost">Ghost Button</Button>
+            <Button variant="link">Link Button</Button>
+          </div>
+
+          <div className="space-x-4">
+            <Button size="sm">Small Button</Button>
+            <Button size="default">Default Size</Button>
+            <Button size="lg">Large Button</Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

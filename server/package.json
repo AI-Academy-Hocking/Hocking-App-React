@@ -15,7 +15,8 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "ical": "^0.8.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.6.7",
+    "zod-validation-error": "^3.4.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

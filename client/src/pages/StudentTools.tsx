@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar 
+  Users, Dumbbell, Utensils, Calendar, House 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { StudentTool } from "@shared/schema";
@@ -46,6 +46,8 @@ export default function StudentTools() {
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
+    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
+
   ];
 
   return (

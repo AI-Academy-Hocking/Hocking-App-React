@@ -1,0 +1,29 @@
+{
+  "name": "@shared/schema",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/schema.js",
+  "types": "./dist/schema.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/schema.js",
+      "types": "./dist/schema.d.ts",
+      "default": "./dist/schema.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc && tsc --project tsconfig.cjs.json",
+    "dev": "tsc --watch",
+    "clean": "if exist dist rmdir /s /q dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.43.1",
+    "drizzle-zod": "^0.7.1",
+    "mysql2": "^3.14.1",
+    "sqlite3": "^5.1.7",
+    "zod": "^3.24.4"
+  }
+}

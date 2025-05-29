@@ -4,3 +4,271 @@
                -1px 1px 0 #0000ff,  /* Bottom-left */
                1px 1px 0 #0000ff;   /* Bottom-right */
 }
+
+/* Page transition classes */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Ripple animation */
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 600ms linear;
+}
+
+/* Ripple effect for buttons */
+.hc-button-primary,
+.hc-button-secondary {
+  position: relative;
+  overflow: hidden;
+}
+
+.hc-button-primary::after,
+.hc-button-secondary::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform .5s, opacity 1s;
+}
+
+.hc-button-primary:active::after,
+.hc-button-secondary:active::after {
+  transform: scale(0, 0);
+  opacity: .3;
+  transition: 0s;
+}
+
+/* Original color system - keeping exactly as is */
+:root {
+  --color-primary: #0057b8;      /* Hocking's main blue */
+  --color-secondary: #ffd600;    /* Yellow accent */
+  --color-background: #ffffff;   /* Light mode background */
+  --color-text: #003366;         /* Dark blue text */
+  --color-accent: #00b86b;       /* Green accent */
+  --color-border: #e0e0e0;       /* Light border */
+}
+
+/* Dark mode - keeping exactly as is */
+[data-theme="dark"], .dark {
+  --color-background: #003366;   /* Dark blue background */
+  --color-text: #ffffff;         /* White text */
+  border-color: var(--color-border);
+}
+
+/* Original base styles - keeping exactly as is */
+body {
+  font-family: var(--font-sans, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+a, .accent {
+  color: var(--color-accent);
+}
+
+.button-primary {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.button-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+}
+
+/* New enhanced styles - using specific class names to avoid conflicts */
+.hc-button-primary {
+  background: var(--color-primary);
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.hc-button-primary:hover {
+  background: #3377c8;  /* Lighter blue */
+}
+
+.hc-button-primary:active {
+  background: #004494;  /* Darker blue */
+}
+
+.hc-button-secondary {
+  background: var(--color-secondary);
+  color: var(--color-text);
+  transition: background-color 0.2s ease;
+}
+
+.hc-button-secondary:hover {
+  background: #ffe033;  /* Lighter yellow */
+}
+
+.hc-button-secondary:active {
+  background: #e6c100;  /* Darker yellow */
+}
+
+/* New utility classes with specific prefixes */
+.hc-bg-muted {
+  background-color: #f5f5f5;
+}
+
+.hc-text-muted {
+  color: #666666;
+}
+
+.hc-bg-success {
+  background-color: #00b86b;
+}
+
+.hc-bg-warning {
+  background-color: #ffd600;
+}
+
+.hc-bg-error {
+  background-color: #dc2626;
+}
+
+.hc-bg-info {
+  background-color: #0057b8;
+}
+
+/* Utility classes for consistent color usage */
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-light { background-color: var(--color-primary-light); }
+.bg-primary-dark { background-color: var(--color-primary-dark); }
+
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-secondary-light { background-color: var(--color-secondary-light); }
+.bg-secondary-dark { background-color: var(--color-secondary-dark); }
+
+.bg-accent { background-color: var(--color-accent); }
+.bg-accent-light { background-color: var(--color-accent-light); }
+.bg-accent-dark { background-color: var(--color-accent-dark); }
+
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-accent { color: var(--color-accent); }
+
+/* Hover states */
+.hover\:bg-primary-light:hover { background-color: var(--color-primary-light); }
+.hover\:bg-secondary-light:hover { background-color: var(--color-secondary-light); }
+.hover\:bg-accent-light:hover { background-color: var(--color-accent-light); }
+
+/* Active states */
+.active\:bg-primary-dark:active { background-color: var(--color-primary-dark); }
+.active\:bg-secondary-dark:active { background-color: var(--color-secondary-dark); }
+.active\:bg-accent-dark:active { background-color: var(--color-accent-dark); }
+
+/* Card Hover Animations */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Hover Effects */
+.button-hover {
+  transition: all 0.2s ease;
+}
+
+.button-hover:hover {
+  transform: scale(1.05);
+}
+
+/* List Item Animations */
+.list-item-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.list-item-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Fade In Animation */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Scale In Animation */
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Slide In Animation */
+.slide-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
