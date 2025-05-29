@@ -1,4 +1,4 @@
-import { Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail } from 'lucide-react';
+import { Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
@@ -16,6 +16,42 @@ const housingOptions: HousingOption[] = [
     icon: <Building2 className="h-8 w-8" />,
     path: "/housing/dormitories",
     description: "Explore our residence halls and find your perfect home"
+  },
+  {
+    title: "Residence Life Handbook",
+    icon: <div className="relative">
+            <Book className="h-8 w-8" />
+            <Building2 className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+          </div>,
+    path: "/housing/handbook",
+    description: "Access the complete guide to living on campus"
+  },
+  {
+    title: "Pricing & Rates",
+    icon: <div className="relative">
+            <Square className="h-8 w-8" />
+            <DollarSign className="h-4 w-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+          </div>,
+    path: "/housing/pricing",
+    description: "View housing costs and payment options"
+  },
+  {
+    title: "Campus Life & Activities",
+    icon: <div className="relative">
+            <PartyPopper className="h-8 w-8" />
+            <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+          </div>,
+    path: "/housing/activities",
+    description: "Discover events and activities for an amazing college experience"
+  },
+  {
+    title: "Campus Social Hub",
+    icon: <div className="relative">
+            <MessageSquare className="h-8 w-8" />
+            <Image className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+          </div>,
+    path: "/housing/social",
+    description: "Share your campus life experiences and connect with others"
   },
   {
     title: "Amenities",

@@ -27,6 +27,10 @@ import Roomies from "./pages/housing/Roomies";
 import WhatToBring from "./pages/housing/WhatToBring";
 import Maintenance from "./pages/housing/Maintenance";
 import Contact from "./pages/housing/Contact";
+import Handbook from "./pages/housing/Handbook";
+import Pricing from "./pages/housing/Pricing";
+import Activities from "./pages/housing/Activities";
+import Social from "./pages/housing/Social";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -92,6 +96,10 @@ function Router() {
             <Route path="/housing/what-to-bring" component={WhatToBring} />
             <Route path="/housing/maintenance" component={Maintenance} />
             <Route path="/housing/contact" component={Contact} />
+            <Route path="/housing/handbook" component={Handbook} />
+            <Route path="/housing/pricing" component={Pricing} />
+            <Route path="/housing/activities" component={Activities} />
+            <Route path="/housing/social" component={Social} />
             <Route component={NotFound} />
           </Switch>
         </CSSTransition>
