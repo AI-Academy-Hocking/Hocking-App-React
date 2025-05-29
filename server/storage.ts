@@ -3,7 +3,6 @@ import {
   events, type Event, type InsertEvent, 
   buildings, type Building, type InsertBuilding, 
   studentTools, type StudentTool, type InsertStudentTool, 
-  discussions, type Discussion, type InsertDiscussion,
   comments, type Comment, type InsertComment,
   safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
   safetyResources, type SafetyResource, type InsertSafetyResource,
@@ -34,12 +33,6 @@ export interface IStorage {
   getStudentTool(id: string): Promise<StudentTool | undefined>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
   
-  // Discussion operations
-  getDiscussions(): Promise<Discussion[]>;
-  getDiscussion(id: number): Promise<Discussion | undefined>;
-  createDiscussion(discussion: InsertDiscussion): Promise<Discussion>;
-  getDiscussionsByCategory(category: string): Promise<Discussion[]>;
-  
   // Comment operations
   getComments(discussionId: number): Promise<Comment[]>;
   getCommentReplies(commentId: number): Promise<Comment[]>;
@@ -64,7 +57,6 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
-  private discussions: Map<number, Discussion>;
   private comments: Map<number, Comment>;
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
@@ -72,7 +64,6 @@ export class MemStorage implements IStorage {
   private currentUserId: number;
   private currentEventId: number;
   private currentBuildingId: number;
-  private currentDiscussionId: number;
   private currentCommentId: number;
   private currentSafetyAlertId: number;
   private currentSafetyResourceId: number;
@@ -82,7 +73,6 @@ export class MemStorage implements IStorage {
     this.events = new Map();
     this.buildings = new Map();
     this.studentTools = new Map();
-    this.discussions = new Map();
     this.comments = new Map();
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
@@ -90,7 +80,6 @@ export class MemStorage implements IStorage {
     this.currentUserId = 1;
     this.currentEventId = 1;
     this.currentBuildingId = 1;
-    this.currentDiscussionId = 1;
     this.currentCommentId = 1;
     this.currentSafetyAlertId = 1;
     this.currentSafetyResourceId = 1;
@@ -204,37 +193,9 @@ export class MemStorage implements IStorage {
     return tool;
   }
   
-  // Discussion operations
-  async getDiscussions(): Promise<Discussion[]> {
-    return Array.from(this.discussions.values());
-  }
-  
-  async getDiscussion(id: number): Promise<Discussion | undefined> {
-    return this.discussions.get(id);
-  }
-  
-  async createDiscussion(insertDiscussion: InsertDiscussion): Promise<Discussion> {
-    const id = this.currentDiscussionId++;
-    const discussion: Discussion = {
-      ...insertDiscussion,
-      id,
-      createdAt: new Date(),
-      isPinned: insertDiscussion.isPinned || false,
-      category: insertDiscussion.category || "general"
-    };
-    this.discussions.set(id, discussion);
-    return discussion;
-  }
-  
-  async getDiscussionsByCategory(category: string): Promise<Discussion[]> {
-    return Array.from(this.discussions.values()).filter(
-      (discussion) => discussion.category === category
-    );
-  }
-  
   // Comment operations
   async getAllComments(): Promise<Comment[]> {
-    return this.comments;
+    return Array.from(this.comments.values());
   }
 
   async getComments(discussionId: number): Promise<Comment[]> {

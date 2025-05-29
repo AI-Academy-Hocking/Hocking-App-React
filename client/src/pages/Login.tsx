@@ -4,13 +4,6 @@ import { useToast } from "../hooks/use-toast";
 import { Card, CardContent } from "../components/ui/card";
 import HockingLogo from "../components/assets/HockingLogo.png";
 
-const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function Login() {
   const { guestLogin } = useAuth();
   const { toast } = useToast();
@@ -40,7 +33,7 @@ export default function Login() {
           <div className="text-center space-y-6">
             <div>
               <img 
-                src={hockingLogo}
+                src={HockingLogo}
                 alt="Hocking College Logo" 
                 className="h-20 mx-auto mb-6" 
               />
@@ -48,13 +41,19 @@ export default function Login() {
               <p className="text-base text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
             </div>
             
-            <div className="pt-4">
+            <div className="pt-4 space-y-4">
               <Button 
                 type="button" 
                 onClick={handleGuestLogin}
                 className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
               >
-                Enter Home Page
+                Enter as Guest
+              </Button>
+              <Button 
+                type="button" 
+                className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
+              >
+                Enter as Student
               </Button>
             </div>
           </div>

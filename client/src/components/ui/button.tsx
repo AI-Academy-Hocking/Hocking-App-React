@@ -36,6 +36,7 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "default" | "ghost"
   size?: "default" | "icon"
+  asChild?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -59,7 +60,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
-      <button
+      <Comp
         className={cn(
           "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
           variant === "default" && "bg-primary text-primary-foreground shadow hover:bg-primary/90",
@@ -71,19 +72,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         onClick={addRipple}
         {...props}
+        style={{ position: "relative", overflow: "hidden", ...props.style }}
       >
-    <Comp>
         {props.children}
         {ripples.map((ripple) => (
           <span
             key={ripple.id}
-            className="absolute block rounded-full bg-white/20 animate-ripple"
+            className="absolute block rounded-full bg-white/20 animate-ripple pointer-events-none"
             style={{
               left: ripple.x,
               top: ripple.y,
               width: "100px",
               height: "100px",
               transform: "translate(-50%, -50%)",
+              pointerEvents: "none"
             }}
           />
         ))}
