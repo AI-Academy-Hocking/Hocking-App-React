@@ -33,9 +33,9 @@ const buttonVariants = cva(
 )
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "default" | "ghost"
+  size?: "default" | "icon"
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -59,15 +59,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return (
-      <Comp
+      <button
         className={cn(
-          buttonVariants({ variant, size, className }),
-          "relative overflow-hidden"
+          "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+          variant === "default" && "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          variant === "ghost" && "hover:bg-accent hover:text-accent-foreground",
+          size === "default" && "h-9 px-4 py-2",
+          size === "icon" && "h-9 w-9",
+          className
         )}
         ref={ref}
         onClick={addRipple}
         {...props}
       >
+    <Comp>
         {props.children}
         {ripples.map((ripple) => (
           <span
@@ -88,4 +93,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-export { Button, buttonVariants }
+export { Button }

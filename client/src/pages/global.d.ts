@@ -24,6 +24,23 @@ declare namespace gapi.client {
         maxResults: number;
         orderBy: string;
       }): Promise<{ result: { items: Event[] } }>;
+
+      function insert(request: {
+        calendarId: string;
+        resource: {
+          summary: string;
+          location?: string;
+          description?: string;
+          start: {
+            dateTime: string;
+            timeZone: string;
+          };
+          end: {
+            dateTime: string;
+            timeZone: string;
+          };
+        };
+      }): Promise<{ result: Event }>;
     }
   }
 }
