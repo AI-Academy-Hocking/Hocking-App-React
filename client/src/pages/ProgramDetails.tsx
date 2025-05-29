@@ -4,51 +4,85 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from "@/components/ui/skeleton";
 
-const programs = [
-  { 
-    id: '1', 
-    name: 'Computer Science',
-    description: 'Our Computer Science program prepares students for careers in software development, systems analysis, and other technology-focused roles.',
-    courses: ['Introduction to Programming', 'Data Structures', 'Database Systems', 'Web Development', 'Software Engineering'],
-    careers: ['Software Developer', 'Systems Analyst', 'Database Administrator', 'Web Developer']
-  },
-  { 
-    id: '2', 
-    name: 'Business Administration',
-    description: 'The Business Administration program provides a comprehensive foundation in business principles, management, and entrepreneurship.',
-    courses: ['Business Fundamentals', 'Marketing Principles', 'Financial Accounting', 'Business Law', 'Strategic Management'],
-    careers: ['Business Manager', 'Marketing Specialist', 'Financial Analyst', 'Entrepreneur']
-  },
-  { 
-    id: '3', 
-    name: 'Psychology',
-    description: 'Our Psychology program explores human behavior and mental processes, preparing students for careers in counseling and research.',
-    courses: ['Introduction to Psychology', 'Developmental Psychology', 'Abnormal Psychology', 'Research Methods', 'Cognitive Psychology'],
-    careers: ['Counselor', 'Research Assistant', 'Human Resources Specialist', 'Mental Health Worker']
-  },
-  { 
-    id: '4', 
-    name: 'Biology',
-    description: 'The Biology program offers comprehensive study of living organisms, preparing students for careers in healthcare and research.',
-    courses: ['General Biology', 'Cell Biology', 'Genetics', 'Ecology', 'Human Anatomy'],
-    careers: ['Research Scientist', 'Laboratory Technician', 'Environmental Consultant', 'Healthcare Professional']
-  },
-  { 
-    id: '5', 
-    name: 'Mathematics',
-    description: 'Our Mathematics program develops strong analytical and problem-solving skills, preparing students for various technical careers.',
-    courses: ['Calculus', 'Linear Algebra', 'Differential Equations', 'Statistics', 'Number Theory'],
-    careers: ['Data Analyst', 'Statistician', 'Actuary', 'Mathematics Teacher']
-  }
-];
+interface ProgramDetails {
+  id: string;
+  name: string;
+  category: string;
+  details: {
+    title: string;
+    description: string;
+    courses: string[];
+    careers: string[];
+    lastUpdated: string;
+  } | null;
+}
 
 export default function ProgramDetails() {
   const [, params] = useRoute<{ id: string }>("/programs/:id");
   const programId = params?.id;
-  const program = programs.find(p => p.id === programId);
 
-  if (!program) {
+  const { data: program, isLoading, error } = useQuery<ProgramDetails>({
+    queryKey: ['program', programId],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/programs/${programId}`);
+        if (!response.ok) {
+          console.error('Program fetch failed:', await response.text());
+          throw new Error('Program not found');
+        }
+        const data = await response.json();
+        console.log('Fetched program data:', data);
+        return data;
+      } catch (err) {
+        console.error('Error fetching program:', err);
+        throw err;
+      }
+    },
+    enabled: !!programId
+  });
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="flex items-center gap-4">
+          <Link href="/home">
+            <Button variant="ghost" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </Link>
+          <Skeleton className="h-8 w-64" />
+        </div>
+
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-7 w-40" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-24 w-full" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-7 w-40" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-6 w-full" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error || !program) {
     return (
       <div className="p-6">
         <Card>
@@ -74,43 +108,66 @@ export default function ProgramDetails() {
             Back to Home
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold">{program.name}</h1>
+        <div>
+          <h1 className="text-2xl font-bold">{program.name}</h1>
+          <p className="text-sm text-gray-500">{program.category}</p>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Program Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600">{program.description}</p>
-        </CardContent>
-      </Card>
+      {program.details ? (
+        <>
+          <Card>
+            <CardHeader>
+              <CardTitle>Program Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">{program.details.description}</p>
+            </CardContent>
+          </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Course Curriculum</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc pl-6 space-y-2">
-            {program.courses.map((course, index) => (
-              <li key={index} className="text-gray-600">{course}</li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+          {program.details.courses.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Course Curriculum</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc pl-6 space-y-2">
+                  {program.details.courses.map((course, index) => (
+                    <li key={index} className="text-gray-600">{course}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Career Opportunities</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="list-disc pl-6 space-y-2">
-            {program.careers.map((career, index) => (
-              <li key={index} className="text-gray-600">{career}</li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+          {program.details.careers.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Career Opportunities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="list-disc pl-6 space-y-2">
+                  {program.details.careers.map((career, index) => (
+                    <li key={index} className="text-gray-600">{career}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
+          <p className="text-sm text-gray-400 text-right">
+            Last updated: {new Date(program.details.lastUpdated).toLocaleDateString()}
+          </p>
+        </>
+      ) : (
+        <Card>
+          <CardContent className="py-6">
+            <p className="text-center text-gray-500">
+              Program details are currently being updated. Please check back later.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 } 
