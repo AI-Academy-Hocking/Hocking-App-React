@@ -3,9 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { 
-  insertUserSchema, insertEventSchema, insertBuildingSchema, 
-  insertStudentToolSchema, locationUpdateSchema, 
-  insertDiscussionSchema, insertCommentSchema,
+  insertUserSchema, insertEventSchema, insertBuildingSchema, locationUpdateSchema, 
   insertSafetyAlertSchema, insertSafetyResourceSchema
 } from "@shared/schema";
 import { ZodError } from "zod";
@@ -159,56 +157,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Student Tools routes
-  app.get("/api/student-tools", async (_req: Request, res: Response) => {
-    try {
-      const tools = await storage.getStudentTools();
-      res.status(200).json(tools);
-    } catch (error) {
-      console.error("Error fetching student tools:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  app.get("/api/student-tools/:id", async (req: Request, res: Response) => {
-    try {
-      const id = req.params.id;
-      const tool = await storage.getStudentTool(id);
-      
-      if (!tool) {
-        return res.status(404).json({ message: "Student tool not found" });
-      }
-      
-      res.status(200).json(tool);
-    } catch (error) {
-      console.error("Error fetching student tool:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  app.post("/api/student-tools", async (req: Request, res: Response) => {
-    try {
-      const toolData = insertStudentToolSchema.parse(req.body);
-      
-      // Check if tool ID already exists
-      const existingTool = await storage.getStudentTool(toolData.id);
-      if (existingTool) {
-        return res.status(409).json({ message: "Student tool ID already exists" });
-      }
-      
-      const newTool = await storage.createStudentTool(toolData);
-      res.status(201).json(newTool);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      
-      console.error("Error creating student tool:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
   // Location API routes
   app.post("/api/users/:id/location", async (req: Request, res: Response) => {
     try {
@@ -274,12 +222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           authorInfo = { ...userWithoutPassword };
         }
         
-        const discussion = await storage.getDiscussion(comment.discussionId);
-        return { 
-          ...comment, 
-          author: authorInfo,
-          discussionTitle: discussion?.title || "Unknown Discussion"
-        };
+      
       }));
       
       res.status(200).json(commentsWithDetails);
@@ -336,42 +279,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  
-  app.post("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
+
       
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      
-      const commentData = insertCommentSchema.parse({
-        ...req.body,
-        discussionId
-      });
-      
-      const newComment = await storage.createComment(commentData);
-      
-      // Get author info
-      const author = await storage.getUser(newComment.authorId);
-      let authorInfo = { id: newComment.authorId, username: "Unknown" };
-      
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      
-      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      
-      console.error("Error creating comment:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
+     
   
   // Safety Alert routes
   app.get("/api/safety/alerts", async (req: Request, res: Response) => {
