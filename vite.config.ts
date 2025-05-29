@@ -45,7 +45,8 @@ export default defineConfig({
   },
   server: {
     fs: {
-      strict: false
+      strict: false,
+      allow: ['..', 'node_modules']
     }
   }
 });
