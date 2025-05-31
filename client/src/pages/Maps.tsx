@@ -43,7 +43,7 @@ export default function Maps() {
   useEffect(() => {
     if (mapRef.current && !map) {
       // Updated coordinates for the new location
-      const location = [38.2198, -85.7030];
+      const location = [39.44374, -82.22048];
       
       const leafletMap = L.map(mapRef.current).setView(location as L.LatLngExpression, 16);
       
@@ -67,8 +67,8 @@ export default function Maps() {
         .bindPopup(`
           <div class="text-center">
             <b class="text-lg">Location</b><br>
-            <span class="text-sm">Latitude: 38.2198</span><br>
-            <span class="text-sm">Longitude: -85.7030</span>
+            <span class="text-sm">Latitude: 39.44374</span><br>
+            <span class="text-sm">Longitude: -82.22048</span>
           </div>
         `);
       
