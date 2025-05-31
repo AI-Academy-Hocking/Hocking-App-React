@@ -43,10 +43,10 @@ export default function Maps() {
   useEffect(() => {
     if (mapRef.current && !map) {
       // Hocking College coordinates (3301 Hocking Pkwy, Nelsonville, OH 45764)
-      // Updated coordinates for more precise location on Hocking Parkway
-      const hockingCollege = [39.4618, -82.2364];
+      // Updated coordinates to focus on Hocking Parkway
+      const hockingCollege = [39.4612, -82.2368];
       
-      const leafletMap = L.map(mapRef.current).setView(hockingCollege as L.LatLngExpression, 18);
+      const leafletMap = L.map(mapRef.current).setView(hockingCollege as L.LatLngExpression, 16);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -75,7 +75,7 @@ export default function Maps() {
       
       // Add a circle marker to show precise location
       L.circle(hockingCollege as L.LatLngExpression, {
-        radius: 15,
+        radius: 50,
         color: '#dc2626',
         fillColor: '#dc2626',
         fillOpacity: 0.2,
