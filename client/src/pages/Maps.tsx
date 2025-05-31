@@ -10,7 +10,7 @@ import { useSharedLocations } from "../hooks/use-shared-locations";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { toast } from "../hooks/use-toast";
-import L from "leaflet";
+import L, { Circle } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 export default function Maps() {
@@ -45,16 +45,41 @@ export default function Maps() {
       // Hocking College coordinates (3301 Hocking Pkwy, Nelsonville, OH 45764)
       const hockingCollege = [39.4616, -82.2366];
       
-      const leafletMap = L.map(mapRef.current).setView(hockingCollege as L.LatLngExpression, 16);
+      const leafletMap = L.map(mapRef.current).setView(hockingCollege as L.LatLngExpression, 17);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(leafletMap);
       
-      // Add a marker for Hocking College main campus
-      L.marker(hockingCollege as L.LatLngExpression)
+      // Create a custom icon for Hocking College
+      const hockingIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
+      
+      // Add a marker for Hocking College main campus with custom icon
+      const mainMarker = L.marker(hockingCollege as L.LatLngExpression, { icon: hockingIcon })
         .addTo(leafletMap)
-        .bindPopup("<b>Hocking College</b><br>3301 Hocking Pkwy, Nelsonville, OH 45764");
+        .bindPopup(`
+          <div class="text-center">
+            <b class="text-lg">Hocking College</b><br>
+            <span class="text-sm">3301 Hocking Pkwy</span><br>
+            <span class="text-sm">Nelsonville, OH 45764</span>
+          </div>
+        `);
+      
+      // Add a circle marker to show precise location
+      L.circle(hockingCollege as L.LatLngExpression, {
+        radius: 30,
+        color: '#2563eb',
+        fillColor: '#2563eb',
+        fillOpacity: 0.2,
+        weight: 2
+      }).addTo(leafletMap);
       
       setMap(leafletMap);
       
@@ -95,15 +120,25 @@ export default function Maps() {
           if (userLocationMarker) {
             (userLocationMarker as any).setLatLng([latitude, longitude]);
           } else {
-            // Create a marker for user location
+            // Create a marker for user location with circle for precision
             const marker = L.marker([latitude, longitude])
               .addTo(map)
               .bindPopup("Your location");
+            
+            // Add circle marker for precise location
+            L.circle([latitude, longitude], {
+              radius: 10,
+              color: '#2563eb',
+              fillColor: '#2563eb',
+              fillOpacity: 0.2,
+              weight: 2
+            }).addTo(map);
+            
             setUserLocationMarker(marker);
           }
           
-          // Center map on user location
-          map.setView([latitude, longitude], 17);
+          // Center map on user location with higher zoom
+          map.setView([latitude, longitude], 19);
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -163,6 +198,15 @@ export default function Maps() {
         const marker = L.marker([building.lat, building.lng])
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
+        
+        // Add circle marker for precise location
+        L.circle([building.lat, building.lng], {
+          radius: 15,
+          color: '#2563eb',
+          fillColor: '#2563eb',
+          fillOpacity: 0.2,
+          weight: 2
+        }).addTo(map);
       });
     }
     
@@ -187,6 +231,15 @@ export default function Maps() {
             .bindPopup(`<b>${sharedUser.name || sharedUser.username}</b><br>Last updated: ${
               sharedUser.lastLocationUpdate ? new Date(sharedUser.lastLocationUpdate).toLocaleTimeString() : 'Unknown'
             }`);
+          
+          // Add circle marker for precise location
+          L.circle([sharedUser.lat, sharedUser.lng], {
+            radius: 8,
+            color: '#3b82f6',
+            fillColor: '#3b82f6',
+            fillOpacity: 0.2,
+            weight: 2
+          }).addTo(map);
           
           newUserMarkers.push(marker);
         }
@@ -227,7 +280,7 @@ export default function Maps() {
           <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-[1000]">
             <Button 
               size="icon" 
-              variant="secondary" 
+              variant="default" 
               className="rounded-full" 
               onClick={handleZoomIn}
             >
@@ -235,7 +288,7 @@ export default function Maps() {
             </Button>
             <Button 
               size="icon" 
-              variant="secondary" 
+              variant="default" 
               className="rounded-full" 
               onClick={handleZoomOut}
             >
@@ -260,8 +313,8 @@ export default function Maps() {
               {categories.map((category) => (
                 <Button 
                   key={category.id}
-                  variant={activeCategory === category.id ? "default" : "outline"}
-                  size="sm"
+                  variant={activeCategory === category.id ? "default" : "ghost"}
+                  size="default"
                   className={`rounded-full text-sm ${
                     activeCategory === category.id 
                       ? "bg-primary text-white" 
@@ -305,8 +358,8 @@ export default function Maps() {
               
               {isLocationSharing && (
                 <Button 
-                  variant="outline" 
-                  size="sm"
+                  variant="ghost" 
+                  size="default"
                   className="w-full"
                   onClick={getUserLocation}
                 >
