@@ -45,7 +45,7 @@ export default function Maps() {
       // Updated coordinates for the new location
       const location = [39.44374, -82.22048];
       
-      const leafletMap = L.map(mapRef.current).setView(location as L.LatLngExpression, 14);
+      const leafletMap = L.map(mapRef.current).setView(location as L.LatLngExpression, 15);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
