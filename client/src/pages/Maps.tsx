@@ -42,18 +42,17 @@ export default function Maps() {
   // Initialize map
   useEffect(() => {
     if (mapRef.current && !map) {
-      // Hocking College coordinates (3301 Hocking Pkwy, Nelsonville, OH 45764)
-      // Updated coordinates to focus on Hocking Parkway
-      const hockingCollege = [39.4612, -82.2368];
+      // Updated coordinates for the new location
+      const location = [38.2198, -85.7030];
       
-      const leafletMap = L.map(mapRef.current).setView(hockingCollege as L.LatLngExpression, 16);
+      const leafletMap = L.map(mapRef.current).setView(location as L.LatLngExpression, 16);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(leafletMap);
       
-      // Create a custom icon for Hocking College
-      const hockingIcon = L.icon({
+      // Create a custom icon for the location
+      const locationIcon = L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
         iconSize: [25, 41],
@@ -62,19 +61,19 @@ export default function Maps() {
         shadowSize: [41, 41]
       });
       
-      // Add a marker for Hocking College main campus with custom icon
-      const mainMarker = L.marker(hockingCollege as L.LatLngExpression, { icon: hockingIcon })
+      // Add a marker for the location with custom icon
+      const mainMarker = L.marker(location as L.LatLngExpression, { icon: locationIcon })
         .addTo(leafletMap)
         .bindPopup(`
           <div class="text-center">
-            <b class="text-lg">Hocking College</b><br>
-            <span class="text-sm">3301 Hocking Pkwy</span><br>
-            <span class="text-sm">Nelsonville, OH 45764</span>
+            <b class="text-lg">Location</b><br>
+            <span class="text-sm">Latitude: 38.2198</span><br>
+            <span class="text-sm">Longitude: -85.7030</span>
           </div>
         `);
       
       // Add a circle marker to show precise location
-      L.circle(hockingCollege as L.LatLngExpression, {
+      L.circle(location as L.LatLngExpression, {
         radius: 50,
         color: '#dc2626',
         fillColor: '#dc2626',
