@@ -4,14 +4,36 @@ import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Search, Plus, Minus, Navigation, MapPin, Users } from "lucide-react";
-import { Building } from "@shared/schema";
-import { useAuth } from "../lib/auth";
-import { useSharedLocations } from "../hooks/use-shared-locations";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { toast } from "../hooks/use-toast";
-import L, { Circle } from "leaflet";
+import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useAuth } from "../lib/auth";
+import { useSharedLocations } from "../hooks/use-shared-locations";
+
+// Fix for Leaflet marker icons
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Use L.icon for default marker icon
+// @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+const DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+
+// Local Building type definition
+type Building = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  lat: number;
+  lng: number;
+};
 
 export default function Maps() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +44,7 @@ export default function Maps() {
   const [userMarkers, setUserMarkers] = useState<L.Marker[]>([]);
   const [userLocationMarker, setUserLocationMarker] = useState<L.Marker | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
   
   const { user } = useAuth();
   const { sharedLocations, updateLocation } = useSharedLocations();
@@ -30,14 +53,45 @@ export default function Maps() {
     queryKey: ['/api/buildings'],
   });
 
-  // Filter buildings based on search and category
-  const filteredBuildings = buildings?.filter(building => {
+  // Add static housing buildings if not present
+  const staticHousingBuildings: Building[] = [
+    { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'downhour', name: 'Downhour', description: 'Female Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'summit', name: 'Summit', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'sycamore', name: 'Sycamore', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
+  ];
+
+  // Add static parking buildings if not present
+  const staticParkingBuildings: Building[] = [
+    { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+    { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights / Downhour Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+    { id: 'john-light-lot', name: 'John Light Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+  ];
+
+  let allBuildings = buildings ? [...buildings] : [];
+  staticHousingBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
+  staticParkingBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
+
+  let filteredBuildings = allBuildings.filter(building => {
     const matchesSearch = searchQuery === "" || 
       building.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === "all" || 
       building.category === activeCategory;
     return matchesSearch && matchesCategory;
-  }) || [];
+  });
+
+  // If the selected building is not in the filtered list, clear the selection
+  if (selectedBuildingId && !filteredBuildings.some(b => b.id === selectedBuildingId)) {
+    setSelectedBuildingId(null);
+  }
 
   // Initialize map
   useEffect(() => {
@@ -52,6 +106,7 @@ export default function Maps() {
       }).addTo(leafletMap);
       
       // Create a custom icon for the location
+      // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
       const locationIcon = L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
@@ -61,7 +116,7 @@ export default function Maps() {
         shadowSize: [41, 41]
       });
       
-      // Add a marker for the location with custom icon
+      // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
       const mainMarker = L.marker(location as L.LatLngExpression, { icon: locationIcon })
         .addTo(leafletMap)
         .bindPopup(`
@@ -109,21 +164,11 @@ export default function Maps() {
           
           // Update marker on map
           if (userLocationMarker) {
-            (userLocationMarker as any).setLatLng([latitude, longitude]);
+            userLocationMarker.setLatLng([latitude, longitude]);
           } else {
-            // Create a marker for user location with circle for precision
             const marker = L.marker([latitude, longitude])
               .addTo(map)
               .bindPopup("Your location");
-            
-            // Add circle marker for precise location
-            L.circle([latitude, longitude], {
-              radius: 10,
-              color: '#2563eb',
-              fillColor: '#2563eb',
-              fillOpacity: 0.2,
-              weight: 2
-            }).addTo(map);
             
             setUserLocationMarker(marker);
           }
@@ -174,30 +219,22 @@ export default function Maps() {
     if (!map) return;
     
     // Clear existing markers
-    userMarkers.forEach(marker => (marker as any).remove());
+    userMarkers.forEach(marker => marker.remove());
     setUserMarkers([]);
     
-    map.eachLayer((layer: any) => {
+    map.eachLayer((layer) => {
       if (layer instanceof L.Marker && layer !== userLocationMarker) {
         map.removeLayer(layer);
       }
     });
     
     // Add markers for filtered buildings
-    if (buildings) {
-      filteredBuildings.forEach(building => {
-        const marker = L.marker([building.lat, building.lng])
+    if (filteredBuildings) {
+      filteredBuildings.forEach((building: Building) => {
+        // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+        const marker = L.marker([building.lat, building.lng], { icon: DefaultIcon })
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
-        
-        // Add circle marker for precise location
-        L.circle([building.lat, building.lng], {
-          radius: 15,
-          color: '#2563eb',
-          fillColor: '#2563eb',
-          fillOpacity: 0.2,
-          weight: 2
-        }).addTo(map);
       });
     }
     
@@ -205,32 +242,20 @@ export default function Maps() {
     if (viewingSharedLocations) {
       const newUserMarkers: L.Marker[] = [];
       
-      sharedLocations.forEach(sharedUser => {
+      sharedLocations.forEach((sharedUser: any) => {
         // Don't show current user marker twice
         if (user && sharedUser.id === user.id) return;
         
         // Make sure lat/lng are valid
         if (sharedUser.lat !== null && sharedUser.lng !== null) {
+          // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
           const marker = L.marker([sharedUser.lat, sharedUser.lng], {
-            icon: (L as any).divIcon({
-              className: 'bg-blue-500 rounded-full w-4 h-4 flex items-center justify-center border-2 border-white',
-              iconSize: [20, 20],
-              html: `<div class="bg-blue-500 rounded-full w-4 h-4 flex items-center justify-center border-2 border-white"></div>`
-            })
+            icon: DefaultIcon
           })
             .addTo(map)
             .bindPopup(`<b>${sharedUser.name || sharedUser.username}</b><br>Last updated: ${
               sharedUser.lastLocationUpdate ? new Date(sharedUser.lastLocationUpdate).toLocaleTimeString() : 'Unknown'
             }`);
-          
-          // Add circle marker for precise location
-          L.circle([sharedUser.lat, sharedUser.lng], {
-            radius: 8,
-            color: '#3b82f6',
-            fillColor: '#3b82f6',
-            fillOpacity: 0.2,
-            weight: 2
-          }).addTo(map);
           
           newUserMarkers.push(marker);
         }
@@ -238,7 +263,7 @@ export default function Maps() {
       
       setUserMarkers(newUserMarkers);
     }
-  }, [map, buildings, filteredBuildings, sharedLocations, user, userLocationMarker, viewingSharedLocations]);
+  }, [map, filteredBuildings, sharedLocations, user, userLocationMarker, viewingSharedLocations]);
 
   // Handle zoom in/out
   const handleZoomIn = () => {
@@ -396,15 +421,19 @@ export default function Maps() {
               filteredBuildings.map((building) => (
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">{building.name}</h3>
-                      <p className="text-sm text-neutral-dark">{building.description}</p>
+                    <div className="flex items-center gap-3">
+                      <span className={`inline-block w-5 h-5 rounded-full border-2 transition-colors duration-200 mr-2 ${selectedBuildingId === building.id ? 'bg-blue-600 border-blue-700' : 'bg-neutral-200 border-neutral-400'}`}></span>
+                      <div>
+                        <h3 className={`font-semibold ${selectedBuildingId === building.id ? 'text-black' : ''}`}>{building.name}</h3>
+                        <p className="text-sm text-neutral-dark">{building.description}</p>
+                      </div>
                     </div>
                     <Button 
                       variant="ghost" 
                       size="icon" 
                       className="text-primary hover:text-primary-dark"
                       onClick={() => {
+                        setSelectedBuildingId(building.id);
                         if (map) map.setView([building.lat, building.lng], 18);
                       }}
                     >
