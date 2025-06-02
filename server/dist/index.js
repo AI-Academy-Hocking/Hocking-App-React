@@ -4,16 +4,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const cors = require('cors');
-const { registerRoutes } = require('./routes');
+
+const cors_1 = __importDefault(require("cors"));
+const calendar_1 = __importDefault(require("./routes/calendar"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3001;
 // Middleware
-app.use(cors());
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// Register all routes
-registerRoutes(app).then((server) => {
-    server.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-    });
+// Routes
+app.use('/api/calendar', calendar_1.default);
+// Start server
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+
 });

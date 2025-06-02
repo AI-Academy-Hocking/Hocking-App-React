@@ -1,60 +1,12 @@
-import { useState } from "react";
 import { useAuth } from "../lib/auth";
-import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../components/ui/form";
 import { Card, CardContent } from "../components/ui/card";
 import HockingLogo from "../components/assets/HockingLogo.png";
 
-const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function Login() {
-  const { login, guestLogin } = useAuth();
+  const { guestLogin } = useAuth();
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true);
-    try {
-      await login(data.username, data.password);
-      toast({
-        title: "Success",
-        description: "You have successfully logged in",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Invalid username or password",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleGuestLogin = () => {
     guestLogin();
@@ -65,79 +17,46 @@ export default function Login() {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen relative overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/src/components/assets/campus-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-black/50" /> {/* Overlay for better text readability */}
+      <Card className="w-full max-w-md p-8 bg-gray-100/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10 border border-black">
         <CardContent className="p-0">
-          <div className="text-center mb-8">
-            <img 
-              src="client\src\components\assets\HockingLogo.png" 
-              alt="Hocking College Logo" 
-              className="h-16 mx-auto mb-4" 
-            />
-            <h1 className="text-2xl font-heading font-bold text-primary">Hocking College App</h1>
-            <p className="text-neutral-dark mt-2">Sign in to access all features</p>
-          </div>
-          
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="your username" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          <div className="text-center space-y-6">
+            <div>
+              <img 
+                src={HockingLogo}
+                alt="Hocking College Logo" 
+                className="h-20 mx-auto mb-6" 
               />
-              
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="password" 
-                        placeholder="••••••••" 
-                        {...field} 
-                        disabled={isLoading}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
+              <h1 className="text-3xl font-bold text-primary mb-3">Welcome to Hocking College</h1>
+              <p className="text-base text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
+            </div>
+            
+            <div className="pt-4 space-y-4">
               <Button 
-                type="submit" 
-                className="w-full bg-primary text-white py-2 rounded font-semibold hover:bg-primary-dark transition"
-                disabled={isLoading}
+                type="button" 
+                onClick={handleGuestLogin}
+                className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
               >
-                {isLoading ? "Signing In..." : "Sign In"}
+                Enter as Guest
               </Button>
-              
-              <div className="text-center">
-                <Button 
-                  type="button" 
-                  variant="link" 
-                  onClick={handleGuestLogin}
-                  className="text-primary hover:text-primary-dark transition"
-                  disabled={isLoading}
-                >
-                  Continue as Guest
-                </Button>
-              </div>
-            </form>
-          </Form>
+              <Button 
+                type="button" 
+                className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
+              >
+                Enter as Student
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

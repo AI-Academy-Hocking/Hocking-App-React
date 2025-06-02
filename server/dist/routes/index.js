@@ -11,11 +11,12 @@ const calendar_1 = __importDefault(require("./calendar"));
 const schema_1 = require("@shared/schema");
 const zod_1 = require("zod");
 const zod_validation_error_1 = require("zod-validation-error");
-// Define locationUpdateSchema
-const locationUpdateSchema = zod_1.z.object({
-    lat: zod_1.z.string(),
-    lng: zod_1.z.string(),
-    isLocationShared: zod_1.z.boolean().optional()
+const zod_2 = require("zod");
+// Define the location update schema here since we can't import it directly
+const locationUpdateSchema = zod_2.z.object({
+    lat: zod_2.z.number(),
+    lng: zod_2.z.number(),
+    isLocationShared: zod_2.z.boolean().optional(),
 });
 async function registerRoutes(app) {
     // Create HTTP server
@@ -45,16 +46,16 @@ async function registerRoutes(app) {
     // Function to broadcast location updates to all connected clients
     async function broadcastLocationUpdate() {
         const sharedLocations = await storage_1.storage.getSharedLocations();
-        // Remove sensitive info like passwords
-        const sanitizedLocations = sharedLocations.map((user) => {
-            const { password, ...userWithoutPassword } = user;
-            return userWithoutPassword;
-        });
         const message = JSON.stringify({
-            type: "location_update",
-            locations: sanitizedLocations,
+            type: 'location_update',
+            locations: sharedLocations.map(user => ({
+                id: user.id,
+                lat: user.lat,
+                lng: user.lng,
+                isLocationShared: user.isLocationShared
+            }))
         });
-        clients.forEach((client) => {
+        clients.forEach(client => {
             if (client.readyState === ws_1.WebSocket.OPEN) {
                 client.send(message);
             }
@@ -101,7 +102,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Registration error:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -111,7 +112,7 @@ async function registerRoutes(app) {
     app.get("/api/events", async (req, res) => {
         try {
             const events = await storage_1.storage.getEvents();
-            res.json(events);
+            res.status(200).json(events);
         }
         catch (error) {
             console.error("Error fetching events:", error);
@@ -144,7 +145,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating event:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -187,7 +188,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating building:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -234,7 +235,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating student tool:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -247,12 +248,12 @@ async function registerRoutes(app) {
             if (isNaN(userId)) {
                 return res.status(400).json({ message: "Invalid user ID" });
             }
-            const locationData = {
-                lat: parseFloat(req.body.lat),
-                lng: parseFloat(req.body.lng),
-                isLocationShared: req.body.isLocationShared
-            };
-            const updatedUser = await storage_1.storage.updateUserLocation(userId, locationData);
+            const locationData = locationUpdateSchema.parse(req.body);
+            const updatedUser = await storage_1.storage.updateUserLocation(userId, {
+                lat: locationData.lat,
+                lng: locationData.lng,
+                isLocationShared: locationData.isLocationShared
+            });
             if (!updatedUser) {
                 return res.status(404).json({ message: "User not found" });
             }
@@ -265,7 +266,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error updating user location:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -356,7 +357,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating discussion:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -409,11 +410,8 @@ async function registerRoutes(app) {
                 const replies = await storage_1.storage.getCommentReplies(comment.id);
                 // Get author info for each reply
                 const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-                    const replyAuthor = await storage_1.storage.getUser(reply.authorId);
-                    let replyAuthorInfo = {
-                        id: reply.authorId,
-                        username: "Unknown",
-                    };
+                    const replyAuthor = reply.authorId ? await storage_1.storage.getUser(reply.authorId) : null;
+                    let replyAuthorInfo = { id: reply.authorId ?? 0, username: "Unknown" };
                     if (replyAuthor) {
                         const { password, ...userWithoutPassword } = replyAuthor;
                         replyAuthorInfo = { ...userWithoutPassword };
@@ -458,7 +456,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating comment:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -504,7 +502,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating safety alert:", error);
             res.status(500).json({ message: "Internal server error" });
@@ -550,7 +548,7 @@ async function registerRoutes(app) {
         catch (error) {
             if (error instanceof zod_1.ZodError) {
                 const validationError = (0, zod_validation_error_1.fromZodError)(error);
-                return res.status(400).json({ error: validationError.message });
+                return res.status(400).json({ message: validationError.message });
             }
             console.error("Error creating safety resource:", error);
             res.status(500).json({ message: "Internal server error" });

@@ -4,8 +4,9 @@ import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
-import { useAuth } from "../lib/auth";
-// import HockingBackground from "../components/assets/Campus.jpeg";
+import { useAuth } from "@/lib/auth";
+import HockingBackground from "../components/assets/Campus.jpeg";  
+import { Button } from "@/components/ui/button";
 
 // Define a local Event type for type safety
 export type Event = {
@@ -143,6 +144,27 @@ export default function Home() {
           </div>
         </Card>
       </section>
+
+      <div className="p-8 space-y-8">
+        <h1 className="text-2xl font-bold mb-6">Button Examples with Ripple Effect</h1>
+        
+        <div className="space-y-4">
+          <div className="space-x-4">
+            <Button variant="default">Default Button</Button>
+            <Button variant="ghost">Ghost Button</Button>
+          </div>
+
+          <div className="space-x-4">
+            <Button variant="default">Default Variant</Button>
+            <Button variant="ghost">Ghost Variant</Button>
+          </div>
+
+          <div className="space-x-4">
+            <Button size="default">Default Size</Button>
+            <Button size="icon">Icon Size</Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

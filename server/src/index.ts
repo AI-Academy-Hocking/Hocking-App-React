@@ -9,9 +9,12 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Register all routes
-registerRoutes(app).then((server: Express) => {
-  server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}); 
+
+// Routes
+app.use('/api/calendar', calendarRouter);
+
+// Start server
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+

@@ -36,10 +36,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const express_1 = require("express");
 const ical = __importStar(require("ical"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
-const router = express_1.default.Router();
+const router = (0, express_1.Router)();
 const CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
 // GET /api/calendar/events
 router.get('/events', async (req, res) => {
