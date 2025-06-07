@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PartyPopper, MapPin, Calendar, Clock, Users } from 'lucide-react';
+import { PartyPopper, MapPin, Calendar, Users } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 
