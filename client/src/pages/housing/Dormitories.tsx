@@ -17,8 +17,8 @@ const dormitories: Dormitory[] = [
     type: "Male only",
     description: "Traditional male residence hall offering a supportive community environment.",
     features: [
-      "Single and double rooms",
-      "Community bathrooms",
+      "Double rooms only",
+      "Suite bathrooms",
       "Study lounges",
       "Laundry facilities",
       "24/7 security"
@@ -27,10 +27,10 @@ const dormitories: Dormitory[] = [
   {
     name: "Downhour",
     type: "Female only",
-    description: "Traditional female residence hall with a focus on academic success and community building.",
+    description: "Traditional female residence hall offering a supportive community environment.",
     features: [
-      "Single and double rooms",
-      "Community bathrooms",
+      "Double rooms only",
+      "Suite bathrooms",
       "Study lounges",
       "Laundry facilities",
       "24/7 security"
@@ -42,10 +42,11 @@ const dormitories: Dormitory[] = [
     description: "Specialized housing for student athletes with convenient access to athletic facilities.",
     features: [
       "Double rooms",
-      "Private bathrooms",
-      "Athletic study center",
-      "Fitness facilities",
-      "Team meeting rooms"
+      "Community bathrooms",
+      "Games lounge",
+      "Community kitchen",
+      "Laundry facilities",
+      "24/7 security"
     ]
   },
   {
@@ -53,11 +54,12 @@ const dormitories: Dormitory[] = [
     type: "Coed Dorm",
     description: "Modern coeducational housing with contemporary amenities and study spaces.",
     features: [
-      "Suite-style living",
-      "Private bathrooms",
+      "Suite-style living (single rooms with shared bathroom)",
       "Kitchen facilities",
-      "Study lounges",
-      "Social spaces"
+      "Games and study lounges",
+      "Social spaces",
+      "Parking",
+      "24/7 security"
     ]
   },
   {
@@ -65,11 +67,12 @@ const dormitories: Dormitory[] = [
     type: "Coed Dorm",
     description: "Coeducational residence hall featuring suite-style living arrangements.",
     features: [
-      "Suite-style living",
-      "Private bathrooms",
+      "Single and double rooms with private bathrooms",
       "Kitchen facilities",
-      "Study lounges",
-      "Social spaces"
+      "Games and study lounges",
+      "Social spaces",
+      "Parking",
+      "24/7 security"
     ]
   },
   {
@@ -77,11 +80,25 @@ const dormitories: Dormitory[] = [
     type: "WHI Program",
     description: "Specialized housing for international students participating in the WHI Program.",
     features: [
-      "Single and double rooms",
-      "Private bathrooms",
-      "Cultural center",
-      "Language labs",
-      "International student support"
+      "Apartment, 32, 34, 36, 79, and 81",
+      "Single and Double rooms",
+      "1 bathroom per Apartment and Kitchen",
+      "Laundry facilities",
+      "24/7 security"
+    ]
+  },
+  {
+    name: "Opportunity House",
+    type: "Coed Dorm",
+    description: "A supportive community space designed to help students grow and succeed through guided programs and mentorship.",
+    features: [
+      "Double rooms",
+      "2 bathrooms",
+      "Laundry facilities",
+      "Study room",
+      "Social spaces",
+      "Community kitchen",
+      "24/7 security"
     ]
   }
 ];

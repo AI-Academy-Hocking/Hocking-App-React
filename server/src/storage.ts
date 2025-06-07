@@ -3,6 +3,7 @@ import {
   events, type Event, type InsertEvent, 
   buildings, type Building, type InsertBuilding, 
   studentTools, type StudentTool, type InsertStudentTool, 
+  discussions, type Discussion, type InsertDiscussion,
   comments, type Comment, type InsertComment,
   safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
   safetyResources, type SafetyResource, type InsertSafetyResource,
@@ -33,11 +34,18 @@ export interface IStorage {
   getStudentTool(id: string): Promise<StudentTool | undefined>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
   
+  // Discussion operations
+  getDiscussions(): Promise<Discussion[]>;
+  getDiscussion(id: number): Promise<Discussion | undefined>;
+  createDiscussion(discussion: InsertDiscussion): Promise<Discussion>;
+  getDiscussionsByCategory(category: string): Promise<Discussion[]>;
+  
   // Comment operations
   getComments(discussionId: number): Promise<Comment[]>;
   getCommentReplies(commentId: number): Promise<Comment[]>;
   createComment(comment: InsertComment): Promise<Comment>;
   getUserComments(userId: number): Promise<Comment[]>;
+  getAllComments(): Promise<Comment[]>;
   
   // Safety Alert operations
   getSafetyAlerts(): Promise<SafetyAlert[]>;
@@ -57,6 +65,7 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
+  private discussions: Map<number, Discussion>;
   private comments: Map<number, Comment>;
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
@@ -64,6 +73,7 @@ export class MemStorage implements IStorage {
   private currentUserId: number;
   private currentEventId: number;
   private currentBuildingId: number;
+  private currentDiscussionId: number;
   private currentCommentId: number;
   private currentSafetyAlertId: number;
   private currentSafetyResourceId: number;
@@ -73,6 +83,7 @@ export class MemStorage implements IStorage {
     this.events = new Map();
     this.buildings = new Map();
     this.studentTools = new Map();
+    this.discussions = new Map();
     this.comments = new Map();
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
@@ -80,6 +91,7 @@ export class MemStorage implements IStorage {
     this.currentUserId = 1;
     this.currentEventId = 1;
     this.currentBuildingId = 1;
+    this.currentDiscussionId = 1;
     this.currentCommentId = 1;
     this.currentSafetyAlertId = 1;
     this.currentSafetyResourceId = 1;
@@ -94,19 +106,18 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username.toLowerCase() === username.toLowerCase(),
-    );
+    return Array.from(this.users.values()).find(user => user.username === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { 
-      ...insertUser, 
-      id, 
-      name: insertUser.name || null,
-      email: insertUser.email || null,
-      isGuest: insertUser.isGuest !== undefined ? insertUser.isGuest : null,
+    const user: User = {
+      id,
+      username: insertUser.username,
+      password: insertUser.password,
+      name: insertUser.name ?? null,
+      email: insertUser.email ?? null,
+      isGuest: insertUser.isGuest ?? null,
       lat: null,
       lng: null,
       isLocationShared: false,
@@ -127,9 +138,7 @@ export class MemStorage implements IStorage {
       ...user,
       lat: locationUpdate.lat,
       lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared !== undefined 
-        ? locationUpdate.isLocationShared 
-        : user.isLocationShared,
+      isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
       lastLocationUpdate: new Date()
     };
     
@@ -154,10 +163,13 @@ export class MemStorage implements IStorage {
   
   async createEvent(insertEvent: InsertEvent): Promise<Event> {
     const id = this.currentEventId++;
-    const event: Event = { 
-      ...insertEvent, 
-      id, 
-      description: insertEvent.description || null 
+    const event: Event = {
+      id,
+      date: insertEvent.date,
+      title: insertEvent.title,
+      description: insertEvent.description ?? null,
+      time: insertEvent.time,
+      location: insertEvent.location
     };
     this.events.set(id, event);
     return event;
@@ -174,7 +186,14 @@ export class MemStorage implements IStorage {
   
   async createBuilding(insertBuilding: InsertBuilding): Promise<Building> {
     const id = this.currentBuildingId++;
-    const building: Building = { ...insertBuilding, id };
+    const building: Building = {
+      id,
+      name: insertBuilding.name,
+      lat: insertBuilding.lat,
+      lng: insertBuilding.lng,
+      description: insertBuilding.description ?? null,
+      category: insertBuilding.category
+    };
     this.buildings.set(id, building);
     return building;
   }
@@ -191,6 +210,36 @@ export class MemStorage implements IStorage {
   async createStudentTool(tool: InsertStudentTool): Promise<StudentTool> {
     this.studentTools.set(tool.id, tool);
     return tool;
+  }
+  
+  // Discussion operations
+  async getDiscussions(): Promise<Discussion[]> {
+    return Array.from(this.discussions.values());
+  }
+  
+  async getDiscussion(id: number): Promise<Discussion | undefined> {
+    return this.discussions.get(id);
+  }
+  
+  async createDiscussion(insertDiscussion: InsertDiscussion): Promise<Discussion> {
+    const id = this.currentDiscussionId++;
+    const discussion: Discussion = {
+      id,
+      title: insertDiscussion.title,
+      content: insertDiscussion.content,
+      authorId: insertDiscussion.authorId ?? null,
+      createdAt: new Date(),
+      isPinned: insertDiscussion.isPinned ?? false,
+      category: insertDiscussion.category ?? "general"
+    };
+    this.discussions.set(id, discussion);
+    return discussion;
+  }
+  
+  async getDiscussionsByCategory(category: string): Promise<Discussion[]> {
+    return Array.from(this.discussions.values()).filter(
+      (discussion) => discussion.category === category
+    );
   }
   
   // Comment operations
@@ -213,10 +262,12 @@ export class MemStorage implements IStorage {
   async createComment(insertComment: InsertComment): Promise<Comment> {
     const id = this.currentCommentId++;
     const comment: Comment = {
-      ...insertComment,
       id,
+      discussionId: insertComment.discussionId,
+      authorId: insertComment.authorId,
+      content: insertComment.content,
       createdAt: new Date(),
-      parentId: insertComment.parentId || null
+      parentId: insertComment.parentId ?? null
     };
     this.comments.set(id, comment);
     return comment;
@@ -248,12 +299,14 @@ export class MemStorage implements IStorage {
   async createSafetyAlert(insertAlert: InsertSafetyAlert): Promise<SafetyAlert> {
     const id = this.currentSafetyAlertId++;
     const alert: SafetyAlert = {
-      ...insertAlert,
       id,
-      startDate: insertAlert.startDate || new Date(),
-      endDate: insertAlert.endDate || null,
-      isActive: insertAlert.isActive !== undefined ? insertAlert.isActive : true,
-      location: insertAlert.location || null
+      title: insertAlert.title,
+      content: insertAlert.content,
+      severity: insertAlert.severity,
+      startDate: insertAlert.startDate ?? new Date(),
+      endDate: insertAlert.endDate ?? null,
+      isActive: insertAlert.isActive ?? true,
+      location: insertAlert.location ?? null
     };
     this.safetyAlerts.set(id, alert);
     return alert;
@@ -278,12 +331,14 @@ export class MemStorage implements IStorage {
   async createSafetyResource(insertResource: InsertSafetyResource): Promise<SafetyResource> {
     const id = this.currentSafetyResourceId++;
     const resource: SafetyResource = {
-      ...insertResource,
       id,
-      phoneNumber: insertResource.phoneNumber || null,
-      url: insertResource.url || null,
-      icon: insertResource.icon || null,
-      order: insertResource.order || 0
+      title: insertResource.title,
+      description: insertResource.description,
+      category: insertResource.category,
+      url: insertResource.url ?? null,
+      phoneNumber: insertResource.phoneNumber ?? null,
+      icon: insertResource.icon ?? null,
+      order: insertResource.order ?? 0
     };
     this.safetyResources.set(id, resource);
     return resource;
@@ -308,30 +363,7 @@ export class MemStorage implements IStorage {
       email: "student@hocking.edu",
     });
     
-    // Sample events
-    await this.createEvent({
-      title: "Fall Festival",
-      description: "Annual celebration with food, games, and activities for students and faculty.",
-      date: "2023-10-15",
-      time: "12:00 PM - 4:00 PM",
-      location: "Student Center",
-    });
-    
-    await this.createEvent({
-      title: "Career Fair",
-      description: "Meet with employers from around the region for internship and job opportunities.",
-      date: "2023-10-20",
-      time: "10:00 AM - 2:00 PM",
-      location: "Main Hall",
-    });
-    
-    await this.createEvent({
-      title: "Registration Deadline",
-      description: "Last day to register for Spring semester classes without late fees.",
-      date: "2023-11-05",
-      time: "11:59 PM",
-      location: "For Spring Semester",
-    });
+    // No sample events - removed
     
     // Sample buildings
     await this.createBuilding({
@@ -469,6 +501,65 @@ export class MemStorage implements IStorage {
       description: "Job search and career planning",
       category: "resources",
       url: "#",
+    });
+    
+    // Sample discussions
+    const discussion1 = await this.createDiscussion({
+      title: "Tips for new students",
+      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
+      authorId: 1,
+      category: "general",
+      isPinned: true
+    });
+    
+    const discussion2 = await this.createDiscussion({
+      title: "Study group for Biology 101",
+      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
+      authorId: 2,
+      category: "academic"
+    });
+    
+    const discussion3 = await this.createDiscussion({
+      title: "Campus food recommendations",
+      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
+      authorId: 1,
+      category: "social"
+    });
+    
+    // Sample comments
+    await this.createComment({
+      content: "Always check Rate My Professor before signing up for classes!",
+      authorId: 2,
+      discussionId: discussion1.id,
+      parentId: null
+    });
+    
+    const comment1 = await this.createComment({
+      content: "Get involved in campus clubs early - it's the best way to make friends!",
+      authorId: 1,
+      discussionId: discussion1.id,
+      parentId: null
+    });
+    
+    await this.createComment({
+      content: "I totally agree! I joined the hiking club and met my best friends there.",
+      authorId: 2,
+      discussionId: discussion1.id,
+      parentId: comment1.id
+    });
+    
+    await this.createComment({
+      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
+      authorId: 1,
+      discussionId: discussion2.id,
+      parentId: null
+    });
+    
+    await this.createComment({
+      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
+      authorId: 2,
+      discussionId: discussion3.id,
+      parentId: null
     });
     
     // Sample safety alerts

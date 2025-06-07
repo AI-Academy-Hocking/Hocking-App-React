@@ -9,8 +9,6 @@ import Calendar from "@/pages/Calendar";
 import StudentTools from "@/pages/StudentTools";
 import Maps from "@/pages/Maps";
 import DiningHall from "@/pages/DiningHall";
-import Discussions from "./pages/Discussions";
-import DiscussionDetail from "./pages/DiscussionDetail";
 import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
@@ -78,10 +76,6 @@ function Router() {
             <Route path="/tools" component={StudentTools} />
             <Route path="/maps" component={Maps} />
             <Route path="/dining" component={DiningHall} />
-            <Route path="/discussions" component={Discussions} />
-            <Route path="/discussions/:id">
-              {(params) => <DiscussionDetail params={params} />}
-            </Route>
             <Route path="/safety" component={CampusSafety} />
             <Route path="/recreation" component={RecreationPage} />
             <Route path="/library" component={LibraryPage} />

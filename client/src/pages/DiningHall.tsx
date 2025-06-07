@@ -1,12 +1,43 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin } from "lucide-react";
-import HawksNest from "../components/assets/HawksNest.webp";
-import DiamondDawgs from "../components/assets/DiamondDawgs.jpeg";
-import Rhapsody from "../components/assets/rhapsody.webp";
-import { useState } from "react";
+import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export default function DiningHall() {
   const [selectedTab, setSelectedTab] = useState("hours");
+  const [imageLoading, setImageLoading] = useState({
+    hawksNest: true,
+    diamondDawgs: true,
+    rhapsody: true
+  });
+  const [images, setImages] = useState({
+    hawksNest: '',
+    diamondDawgs: '',
+    rhapsody: ''
+  });
+
+  useEffect(() => {
+    // Load images safely
+    try {
+      import("../components/assets/HawksNest.webp").then(module => {
+        setImages(prev => ({ ...prev, hawksNest: module.default }));
+      });
+      import("../components/assets/DiamondDawgs.jpeg").then(module => {
+        setImages(prev => ({ ...prev, diamondDawgs: module.default }));
+      });
+      import("../components/assets/rhapsody.webp").then(module => {
+        setImages(prev => ({ ...prev, rhapsody: module.default }));
+      });
+    } catch (error) {
+      console.error('Error loading images:', error);
+    }
+  }, []);
+
+  const handleImageLoad = (imageName: keyof typeof imageLoading) => {
+    setImageLoading(prev => ({
+      ...prev,
+      [imageName]: false
+    }));
+  };
 
   return (
     <div className="container mx-auto py-6 px-4">
@@ -56,7 +87,7 @@ export default function DiningHall() {
                 </tr>
                 <tr>
                   <td className="py-3 px-4 font-medium">Saturday - Sunday</td>
-                  <td className="py-3 px-4" colSpan={2}>11:00 AM - 1:00 PM</td>
+                  <td className="py-3 px-4">11:00 AM - 1:00 PM</td>
                   <td className="py-3 px-4">11:00 AM - 5:00 PM</td>
                 </tr>
               </tbody>
@@ -283,9 +314,23 @@ export default function DiningHall() {
           <h2 className="text-2xl font-semibold mb-4 text-primary">Campus Dining Locations</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col h-full">
-              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
+              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4 relative">
                 <div className="w-full h-full flex items-center justify-center bg-primary/5">
-                  <img src={HawksNest} alt="Hawks Nest" className="w-full h-full object-cover" />
+                  {imageLoading.hawksNest && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  )}
+                  <img 
+                    src={images.hawksNest} 
+                    alt="Hawks Nest" 
+                    className="w-full h-full object-cover"
+                    onLoad={() => handleImageLoad('hawksNest')}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Hawks+Nest';
+                      handleImageLoad('hawksNest');
+                    }}
+                  />
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-2">Hawks Nest Dining Hall</h3>
@@ -302,9 +347,23 @@ export default function DiningHall() {
             </div>
       
             <div className="flex flex-col h-full">
-              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4">
+              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4 relative">
                 <div className="w-full h-full flex items-center justify-center bg-primary/5">
-                  <img src={DiamondDawgs} alt="Diamond Dawgz" className="w-full h-full object-cover" />
+                  {imageLoading.diamondDawgs && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  )}
+                  <img 
+                    src={images.diamondDawgs} 
+                    alt="Diamond Dawgz" 
+                    className="w-full h-full object-cover"
+                    onLoad={() => handleImageLoad('diamondDawgs')}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Diamond+Dawgz';
+                      handleImageLoad('diamondDawgs');
+                    }}
+                  />
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-2">Diamond Dawgz</h3>
@@ -345,11 +404,21 @@ export default function DiningHall() {
                 </li>
               </ul>
             </div>
-            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200">
+            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200 relative">
+              {imageLoading.rhapsody && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              )}
               <img 
-                src={Rhapsody} 
+                src={images.rhapsody} 
                 alt="Rhapsody Restaurant" 
-                className="w-full h-full object-cover" 
+                className="w-full h-full object-cover"
+                onLoad={() => handleImageLoad('rhapsody')}
+                onError={(e) => {
+                  e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Rhapsody';
+                  handleImageLoad('rhapsody');
+                }}
               />
             </div>
           </div>
