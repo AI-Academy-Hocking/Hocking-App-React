@@ -61,6 +61,13 @@ export default function Maps() {
     { id: 'sycamore', name: 'Sycamore', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
   ];
 
+  // Add static dining buildings
+  const staticDiningBuildings: Building[] = [
+    { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.4442, lng: -82.2207 },
+    { id: 'diamond-dawgz', name: 'Diamond Dawgz', description: 'Quick hotdogs, burgers, fries, and ice cream.', category: 'dining', lat: 39.4450, lng: -82.2212 },
+    { id: 'rhapsody', name: 'Rhapsody', description: 'Student-run restaurant with casual fine dining and live music.', category: 'dining', lat: 39.4580, lng: -82.2310 },
+  ];
+
   // Add static parking buildings if not present
   const staticParkingBuildings: Building[] = [
     { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
@@ -70,6 +77,11 @@ export default function Maps() {
 
   let allBuildings = buildings ? [...buildings] : [];
   staticHousingBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
+  staticDiningBuildings.forEach(staticBldg => {
     if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
       allBuildings.push(staticBldg);
     }
@@ -214,6 +226,27 @@ export default function Maps() {
     }
   };
   
+  // Define colored marker icons for each building type
+  const iconUrls = {
+    academic: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    housing: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    dining: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    parking: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+    other: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+  };
+
+  function getMarkerIcon(category: string) {
+    // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+    return L.icon({
+      iconUrl: iconUrls[category as keyof typeof iconUrls] || iconUrls.other,
+      shadowUrl: iconShadow,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
+    });
+  }
+
   // Add markers for buildings and other users
   useEffect(() => {
     if (!map) return;
@@ -231,8 +264,8 @@ export default function Maps() {
     // Add markers for filtered buildings
     if (filteredBuildings) {
       filteredBuildings.forEach((building: Building) => {
-        // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
-        const marker = L.marker([building.lat, building.lng], { icon: DefaultIcon })
+        // Use colored icon based on building type
+        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
       });
@@ -250,7 +283,7 @@ export default function Maps() {
         if (sharedUser.lat !== null && sharedUser.lng !== null) {
           // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
           const marker = L.marker([sharedUser.lat, sharedUser.lng], {
-            icon: DefaultIcon
+            icon: getMarkerIcon(sharedUser.category)
           })
             .addTo(map)
             .bindPopup(`<b>${sharedUser.name || sharedUser.username}</b><br>Last updated: ${

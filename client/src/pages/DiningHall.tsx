@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import "../styles/animations.css";
 
 export default function DiningHall() {
   const [selectedTab, setSelectedTab] = useState("hours");
@@ -68,8 +69,11 @@ export default function DiningHall() {
 
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
-        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
-          <h2 className="text-2xl font-semibold mb-4 text-primary">Hours of Operation</h2>
+        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200 animate-fadeIn">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary mb-4">
+            <Clock className="h-7 w-7 text-primary" />
+            Hours of Operation
+          </h2>
           <div className="overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50">
             <table className="w-full">
               <thead className="bg-neutral-100">
@@ -80,12 +84,12 @@ export default function DiningHall() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200">
-                <tr>
+                <tr className="hover:bg-primary/10 transition-colors duration-200">
                   <td className="py-3 px-4 font-medium">Monday - Friday</td>
                   <td className="py-3 px-4">7:00 AM - 10:00 AM</td>
                   <td className="py-3 px-4">10:30 AM - 7:00 PM</td>
                 </tr>
-                <tr>
+                <tr className="hover:bg-primary/10 transition-colors duration-200">
                   <td className="py-3 px-4 font-medium">Saturday - Sunday</td>
                   <td className="py-3 px-4">11:00 AM - 1:00 PM</td>
                   <td className="py-3 px-4">11:00 AM - 5:00 PM</td>
@@ -100,13 +104,16 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "meal-plans" && (
-        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
-          <h2 className="text-2xl font-semibold mb-4 text-primary">Meal Plans</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="border border-neutral-200 rounded-lg p-5 hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-2">Full Meal Plan</h3>
-              <div className="text-xl font-bold text-primary mb-4">19 meals/week</div>
-              <ul className="space-y-2 text-neutral-600 mb-4">
+        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200 animate-fadeIn">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary mb-4">
+            <CreditCard className="h-7 w-7 text-primary" />
+            Meal Plans
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-stretch">
+            <div className="border border-neutral-200 rounded-xl p-8 flex flex-col items-center justify-between min-h-[340px] bg-white animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <h3 className="text-2xl font-bold mb-3">Full Meal Plan</h3>
+              <div className="text-2xl font-extrabold text-primary mb-5">19 meals/week</div>
+              <ul className="space-y-3 text-neutral-700 mb-6 text-lg">
                 <li className="flex items-start">
                   <span className="inline-flex mr-2 mt-1">•</span>
                   <span>3 meals per day (Mon-Fri)</span>
@@ -120,13 +127,12 @@ export default function DiningHall() {
                   <span>$100 in Hawk Bucks per semester</span>
                 </li>
               </ul>
-              <p className="text-sm text-neutral-500">Perfect for residential students</p>
+              <p className="text-base text-neutral-500">Perfect for residential students</p>
             </div>
-            
-            <div className="border border-neutral-200 rounded-lg p-5 hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-2">Partial Meal Plan</h3>
-              <div className="text-xl font-bold text-primary mb-4">14 meals/week</div>
-              <ul className="space-y-2 text-neutral-600 mb-4">
+            <div className="border border-neutral-200 rounded-xl p-8 flex flex-col items-center justify-between min-h-[340px] bg-white animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+              <h3 className="text-2xl font-bold mb-3">Partial Meal Plan</h3>
+              <div className="text-2xl font-extrabold text-primary mb-5">14 meals/week</div>
+              <ul className="space-y-3 text-neutral-700 mb-6 text-lg">
                 <li className="flex items-start">
                   <span className="inline-flex mr-2 mt-1">•</span>
                   <span>2 meals per day (Mon-Fri)</span>
@@ -140,30 +146,10 @@ export default function DiningHall() {
                   <span>$75 in Hawk Dollars per semester</span>
                 </li>
               </ul>
-              <p className="text-sm text-neutral-500">Great for most students</p>
-            </div>
-            
-            <div className="border border-neutral-200 rounded-lg p-5 hover:shadow-md transition">
-              <h3 className="text-xl font-semibold mb-2">Commuter Plan</h3>
-              <div className="text-xl font-bold text-primary mb-4">5 meals/week</div>
-              <ul className="space-y-2 text-neutral-600 mb-4">
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>1 meal per day (Mon-Fri)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>$50 in Hawk Dollars per semester</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>Discounted rates on additional meals</span>
-                </li>
-              </ul>
-              <p className="text-sm text-neutral-500">Ideal for commuter students</p>
+              <p className="text-base text-neutral-500">Great for most students</p>
             </div>
           </div>
-          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 animate-fadeIn">
             <h4 className="font-medium mb-2">How to Update Your Meal Plan</h4>
             <p className="text-neutral-600">
               For more information about meal plans or to upgrade your current plan, 
@@ -174,12 +160,12 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "menu" && (
-        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold text-primary">This Week's Menu</h2>
-            <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">March 31 - April 6</span>
+        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200 animate-fadeIn">
+          <div className="flex items-center gap-2 mb-4">
+            <Calendar className="h-7 w-7 text-primary" />
+            <h2 className="text-2xl font-bold text-primary">This Week's Menu</h2>
+            <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full ml-auto">March 31 - April 6</span>
           </div>
-          
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
             {[
               { day: "Monday", date: "March 31", menu: {
@@ -208,7 +194,7 @@ export default function DiningHall() {
                 dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
               }}
             ].map((day) => (
-              <div key={day.day} className="border border-neutral-200 rounded-lg overflow-hidden bg-white">
+              <div key={day.day} className="border border-neutral-200 rounded-lg overflow-hidden bg-white hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
                 <div className="bg-primary text-white py-2 px-4 font-medium">
                   <div className="text-lg">{day.day}</div>
                   <div className="text-xs opacity-80">{day.date}</div>
@@ -236,11 +222,13 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "dietary" && (
-        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
-          <h2 className="text-2xl font-semibold mb-4 text-primary">Special Dietary Information</h2>
-          
+        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200 animate-fadeIn">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary mb-4">
+            <Info className="h-7 w-7 text-primary" />
+            Special Dietary Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-neutral-200 rounded-lg p-5">
+            <div className="border border-neutral-200 rounded-lg p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
               <h3 className="text-lg font-semibold mb-3">Dietary Accommodations</h3>
               <p className="text-neutral-600 mb-4">
                 Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
@@ -265,7 +253,7 @@ export default function DiningHall() {
               </ul>
             </div>
             
-            <div className="border border-neutral-200 rounded-lg p-5">
+            <div className="border border-neutral-200 rounded-lg p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
               <h3 className="text-lg font-semibold mb-3">Food Allergen Information</h3>
               <p className="text-neutral-600 mb-4">
                 All menu items are clearly labeled with the following allergen information:
@@ -299,7 +287,7 @@ export default function DiningHall() {
             </div>
           </div>
           
-          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200">
+          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 animate-fadeIn">
             <h4 className="font-medium mb-2">Special Accommodations</h4>
             <p className="text-neutral-600">
               For specific dietary accommodations or concerns, please contact Janet M.Smith
@@ -310,11 +298,14 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "locations" && (
-        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200">
-          <h2 className="text-2xl font-semibold mb-4 text-primary">Campus Dining Locations</h2>
+        <div className="bg-white rounded-lg shadow-md p-6 border border-neutral-200 animate-fadeIn">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary mb-4">
+            <MapPin className="h-7 w-7 text-primary" />
+            Campus Dining Locations
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex flex-col h-full">
-              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4 relative">
+            <div className="flex flex-col h-full animate-fadeIn">
+              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4 relative group">
                 <div className="w-full h-full flex items-center justify-center bg-primary/5">
                   {imageLoading.hawksNest && (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/80">
@@ -324,7 +315,7 @@ export default function DiningHall() {
                   <img 
                     src={images.hawksNest} 
                     alt="Hawks Nest" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     onLoad={() => handleImageLoad('hawksNest')}
                     onError={(e) => {
                       e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Hawks+Nest';
@@ -346,8 +337,8 @@ export default function DiningHall() {
               </ul>
             </div>
       
-            <div className="flex flex-col h-full">
-              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4 relative">
+            <div className="flex flex-col h-full animate-fadeIn">
+              <div className="rounded-lg overflow-hidden border border-neutral-200 bg-neutral-50 h-48 mb-4 relative group">
                 <div className="w-full h-full flex items-center justify-center bg-primary/5">
                   {imageLoading.diamondDawgs && (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/80">
@@ -357,7 +348,7 @@ export default function DiningHall() {
                   <img 
                     src={images.diamondDawgs} 
                     alt="Diamond Dawgz" 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     onLoad={() => handleImageLoad('diamondDawgs')}
                     onError={(e) => {
                       e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Diamond+Dawgz';
@@ -383,7 +374,7 @@ export default function DiningHall() {
             </div>
           </div>
       
-          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col md:flex-row items-start gap-4">
+          <div className="mt-6 p-4 bg-neutral-50 rounded-lg border border-neutral-200 flex flex-col md:flex-row items-start gap-4 animate-fadeIn">
             <div className="flex-1">
               <h3 className="font-medium mb-2">Rhapsody Restaurant</h3>
               <p className="text-neutral-600 mb-2">
@@ -404,7 +395,7 @@ export default function DiningHall() {
                 </li>
               </ul>
             </div>
-            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200 relative">
+            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200 relative group animate-fadeIn">
               {imageLoading.rhapsody && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/80">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -413,7 +404,7 @@ export default function DiningHall() {
               <img 
                 src={images.rhapsody} 
                 alt="Rhapsody Restaurant" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 onLoad={() => handleImageLoad('rhapsody')}
                 onError={(e) => {
                   e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Rhapsody';
