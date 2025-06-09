@@ -15,6 +15,13 @@ export default function StudentTools() {
   
   const { data: tools } = useQuery<StudentTool[]>({
     queryKey: ['/api/student-tools'],
+    queryFn: async () => {
+      const response = await fetch('/api/student-tools');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    },
   });
 
   // Filter tools by category

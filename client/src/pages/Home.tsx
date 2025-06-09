@@ -4,9 +4,14 @@ import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
+<<<<<<< HEAD
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
 import { Button } from "@/components/ui/button";
+=======
+import { useAuth } from "../lib/auth";
+// import HockingBackground from "../components/assets/Campus.jpeg";
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
 
 // Define a local Event type for type safety
 export type Event = {
@@ -15,7 +20,9 @@ export type Event = {
   date: string;
   time: string;
   location: string;
-};
+};import ProgramDropdown from "@/components/ProgramDropdown";
+import { Button } from "@/components/ui/button";
+
 
 export default function Home() {
   const { user } = useAuth();
@@ -23,6 +30,11 @@ export default function Home() {
   const { data: events, isLoading: eventsLoading } = useQuery<Event[]>({
     queryKey: ['/api/events'],
   });
+
+  const handleProgramChange = (program: string) => {
+    console.log('Selected program:', program);
+    // Add any additional program selection logic here
+  };
 
   const quickLinks = [
     { 
@@ -70,10 +82,15 @@ export default function Home() {
             className="w-full h-48 object-cover" 
           /> */}
           <CardContent className="p-4">
-            <p className="text-neutral-dark">
-              Explore all that Hocking College has to offer. Access your student resources, 
-              check the academic calendar, find your way around campus, and more.
-            </p>
+            <div className="space-y-4">
+              <p className="text-neutral-dark">
+                Explore all that Hocking College has to offer. Access your student resources, 
+                check the academic calendar, find your way around campus, and more.
+              </p>
+              <div className="w-full max-w-xs">
+                <ProgramDropdown onChange={handleProgramChange} />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </section>
@@ -150,16 +167,23 @@ export default function Home() {
         
         <div className="space-y-4">
           <div className="space-x-4">
+<<<<<<< HEAD
             <Button variant="default">Default Button</Button>
+=======
+            <Button>Default Button</Button>
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
             <Button variant="ghost">Ghost Button</Button>
           </div>
 
           <div className="space-x-4">
+<<<<<<< HEAD
             <Button variant="default">Default Variant</Button>
             <Button variant="ghost">Ghost Variant</Button>
           </div>
 
           <div className="space-x-4">
+=======
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
             <Button size="default">Default Size</Button>
             <Button size="icon">Icon Size</Button>
           </div>

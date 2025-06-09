@@ -1,54 +1,42 @@
-import { 
-  users, type User, type InsertUser, 
-  events, type Event, type InsertEvent, 
-  buildings, type Building, type InsertBuilding, 
-  studentTools, type StudentTool, type InsertStudentTool, 
-  comments, type Comment, type InsertComment,
-  safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
-  safetyResources, type SafetyResource, type InsertSafetyResource,
-  type LocationUpdate 
+import type { 
+  User, Event, Building, StudentTool, SafetyAlert, SafetyResource,
+  InsertUser, InsertEvent, InsertBuilding, InsertStudentTool,
+  InsertSafetyAlert, InsertSafetyResource, LocationUpdate
 } from "@shared/schema";
 
-// Interface for storage operations
 export interface IStorage {
-  // User operations
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  // User methods
+  getUser(id: number): Promise<User | null>;
+  getUserByUsername(username: string): Promise<User | null>;
   createUser(user: InsertUser): Promise<User>;
-  updateUserLocation(userId: number, locationUpdate: LocationUpdate): Promise<User | undefined>;
+  updateUserLocation(id: number, location: LocationUpdate): Promise<User | null>;
   getSharedLocations(): Promise<User[]>;
   
-  // Event operations
+  // Event methods
   getEvents(): Promise<Event[]>;
-  getEvent(id: number): Promise<Event | undefined>;
+  getEvent(id: number): Promise<Event | null>;
   createEvent(event: InsertEvent): Promise<Event>;
   
-  // Building operations
+  // Building methods
   getBuildings(): Promise<Building[]>;
-  getBuilding(id: number): Promise<Building | undefined>;
+  getBuilding(id: number): Promise<Building | null>;
   createBuilding(building: InsertBuilding): Promise<Building>;
   
-  // Student Tool operations
+  // Student Tool methods
   getStudentTools(): Promise<StudentTool[]>;
-  getStudentTool(id: string): Promise<StudentTool | undefined>;
+  getStudentTool(id: string): Promise<StudentTool | null>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
   
-  // Comment operations
-  getComments(discussionId: number): Promise<Comment[]>;
-  getCommentReplies(commentId: number): Promise<Comment[]>;
-  createComment(comment: InsertComment): Promise<Comment>;
-  getUserComments(userId: number): Promise<Comment[]>;
-  
-  // Safety Alert operations
+  // Safety Alert methods
   getSafetyAlerts(): Promise<SafetyAlert[]>;
   getActiveSafetyAlerts(): Promise<SafetyAlert[]>;
-  getSafetyAlert(id: number): Promise<SafetyAlert | undefined>;
+  getSafetyAlert(id: number): Promise<SafetyAlert | null>;
   createSafetyAlert(alert: InsertSafetyAlert): Promise<SafetyAlert>;
   
-  // Safety Resource operations
+  // Safety Resource methods
   getSafetyResources(): Promise<SafetyResource[]>;
   getSafetyResourcesByCategory(category: string): Promise<SafetyResource[]>;
-  getSafetyResource(id: number): Promise<SafetyResource | undefined>;
+  getSafetyResource(id: number): Promise<SafetyResource | null>;
   createSafetyResource(resource: InsertSafetyResource): Promise<SafetyResource>;
 }
 
@@ -57,50 +45,44 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
-  private comments: Map<number, Comment>;
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
-  
-  private currentUserId: number;
-  private currentEventId: number;
-  private currentBuildingId: number;
-  private currentCommentId: number;
-  private currentSafetyAlertId: number;
-  private currentSafetyResourceId: number;
+  private nextUserId: number;
+  private nextEventId: number;
+  private nextBuildingId: number;
+  private nextSafetyAlertId: number;
+  private nextSafetyResourceId: number;
 
   constructor() {
     this.users = new Map();
     this.events = new Map();
     this.buildings = new Map();
     this.studentTools = new Map();
-    this.comments = new Map();
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
-    
-    this.currentUserId = 1;
-    this.currentEventId = 1;
-    this.currentBuildingId = 1;
-    this.currentCommentId = 1;
-    this.currentSafetyAlertId = 1;
-    this.currentSafetyResourceId = 1;
-    
+    this.nextUserId = 1;
+    this.nextEventId = 1;
+    this.nextBuildingId = 1;
+    this.nextSafetyAlertId = 1;
+    this.nextSafetyResourceId = 1;
+
     // Initialize with sample data
     this.initializeSampleData();
   }
 
   // User operations
-  async getUser(id: number): Promise<User | undefined> {
+  async getUser(id: number): Promise<User | null> {
     return this.users.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<User | null> {
     return Array.from(this.users.values()).find(
       (user) => user.username.toLowerCase() === username.toLowerCase(),
     );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
+    const id = this.nextUserId++;
     const user: User = { 
       ...insertUser, 
       id, 
@@ -116,24 +98,24 @@ export class MemStorage implements IStorage {
     return user;
   }
   
-  async updateUserLocation(userId: number, locationUpdate: LocationUpdate): Promise<User | undefined> {
-    const user = await this.getUser(userId);
+  async updateUserLocation(id: number, location: LocationUpdate): Promise<User | null> {
+    const user = await this.getUser(id);
     
     if (!user) {
-      return undefined;
+      return null;
     }
     
     const updatedUser: User = {
       ...user,
-      lat: locationUpdate.lat,
-      lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared !== undefined 
-        ? locationUpdate.isLocationShared 
+      lat: location.lat,
+      lng: location.lng,
+      isLocationShared: location.isLocationShared !== undefined 
+        ? location.isLocationShared 
         : user.isLocationShared,
       lastLocationUpdate: new Date()
     };
     
-    this.users.set(userId, updatedUser);
+    this.users.set(id, updatedUser);
     return updatedUser;
   }
   
@@ -148,12 +130,12 @@ export class MemStorage implements IStorage {
     return Array.from(this.events.values());
   }
   
-  async getEvent(id: number): Promise<Event | undefined> {
+  async getEvent(id: number): Promise<Event | null> {
     return this.events.get(id);
   }
   
   async createEvent(insertEvent: InsertEvent): Promise<Event> {
-    const id = this.currentEventId++;
+    const id = this.nextEventId++;
     const event: Event = { 
       ...insertEvent, 
       id, 
@@ -168,12 +150,12 @@ export class MemStorage implements IStorage {
     return Array.from(this.buildings.values());
   }
   
-  async getBuilding(id: number): Promise<Building | undefined> {
+  async getBuilding(id: number): Promise<Building | null> {
     return this.buildings.get(id);
   }
   
   async createBuilding(insertBuilding: InsertBuilding): Promise<Building> {
-    const id = this.currentBuildingId++;
+    const id = this.nextBuildingId++;
     const building: Building = { ...insertBuilding, id };
     this.buildings.set(id, building);
     return building;
@@ -184,48 +166,13 @@ export class MemStorage implements IStorage {
     return Array.from(this.studentTools.values());
   }
   
-  async getStudentTool(id: string): Promise<StudentTool | undefined> {
+  async getStudentTool(id: string): Promise<StudentTool | null> {
     return this.studentTools.get(id);
   }
   
   async createStudentTool(tool: InsertStudentTool): Promise<StudentTool> {
     this.studentTools.set(tool.id, tool);
     return tool;
-  }
-  
-  // Comment operations
-  async getAllComments(): Promise<Comment[]> {
-    return Array.from(this.comments.values());
-  }
-
-  async getComments(discussionId: number): Promise<Comment[]> {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.discussionId === discussionId && comment.parentId === null
-    );
-  }
-  
-  async getCommentReplies(commentId: number): Promise<Comment[]> {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.parentId === commentId
-    );
-  }
-  
-  async createComment(insertComment: InsertComment): Promise<Comment> {
-    const id = this.currentCommentId++;
-    const comment: Comment = {
-      ...insertComment,
-      id,
-      createdAt: new Date(),
-      parentId: insertComment.parentId || null
-    };
-    this.comments.set(id, comment);
-    return comment;
-  }
-  
-  async getUserComments(userId: number): Promise<Comment[]> {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.authorId === userId
-    );
   }
   
   // Safety Alert operations
@@ -241,12 +188,12 @@ export class MemStorage implements IStorage {
     );
   }
   
-  async getSafetyAlert(id: number): Promise<SafetyAlert | undefined> {
+  async getSafetyAlert(id: number): Promise<SafetyAlert | null> {
     return this.safetyAlerts.get(id);
   }
   
   async createSafetyAlert(insertAlert: InsertSafetyAlert): Promise<SafetyAlert> {
-    const id = this.currentSafetyAlertId++;
+    const id = this.nextSafetyAlertId++;
     const alert: SafetyAlert = {
       ...insertAlert,
       id,
@@ -271,12 +218,12 @@ export class MemStorage implements IStorage {
       .sort((a, b) => (a.order || 999) - (b.order || 999));
   }
   
-  async getSafetyResource(id: number): Promise<SafetyResource | undefined> {
+  async getSafetyResource(id: number): Promise<SafetyResource | null> {
     return this.safetyResources.get(id);
   }
   
   async createSafetyResource(insertResource: InsertSafetyResource): Promise<SafetyResource> {
-    const id = this.currentSafetyResourceId++;
+    const id = this.nextSafetyResourceId++;
     const resource: SafetyResource = {
       ...insertResource,
       id,

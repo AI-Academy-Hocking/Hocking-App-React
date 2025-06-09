@@ -1,6 +1,5 @@
 import { Switch, Route, useLocation } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/Login";
@@ -16,6 +15,8 @@ import RecreationPage from "./pages/Recreation";
 import LibraryPage from "./pages/Library";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
+import ProgramDetails from "./pages/ProgramDetails";
+
 import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
@@ -33,6 +34,8 @@ import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from "@/components/ui/button";
+
+const queryClient = new QueryClient();
 
 function Router() {
   const [location] = useLocation();

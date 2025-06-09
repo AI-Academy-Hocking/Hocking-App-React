@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+<<<<<<< HEAD
 
+=======
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -65,31 +68,8 @@ export default function CalendarPage() {
 
   // Format events for the BigCalendar
   const formattedEvents = events.map(event => {
-    const startDate = new Date(event.date);
-    const endDate = new Date(event.date); // Use same date for end if not specified
-    
-    let startHours = 0, startMinutes = 0, endHours = 23, endMinutes = 59;
-    
-    if (event.time) {
-      const [startTime, endTime] = event.time.split(" - ");
-      if (startTime) {
-        const [hours, minutes] = startTime.split(":").map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          startHours = hours;
-          startMinutes = minutes;
-        }
-      }
-      if (endTime) {
-        const [hours, minutes] = endTime.split(":").map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          endHours = hours;
-          endMinutes = minutes;
-        }
-      }
-    }
-    
-    startDate.setHours(startHours, startMinutes);
-    endDate.setHours(endHours, endMinutes);
+    const startDate = new Date(event.startTime);
+    const endDate = new Date(event.endTime);
     
     return {
       title: event.title || "Untitled Event",
@@ -114,14 +94,14 @@ export default function CalendarPage() {
         
         // When you add real events, uncomment this code:
         /*
-        const eventDate = new Date(event.date);
+        const eventDate = new Date(event.startTime);
         if (selectedDate) {
           return isSameDay(eventDate, selectedDate);
         }
         return eventDate >= monthStart && eventDate <= monthEnd;
         */
       })
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
   };
 
   // Get events for both calendar types
@@ -132,7 +112,7 @@ export default function CalendarPage() {
   const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
 
   // Format date for display
-  const formatEventDate = (date: string) => {
+  const formatEventDate = (date: string | Date) => {
     const eventDate = new Date(date);
     return {
       weekday: eventDate.toLocaleString('en-US', { weekday: 'short' }),
@@ -159,7 +139,7 @@ export default function CalendarPage() {
 
   // Custom day renderer for the calendar
   const dayPropGetter = (date: Date) => {
-    const hasEvents = events.some(event => isSameDay(new Date(event.date), date));
+    const hasEvents = events.some(event => isSameDay(new Date(event.startTime), date));
     const isSelectedDay = selectedDate && isSameDay(date, selectedDate);
     const isTodayDate = isToday(date);
     
@@ -196,7 +176,7 @@ export default function CalendarPage() {
 
   // Group events by date
   const groupedEvents = filteredEvents.reduce((acc, event) => {
-    const date = event.date;
+    const date = new Date(event.startTime).toISOString().split('T')[0];
     if (!acc[date]) {
       acc[date] = [];
     }
@@ -204,6 +184,16 @@ export default function CalendarPage() {
     return acc;
   }, {} as Record<string, Event[]>);
 
+<<<<<<< HEAD
+=======
+  // Helper to format time range
+  const formatTimeRange = (start: Date, end: Date) => {
+    const startStr = start ? format(start, 'h:mm a') : '';
+    const endStr = end ? format(end, 'h:mm a') : '';
+    return startStr && endStr ? `${startStr} - ${endStr}` : startStr || endStr;
+  };
+
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
   return (
     <div className="space-y-6">
       <section>
@@ -303,6 +293,10 @@ export default function CalendarPage() {
                   Back to All Events
                 </Button>
               )}
+<<<<<<< HEAD
+=======
+
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
             </div>
             
             {view === "month" && (
@@ -362,7 +356,7 @@ export default function CalendarPage() {
                             >
                               <h4 className="font-medium">{event.title}</h4>
                               <div className="text-sm text-neutral-dark mt-1 flex items-center">
-                                <Clock className="h-3.5 w-3.5 mr-1 inline" /> {event.time}
+                                <Clock className="h-3.5 w-3.5 mr-1 inline" /> {formatTimeRange(new Date(event.startTime), new Date(event.endTime))}
                                 {event.location && (
                                   <span className="ml-2 flex items-center">
                                     <MapPin className="h-3.5 w-3.5 mr-1 inline" /> {event.location}
@@ -442,6 +436,7 @@ export default function CalendarPage() {
                 ))}
               </div>
             ) : (
+<<<<<<< HEAD
               <div className="divide-y divide-neutral-light">
                 {/* Render academic events here */}
               </div>
@@ -481,6 +476,76 @@ export default function CalendarPage() {
                 {/* Render activity events here */}
               </div>
             )}
+=======
+              <CardContent className="p-4">
+                {/* Academic events content */}
+              </CardContent>
+            )}
+          </Card>
+
+          {/* Activity Events */}
+          <Card className="border border-white rounded-lg shadow-[0_0_0_2px_white,0_0_10px_white,0_0_20px_white]">
+            <div className="p-3 bg-[linear-gradient(to_bottom,#eab308_0%,#eab308_60%,#bfdbfe_100%)] flex justify-between items-center rounded-t-lg">
+              <h3 className="font-medium text-white [text-shadow:_-1px_-1px_0_#1e40af,_1px_-1px_0_#1e40af,_-1px_1px_0_#1e40af,_1px_1px_0_#1e40af]">Activity Calendar</h3>
+              <button 
+                onClick={() => setActiveCalendar("activities")}
+                className={`text-xs px-2 py-1 rounded border-2 bg-blue-800 text-white border-blue-800 hover:bg-blue-900`}
+              >
+                View All
+              </button>
+            </div>
+            <div className="max-h-[400px] overflow-y-auto">
+              <ul className="divide-y divide-neutral-light">
+                {activityEvents.length > 0 ? (
+                  activityEvents.map((event) => {
+                    const { weekday, month, day } = formatEventDate(event.startTime);
+                    return (
+                      <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0 mr-4">
+                            <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
+                              <div className="text-xs font-medium">{weekday}</div>
+                              <div className="text-sm font-bold">{month}</div>
+                              <div className="text-xl font-bold">{day}</div>
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex justify-between">
+                              <h3 className="font-semibold">{event.title}</h3>
+                              <Badge variant="outline" className="ml-2">
+                                {formatTimeRange(new Date(event.startTime), new Date(event.endTime))}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center text-sm text-neutral-dark mt-1">
+                              {event.location && (
+                                <div className="flex items-center mr-3">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  <span>{event.location}</span>
+                                </div>
+                              )}
+                            </div>
+                            {event.description && (
+                              <p className="text-sm mt-2">{event.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li className="p-6 text-center">
+                    <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-neutral-light" />
+                    <p className="text-neutral-dark">No student activities</p>
+                    <p className="text-sm text-neutral-dark mt-1">
+                      {selectedDate 
+                        ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
+                        : 'Check back later for new events'}
+                    </p>
+                  </li>
+                )}
+              </ul>
+            </div>
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
           </Card>
         </div>
       </section>
@@ -494,13 +559,20 @@ export default function CalendarPage() {
         
         .rbc-header {
           padding: 8px 0;
-          background-color: #f8fafc;
+          background-color: #1e3a8a;
           font-weight: 600;
+          color: white;
+          text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
         }
         
         .rbc-date-cell {
           padding: 8px;
           text-align: center;
+          background-color: #e5e7eb;
+        }
+
+        .rbc-month-row {
+          background-color: #d1d5db;
         }
         
         .rbc-day-bg.selected-day {
@@ -559,6 +631,10 @@ export default function CalendarPage() {
           color: white;
         }
       ` }} />
+<<<<<<< HEAD
+=======
+
+>>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
     </div>
   );
 }
