@@ -4,14 +4,8 @@ import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
-<<<<<<< HEAD
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
-import { Button } from "@/components/ui/button";
-=======
-import { useAuth } from "../lib/auth";
-// import HockingBackground from "../components/assets/Campus.jpeg";
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
 
 // Define a local Event type for type safety
 export type Event = {
@@ -167,23 +161,11 @@ export default function Home() {
         
         <div className="space-y-4">
           <div className="space-x-4">
-<<<<<<< HEAD
-            <Button variant="default">Default Button</Button>
-=======
             <Button>Default Button</Button>
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
             <Button variant="ghost">Ghost Button</Button>
           </div>
 
           <div className="space-x-4">
-<<<<<<< HEAD
-            <Button variant="default">Default Variant</Button>
-            <Button variant="ghost">Ghost Variant</Button>
-          </div>
-
-          <div className="space-x-4">
-=======
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
             <Button size="default">Default Size</Button>
             <Button size="icon">Icon Size</Button>
           </div>

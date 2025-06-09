@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
-
-=======
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -184,8 +180,6 @@ export default function CalendarPage() {
     return acc;
   }, {} as Record<string, Event[]>);
 
-<<<<<<< HEAD
-=======
   // Helper to format time range
   const formatTimeRange = (start: Date, end: Date) => {
     const startStr = start ? format(start, 'h:mm a') : '';
@@ -193,7 +187,6 @@ export default function CalendarPage() {
     return startStr && endStr ? `${startStr} - ${endStr}` : startStr || endStr;
   };
 
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
   return (
     <div className="space-y-6">
       <section>
@@ -293,10 +286,6 @@ export default function CalendarPage() {
                   Back to All Events
                 </Button>
               )}
-<<<<<<< HEAD
-=======
-
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
             </div>
             
             {view === "month" && (
@@ -436,47 +425,6 @@ export default function CalendarPage() {
                 ))}
               </div>
             ) : (
-<<<<<<< HEAD
-              <div className="divide-y divide-neutral-light">
-                {/* Render academic events here */}
-              </div>
-            )}
-          </Card>
-          {/* Activity Events */}
-          <Card className={activeCalendar === "activities" ? "ring-2 ring-primary ring-offset-2" : ""}>
-            <div className="p-3 bg-primary-light/10 border-b border-neutral-light flex justify-between items-center">
-              <h3 className="font-medium text-primary">Student Activities</h3>
-              <button 
-                onClick={() => setActiveCalendar("activities")}
-                className={`text-xs px-2 py-1 rounded border-2 ${
-                  activeCalendar === "activities" 
-                    ? "ring-2 ring-primary-light ring-offset-2 bg-white text-primary border-primary" 
-                    : "bg-white text-primary border-primary"
-                } hover:bg-primary-light/10`}
-              >
-                {activeCalendar === "activities" ? "Active" : "Set Active"}
-              </button>
-            </div>
-            {isLoading ? (
-              <div className="divide-y divide-neutral-light">
-                {[1, 2].map((i) => (
-                  <div key={i} className="p-4">
-                    <div className="flex items-start">
-                      <Skeleton className="h-16 w-12 rounded mr-4" />
-                      <div className="space-y-2 flex-1">
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-3 w-1/3" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="divide-y divide-neutral-light">
-                {/* Render activity events here */}
-              </div>
-            )}
-=======
               <CardContent className="p-4">
                 {/* Academic events content */}
               </CardContent>
@@ -545,7 +493,6 @@ export default function CalendarPage() {
                 )}
               </ul>
             </div>
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
           </Card>
         </div>
       </section>
@@ -631,10 +578,6 @@ export default function CalendarPage() {
           color: white;
         }
       ` }} />
-<<<<<<< HEAD
-=======
-
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
     </div>
   );
 }

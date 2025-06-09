@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
 /* Removed @tailwind directives because Tailwind CSS is not configured or not being used */
 
 :root {
@@ -22,10 +19,6 @@
   border-color: var(--color-border);
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c638959b24dc6c36aa7b047bc0d62fea3619d794
 body {
   font-family: var(--font-sans, sans-serif);
   -webkit-font-smoothing: antialiased;
