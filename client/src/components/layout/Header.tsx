@@ -1,10 +1,11 @@
+import * as React from "react";
 import { useState } from "react";
 import { Menu, Bell, User } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Button } from "../ui/button";
+import { useAuth } from "../../lib/auth";
 import { Link } from "wouter";
-import HawkLogo from '/HawkLogo.png';
+import HawkLogo from "../../assets/HawkLogo.png";
 
 export default function Header() {
   const { user, logout } = useAuth();

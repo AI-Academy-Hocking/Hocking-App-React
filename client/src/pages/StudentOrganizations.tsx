@@ -1,11 +1,19 @@
-
 import React from 'react';
-import { Users, Calendar, Mail, Award } from 'lucide-react';
+import { Users, Calendar, Mail, Award, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "wouter";
 
 function StudentOrganizationsPage() {
   return (
     <div className="container mx-auto py-8 px-4">
+      <div className="flex items-center mb-6">
+        <Link href="/tools">
+          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            <span>Back to Student Tools</span>
+          </button>
+        </Link>
+      </div>
       <h1 className="text-2xl font-bold text-primary mb-6">Student Organizations</h1>
       
       <p className="mb-6">Hocking College offers a variety of student organizations to enhance your college experience, develop leadership skills, and connect with peers who share your interests.</p>

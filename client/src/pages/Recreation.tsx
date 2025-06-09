@@ -1,11 +1,21 @@
 import React from 'react';
-import { Phone, Mail, Clock } from 'lucide-react';
+import { Phone, Mail, Clock, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import studentCenterImage from "@/components/assets/studentCenter.jpg"; // Import the image
+import { Link } from "wouter";
 
 function RecreationPage() {
   return (
     <div className="container mx-auto py-8 px-4">
+      <div className="flex items-center mb-6">
+        <Link href="/tools">
+          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            <span>Back to Student Tools</span>
+          </button>
+        </Link>
+      </div>
+
       <h1 className="text-2xl font-bold text-primary mb-6">Recreation & Student Center</h1>
       
       <Card className="overflow-hidden mb-6">

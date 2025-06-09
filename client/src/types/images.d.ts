@@ -1,4 +1,4 @@
-declare module '*.jpeg' {
+declare module '*.png' {
   const content: string;
   export default content;
 }
@@ -8,12 +8,12 @@ declare module '*.jpg' {
   export default content;
 }
 
-declare module '*.png' {
+declare module '*.jpeg' {
   const content: string;
   export default content;
 }
 
-declare module '*.webp' {
+declare module '*.svg' {
   const content: string;
   export default content;
 } 
