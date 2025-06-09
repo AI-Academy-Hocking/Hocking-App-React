@@ -5,7 +5,6 @@ import { storage } from "./storage";
 import { 
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, locationUpdateSchema, 
-  insertDiscussionSchema, insertCommentSchema,
   insertSafetyAlertSchema, insertSafetyResourceSchema
 } from "@shared/schema";
 import { ZodError } from "zod";
@@ -256,119 +255,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(200).json(locationsWithoutPasswords);
     } catch (error) {
       console.error("Error fetching shared locations:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  // Comment routes
-  // Get all comments for a user
-  app.get("/api/comments", async (req: Request, res: Response) => {
-    try {
-      const comments = await storage.getAllComments();
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        
-        const discussion = await storage.getDiscussion(comment.discussionId);
-        return { 
-          ...comment, 
-          author: authorInfo,
-          discussionTitle: discussion?.title || "Unknown Discussion"
-        };
-      }));
-      
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching all comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  app.get("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      
-      // Get top-level comments for the discussion
-      const comments = await storage.getComments(discussionId);
-      
-      // Fetch author info and replies for each comment
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        // Get author info
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        
-        // Get replies
-        const replies = await storage.getCommentReplies(comment.id);
-        
-        // Get author info for each reply
-        const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-          const replyAuthor = await storage.getUser(reply.authorId);
-          let replyAuthorInfo = { id: reply.authorId, username: "Unknown" };
-          
-          if (replyAuthor) {
-            const { password, ...userWithoutPassword } = replyAuthor;
-            replyAuthorInfo = { ...userWithoutPassword };
-          }
-          
-          return { ...reply, author: replyAuthorInfo };
-        }));
-        
-        return { ...comment, author: authorInfo, replies: repliesWithAuthor };
-      }));
-      
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  app.post("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      
-      const commentData = insertCommentSchema.parse({
-        ...req.body,
-        discussionId
-      });
-      
-      const newComment = await storage.createComment(commentData);
-      
-      // Get author info
-      const author = await storage.getUser(newComment.authorId);
-      let authorInfo = { id: newComment.authorId, username: "Unknown" };
-      
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      
-      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      
-      console.error("Error creating comment:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });

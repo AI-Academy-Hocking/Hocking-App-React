@@ -161,21 +161,13 @@ export default function Home() {
         
         <div className="space-y-4">
           <div className="space-x-4">
-            <Button variant="default">Default Button</Button>
-            <Button variant="secondary">Secondary Button</Button>
-            <Button variant="destructive">Destructive Button</Button>
-          </div>
-
-          <div className="space-x-4">
-            <Button variant="outline">Outline Button</Button>
+            <Button>Default Button</Button>
             <Button variant="ghost">Ghost Button</Button>
-            <Button variant="link">Link Button</Button>
           </div>
 
           <div className="space-x-4">
-            <Button size="sm">Small Button</Button>
             <Button size="default">Default Size</Button>
-            <Button size="lg">Large Button</Button>
+            <Button size="icon">Icon Size</Button>
           </div>
         </div>
       </div>
