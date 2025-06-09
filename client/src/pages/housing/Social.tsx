@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Image, Heart, Share2, MoreHorizontal, Send, Smile } from 'lucide-react';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { MessageSquare, Image, Heart, Share2, MoreHorizontal, Smile } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -200,15 +200,15 @@ export default function Social() {
                       ))}
                     </div>
                     <div className="flex items-center gap-4 pt-2">
-                      <Button variant="ghost" size="sm" className="gap-2">
+                      <Button variant="ghost" size="icon" className="gap-2">
                         <Heart className="h-4 w-4" />
                         {post.likes}
                       </Button>
-                      <Button variant="ghost" size="sm" className="gap-2">
+                      <Button variant="ghost" size="icon" className="gap-2">
                         <MessageSquare className="h-4 w-4" />
                         {post.comments}
                       </Button>
-                      <Button variant="ghost" size="sm" className="gap-2">
+                      <Button variant="ghost" size="icon" className="gap-2">
                         <Share2 className="h-4 w-4" />
                         {post.shares}
                       </Button>

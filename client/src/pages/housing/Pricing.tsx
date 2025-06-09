@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface PricingOption {
   title: string;
-  type: "standard" | "premium" | "suite";
+  type: "standard" | "premium" | "special";
   price: string;
   term: string;
   features: string[];
@@ -15,61 +15,68 @@ interface PricingOption {
 
 const pricingOptions: PricingOption[] = [
   {
+    title: "Premium Single Room",
+    type: "premium",
+    price: "$3,490.00",
+    term: "per semester",
+    features: [
+      "Private room",
+      "Private Bathroom or share bathroom with suitemate",
+      "Furniture including Twin XL bed",
+      "Closet",
+      "Three-draw dresser",
+      "Desk and chair",
+      "Microwave",
+      "Own controlled HVAC Unit",
+      "Fridge and microwave",
+      "WiFi"
+    ],
+    bestFor: [
+      "Returners",
+      "Students who prefer privacy",
+      "Final Semester Student"
+    ],
+    notes: [
+      "Limited Availability",
+      "Early Application",
+      "Can be waitlisted"
+    ]
+  },
+  {
     title: "Standard Double Room",
     type: "standard",
-    price: "$3,200",
+    price: "$2,990.00",
     term: "per semester",
     features: [
       "Shared double occupancy room",
-      "Community bathroom",
-      "Basic furnishings",
-      "High-speed internet",
-      "24/7 security"
+      "Suite-style bathroom",
+      "Furniture including Twin XL bed",
+      "Closet",
+      "Three-draw dresser",
+      "Desk and chair",
+      "Microwave",
+      "Own controlled HVAC Unit",
+      "Fridge and microwave",
+      "WiFi"
     ],
     bestFor: [
-      "First-year students",
-      "Budget-conscious students",
+      "First year students",
+      "Budget-conscious Students",
       "Traditional college experience"
-    ]
-  },
-  {
-    title: "Premium Single Room",
-    type: "premium",
-    price: "$4,500",
-    term: "per semester",
-    features: [
-      "Private single room",
-      "Private bathroom",
-      "Enhanced furnishings",
-      "Priority internet access",
-      "Extended quiet hours"
-    ],
-    bestFor: [
-      "Upperclassmen",
-      "Students who prefer privacy",
-      "Graduate students"
     ],
     notes: [
-      "Limited availability",
-      "Early application recommended"
+      "You are able to request your own roommate in the allotted time given before assignments"
     ]
   },
   {
-    title: "Suite-Style Living",
-    type: "suite",
-    price: "$4,000",
-    term: "per semester",
-    features: [
-      "Shared suite with 2-4 students",
-      "Private bathroom",
-      "Common living area",
-      "Kitchenette",
-      "Enhanced amenities"
-    ],
-    bestFor: [
-      "Small group living",
-      "Students seeking community",
-      "Upperclassmen"
+    title: "Sports Dorm and WHI Program",
+    type: "special",
+    price: "Contact for pricing",
+    term: "",
+    features: [],
+    bestFor: [],
+    notes: [
+      "For prices, contact your program director or coach"
     ]
   }
 ];
@@ -112,17 +119,16 @@ export default function Pricing() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto"
       >
-        {pricingOptions.map((option) => (
+        {pricingOptions.slice(0, 2).map((option) => (
           <motion.div key={option.title} variants={item}>
             <Card className="hover-card h-full">
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <CardTitle>{option.title}</CardTitle>
                   <Badge 
-                    variant={option.type === "premium" ? "default" : 
-                           option.type === "suite" ? "secondary" : "outline"}
+                    variant={option.type === "premium" ? "default" : "secondary"}
                   >
                     {option.type}
                   </Badge>
@@ -174,6 +180,41 @@ export default function Pricing() {
             </Card>
           </motion.div>
         ))}
+      </motion.div>
+
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="max-w-md mx-auto mt-6"
+      >
+        <motion.div variants={item}>
+          <Card className="hover-card">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <CardTitle>{pricingOptions[2].title}</CardTitle>
+                <Badge variant="outline">Special Program</Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {pricingOptions[2].notes && (
+                  <div>
+                    <h3 className="text-sm font-semibold mb-3">Notes</h3>
+                    <ul className="space-y-2">
+                      {pricingOptions[2].notes.map((note) => (
+                        <li key={note} className="text-sm flex items-center gap-2 text-muted-foreground">
+                          <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground"></span>
+                          {note}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
       </motion.div>
     </div>
   );
