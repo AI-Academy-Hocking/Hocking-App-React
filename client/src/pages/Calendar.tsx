@@ -446,75 +446,75 @@ export default function CalendarPage() {
                   </div>
                 ))}
               </div>
+            ) : (
               <CardContent className="p-4">
                 {/* Academic events content */}
               </CardContent>
-            </Card>
+            )}
+          </Card>
 
-            {/* Activity Events */}
-            <Card className="border border-white rounded-lg shadow-[0_0_0_2px_white,0_0_10px_white,0_0_20px_white]">
-              <div className="p-3 bg-[linear-gradient(to_bottom,#eab308_0%,#eab308_60%,#bfdbfe_100%)] flex justify-between items-center rounded-t-lg">
-                <h3 className="font-medium text-white [text-shadow:_-1px_-1px_0_#1e40af,_1px_-1px_0_#1e40af,_-1px_1px_0_#1e40af,_1px_1px_0_#1e40af]">Activity Calendar</h3>
-                <button 
-                  onClick={() => setActiveCalendar("activities")}
-                  className={`text-xs px-2 py-1 rounded border-2 bg-blue-800 text-white border-blue-800 hover:bg-blue-900`}
-                >
-                  View All
-                </button>
-              </div>
-            ) : (
-              <div className="max-h-[400px] overflow-y-auto">
-                <ul className="divide-y divide-neutral-light">
-                  {activityEvents.length > 0 ? (
-                    activityEvents.map((event) => {
-                      const { weekday, month, day } = formatEventDate(event.date);
-                      return (
-                        <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
-                          <div className="flex items-start">
-                            <div className="flex-shrink-0 mr-4">
-                              <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
-                                <div className="text-xs font-medium">{weekday}</div>
-                                <div className="text-sm font-bold">{month}</div>
-                                <div className="text-xl font-bold">{day}</div>
-                              </div>
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex justify-between">
-                                <h3 className="font-semibold">{event.title}</h3>
-                                <Badge variant="outline" className="ml-2">
-                                  {event.time}
-                                </Badge>
-                              </div>
-                              <div className="flex items-center text-sm text-neutral-dark mt-1">
-                                {event.location && (
-                                  <div className="flex items-center mr-3">
-                                    <MapPin className="h-4 w-4 mr-1" />
-                                    <span>{event.location}</span>
-                                  </div>
-                                )}
-                              </div>
-                              {event.description && (
-                                <p className="text-sm mt-2">{event.description}</p>
-                              )}
+          {/* Activity Events */}
+          <Card className="border border-white rounded-lg shadow-[0_0_0_2px_white,0_0_10px_white,0_0_20px_white]">
+            <div className="p-3 bg-[linear-gradient(to_bottom,#eab308_0%,#eab308_60%,#bfdbfe_100%)] flex justify-between items-center rounded-t-lg">
+              <h3 className="font-medium text-white [text-shadow:_-1px_-1px_0_#1e40af,_1px_-1px_0_#1e40af,_-1px_1px_0_#1e40af,_1px_1px_0_#1e40af]">Activity Calendar</h3>
+              <button 
+                onClick={() => setActiveCalendar("activities")}
+                className={`text-xs px-2 py-1 rounded border-2 bg-blue-800 text-white border-blue-800 hover:bg-blue-900`}
+              >
+                View All
+              </button>
+            </div>
+            <div className="max-h-[400px] overflow-y-auto">
+              <ul className="divide-y divide-neutral-light">
+                {activityEvents.length > 0 ? (
+                  activityEvents.map((event) => {
+                    const { weekday, month, day } = formatEventDate(event.date);
+                    return (
+                      <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0 mr-4">
+                            <div className="bg-primary-light text-white rounded-md p-2 text-center w-16">
+                              <div className="text-xs font-medium">{weekday}</div>
+                              <div className="text-sm font-bold">{month}</div>
+                              <div className="text-xl font-bold">{day}</div>
                             </div>
                           </div>
-                        </li>
-                      );
-                    })
-                  ) : (
-                    <li className="p-6 text-center">
-                      <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-neutral-light" />
-                      <p className="text-neutral-dark">No student activities</p>
-                      <p className="text-sm text-neutral-dark mt-1">
-                        {selectedDate 
-                          ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
-                          : 'Check back later for new events'}
-                      </p>
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )}
+                          <div className="flex-1">
+                            <div className="flex justify-between">
+                              <h3 className="font-semibold">{event.title}</h3>
+                              <Badge variant="outline" className="ml-2">
+                                {event.time}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center text-sm text-neutral-dark mt-1">
+                              {event.location && (
+                                <div className="flex items-center mr-3">
+                                  <MapPin className="h-4 w-4 mr-1" />
+                                  <span>{event.location}</span>
+                                </div>
+                              )}
+                            </div>
+                            {event.description && (
+                              <p className="text-sm mt-2">{event.description}</p>
+                            )}
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li className="p-6 text-center">
+                    <CalendarIcon className="h-12 w-12 mx-auto mb-3 text-neutral-light" />
+                    <p className="text-neutral-dark">No student activities</p>
+                    <p className="text-sm text-neutral-dark mt-1">
+                      {selectedDate 
+                        ? `No events scheduled for ${format(selectedDate, 'MMMM d, yyyy')}` 
+                        : 'Check back later for new events'}
+                    </p>
+                  </li>
+                )}
+              </ul>
+            </div>
           </Card>
         </div>
       </section>
