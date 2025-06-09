@@ -511,13 +511,20 @@ export default function CalendarPage() {
         
         .rbc-header {
           padding: 8px 0;
-          background-color: #f8fafc;
+          background-color: #1e3a8a;
           font-weight: 600;
+          color: white;
+          text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
         }
         
         .rbc-date-cell {
           padding: 8px;
           text-align: center;
+          background-color: #e5e7eb;
+        }
+
+        .rbc-month-row {
+          background-color: #d1d5db;
         }
         
         .rbc-day-bg.selected-day {

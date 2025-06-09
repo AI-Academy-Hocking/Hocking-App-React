@@ -4,14 +4,36 @@ import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Search, Plus, Minus, Navigation, MapPin, Users } from "lucide-react";
-import { Building } from "@shared/schema";
-import { useAuth } from "../lib/auth";
-import { useSharedLocations } from "../hooks/use-shared-locations";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { toast } from "../hooks/use-toast";
-import L from "leaflet";
+import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { useAuth } from "../lib/auth";
+import { useSharedLocations } from "../hooks/use-shared-locations";
+
+// Fix for Leaflet marker icons
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Use L.icon for default marker icon
+// @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+const DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
+
+// Local Building type definition
+type Building = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  lat: number;
+  lng: number;
+};
 
 export default function Maps() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +44,7 @@ export default function Maps() {
   const [userMarkers, setUserMarkers] = useState<L.Marker[]>([]);
   const [userLocationMarker, setUserLocationMarker] = useState<L.Marker | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
   
   const { user } = useAuth();
   const { sharedLocations, updateLocation } = useSharedLocations();
@@ -30,31 +53,91 @@ export default function Maps() {
     queryKey: ['/api/buildings'],
   });
 
-  // Filter buildings based on search and category
-  const filteredBuildings = buildings?.filter(building => {
+  // Add static housing buildings if not present
+  const staticHousingBuildings: Building[] = [
+    { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'downhour', name: 'Downhour', description: 'Female Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'summit', name: 'Summit', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'sycamore', name: 'Sycamore', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
+  ];
+
+  // Add static dining buildings
+  const staticDiningBuildings: Building[] = [
+    { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.4442, lng: -82.2207 },
+    { id: 'diamond-dawgz', name: 'Diamond Dawgz', description: 'Quick hotdogs, burgers, fries, and ice cream.', category: 'dining', lat: 39.4450, lng: -82.2212 },
+    { id: 'rhapsody', name: 'Rhapsody', description: 'Student-run restaurant with casual fine dining and live music.', category: 'dining', lat: 39.4580, lng: -82.2310 },
+  ];
+
+  // Add static parking buildings if not present
+  const staticParkingBuildings: Building[] = [
+    { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+    { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights / Downhour Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+    { id: 'john-light-lot', name: 'John Light Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+  ];
+
+  let allBuildings = buildings ? [...buildings] : [];
+  staticHousingBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
+  staticDiningBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
+  staticParkingBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
+
+  let filteredBuildings = allBuildings.filter(building => {
     const matchesSearch = searchQuery === "" || 
       building.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === "all" || 
       building.category === activeCategory;
     return matchesSearch && matchesCategory;
-  }) || [];
+  });
+
+  // If the selected building is not in the filtered list, clear the selection
+  if (selectedBuildingId && !filteredBuildings.some(b => b.id === selectedBuildingId)) {
+    setSelectedBuildingId(null);
+  }
 
   // Initialize map
   useEffect(() => {
     if (mapRef.current && !map) {
-      // Hocking College coordinates (3301 Hocking Pkwy, Nelsonville, OH 45764)
-      const hockingCollege = [39.4616, -82.2366];
+      // Updated coordinates for the new location
+      const location = [39.44374, -82.22048];
       
-      const leafletMap = L.map(mapRef.current).setView(hockingCollege as L.LatLngExpression, 16);
+      const leafletMap = L.map(mapRef.current).setView(location as L.LatLngExpression, 15);
       
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(leafletMap);
       
-      // Add a marker for Hocking College main campus
-      L.marker(hockingCollege as L.LatLngExpression)
+      // Create a custom icon for the location
+      // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+      const locationIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      });
+      
+      // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+      const mainMarker = L.marker(location as L.LatLngExpression, { icon: locationIcon })
         .addTo(leafletMap)
-        .bindPopup("<b>Hocking College</b><br>3301 Hocking Pkwy, Nelsonville, OH 45764");
+        .bindPopup(`
+          <div class="text-center">
+            <b class="text-lg">Location</b><br>
+            <span class="text-sm">Latitude: 39.44374</span><br>
+            <span class="text-sm">Longitude: -82.22048</span>
+          </div>
+        `);
       
       setMap(leafletMap);
       
@@ -93,17 +176,17 @@ export default function Maps() {
           
           // Update marker on map
           if (userLocationMarker) {
-            (userLocationMarker as any).setLatLng([latitude, longitude]);
+            userLocationMarker.setLatLng([latitude, longitude]);
           } else {
-            // Create a marker for user location
             const marker = L.marker([latitude, longitude])
               .addTo(map)
               .bindPopup("Your location");
+            
             setUserLocationMarker(marker);
           }
           
-          // Center map on user location
-          map.setView([latitude, longitude], 17);
+          // Center map on user location with higher zoom
+          map.setView([latitude, longitude], 19);
         },
         (error) => {
           console.error('Error getting location:', error);
@@ -143,24 +226,46 @@ export default function Maps() {
     }
   };
   
+  // Define colored marker icons for each building type
+  const iconUrls = {
+    academic: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    housing: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    dining: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    parking: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+    other: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+  };
+
+  function getMarkerIcon(category: string) {
+    // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
+    return L.icon({
+      iconUrl: iconUrls[category as keyof typeof iconUrls] || iconUrls.other,
+      shadowUrl: iconShadow,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
+    });
+  }
+
   // Add markers for buildings and other users
   useEffect(() => {
     if (!map) return;
     
     // Clear existing markers
-    userMarkers.forEach(marker => (marker as any).remove());
+    userMarkers.forEach(marker => marker.remove());
     setUserMarkers([]);
     
-    map.eachLayer((layer: any) => {
+    map.eachLayer((layer) => {
       if (layer instanceof L.Marker && layer !== userLocationMarker) {
         map.removeLayer(layer);
       }
     });
     
     // Add markers for filtered buildings
-    if (buildings) {
-      filteredBuildings.forEach(building => {
-        const marker = L.marker([building.lat, building.lng])
+    if (filteredBuildings) {
+      filteredBuildings.forEach((building: Building) => {
+        // Use colored icon based on building type
+        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
       });
@@ -170,18 +275,15 @@ export default function Maps() {
     if (viewingSharedLocations) {
       const newUserMarkers: L.Marker[] = [];
       
-      sharedLocations.forEach(sharedUser => {
+      sharedLocations.forEach((sharedUser: any) => {
         // Don't show current user marker twice
         if (user && sharedUser.id === user.id) return;
         
         // Make sure lat/lng are valid
         if (sharedUser.lat !== null && sharedUser.lng !== null) {
+          // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
           const marker = L.marker([sharedUser.lat, sharedUser.lng], {
-            icon: (L as any).divIcon({
-              className: 'bg-blue-500 rounded-full w-4 h-4 flex items-center justify-center border-2 border-white',
-              iconSize: [20, 20],
-              html: `<div class="bg-blue-500 rounded-full w-4 h-4 flex items-center justify-center border-2 border-white"></div>`
-            })
+            icon: getMarkerIcon(sharedUser.category)
           })
             .addTo(map)
             .bindPopup(`<b>${sharedUser.name || sharedUser.username}</b><br>Last updated: ${
@@ -194,7 +296,7 @@ export default function Maps() {
       
       setUserMarkers(newUserMarkers);
     }
-  }, [map, buildings, filteredBuildings, sharedLocations, user, userLocationMarker, viewingSharedLocations]);
+  }, [map, filteredBuildings, sharedLocations, user, userLocationMarker, viewingSharedLocations]);
 
   // Handle zoom in/out
   const handleZoomIn = () => {
@@ -227,7 +329,7 @@ export default function Maps() {
           <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-[1000]">
             <Button 
               size="icon" 
-              variant="secondary" 
+              variant="default" 
               className="rounded-full" 
               onClick={handleZoomIn}
             >
@@ -235,7 +337,7 @@ export default function Maps() {
             </Button>
             <Button 
               size="icon" 
-              variant="secondary" 
+              variant="default" 
               className="rounded-full" 
               onClick={handleZoomOut}
             >
@@ -260,8 +362,8 @@ export default function Maps() {
               {categories.map((category) => (
                 <Button 
                   key={category.id}
-                  variant={activeCategory === category.id ? "default" : "outline"}
-                  size="sm"
+                  variant={activeCategory === category.id ? "default" : "ghost"}
+                  size="default"
                   className={`rounded-full text-sm ${
                     activeCategory === category.id 
                       ? "bg-primary text-white" 
@@ -305,8 +407,8 @@ export default function Maps() {
               
               {isLocationSharing && (
                 <Button 
-                  variant="outline" 
-                  size="sm"
+                  variant="ghost" 
+                  size="default"
                   className="w-full"
                   onClick={getUserLocation}
                 >
@@ -352,15 +454,19 @@ export default function Maps() {
               filteredBuildings.map((building) => (
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="font-semibold">{building.name}</h3>
-                      <p className="text-sm text-neutral-dark">{building.description}</p>
+                    <div className="flex items-center gap-3">
+                      <span className={`inline-block w-5 h-5 rounded-full border-2 transition-colors duration-200 mr-2 ${selectedBuildingId === building.id ? 'bg-blue-600 border-blue-700' : 'bg-neutral-200 border-neutral-400'}`}></span>
+                      <div>
+                        <h3 className={`font-semibold ${selectedBuildingId === building.id ? 'text-black' : ''}`}>{building.name}</h3>
+                        <p className="text-sm text-neutral-dark">{building.description}</p>
+                      </div>
                     </div>
                     <Button 
                       variant="ghost" 
                       size="icon" 
                       className="text-primary hover:text-primary-dark"
                       onClick={() => {
+                        setSelectedBuildingId(building.id);
                         if (map) map.setView([building.lat, building.lng], 18);
                       }}
                     >
