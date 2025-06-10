@@ -70,14 +70,14 @@ export default function StudentTools() {
 
   // Add Testing Center to academic tools if it doesn't exist
   const academicToolsWithTesting = [
-    ...(academicTools || []),
     {
       id: 'testing-center',
       name: 'Testing Center',
       description: 'Schedule and take tests',
       url: '/testing-center',
       category: 'academic'
-    }
+    },
+    ...(academicTools || [])
   ];
 
   return (
@@ -98,9 +98,9 @@ export default function StudentTools() {
                 {academicToolsWithTesting.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
-                    <a 
+                    <Link 
                       key={tool.id} 
-                      href={tool.url} 
+                      href={tool.url}
                       className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
@@ -108,7 +108,7 @@ export default function StudentTools() {
                         <h3 className="font-semibold">{tool.name}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
