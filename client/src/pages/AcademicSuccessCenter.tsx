@@ -1,158 +1,144 @@
 import React from 'react';
-import { ArrowLeft, GraduationCap, Lightbulb, Heart, Brain, MessageSquare, Pencil, LibraryBig, BookOpen, FileText, Accessibility, Users } from 'lucide-react';
+import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, OwlWithGlasses, MessageSquare, Heart, Accessibility, FileText, Home, Utensils, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-
-// Custom icon for Tutoring (chat bubble with pencil)
-const ChatWithPencil = () => (
-  <div className="relative">
-    <MessageSquare className="h-8 w-8 text-blue-600" />
-    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
-  </div>
-);
-
-// Custom icon for Library Resources (books on shelf)
-const BooksOnShelf = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-8 w-8 text-blue-600"
-  >
-    {/* Shelf */}
-    <path d="M3 20h18" />
-    {/* Books */}
-    <path d="M4 20V8a2 2 0 0 1 2-2h2" />
-    <path d="M8 20V6a2 2 0 0 1 2-2h2" />
-    <path d="M12 20V4a2 2 0 0 1 2-2h2" />
-    <path d="M16 20V6a2 2 0 0 1 2-2h2" />
-    {/* Book spines */}
-    <path d="M4 8h2" />
-    <path d="M8 6h2" />
-    <path d="M12 4h2" />
-    <path d="M16 6h2" />
-  </svg>
-);
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 function AcademicSuccessCenter() {
-  const sections = [
-    {
-      title: "Tutoring",
-      icon: ChatWithPencil,
-      description: "Get help with your coursework from qualified tutors",
-      color: "text-blue-600",
-      path: "/tutoring"
-    },
-    {
-      title: "Library Resources",
-      icon: BooksOnShelf,
-      description: "Access books, databases, and study materials",
-      color: "text-blue-600",
-      path: "/library-resources"
-    },
-    {
-      title: "Learning Labs",
-      icon: Lightbulb,
-      description: "Enhance your learning through specialized labs",
-      color: "text-blue-600",
-      path: "/learning-labs"
-    },
-    {
-      title: "Accessibility Resources",
-      icon: Heart,
-      description: "Support services for students with disabilities",
-      color: "text-blue-600",
-      path: "/accessibility-resources"
-    },
-    {
-      title: "TRIO Student Support Services",
-      icon: GraduationCap,
-      description: "Comprehensive support for eligible students",
-      color: "text-blue-600",
-      path: "/trio-services"
-    },
-    {
-      title: "Testing Center",
-      icon: Brain,
-      description: "Professional testing and assessment services",
-      color: "text-blue-600"
-    }
-  ];
-
   const quickLinks = [
     {
-      title: "Tutoring",
-      description: "Get help with your coursework",
-      icon: MessageSquare,
-      link: "/tutoring"
-    },
-    {
-      title: "Library Resources",
-      description: "Access library services and resources",
+      id: "library",
+      label: "Library Resources",
       icon: LibraryBig,
-      link: "/library-resources"
+      path: "/library-resources",
+      description: "Access library services and resources"
     },
     {
-      title: "Learning Labs",
-      description: "Access specialized learning resources",
+      id: "learning-labs",
+      label: "Learning Labs",
       icon: BookOpen,
-      link: "/learning-labs"
+      path: "/learning-labs",
+      description: "Get help with your coursework"
     },
     {
-      title: "Testing Center",
-      description: "Schedule and take tests",
-      icon: FileText,
-      link: "/testing-center"
-    },
-    {
-      title: "Accessibility Resources",
-      description: "Get support for disabilities and accommodations",
+      id: "accessibility",
+      label: "Accessibility Resources",
       icon: Accessibility,
-      link: "/accessibility-resources"
+      path: "/accessibility-resources",
+      description: "Get support for disabilities and accommodations"
     },
     {
-      title: "TRIO Student Support",
-      description: "Access TRIO program services",
+      id: "trio",
+      label: "TRIO Student Support",
       icon: Users,
-      link: "/trio-services"
+      path: "/trio-services",
+      description: "Support for first-generation students"
+    },
+    {
+      id: "testing",
+      label: "Testing Center",
+      icon: FileText,
+      path: "/testing-center",
+      description: "Schedule and take exams"
     }
   ];
 
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
-        <Link href="/tools">
+        <Link href="/student-tools">
           <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
           </button>
         </Link>
       </div>
-      <h1 className="text-3xl font-bold text-primary mb-8">Academic Success Center</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sections.map((section, index) => (
-          <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
-            <CardHeader className="bg-primary-light/10">
-              <div className="flex items-center gap-3">
-                <section.icon className={`h-8 w-8 ${section.color}`} />
-                <CardTitle className="text-2xl font-semibold text-black">{section.title}</CardTitle>
+
+      <div className="flex items-center gap-4 mb-8">
+        <OwlWithGlasses className="h-8 w-8 text-blue-600" />
+        <h1 className="text-3xl font-bold text-primary">Academic Success Center</h1>
+      </div>
+
+      <Alert className="mb-6">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          We're here to help you succeed! Contact us for academic support and resources.
+        </AlertDescription>
+      </Alert>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <Card>
+          <CardHeader className="bg-primary-light/10">
+            <CardTitle className="text-xl">Contact Information</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-blue-600" />
+                <span>DVD 114</span>
               </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <p className="text-black text-lg">{section.description}</p>
-              {section.path && (
-                <Link href={section.path}>
-                  <button className="mt-4 text-blue-600 hover:text-blue-800 font-medium">
-                    Learn More →
-                  </button>
-                </Link>
-              )}
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-2">
+                <Phone className="h-5 w-5 text-blue-600" />
+                <a href="tel:740-753-4195" className="hover:text-blue-600">
+                  740-753-4195
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="h-5 w-5 text-blue-600" />
+                <a href="mailto:academicsuccess@hocking.edu" className="hover:text-blue-600">
+                  academicsuccess@hocking.edu
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-blue-600" />
+                <span>Monday – Friday: 8 a.m.-4 p.m.</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="bg-primary-light/10">
+            <CardTitle className="text-xl">Get Started</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="space-y-4">
+              <p className="text-neutral-dark">
+                To access our services:
+              </p>
+              <ol className="list-decimal list-inside space-y-2 text-neutral-dark">
+                <li>Visit our office in DVD 114</li>
+                <li>Call or email to schedule an appointment</li>
+                <li>Check our hours of operation</li>
+                <li>Bring any necessary documentation</li>
+              </ol>
+              <Button className="w-full">
+                Schedule an Appointment
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {quickLinks.map((link) => (
+          <Link key={link.id} href={link.path}>
+            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader className="bg-primary-light/10">
+                <div className="flex items-center gap-3">
+                  <link.icon className="h-6 w-6 text-blue-600" />
+                  <CardTitle className="text-xl">{link.label}</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <p className="text-neutral-dark">{link.description}</p>
+                <Button variant="ghost" className="w-full mt-4">
+                  Learn More
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
