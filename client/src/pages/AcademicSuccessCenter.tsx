@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, BookOpen, GraduationCap, Lightbulb, Heart, Brain, MessageSquare, Pencil } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Lightbulb, Heart, Brain, MessageSquare, Pencil } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 
@@ -9,6 +9,32 @@ const ChatWithPencil = () => (
     <MessageSquare className="h-8 w-8 text-blue-600" />
     <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
   </div>
+);
+
+// Custom icon for Library Resources (books on shelf)
+const BooksOnShelf = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-8 w-8 text-blue-600"
+  >
+    {/* Shelf */}
+    <path d="M3 20h18" />
+    {/* Books */}
+    <path d="M4 20V8a2 2 0 0 1 2-2h2" />
+    <path d="M8 20V6a2 2 0 0 1 2-2h2" />
+    <path d="M12 20V4a2 2 0 0 1 2-2h2" />
+    <path d="M16 20V6a2 2 0 0 1 2-2h2" />
+    {/* Book spines */}
+    <path d="M4 8h2" />
+    <path d="M8 6h2" />
+    <path d="M12 4h2" />
+    <path d="M16 6h2" />
+  </svg>
 );
 
 function AcademicSuccessCenter() {
@@ -21,7 +47,7 @@ function AcademicSuccessCenter() {
     },
     {
       title: "Library Resources",
-      icon: BookOpen,
+      icon: BooksOnShelf,
       description: "Access books, databases, and study materials",
       color: "text-blue-600"
     },
