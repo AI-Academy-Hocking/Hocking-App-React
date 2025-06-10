@@ -82,6 +82,45 @@ function AcademicSuccessCenter() {
     }
   ];
 
+  const quickLinks = [
+    {
+      title: "Tutoring",
+      description: "Get help with your coursework",
+      icon: MessageSquare,
+      link: "/tutoring"
+    },
+    {
+      title: "Library Resources",
+      description: "Access library services and resources",
+      icon: LibraryBig,
+      link: "/library-resources"
+    },
+    {
+      title: "Learning Labs",
+      description: "Access specialized learning resources",
+      icon: BookOpen,
+      link: "/learning-labs"
+    },
+    {
+      title: "Testing Center",
+      description: "Schedule and take tests",
+      icon: FileText,
+      link: "/testing-center"
+    },
+    {
+      title: "Accessibility Resources",
+      description: "Get support for disabilities",
+      icon: Accessibility,
+      link: "/accessibility-resources"
+    },
+    {
+      title: "TRIO Student Support",
+      description: "Access TRIO program services",
+      icon: Users,
+      link: "/trio-services"
+    }
+  ];
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">

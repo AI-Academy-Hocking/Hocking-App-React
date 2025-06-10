@@ -32,7 +32,6 @@ import Social from "./pages/housing/Social";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { Button } from "@/components/ui/button";
 import Tutoring from './pages/Tutoring';
 import LibraryResources from './pages/LibraryResources';
 import LearningLabs from './pages/LearningLabs';

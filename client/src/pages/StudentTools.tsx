@@ -45,11 +45,13 @@ export default function StudentTools() {
     'recreation': Dumbbell,
     'dining': Utensils,
     'events': Calendar,
+    'testing-center': FileText,
   };
 
   // Quick links for bottom section
   const quickLinks = [
     { id: 'academic-success', label: 'Academic Success Center', icon: ChatWithPencil, path: '/academic-success' },
+    { id: 'testing-center', label: 'Testing Center', icon: FileText, path: '/testing-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
