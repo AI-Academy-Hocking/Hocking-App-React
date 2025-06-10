@@ -3,10 +3,11 @@ import { ArrowLeft, Trophy, Phone, Mail, Users, Award, Target, Circle, Volleybal
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { LucideIcon } from 'lucide-react';
 
 interface Sport {
   name: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: LucideIcon;
 }
 
 function Athletics() {
