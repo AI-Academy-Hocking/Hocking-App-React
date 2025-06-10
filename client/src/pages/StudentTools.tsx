@@ -4,34 +4,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House 
+  Users, Dumbbell, Utensils, Calendar, House,
+  MessageSquare, Pencil
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
 
-// Custom icon components
-const OwlWithGlasses = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-8 w-8"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="9" cy="10" r="2" />
-    <circle cx="15" cy="10" r="2" />
-    <path d="M8 14h8" />
-    <path d="M9 6l-1 2" />
-    <path d="M15 6l1 2" />
-    <path d="M7 4l2 2" />
-    <path d="M17 4l-2 2" />
-    <path d="M9 8l-1 2" />
-    <path d="M15 8l1 2" />
-  </svg>
+// Custom icon for Academic Success Center
+const ChatWithPencil = () => (
+  <div className="relative">
+    <MessageSquare className="h-8 w-8 text-blue-600" />
+    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
+  </div>
 );
 
 export default function StudentTools() {
@@ -54,7 +39,7 @@ export default function StudentTools() {
     'advising': UserCheck,
     'academic-history': History,
     'graduation': School,
-    'academic-success': OwlWithGlasses,
+    'academic-success': ChatWithPencil,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
     'recreation': Dumbbell,
@@ -64,7 +49,7 @@ export default function StudentTools() {
 
   // Quick links for bottom section
   const quickLinks = [
-    { id: 'academic-success', label: 'Academic Success Center', icon: OwlWithGlasses, path: '/academic-success' },
+    { id: 'academic-success', label: 'Academic Success Center', icon: ChatWithPencil, path: '/academic-success' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },

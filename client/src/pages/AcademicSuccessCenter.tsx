@@ -1,56 +1,21 @@
 import React from 'react';
-import { ArrowLeft, BookOpen, GraduationCap, Lightbulb, Heart, Brain, School } from 'lucide-react';
+import { ArrowLeft, BookOpen, GraduationCap, Lightbulb, Heart, Brain, MessageSquare, Pencil } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 
-// Custom icon components
-const OwlWithGlasses = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-8 w-8"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="9" cy="10" r="2" />
-    <circle cx="15" cy="10" r="2" />
-    <path d="M8 14h8" />
-    <path d="M9 6l-1 2" />
-    <path d="M15 6l1 2" />
-    <path d="M7 4l2 2" />
-    <path d="M17 4l-2 2" />
-    <path d="M9 8l-1 2" />
-    <path d="M15 8l1 2" />
-  </svg>
-);
-
-const HelpingHandWithPaw = () => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-8 w-8"
-  >
-    <path d="M12 2L9 7h6l-3-5z" />
-    <path d="M12 7v4" />
-    <path d="M8 11h8" />
-    <path d="M7 15c0-2 2-3 5-3s5 1 5 3" />
-    <path d="M12 15v4" />
-    <path d="M9 19c0-2 2-3 3-3s3 1 3 3" />
-  </svg>
+// Custom icon for Tutoring (chat bubble with pencil)
+const ChatWithPencil = () => (
+  <div className="relative">
+    <MessageSquare className="h-8 w-8 text-blue-600" />
+    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
+  </div>
 );
 
 function AcademicSuccessCenter() {
   const sections = [
     {
       title: "Tutoring",
-      icon: OwlWithGlasses,
+      icon: ChatWithPencil,
       description: "Get help with your coursework from qualified tutors",
       color: "text-blue-600"
     },
@@ -58,31 +23,31 @@ function AcademicSuccessCenter() {
       title: "Library Resources",
       icon: BookOpen,
       description: "Access books, databases, and study materials",
-      color: "text-green-600"
+      color: "text-blue-600"
     },
     {
       title: "Learning Labs",
       icon: Lightbulb,
       description: "Enhance your learning through specialized labs",
-      color: "text-yellow-600"
+      color: "text-blue-600"
     },
     {
       title: "Accessibility Resources",
-      icon: HelpingHandWithPaw,
+      icon: Heart,
       description: "Support services for students with disabilities",
-      color: "text-purple-600"
+      color: "text-blue-600"
     },
     {
       title: "TRIO Student Support Services",
       icon: GraduationCap,
       description: "Comprehensive support for eligible students",
-      color: "text-red-600"
+      color: "text-blue-600"
     },
     {
       title: "Testing Center",
       icon: Brain,
       description: "Professional testing and assessment services",
-      color: "text-indigo-600"
+      color: "text-blue-600"
     }
   ];
 
@@ -104,11 +69,11 @@ function AcademicSuccessCenter() {
             <CardHeader className="bg-primary-light/10">
               <div className="flex items-center gap-3">
                 <section.icon className={`h-8 w-8 ${section.color}`} />
-                <CardTitle className="text-2xl font-semibold text-primary">{section.title}</CardTitle>
+                <CardTitle className="text-2xl font-semibold text-black">{section.title}</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="pt-4">
-              <p className="text-neutral-dark text-lg">{section.description}</p>
+              <p className="text-black text-lg">{section.description}</p>
             </CardContent>
           </Card>
         ))}
