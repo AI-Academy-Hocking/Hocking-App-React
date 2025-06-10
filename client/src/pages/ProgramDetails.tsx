@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRoute } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, GraduationCap, Clock, BookOpen, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { useQuery } from '@tanstack/react-query';
@@ -16,6 +16,8 @@ interface ProgramDetails {
     description: string;
     courses: string[];
     careers: string[];
+    degreeType: string;
+    programLength: string;
     lastUpdated: string;
   } | null;
 }
@@ -116,19 +118,61 @@ export default function ProgramDetails() {
 
       {program.details ? (
         <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GraduationCap className="h-5 w-5" />
+                  Degree Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {program.details.degreeType && (
+                    <p className="text-gray-600">
+                      <span className="font-semibold">Degree Type:</span> {program.details.degreeType}
+                    </p>
+                  )}
+                  {program.details.programLength && (
+                    <p className="text-gray-600">
+                      <span className="font-semibold">Program Length:</span> {program.details.programLength}
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  Last Updated
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  {new Date(program.details.lastUpdated).toLocaleDateString()}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
           <Card>
             <CardHeader>
               <CardTitle>Program Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">{program.details.description}</p>
+              <p className="text-gray-600 whitespace-pre-line">{program.details.description}</p>
             </CardContent>
           </Card>
 
           {program.details.courses.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Course Curriculum</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BookOpen className="h-5 w-5" />
+                  Course Curriculum
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="list-disc pl-6 space-y-2">
@@ -143,7 +187,10 @@ export default function ProgramDetails() {
           {program.details.careers.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Career Opportunities</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Briefcase className="h-5 w-5" />
+                  Career Opportunities
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="list-disc pl-6 space-y-2">
@@ -154,10 +201,6 @@ export default function ProgramDetails() {
               </CardContent>
             </Card>
           )}
-
-          <p className="text-sm text-gray-400 text-right">
-            Last updated: {new Date(program.details.lastUpdated).toLocaleDateString()}
-          </p>
         </>
       ) : (
         <Card>

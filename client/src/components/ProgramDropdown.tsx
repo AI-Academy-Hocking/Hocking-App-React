@@ -36,24 +36,10 @@ const programCategories: ProgramCategories = {
     { id: 'associate-of-technical-study', name: 'Associate of Technical Study' }
   ],
   'Natural Resources and Public Safety': [
-    { id: 'canine-assisted-services', name: 'Canine Assisted Services' },
-    { id: 'canine-certificates', name: 'Canine Certificates' },
-    { id: 'criminal-justice-law-enforcement', name: 'Criminal Justice - Law Enforcement' },
-    { id: 'emt-paramedic-certificate', name: 'EMT / Paramedic Certificate' },
     { id: 'environmental-science', name: 'Environmental Science' },
-    { id: 'equine-health-and-complementary-therapies', name: 'Equine Health and Complementary Therapies' },
-    { id: 'equine-teaching-training', name: 'Equine Teaching & Training' },
-    { id: 'farrier-science-business', name: 'Farrier Science & Business' },
-    { id: 'fire-emergency-medical-services', name: 'Fire & Emergency Medical Services' },
-    { id: 'firefighter-certificate', name: 'Firefighter Certificate' },
-    { id: 'fish-management-and-aquaculture-sciences', name: 'Fish Management and Aquaculture Sciences' },
-    { id: 'forest-management', name: 'Forest Management' },
-    { id: 'laboratory-sciences-medical-cannabis', name: 'Laboratory Sciences: Medical Cannabis' },
-    { id: 'natural-resources-law-enforcement', name: 'Natural Resources Law Enforcement' },
-    { id: 'ohio-peace-officer-basic-certificate', name: 'Ohio Peace Officer Basic Certificate' },
-    { id: 'parks-and-museum-education', name: 'Parks and Museum Education' },
-    { id: 'timber-harvesting-and-tree-care-certificate', name: 'Timber Harvesting and Tree Care Certificate' },
-    { id: 'wildlife-resources-management', name: 'Wildlife Resources Management' }
+    { id: 'forestry', name: 'Forestry' },
+    { id: 'law-enforcement', name: 'Law Enforcement' },
+    { id: 'wildlife-resources', name: 'Wildlife Resources' }
   ],
   'Workforce Development': [
     { id: 'accounting-and-financial-services', name: 'Accounting and Financial Services' },
@@ -105,7 +91,10 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
   return (
     <div className="space-y-3">
       {/* Category Selection */}
-      <Select onValueChange={handleCategoryChange} value={selectedCategory || undefined}>
+      <Select 
+        onValueChange={handleCategoryChange} 
+        value={selectedCategory || undefined}
+      >
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
@@ -121,7 +110,10 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
       {/* Program Selection - Only shown when category is selected */}
       {selectedCategory && (
         <div className="space-y-3">
-          <Select onValueChange={handleProgramChange} value={selectedProgram || undefined}>
+          <Select 
+            onValueChange={handleProgramChange} 
+            value={selectedProgram || undefined}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a program" />
             </SelectTrigger>

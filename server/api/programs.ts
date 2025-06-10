@@ -17,91 +17,190 @@ async function fetchProgramDetails(programId: string): Promise<any> {
       return null;
     }
 
-    // Try the direct program URL
-    const url = `https://www.hocking.edu/${programId}`;
-    
-    try {
-      console.log(`Fetching from: ${url}`);
-      const response = await fetch(url);
-      if (!response.ok) {
-        console.error(`Failed to fetch from ${url}: ${response.status}`);
-        return null;
-      }
+    // Try multiple possible URLs
+    const urls = [
+      `https://www.hocking.edu/${programId}`,
+      `https://www.hocking.edu/majors/${programId}`,
+      `https://www.hocking.edu/academics/${programId}`,
+      `https://www.hocking.edu/programs/${programId}`
+    ];
 
-      const html = await response.text();
-      const $ = cheerio.load(html);
+    let response = null;
+    let url = '';
 
-      let description = '';
-      let courses: string[] = [];
-      let careers: string[] = [];
-
-      // Get program description - specifically looking for content after "Program Description" heading
-      const descriptionSection = $('h2:contains("Program Description")');
-      if (descriptionSection.length) {
-        let currentElement = descriptionSection.next();
-        while (currentElement.length && !currentElement.is('h2')) {
-          const text = currentElement.text().trim();
-          if (text && !text.includes('APPLY TO HOCKING COLLEGE')) {
-            description += text + ' ';
-          }
-          currentElement = currentElement.next();
+    // Try each URL until we get a successful response
+    for (const testUrl of urls) {
+      try {
+        response = await fetch(testUrl);
+        if (response.ok) {
+          url = testUrl;
+          break;
         }
+      } catch (error) {
+        continue;
       }
+    }
 
-      // Get career information - looking under "Career Options"
-      const careerSection = $('h2:contains("Career Options"), h1:contains("Career Options")');
-      if (careerSection.length) {
-        let currentElement = careerSection.next();
-        while (currentElement.length && !currentElement.is('h1, h2')) {
-          const text = currentElement.text().trim();
-          if (text && text.length > 10 && !text.includes('Print PDF') && !text.includes('View PDF')) {
-            careers.push(text);
-          }
-          currentElement = currentElement.next();
-        }
-      }
-
-      // Get course information - looking under "Course Curriculum"
-      const courseSection = $('div:contains("Course Curriculum")');
-      if (courseSection.length) {
-        courseSection.find('li').each((_, element) => {
-          const text = $(element).text().trim();
-          if (text && text.length > 0) {
-            courses.push(text);
-          }
-        });
-      }
-
-      // If no description found yet, try to find any relevant content
-      if (!description) {
-        $('p').each((_, element) => {
-          const text = $(element).text().trim();
-          if (text.includes(program.name) && text.length > 50) {
-            description = text;
-            return false;
-          }
-        });
-      }
-
-      // Log what we found for debugging
-      console.log(`Found content for ${program.name}:`, {
-        descriptionLength: description.length,
-        coursesCount: courses.length,
-        careersCount: careers.length,
-        description: description.substring(0, 100) + '...' // Log first 100 chars
-      });
-      
+    if (!response || !response.ok) {
+      console.error(`Failed to fetch program details for ${programId}`);
       return {
         title: program.name,
-        description: description || "Visit Hocking College's website for the latest program information.",
-        courses: courses,
-        careers: careers,
+        description: "Program details are currently being updated. Please visit Hocking College's website for the latest information.",
+        courses: [],
+        careers: [],
+        degreeType: "",
+        programLength: "",
         lastUpdated: new Date().toISOString()
       };
-    } catch (error) {
-      console.error(`Error fetching from ${url}:`, error);
-      return null;
     }
+
+    const html = await response.text();
+    const $ = cheerio.load(html);
+
+    // Helper function to clean text
+    const cleanText = (text: string) => {
+      return text
+        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+        .replace(/[\r\n]+/g, ' ')  // Replace newlines with space
+        .replace(/https?:\/\/[^\s]+/g, '')  // Remove URLs
+        .replace(/\[.*?\]/g, '')  // Remove text in square brackets
+        .replace(/\(.*?\)/g, '')  // Remove text in parentheses
+        .replace(/Click here.*?\./g, '')  // Remove "Click here" phrases
+        .replace(/Learn more.*?\./g, '')  // Remove "Learn more" phrases
+        .replace(/Visit.*?\./g, '')  // Remove "Visit" phrases
+        .replace(/For more information.*?\./g, '')  // Remove "For more information" phrases
+        .replace(/\s+/g, ' ')  // Clean up any extra spaces created by removals
+        .trim();
+    };
+
+    // Helper function to extract section content
+    const extractSectionContent = (section: cheerio.Cheerio, $: cheerio.Root) => {
+      let content = '';
+      let currentElement = section.next();
+      
+      while (currentElement.length && !currentElement.is('h1, h2, h3')) {
+        if (currentElement.is('p, ul, ol')) {
+          // Remove any links from the content
+          currentElement.find('a').remove();
+          content += cleanText(currentElement.text()) + ' ';
+        }
+        currentElement = currentElement.next();
+      }
+      
+      return content.trim();
+    };
+
+    // Get program description
+    let description = '';
+    const descriptionSections = [
+      $('h2:contains("Program Description"), h1:contains("Program Description")'),
+      $('h2:contains("About"), h1:contains("About")'),
+      $('h2:contains("Overview"), h1:contains("Overview")')
+    ];
+
+    for (const section of descriptionSections) {
+      if (section.length) {
+        description = extractSectionContent(section, $);
+        if (description) break;
+      }
+    }
+
+    // Get degree type and program length
+    let degreeType = '';
+    let programLength = '';
+    
+    $('p, li').each((_, element) => {
+      const text = cleanText($(element).text());
+      if (text.includes('Degree Type:')) {
+        degreeType = text.split('Degree Type:')[1].trim();
+      }
+      if (text.includes('Program Length:')) {
+        programLength = text.split('Program Length:')[1].trim();
+      }
+    });
+
+    // Get course information
+    let courses: string[] = [];
+    const courseSections = [
+      $('h2:contains("Course Curriculum"), h1:contains("Course Curriculum")'),
+      $('h2:contains("Courses"), h1:contains("Courses")'),
+      $('h2:contains("Curriculum"), h1:contains("Curriculum")')
+    ];
+
+    for (const section of courseSections) {
+      if (section.length) {
+        let currentElement = section.next();
+        while (currentElement.length && !currentElement.is('h1, h2, h3')) {
+          if (currentElement.is('ul, ol')) {
+            currentElement.find('li').each((_, element) => {
+              const text = cleanText($(element).text());
+              if (text && text.length > 0) {
+                courses.push(text);
+              }
+            });
+          }
+          currentElement = currentElement.next();
+        }
+        if (courses.length > 0) break;
+      }
+    }
+
+    // Get career information
+    let careers: string[] = [];
+    const careerSections = [
+      $('h2:contains("Career Options"), h1:contains("Career Options")'),
+      $('h2:contains("Careers"), h1:contains("Careers")'),
+      $('h2:contains("Career Paths"), h1:contains("Career Paths")')
+    ];
+
+    for (const section of careerSections) {
+      if (section.length) {
+        let currentElement = section.next();
+        while (currentElement.length && !currentElement.is('h1, h2, h3')) {
+          if (currentElement.is('ul, ol')) {
+            currentElement.find('li').each((_, element) => {
+              const text = cleanText($(element).text());
+              if (text && text.length > 0) {
+                careers.push(text);
+              }
+            });
+          }
+          currentElement = currentElement.next();
+        }
+        if (careers.length > 0) break;
+      }
+    }
+
+    // If no description found yet, try to find any relevant content
+    if (!description) {
+      $('p').each((_, element) => {
+        const text = cleanText($(element).text());
+        if (text.includes(program.name) && text.length > 50) {
+          description = text;
+          return false;
+        }
+      });
+    }
+
+    // Log what we found for debugging
+    console.log(`Found content for ${program.name}:`, {
+      descriptionLength: description.length,
+      coursesCount: courses.length,
+      careersCount: careers.length,
+      degreeType,
+      programLength,
+      url
+    });
+    
+    return {
+      title: program.name,
+      description: description || "Visit Hocking College's website for the latest program information.",
+      courses: courses,
+      careers: careers,
+      degreeType,
+      programLength,
+      lastUpdated: new Date().toISOString()
+    };
   } catch (error) {
     console.error(`Error fetching program details for ${programId}:`, error);
     return null;
@@ -128,20 +227,17 @@ async function updateProgramCache() {
         categorySection.find('li').each((_, program) => {
           const programName = $(program).text().trim();
           if (programName) {
-            const programId = programName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            // Create a URL-friendly ID from the program name
+            const programId = programName.toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-|-$/g, '');
             
             if (!programCache[programId]) {
               programCache[programId] = {
                 id: programId,
                 name: programName,
                 category: categoryName,
-                details: {
-                  title: programName,
-                  description: "Program details are being updated.",
-                  courses: [],
-                  careers: [],
-                  lastUpdated: new Date().toISOString()
-                }
+                details: null // Will be populated when program details are fetched
               };
 
               // Log each program as it's added to the cache
@@ -162,29 +258,40 @@ async function updateProgramCache() {
 // Initialize cache on server start
 updateProgramCache();
 
-// Endpoint to get all programs
+// GET /api/programs
 router.get('/', async (req, res) => {
-  await updateProgramCache();
-  res.json(Object.values(programCache));
+  try {
+    await updateProgramCache();
+    const programs = Object.values(programCache);
+    res.json(programs);
+  } catch (error) {
+    console.error('Error fetching programs:', error);
+    res.status(500).json({ error: 'Failed to fetch programs' });
+  }
 });
 
-// Endpoint to get specific program details
+// GET /api/programs/:id
 router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  
-  await updateProgramCache();
-  
-  const program = programCache[id];
-  if (!program) {
-    return res.status(404).json({ error: 'Program not found' });
-  }
+  try {
+    const programId = req.params.id;
+    await updateProgramCache();
+    
+    const program = programCache[programId];
+    if (!program) {
+      return res.status(404).json({ error: 'Program not found' });
+    }
 
-  // Fetch detailed information if not already cached
-  if (!program.details) {
-    program.details = await fetchProgramDetails(id);
-  }
+    // If we don't have details yet, fetch them
+    if (!program.details) {
+      program.details = await fetchProgramDetails(programId);
+      programCache[programId] = program;
+    }
 
-  res.json(program);
+    res.json(program);
+  } catch (error) {
+    console.error('Error fetching program details:', error);
+    res.status(500).json({ error: 'Failed to fetch program details' });
+  }
 });
 
 export default router; 

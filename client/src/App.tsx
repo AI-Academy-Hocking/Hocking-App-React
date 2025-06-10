@@ -84,6 +84,7 @@ function Router() {
             <Route path="/library" component={LibraryPage} />
             <Route path="/online-learning" component={OnlineLearningPage} />
             <Route path="/student-organizations" component={StudentOrganizationsPage} />
+            <Route path="/programs/:id" component={ProgramDetails} />
             <Route path="/housing" component={Housing} />
             <Route path="/housing/dormitories" component={Dormitories} />
             <Route path="/housing/amenities" component={Amenities} />
