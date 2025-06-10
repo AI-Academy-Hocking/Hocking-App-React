@@ -53,19 +53,25 @@ function Tutoring() {
           name: "Rebecca Grubb",
           email: "grubbr@hocking.edu",
           specialties: ["English", "Speech", "Writing", "Communications", "TEAS Reading: English and Language Usage"],
-          appointmentType: "Walk-in and by appointment"
+          appointmentType: "Walk-in and by appointment",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Hannah Schenk",
           email: "schenkh@hocking.edu",
           specialties: ["English", "Speech", "Writing", "Communications"],
-          appointmentType: "Walk-in and by appointment"
+          appointmentType: "Walk-in and by appointment",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Ben Yussif",
           email: "yussifb@hocking.edu",
           specialties: ["English", "Speech", "Writing", "Communications"],
-          appointmentType: "Walk-in and by appointment"
+          appointmentType: "Walk-in and by appointment",
+          isVirtual: true,
+          isInPerson: true
         }
       ]
     },
@@ -82,25 +88,33 @@ function Tutoring() {
           name: "Adam Phillips",
           email: "phillipsa@hocking.edu",
           specialties: ["Applied Mathematics", "College Algebra", "Statistics", "Physics", "TEAS Mathematics", "Nursing Dosage Calc."],
-          appointmentType: "Walk-in or Book an appointment"
+          appointmentType: "Walk-in or Book an appointment",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "James Daniels",
           email: "danielsj2@hocking.edu",
           specialties: ["Applied Mathematics", "College Algebra", "Statistics", "Physics", "TEAS Mathematics"],
-          appointmentType: "Walk-in or Book an appointment"
+          appointmentType: "Walk-in or Book an appointment",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Elliot Wozniak",
           email: "wozniake@hocking.edu",
           specialties: ["Applied Mathematics", "College Algebra", "Statistics", "Physics"],
-          appointmentType: "Walk-in or Book an appointment"
+          appointmentType: "Walk-in or Book an appointment",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Samantha Benito",
           email: "benitos@hocking.edu",
           specialties: ["Applied Mathematics", "College Algebra", "Statistics", "Physics"],
-          appointmentType: "Walk-in or Book an appointment"
+          appointmentType: "Walk-in or Book an appointment",
+          isVirtual: true,
+          isInPerson: true
         }
       ]
     },
@@ -117,13 +131,17 @@ function Tutoring() {
           name: "Alexander Arrington",
           email: "arringtona@hocking.edu",
           specialties: ["A&P", "Microbiology", "Nursing", "Human Organism", "TEAS Science"],
-          appointmentType: "Book an appointment"
+          appointmentType: "Book an appointment",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Jennifer Agyeman",
           email: "agyemanj@hocking.edu",
           specialties: ["Nursing"],
-          appointmentType: "Book an appointment"
+          appointmentType: "Book an appointment",
+          isVirtual: true,
+          isInPerson: true
         }
       ]
     },
@@ -141,21 +159,27 @@ function Tutoring() {
           email: "barrowsr@hocking.edu",
           location: "Academic Success Center/Testing Center",
           specialties: ["College Algebra", "Math 1103"],
-          appointmentType: "Contact via email to schedule"
+          appointmentType: "Contact via email to schedule",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "LaDora Ousley",
           email: "ousleyl@hocking.edu",
           location: "Library",
           specialties: ["Intro to Entrepreneurship"],
-          appointmentType: "Book an appointment or contact via email to schedule"
+          appointmentType: "Book an appointment or contact via email to schedule",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "David Herold",
           email: "heroldd@hocking.edu",
           location: "Academic Success Center DVD 114",
           specialties: ["Academic Coaching", "Assistive Technology"],
-          appointmentType: "Book an appointment or contact via email to schedule"
+          appointmentType: "Book an appointment or contact via email to schedule",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Samuel Dewey",
@@ -172,14 +196,18 @@ function Tutoring() {
             "Finance Accounting I ECON",
             "Fitness Management"
           ],
-          appointmentType: "Book an appointment (email for different arrangements)"
+          appointmentType: "Book an appointment (email for different arrangements)",
+          isVirtual: true,
+          isInPerson: true
         },
         {
           name: "Gina Fetty",
           email: "fettyg@hocking.edu",
           location: "Course room and virtual",
           specialties: ["Financial Accounting I and II"],
-          appointmentType: "Email to schedule an appointment"
+          appointmentType: "Email to schedule an appointment",
+          isVirtual: true,
+          isInPerson: true
         }
       ]
     }
@@ -220,10 +248,10 @@ function Tutoring() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
-        <Link href="/tools">
+        <Link href="/academic-success">
           <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span>Back to Student Tools</span>
+            <span>Back to Academic Success Center</span>
           </button>
         </Link>
       </div>

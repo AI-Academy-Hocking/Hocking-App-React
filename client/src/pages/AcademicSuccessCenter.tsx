@@ -50,7 +50,8 @@ function AcademicSuccessCenter() {
       title: "Library Resources",
       icon: BooksOnShelf,
       description: "Access books, databases, and study materials",
-      color: "text-blue-600"
+      color: "text-blue-600",
+      path: "/library-resources"
     },
     {
       title: "Learning Labs",

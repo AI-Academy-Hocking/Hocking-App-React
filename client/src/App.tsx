@@ -34,6 +34,7 @@ import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from "@/components/ui/button";
 import Tutoring from './pages/Tutoring';
+import LibraryResources from './pages/LibraryResources';
 
 function Router() {
   const [location] = useLocation();
@@ -81,6 +82,7 @@ function Router() {
             <Route path="/recreation" component={RecreationPage} />
             <Route path="/academic-success" component={AcademicSuccessCenter} />
             <Route path="/tutoring" component={Tutoring} />
+            <Route path="/library-resources" component={LibraryResources} />
             <Route path="/online-learning" component={OnlineLearningPage} />
             <Route path="/student-organizations" component={StudentOrganizationsPage} />
             <Route path="/housing" component={Housing} />
