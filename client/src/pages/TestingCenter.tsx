@@ -165,13 +165,11 @@ function TestingCenter() {
             <HelpCircle className="h-5 w-5" />
             <span className="font-medium">Contact us for more information</span>
           </div>
-          <Button 
-            variant="ghost" 
-            className="w-full"
-            onClick={() => window.location.href = 'tel:740-753-4195'}
-          >
-            Schedule a Test
-          </Button>
+          <a href="tel:740-753-4195" className="w-full">
+            <Button variant="ghost" className="w-full">
+              Schedule a Test
+            </Button>
+          </a>
         </CardContent>
       </Card>
     </div>
