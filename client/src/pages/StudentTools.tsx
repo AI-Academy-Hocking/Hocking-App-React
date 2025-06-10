@@ -3,12 +3,36 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
-  History, School, LibraryBig, MonitorSmartphone, 
+  History, School, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, House 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
+
+// Custom icon components
+const OwlWithGlasses = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-8 w-8"
+  >
+    <circle cx="12" cy="12" r="10" />
+    <circle cx="9" cy="10" r="2" />
+    <circle cx="15" cy="10" r="2" />
+    <path d="M8 14h8" />
+    <path d="M9 6l-1 2" />
+    <path d="M15 6l1 2" />
+    <path d="M7 4l2 2" />
+    <path d="M17 4l-2 2" />
+    <path d="M9 8l-1 2" />
+    <path d="M15 8l1 2" />
+  </svg>
+);
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -30,7 +54,7 @@ export default function StudentTools() {
     'advising': UserCheck,
     'academic-history': History,
     'graduation': School,
-    'library': LibraryBig,
+    'academic-success': OwlWithGlasses,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
     'recreation': Dumbbell,
@@ -40,14 +64,13 @@ export default function StudentTools() {
 
   // Quick links for bottom section
   const quickLinks = [
-    { id: 'library', label: 'Library', icon: LibraryBig, path: '/library' },
+    { id: 'academic-success', label: 'Academic Success Center', icon: OwlWithGlasses, path: '/academic-success' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
-
+    { id: 'housing', label: 'Housing', icon: House, path: '/housing' },
   ];
 
   return (

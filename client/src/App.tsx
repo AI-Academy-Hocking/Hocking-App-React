@@ -13,7 +13,7 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
-import LibraryPage from "./pages/Library";
+import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import Housing from "./pages/Housing";
@@ -78,7 +78,7 @@ function Router() {
             <Route path="/dining" component={DiningHall} />
             <Route path="/safety" component={CampusSafety} />
             <Route path="/recreation" component={RecreationPage} />
-            <Route path="/library" component={LibraryPage} />
+            <Route path="/academic-success" component={AcademicSuccessCenter} />
             <Route path="/online-learning" component={OnlineLearningPage} />
             <Route path="/student-organizations" component={StudentOrganizationsPage} />
             <Route path="/housing" component={Housing} />
