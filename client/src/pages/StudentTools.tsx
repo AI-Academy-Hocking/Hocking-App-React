@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
@@ -8,8 +8,16 @@ import {
   MessageSquare, Pencil
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
+
+// Define the StudentTool type locally since we can't import it
+interface StudentTool {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  category: string;
+}
 
 // Custom icon for Academic Success Center
 const ChatWithPencil = () => (
@@ -60,6 +68,18 @@ export default function StudentTools() {
     { id: 'housing', label: 'Housing', icon: House, path: '/housing' },
   ];
 
+  // Add Testing Center to academic tools if it doesn't exist
+  const academicToolsWithTesting = [
+    ...(academicTools || []),
+    {
+      id: 'testing-center',
+      name: 'Testing Center',
+      description: 'Schedule and take tests',
+      url: '/testing-center',
+      category: 'academic'
+    }
+  ];
+
   return (
     <div className="space-y-6">
       <section>
@@ -75,7 +95,7 @@ export default function StudentTools() {
             
             <TabsContent value="academic" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {academicTools.map((tool) => {
+                {academicToolsWithTesting.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
                     <a 
