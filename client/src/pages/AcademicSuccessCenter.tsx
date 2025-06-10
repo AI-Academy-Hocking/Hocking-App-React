@@ -1,46 +1,61 @@
 import React from 'react';
-import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, MessageSquare, Heart, Accessibility, FileText, Home, Utensils, AlertCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, MessageSquare, Heart, Accessibility, FileText, Home, Utensils, AlertCircle, Pencil } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+// Custom icon for Tutoring (chat bubble with pencil)
+const ChatWithPencil = () => (
+  <div className="relative">
+    <MessageSquare className="h-8 w-8 text-blue-600" />
+    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
+  </div>
+);
+
 function AcademicSuccessCenter() {
-  const quickLinks = [
+  const sections = [
     {
-      id: "library",
-      label: "Library Resources",
+      title: "Tutoring",
+      icon: ChatWithPencil,
+      description: "Get help with your coursework from qualified tutors",
+      color: "text-blue-600",
+      path: "/tutoring"
+    },
+    {
+      title: "Library Resources",
       icon: LibraryBig,
-      path: "/library-resources",
-      description: "Access library services and resources"
+      description: "Access books, databases, and study materials",
+      color: "text-blue-600",
+      path: "/library-resources"
     },
     {
-      id: "learning-labs",
-      label: "Learning Labs",
+      title: "Learning Labs",
       icon: BookOpen,
-      path: "/learning-labs",
-      description: "Get help with your coursework"
+      description: "Enhance your learning through specialized labs",
+      color: "text-blue-600",
+      path: "/learning-labs"
     },
     {
-      id: "accessibility",
-      label: "Accessibility Resources",
+      title: "Accessibility Resources",
       icon: Accessibility,
-      path: "/accessibility-resources",
-      description: "Get support for disabilities and accommodations"
+      description: "Support services for students with disabilities",
+      color: "text-blue-600",
+      path: "/accessibility-resources"
     },
     {
-      id: "trio",
-      label: "TRIO Student Support",
+      title: "TRIO Student Support Services",
       icon: Users,
-      path: "/trio-services",
-      description: "Support for first-generation students"
+      description: "Comprehensive support for eligible students",
+      color: "text-blue-600",
+      path: "/trio-services"
     },
     {
-      id: "testing",
-      label: "Testing Center",
+      title: "Testing Center",
       icon: FileText,
-      path: "/testing-center",
-      description: "Schedule and take exams"
+      description: "Professional testing and assessment services",
+      color: "text-blue-600",
+      path: "/testing-center"
     }
   ];
 
@@ -122,23 +137,25 @@ function AcademicSuccessCenter() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {quickLinks.map((link) => (
-          <Link key={link.id} href={link.path}>
-            <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader className="bg-primary-light/10">
-                <div className="flex items-center gap-3">
-                  <link.icon className="h-6 w-6 text-blue-600" />
-                  <CardTitle className="text-xl">{link.label}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <p className="text-neutral-dark">{link.description}</p>
-                <Button variant="ghost" className="w-full mt-4">
-                  Learn More
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
+        {sections.map((section, index) => (
+          <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
+            <CardHeader className="bg-primary-light/10">
+              <div className="flex items-center gap-3">
+                <section.icon className={`h-8 w-8 ${section.color}`} />
+                <CardTitle className="text-2xl font-semibold text-black">{section.title}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <p className="text-black text-lg">{section.description}</p>
+              {section.path && (
+                <Link href={section.path}>
+                  <button className="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                    Learn More →
+                  </button>
+                </Link>
+              )}
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
