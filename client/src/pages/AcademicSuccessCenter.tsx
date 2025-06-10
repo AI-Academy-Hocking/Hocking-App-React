@@ -43,7 +43,8 @@ function AcademicSuccessCenter() {
       title: "Tutoring",
       icon: ChatWithPencil,
       description: "Get help with your coursework from qualified tutors",
-      color: "text-blue-600"
+      color: "text-blue-600",
+      path: "/tutoring"
     },
     {
       title: "Library Resources",
@@ -100,6 +101,13 @@ function AcademicSuccessCenter() {
             </CardHeader>
             <CardContent className="pt-4">
               <p className="text-black text-lg">{section.description}</p>
+              {section.path && (
+                <Link href={section.path}>
+                  <button className="mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                    Learn More →
+                  </button>
+                </Link>
+              )}
             </CardContent>
           </Card>
         ))}
