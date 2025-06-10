@@ -35,6 +35,10 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from "@/components/ui/button";
 import Tutoring from './pages/Tutoring';
 import LibraryResources from './pages/LibraryResources';
+import LearningLabs from './pages/LearningLabs';
+import AccessibilityResources from './pages/AccessibilityResources';
+import TrioServices from './pages/TrioServices';
+import TestingCenter from './pages/TestingCenter';
 
 function Router() {
   const [location] = useLocation();
@@ -83,6 +87,10 @@ function Router() {
             <Route path="/academic-success" component={AcademicSuccessCenter} />
             <Route path="/tutoring" component={Tutoring} />
             <Route path="/library-resources" component={LibraryResources} />
+            <Route path="/learning-labs" component={LearningLabs} />
+            <Route path="/testing-center" component={TestingCenter} />
+            <Route path="/accessibility-resources" component={AccessibilityResources} />
+            <Route path="/trio-services" component={TrioServices} />
             <Route path="/online-learning" component={OnlineLearningPage} />
             <Route path="/student-organizations" component={StudentOrganizationsPage} />
             <Route path="/housing" component={Housing} />

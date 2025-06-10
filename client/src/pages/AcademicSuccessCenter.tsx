@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, GraduationCap, Lightbulb, Heart, Brain, MessageSquare, Pencil } from 'lucide-react';
+import { ArrowLeft, GraduationCap, Lightbulb, Heart, Brain, MessageSquare, Pencil, LibraryBig, BookOpen, FileText, Accessibility, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 
@@ -57,19 +57,22 @@ function AcademicSuccessCenter() {
       title: "Learning Labs",
       icon: Lightbulb,
       description: "Enhance your learning through specialized labs",
-      color: "text-blue-600"
+      color: "text-blue-600",
+      path: "/learning-labs"
     },
     {
       title: "Accessibility Resources",
       icon: Heart,
       description: "Support services for students with disabilities",
-      color: "text-blue-600"
+      color: "text-blue-600",
+      path: "/accessibility-resources"
     },
     {
       title: "TRIO Student Support Services",
       icon: GraduationCap,
       description: "Comprehensive support for eligible students",
-      color: "text-blue-600"
+      color: "text-blue-600",
+      path: "/trio-services"
     },
     {
       title: "Testing Center",
