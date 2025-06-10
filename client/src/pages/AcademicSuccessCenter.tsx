@@ -1,20 +1,28 @@
 import React from 'react';
-import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, MessageSquare, Heart, Accessibility, FileText, Home, Utensils, AlertCircle, Pencil } from 'lucide-react';
+import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, MessageSquare, Accessibility, FileText, AlertCircle, Pencil } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Custom icon for Tutoring (chat bubble with pencil)
-const ChatWithPencil = () => (
-  <div className="relative">
+const ChatWithPencil: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={`relative ${className}`}>
     <MessageSquare className="h-8 w-8 text-blue-600" />
     <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
   </div>
 );
 
+interface Section {
+  title: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  color: string;
+  path?: string;
+}
+
 function AcademicSuccessCenter() {
-  const sections = [
+  const sections: Section[] = [
     {
       title: "Tutoring",
       icon: ChatWithPencil,
