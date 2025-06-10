@@ -2,12 +2,15 @@ import React from 'react';
 import { ArrowLeft, Trophy, Phone, Mail, Users, Award, Target, Circle, Volleyball, Gamepad2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+interface Sport {
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
 
 function Athletics() {
-  const sports = [
+  const sports: Sport[] = [
     { name: "Archery", icon: Target },
     { name: "Men's Basketball", icon: Circle },
     { name: "Women's Basketball", icon: Circle },
@@ -29,7 +32,7 @@ function Athletics() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
-        <Link href="/student-tools">
+        <Link href="/tools">
           <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
@@ -145,14 +148,6 @@ function Athletics() {
           </div>
         </CardContent>
       </Card>
-
-      <div className="flex justify-center">
-        <Button className="w-full md:w-auto" asChild>
-          <a href="https://athletics.hocking.edu/landing/index" target="_blank" rel="noopener noreferrer">
-            Visit Athletics Website
-          </a>
-        </Button>
-      </div>
     </div>
   );
 }

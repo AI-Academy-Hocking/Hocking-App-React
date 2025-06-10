@@ -38,6 +38,7 @@ import LearningLabs from './pages/LearningLabs';
 import AccessibilityResources from './pages/AccessibilityResources';
 import TrioServices from './pages/TrioServices';
 import TestingCenter from './pages/TestingCenter';
+import Athletics from './pages/Athletics';
 
 function Router() {
   const [location] = useLocation();
@@ -92,6 +93,7 @@ function Router() {
             <Route path="/trio-services" component={TrioServices} />
             <Route path="/online-learning" component={OnlineLearningPage} />
             <Route path="/student-organizations" component={StudentOrganizationsPage} />
+            <Route path="/athletics" component={Athletics} />
             <Route path="/housing" component={Housing} />
             <Route path="/housing/dormitories" component={Dormitories} />
             <Route path="/housing/amenities" component={Amenities} />
