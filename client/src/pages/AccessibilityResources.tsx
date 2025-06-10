@@ -1,54 +1,80 @@
 import React from 'react';
-import { ArrowLeft, Heart, Phone, Mail, MapPin, Clock, FileText, Users, Shield, HelpCircle, CheckCircle2, Lock } from 'lucide-react';
+import { ArrowLeft, Accessibility, Phone, Mail, FileText, Users, Clock, Heart, Utensils, Home, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 function AccessibilityResources() {
-  const faqItems = [
+  const services = [
     {
-      question: "Who is eligible?",
-      answer: "Eligibility will be determined on the basis of the presence of a disability and a need for accommodations to support an equal educational opportunity. Students with permanent, chronic or temporary conditions that are disabling are considered eligible to enroll with Accessibility Resources."
+      title: "Academic Accommodations",
+      icon: FileText,
+      description: "Support for academic success",
+      items: [
+        "Extended time for tests",
+        "Note-taking assistance",
+        "Alternative format materials",
+        "Sign language interpreters",
+        "Assistive technology"
+      ]
     },
     {
-      question: "What documentation is required?",
-      answer: "Documentation of the disability is required and this may include an IEP/504 Plan or a letter from a qualified medical provider that names the disability, describes the functional limitations of that disability, and includes recommendations for accommodations in the college setting."
+      title: "Emotional Support Animals",
+      icon: Heart,
+      description: "ESA approval and support",
+      items: [
+        "ESA approval process",
+        "Housing accommodations",
+        "Documentation requirements",
+        "Campus guidelines",
+        "Support resources"
+      ]
     },
     {
-      question: "Will my documentation be held confidential?",
-      answer: "All documentation of disability submitted to the Accessibility Resources office will be held in confidence."
+      title: "Meal Plan Accommodations",
+      icon: Utensils,
+      description: "Dietary and medical accommodations",
+      items: [
+        "Meal plan exemption requests",
+        "Dietary restriction documentation",
+        "Medical necessity verification",
+        "Alternative dining options",
+        "Nutrition consultation"
+      ]
     },
     {
-      question: "When should I request accommodations?",
-      answer: "Students who wish to request accommodations should not delay in contacting Accessibility Resources. Timeliness is important because accommodations cannot be given retroactively."
-    },
-    {
-      question: "What accommodations are provided?",
-      answer: "Accommodations are determined on an individualized basis and may include a quiet testing area, extended time for tests, a reader on exams, ASL, CART, closed captioning, audio recording of lectures, and others. Students must meet with Accessibility Resources staff in order to determine the most appropriate accommodations at the college level."
-    },
-    {
-      question: "What support services does Accessibility Resources provide?",
-      answer: "Accessibility Resources staff are available to assist students with supportive needs which may include advising, instructional guidance and serving as liaison with college instructors and staff to promote the welfare of students."
-    },
-    {
-      question: "How do I request services?",
-      answer: "Students or prospective students who would like more information or to request disability related services and accommodations should meet with the Accessibility Resources staff in DVD 114, phone 740-753-7104, or email accessibility@hocking.edu."
+      title: "Housing Accommodations",
+      icon: Home,
+      description: "Special housing arrangements",
+      items: [
+        "Accessible housing options",
+        "Single room accommodations",
+        "Medical necessity housing",
+        "ESA housing arrangements",
+        "Emergency housing support"
+      ]
     }
   ];
 
-  const accommodations = [
-    "Quiet Testing Area",
-    "Extended Test Time",
-    "Exam Reader",
-    "ASL Interpreting",
-    "CART Services",
-    "Closed Captioning",
-    "Audio Recording",
-    "Note-Taking Assistance",
-    "Alternative Format Materials",
-    "Assistive Technology"
+  const faqItems = [
+    {
+      question: "How do I request accommodations?",
+      answer: "Contact our office to schedule an intake appointment. Bring any relevant documentation of your disability or medical condition. We'll work with you to determine appropriate accommodations."
+    },
+    {
+      question: "What documentation do I need for an ESA?",
+      answer: "You'll need a letter from a licensed mental health professional stating the need for an Emotional Support Animal. The letter should be on professional letterhead and include specific details about your need for the ESA."
+    },
+    {
+      question: "How do I apply for a meal plan exemption?",
+      answer: "Submit documentation from a healthcare provider detailing your dietary restrictions or medical needs. Our office will review your request and work with dining services to find appropriate solutions."
+    },
+    {
+      question: "What housing accommodations are available?",
+      answer: "We offer various housing accommodations including accessible rooms, single rooms for medical needs, and ESA-friendly housing. Contact our office to discuss your specific needs and available options."
+    }
   ];
 
   return (
@@ -63,25 +89,16 @@ function AccessibilityResources() {
       </div>
 
       <div className="flex items-center gap-4 mb-8">
-        <Heart className="h-8 w-8 text-blue-600" />
+        <Accessibility className="h-8 w-8 text-blue-600" />
         <h1 className="text-3xl font-bold text-primary">Accessibility Resources</h1>
       </div>
 
-      <Card className="mb-8">
-        <CardHeader className="bg-primary-light/10">
-          <CardTitle className="text-xl">Our Mission</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <p className="text-lg mb-4">
-            The Accessibility Resources Office is dedicated to serving the various needs of individuals with disabilities 
-            and is committed to promoting their full participation in college life.
-          </p>
-          <div className="flex items-center gap-2 text-blue-600">
-            <Shield className="h-5 w-5" />
-            <span className="font-medium">Committed to ADA compliance and equal access</span>
-          </div>
-        </CardContent>
-      </Card>
+      <Alert className="mb-6">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          We're here to help! Contact our office to discuss your specific needs and learn about available accommodations.
+        </AlertDescription>
+      </Alert>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card>
@@ -91,13 +108,9 @@ function AccessibilityResources() {
           <CardContent className="pt-4">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-blue-600" />
-                <span>DVD 114</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <Phone className="h-5 w-5 text-blue-600" />
-                <a href="tel:740-753-7104" className="hover:text-blue-600">
-                  740-753-7104
+                <a href="tel:740-753-4195" className="hover:text-blue-600">
+                  740-753-4195
                 </a>
               </div>
               <div className="flex items-center gap-2">
@@ -108,7 +121,7 @@ function AccessibilityResources() {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-blue-600" />
-                <span>Monday - Friday: 8:00 AM - 5:00 PM</span>
+                <span>Monday – Friday: 8 a.m.-4 p.m.</span>
               </div>
             </div>
           </CardContent>
@@ -116,18 +129,49 @@ function AccessibilityResources() {
 
         <Card>
           <CardHeader className="bg-primary-light/10">
-            <CardTitle className="text-xl">Available Accommodations</CardTitle>
+            <CardTitle className="text-xl">Get Started</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
-            <div className="flex flex-wrap gap-2">
-              {accommodations.map((accommodation) => (
-                <Badge key={accommodation} variant="secondary">
-                  {accommodation}
-                </Badge>
-              ))}
+            <div className="space-y-4">
+              <p className="text-neutral-dark">
+                To begin the accommodation process:
+              </p>
+              <ol className="list-decimal list-inside space-y-2 text-neutral-dark">
+                <li>Contact our office to schedule an appointment</li>
+                <li>Gather relevant documentation</li>
+                <li>Complete the intake process</li>
+                <li>Work with our team to implement accommodations</li>
+              </ol>
+              <Button className="w-full">
+                Schedule an Appointment
+              </Button>
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {services.map((service) => (
+          <Card key={service.title}>
+            <CardHeader className="bg-primary-light/10">
+              <div className="flex items-center gap-3">
+                <service.icon className="h-6 w-6 text-blue-600" />
+                <CardTitle className="text-xl">{service.title}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <p className="text-neutral-dark mb-4">{service.description}</p>
+              <ul className="space-y-2">
+                {service.items.map((item) => (
+                  <li key={item} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <Card className="mb-8">
@@ -152,21 +196,15 @@ function AccessibilityResources() {
 
       <Card>
         <CardHeader className="bg-primary-light/10">
-          <CardTitle className="text-xl">Legal Rights & Grievance Process</CardTitle>
+          <CardTitle className="text-xl">Need Help?</CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
-          <p className="mb-4">
-            Hocking College supports you in your right to file a grievance when you believe you have been denied equal access 
-            in the form of appropriate accommodations, modifications, auxiliary aids or effective communication or suffered 
-            discriminatory harassment as described in Section 504 of the Rehabilitation Act of 1973, The Americans with 
-            Disabilities Act (ADA) of 1990, or the Ohio Administrative Code 4112-5-09.
-          </p>
-          <div className="flex items-center gap-2 text-blue-600">
-            <Lock className="h-5 w-5" />
-            <span className="font-medium">Your rights are protected by law</span>
+          <div className="flex items-center gap-2 text-blue-600 mb-4">
+            <AlertCircle className="h-5 w-5" />
+            <span className="font-medium">Contact us for immediate assistance</span>
           </div>
-          <Button variant="ghost" className="mt-4">
-            File a Grievance
+          <Button variant="ghost" className="w-full">
+            Request Support
           </Button>
         </CardContent>
       </Card>

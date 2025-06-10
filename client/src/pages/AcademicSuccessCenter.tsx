@@ -109,7 +109,7 @@ function AcademicSuccessCenter() {
     },
     {
       title: "Accessibility Resources",
-      description: "Get support for disabilities",
+      description: "Get support for disabilities and accommodations",
       icon: Accessibility,
       link: "/accessibility-resources"
     },
