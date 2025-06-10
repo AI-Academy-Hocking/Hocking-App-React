@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, House,
-  MessageSquare, Pencil
+  MessageSquare, Pencil, Trophy
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -54,6 +54,7 @@ export default function StudentTools() {
     'dining': Utensils,
     'events': Calendar,
     'testing-center': FileText,
+    'athletics': Trophy,
   };
 
   // Quick links for bottom section
@@ -62,6 +63,7 @@ export default function StudentTools() {
     { id: 'testing-center', label: 'Testing Center', icon: FileText, path: '/testing-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
+    { id: 'athletics', label: 'Athletics', icon: Trophy, path: '/athletics' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
