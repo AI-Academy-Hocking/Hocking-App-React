@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, OwlWithGlasses, MessageSquare, Heart, Accessibility, FileText, Home, Utensils, AlertCircle } from 'lucide-react';
+import { ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, MessageSquare, Heart, Accessibility, FileText, Home, Utensils, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ function AcademicSuccessCenter() {
       </div>
 
       <div className="flex items-center gap-4 mb-8">
-        <OwlWithGlasses className="h-8 w-8 text-blue-600" />
+        <GraduationCap className="h-8 w-8 text-blue-600" />
         <h1 className="text-3xl font-bold text-primary">Academic Success Center</h1>
       </div>
 
