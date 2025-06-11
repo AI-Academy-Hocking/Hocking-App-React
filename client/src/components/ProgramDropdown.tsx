@@ -106,7 +106,7 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
     <div className="space-y-3">
       {/* Category Selection */}
       <Select onValueChange={handleCategoryChange} value={selectedCategory || undefined}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full" style={{ background: '#fff', color: '#232f3e' }}>
           <SelectValue placeholder="Select a category" />
         </SelectTrigger>
         <SelectContent>
@@ -122,7 +122,7 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
       {selectedCategory && (
         <div className="space-y-3">
           <Select onValueChange={handleProgramChange} value={selectedProgram || undefined}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" style={{ background: '#fff', color: '#232f3e' }}>
               <SelectValue placeholder="Select a program" />
             </SelectTrigger>
             <SelectContent>

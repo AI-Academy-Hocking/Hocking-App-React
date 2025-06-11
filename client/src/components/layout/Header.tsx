@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, Moon, Sun } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
@@ -10,6 +10,12 @@ import HawkLogo from "../../assets/HawkLogo.png";
 export default function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
+
+  const toggleTheme = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    setDarkMode(isDark);
+  };
 
   return (
     <header className="bg-blue-900 p-4 shadow-md">
@@ -85,6 +91,13 @@ export default function Header() {
             Hocking College
           </h1>
         </div>
+        <button
+          onClick={toggleTheme}
+          className="ml-4 p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+          aria-label="Toggle light/dark mode"
+        >
+          {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+        </button>
       </div>
     </header>
   );
