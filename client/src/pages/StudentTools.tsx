@@ -5,7 +5,8 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, House,
-  MessageSquare, Pencil, Trophy
+  MessageSquare, Pencil, Trophy,
+  LucideIcon
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -17,6 +18,13 @@ interface StudentTool {
   description: string;
   url: string;
   category: string;
+}
+
+interface QuickLink {
+  id: string;
+  label: string;
+  icon: LucideIcon | React.ComponentType;
+  path: string;
 }
 
 // Custom icon for Academic Success Center
@@ -40,14 +48,13 @@ export default function StudentTools() {
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
-  const toolIcons: Record<string, any> = {
+  const toolIcons: Record<string, LucideIcon> = {
     'course-schedule': FileText,
     'grades': GraduationCap,
     'course-catalog': BookOpen,
     'advising': UserCheck,
     'academic-history': History,
     'graduation': School,
-    'academic-success': ChatWithPencil,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
     'recreation': Dumbbell,
@@ -58,7 +65,7 @@ export default function StudentTools() {
   };
 
   // Quick links for bottom section
-  const quickLinks = [
+  const quickLinks: QuickLink[] = [
     { id: 'academic-success', label: 'Academic Success Center', icon: ChatWithPencil, path: '/academic-success' },
     { id: 'testing-center', label: 'Testing Center', icon: FileText, path: '/testing-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
