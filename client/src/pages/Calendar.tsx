@@ -13,6 +13,7 @@ import { Skeleton } from "../components/ui/skeleton";
 import { Event } from "../../../shared/schema";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/badge";
+import { Link } from "wouter";
 
 const locales = {
   "en-US": enUS,
@@ -191,7 +192,7 @@ export default function CalendarPage() {
     <div className="min-h-screen" style={{ background: 'var(--color-background)' }}>
       <section>
         <div className="flex flex-col items-center mb-6">
-          <h2 className="text-3xl font-heading font-semibold mb-4" style={{ color: '#20469b' }}>Calendar</h2>
+          <h2 className="text-3xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Calendar</h2>
           <div className="flex flex-col gap-2 items-center">
             <div className="text-sm font-medium text-[var(--color-text)] text-center mb-2">
               Calendar Type
@@ -236,10 +237,10 @@ export default function CalendarPage() {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
                 <div className="text-center">
-                  <h3 className="font-semibold text-lg">
+                  <h3 className="font-semibold text-lg" style={{ color: 'var(--color-text)' }}>
                     {format(date, 'MMMM yyyy')}
                   </h3>
-                  <div className="text-sm text-primary font-medium">
+                  <div className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
                     {activeCalendar === "academic" ? "Academic Calendar" : "Student Activities Calendar"}
                   </div>
                 </div>
@@ -374,27 +375,30 @@ export default function CalendarPage() {
 
       <section className="max-w-6xl mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-heading font-semibold" style={{ color: '#20469b' }}>
+          <h2 className="text-xl font-heading font-semibold" style={{ color: 'var(--color-text)' }}>
             Upcoming Events
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Academic Events */}
-          <div className="rounded-lg border border-[var(--color-border)] p-4" style={{ background: 'var(--calendar-surface)' }}>
-            <h3 className="font-bold mb-2" style={{ color: '#20469b' }}>Academic Calendar</h3>
-            {/* Placeholder for academic events */}
-            <div className="text-center py-8" style={{ color: '#232f3e' }}>
-              No upcoming academic events
-            </div>
-          </div>
-          {/* Student Activities */}
-          <div className="rounded-lg border border-[var(--color-border)] p-4" style={{ background: 'var(--calendar-surface)' }}>
-            <h3 className="font-bold mb-2" style={{ color: '#20469b' }}>Student Activities</h3>
-            {/* Placeholder for student activities */}
-            <div className="text-center py-8" style={{ color: '#232f3e' }}>
-              No upcoming student activities
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-white">
+            <h3 className="text-xl font-semibold mb-4">Academic Calendar</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              View important dates, deadlines, and events for the academic year.
+            </p>
+            <Link href="/calendar">
+              <Button className="w-full">View Calendar</Button>
+            </Link>
+          </Card>
+
+          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-white">
+            <h3 className="text-xl font-semibold mb-4">Student Activities</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
+              Discover campus events, clubs, and activities to get involved.
+            </p>
+            <Link href="/activities">
+              <Button className="w-full">Explore Activities</Button>
+            </Link>
+          </Card>
         </div>
       </section>
 

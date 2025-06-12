@@ -143,7 +143,7 @@ export default function StudentTools() {
             <Link 
               key={link.id} 
               href={link.path}
-              className="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
+              className="bg-white dark:bg-popover rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold">{link.label}</span>

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { Menu, Moon, Sun } from "lucide-react";
+import { Menu, Moon, Sun, LogOut } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
@@ -66,6 +66,18 @@ export default function Header() {
                     <Link href="/maps" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
                       <span className="material-icons mr-3">map</span>
                       <span>Maps & Directions</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/dining" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
+                      <span className="material-icons mr-3">restaurant</span>
+                      <span>Dining Hall</span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/safety" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
+                      <span className="material-icons mr-3">security</span>
+                      <span>Campus Safety</span>
                     </Link>
                   </li>
                 </ul>

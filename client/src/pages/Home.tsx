@@ -65,14 +65,14 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-background)' }}>
+    <div className="min-h-screen bg-white dark:bg-popover">
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}
         </h2>
-        <Card className="overflow-hidden rounded-lg shadow-md transition border border-[var(--color-border)]">
+        <Card className="overflow-hidden rounded-lg shadow-md transition border border-[var(--color-border)] dark:border-white bg-white dark:bg-[#2d3a4d]">
           <img 
-            src={HockingBackground}
+            src={HockingBackground} 
             alt="Hocking College Campus" 
             className="w-full h-48 object-cover" 
           />
@@ -82,7 +82,7 @@ export default function Home() {
                 Explore all that Hocking College has to offer. Access your student resources, 
                 check the academic calendar, find your way around campus, and more.
               </p>
-              <div className="w-full max-w-xs">
+              <div className="w-full max-w-xs bg-white dark:bg-[#2d3a4d] rounded-lg p-4">
                 <ProgramDropdown onChange={handleProgramChange} />
               </div>
             </div>
@@ -101,12 +101,6 @@ export default function Home() {
               '#ffe082', // Maps & Directions - vivid yellow
               '#ce93d8'  // Resources - vivid purple
             ];
-            const textColors = [
-              '#f06292', // Calendar - pink
-              '#00c389', // Student Tools - green
-              '#ffb300', // Maps & Directions - yellow
-              '#8e24aa'  // Resources - purple
-            ];
             return (
               <Link key={index} href={link.href}>
                 <a
@@ -122,22 +116,21 @@ export default function Home() {
         </div>
       </section>
       
-      <section>
-        <h2 className="text-xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Upcoming Events</h2>
+      <section className="max-w-6xl mx-auto mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Academic Calendar Box */}
-          <div className="bg-[var(--color-surface)] rounded-lg border border-[var(--color-border)] shadow-sm p-4">
-            <h3 className="font-bold mb-2" style={{ color: '#232f3e' }}>Academic Calendar</h3>
+          <div className="rounded-lg border border-[var(--color-border)] dark:border-white shadow-sm p-4 bg-white dark:bg-[#2d3a4d]">
+            <h3 className="font-bold mb-2 text-[#1a365d] dark:text-white">Academic Calendar</h3>
             {/* Placeholder for academic events */}
-            <div className="text-center py-8" style={{ color: '#232f3e' }}>
+            <div className="text-center py-8 text-[#1a365d] dark:text-white">
               No upcoming academic events
             </div>
           </div>
           {/* Student Activities Box */}
-          <div className="bg-[var(--color-surface)] rounded-lg border border-[var(--color-border)] shadow-sm p-4">
-            <h3 className="font-bold mb-2" style={{ color: '#232f3e' }}>Student Activities</h3>
+          <div className="rounded-lg border border-[var(--color-border)] dark:border-white shadow-sm p-4 bg-white dark:bg-[#2d3a4d]">
+            <h3 className="font-bold mb-2 text-[#1a365d] dark:text-white">Student Activities</h3>
             {/* Placeholder for student activities */}
-            <div className="text-center py-8" style={{ color: '#232f3e' }}>
+            <div className="text-center py-8 text-[#1a365d] dark:text-white">
               No upcoming student activities
             </div>
           </div>

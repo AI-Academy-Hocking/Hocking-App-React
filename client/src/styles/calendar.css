@@ -87,8 +87,8 @@
   box-sizing: border-box;
   margin: 0;
   background: var(--calendar-day-bg) !important;
-  border-right: 3px solid #4a5670 !important;
-  border-bottom: 3px solid #4a5670 !important;
+  border-right: 2px solid #4a5670 !important;
+  border-bottom: 2px solid #4a5670 !important;
   border-top: none !important;
   border-left: none !important;
   overflow: hidden;
@@ -191,11 +191,9 @@
 
 .rbc-row .rbc-day-bg:last-child,
 .rbc-month-row .rbc-day-bg:last-child {
-  border-right: none;
-  outline: 1px solid #4a5568;
-  outline-offset: -1px;
-  width: calc(100% / 7 + 3px);
-  margin-right: -2px;
+  border-right: 2px solid #4a5568;
+  width: calc(100% / 7);
+  margin-right: 0;
 }
 
 .rbc-header,
@@ -208,7 +206,7 @@
 .rbc-month-row .rbc-day-bg:nth-child(3),
 .rbc-row .rbc-day-bg:nth-child(4),
 .rbc-month-row .rbc-day-bg:nth-child(4) {
-  width: calc(100% / 7 - 8px);
+  width: calc(100% / 7);
   box-sizing: border-box;
   margin: 0;
   padding: 0;
