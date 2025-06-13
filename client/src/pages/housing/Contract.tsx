@@ -2,10 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
 interface ContractSection {
   title: string;
@@ -110,112 +106,36 @@ export default function Contract() {
         </div>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="lg:col-span-2 space-y-6"
-        >
-          {contractSections.map((section) => (
-            <motion.div key={section.title} variants={item}>
-              <Card className={`hover-card ${section.important ? "border-blue-200" : ""}`}>
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <CardTitle>{section.title}</CardTitle>
-                    {section.important && (
-                      <Badge variant="default">Important</Badge>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {section.content.map((item, index) => (
-                      <li key={index} className="text-sm text-muted-foreground">
-                        • {item}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="space-y-6"
-        >
-          <motion.div variants={item}>
-            <Card>
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="space-y-6"
+      >
+        {contractSections.map((section) => (
+          <motion.div key={section.title} variants={item}>
+            <Card className={`hover-card ${section.important ? "border-blue-200" : ""}`}>
               <CardHeader>
-                <CardTitle>Contract Application</CardTitle>
+                <div className="flex items-center gap-2">
+                  <CardTitle>{section.title}</CardTitle>
+                  {section.important && (
+                    <Badge variant="default">Important</Badge>
+                  )}
+                </div>
               </CardHeader>
               <CardContent>
-                <form className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Applicant Legal Name</Label>
-                    <Input id="name" placeholder="Enter your full legal name" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="studentId">Student ID Number</Label>
-                    <Input id="studentId" placeholder="Enter your student ID" />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="terms">Selected Terms</Label>
-                    <select
-                      id="terms"
-                      className="w-full p-2 border rounded-md"
-                    >
-                      <option value="">Select terms</option>
-                      <option value="fall-spring">Fall & Spring</option>
-                      <option value="fall-only">Fall Only (Graduating)</option>
-                      <option value="spring-only">Spring Only</option>
-                      <option value="summer-only">Summer Only</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signature">Digital Signature</Label>
-                    <Textarea
-                      id="signature"
-                      placeholder="Type your full name to sign"
-                      className="min-h-[100px]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="date">Date</Label>
-                    <Input type="date" id="date" />
-                  </div>
-
-                  <Button className="w-full">Submit Contract</Button>
-                </form>
+                <ul className="space-y-2">
+                  {section.content.map((item, index) => (
+                    <li key={index} className="text-sm text-muted-foreground">
+                      • {item}
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           </motion.div>
-
-          <motion.div variants={item}>
-            <Card className="bg-blue-50 border-blue-200">
-              <CardHeader>
-                <CardTitle className="text-blue-900">Important Notice</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-blue-900">
-                  By signing this contract, I affirm that I am at least 18 years of age and will abide by the Residence Hall Terms and Conditions as stated in this document as well as the Hocking College Code of Conduct. If the named applicant is not 18 years of age, a parent/guardian must sign this form in addition to the applicant and takes full responsibility for the contract obligations stated.
-                </p>
-                <p className="text-sm text-blue-900 mt-4">
-                  I am aware that Hocking College offers equal educational, housing, and employment opportunities without regard for race, color, nation of origin, sex, age, or disability.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </motion.div>
-      </div>
+        ))}
+      </motion.div>
     </div>
   );
 } 

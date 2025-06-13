@@ -29,6 +29,9 @@ import Handbook from "./pages/housing/Handbook";
 import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
+import Contract from "./pages/housing/Contract";
+import HowToApply from "./pages/housing/HowToApply";
+import FloorPlans from "./pages/housing/FloorPlans";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -107,6 +110,9 @@ function Router() {
             <Route path="/housing/pricing" component={Pricing} />
             <Route path="/housing/activities" component={Activities} />
             <Route path="/housing/social" component={Social} />
+            <Route path="/housing/contract" component={Contract} />
+            <Route path="/housing/how-to-apply" component={HowToApply} />
+            <Route path="/housing/floor-plans" component={FloorPlans} />
             <Route component={NotFound} />
           </Switch>
         </CSSTransition>
@@ -115,8 +121,7 @@ function Router() {
   );
 }
 
-export default App;
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

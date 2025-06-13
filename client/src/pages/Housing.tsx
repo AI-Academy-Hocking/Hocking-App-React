@@ -103,6 +103,18 @@ const housingOptions: HousingOption[] = [
           </div>,
     path: "/housing/contract",
     description: "View and sign the residence hall contract"
+  },
+  {
+    title: "How to Apply",
+    description: "Step-by-step guide to complete your housing application",
+    icon: <FileText className="h-6 w-6" />,
+    path: "/housing/how-to-apply"
+  },
+  {
+    title: "Floor Plans",
+    description: "View detailed floor plans for each residence hall",
+    icon: <Building2 className="h-6 w-6" />,
+    path: "/housing/floor-plans"
   }
 ];
 
