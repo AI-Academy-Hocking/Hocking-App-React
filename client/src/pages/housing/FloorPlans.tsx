@@ -11,7 +11,7 @@ interface Building {
   code: string;
   floors: {
     label: string;
-    sheetName: string;
+    gid: string;
   }[];
 }
 
@@ -21,12 +21,12 @@ const buildings: Building[] = [
     description: "Male Only, Double Occupancy",
     code: "NOHL",
     floors: [
-      { label: "Floor 2", sheetName: "2FL NOHL" },
-      { label: "Floor 3", sheetName: "3FL NOHL" },
-      { label: "Floor 4", sheetName: "4FL NOHL" },
-      { label: "Floor 5", sheetName: "5FL NOHL" },
-      { label: "Floor 6", sheetName: "6FL NOHL" },
-      { label: "Floor 7", sheetName: "7FL NOHL" }
+      { label: "Floor 2", gid: "934520048" },
+      { label: "Floor 3", gid: "1283261361" },
+      { label: "Floor 4", gid: "977390809" },
+      { label: "Floor 5", gid: "1628062900" },
+      { label: "Floor 6", gid: "351410270" },
+      { label: "Floor 7", gid: "96825177" }
     ]
   },
   {
@@ -34,12 +34,12 @@ const buildings: Building[] = [
     description: "Female Only, Double Occupancy",
     code: "DRHL",
     floors: [
-      { label: "Floor 2", sheetName: "2FL DRHL" },
-      { label: "Floor 3", sheetName: "3FL DRHL" },
-      { label: "Floor 4", sheetName: "4FL DRHL" },
-      { label: "Floor 5", sheetName: "5FL DRHL" },
-      { label: "Floor 6", sheetName: "6FL DRHL" },
-      { label: "Floor 7", sheetName: "7FL DRHL" }
+      { label: "Floor 2", gid: "605805088" },
+      { label: "Floor 3", gid: "869272327" },
+      { label: "Floor 4", gid: "983011990" },
+      { label: "Floor 5", gid: "1076599400" },
+      { label: "Floor 6", gid: "1549755572" },
+      { label: "Floor 7", gid: "1506478925" }
     ]
   },
   {
@@ -47,15 +47,15 @@ const buildings: Building[] = [
     description: "Male Only, Double Occupancy",
     code: "HH",
     floors: [
-      { label: "Floor 1", sheetName: "1FL HH" },
-      { label: "Floor 2 (L)", sheetName: "2FL(L) HH" },
-      { label: "Floor 2 (S)", sheetName: "2FL(S) HH" },
-      { label: "Floor 2", sheetName: "2FLHH" },
-      { label: "Floor 2 (Alt)", sheetName: "2FL HH" },
-      { label: "Floor 3 (S)", sheetName: "3FL (S) HH" },
-      { label: "Floor 3 (L)", sheetName: "(L) HH" },
-      { label: "Floor 3 (New A)", sheetName: "3FL (NEW A) HH" },
-      { label: "Floor 3 (New B)", sheetName: "3FL (NEWB) HH" }
+      { label: "Floor 1", gid: "540165963" },
+      { label: "Floor 2 (L)", gid: "1912887235" },
+      { label: "Floor 2 (S)", gid: "1117356637" },
+      { label: "Floor 2", gid: "470338677" },
+      { label: "Floor 2 (Alt)", gid: "112036219" },
+      { label: "Floor 3 (S)", gid: "357359095" },
+      { label: "Floor 3 (L)", gid: "627845899" },
+      { label: "Floor 3 (New A)", gid: "1260931559" },
+      { label: "Floor 3 (New B)", gid: "2013317195" }
     ]
   },
   {
@@ -63,8 +63,8 @@ const buildings: Building[] = [
     description: "Co-ed, Single Room, Shared Bathroom",
     code: "SUM",
     floors: [
-      { label: "Floor 1", sheetName: "1FL SUM" },
-      { label: "Floor 2", sheetName: "2FL SUM" }
+      { label: "Floor 1", gid: "875306229" },
+      { label: "Floor 2", gid: "520551152" }
     ]
   },
   {
@@ -72,16 +72,17 @@ const buildings: Building[] = [
     description: "Co-ed, Mixed Single and Double Room Occupancy",
     code: "SY",
     floors: [
-      { label: "Floor 1", sheetName: "1FL SY" },
-      { label: "Floor 2", sheetName: "2FL SY" }
+      { label: "Floor 1", gid: "1822412565" },
+      { label: "Floor 2", gid: "659261022" }
     ]
   },
   {
     name: "Starbrick Village",
     description: "WHI Program Only, Co-ed shared facilities",
+    code: "SBV",
     floors: [
-      { name: "First Floor", sheetName: "YOUR_SHEET_ID_13" },
-      { name: "Second Floor", sheetName: "YOUR_SHEET_ID_14" }
+      { label: "International House", gid: "991777198" },
+      { label: "Opportunity House", gid: "84020514" }
     ]
   }
 ];
@@ -168,7 +169,8 @@ export default function FloorPlans() {
                 <TabsContent key={floor.label} value={floor.label}>
                   <div className="aspect-[4/3] w-full">
                     <iframe
-                      src={`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/preview?rm=minimal&widget=true&headers=false&gid=${encodeURIComponent(floor.sheetName)}`}
+                      key={floor.gid}
+                      src={`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/preview?rm=minimal&widget=true&headers=false&gid=${floor.gid}`}
                       className="w-full h-full border-0"
                       allowFullScreen
                     />
