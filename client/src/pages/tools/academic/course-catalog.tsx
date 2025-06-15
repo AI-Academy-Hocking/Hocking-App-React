@@ -240,13 +240,13 @@ export default function CourseCatalog() {
                           <BookOpen className="text-primary h-6 w-6" />
                           <span className="font-bold text-lg text-black">{program.name}</span>
                         </div>
-                        <p className="text-sm text-neutral-200 mb-4">{program.description}</p>
+                        <p className="text-sm text-gray-700 mb-4">{program.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           <span className="bg-primary/90 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1"><GraduationCap className="h-4 w-4" /> {program.degree}</span>
                           <span className="bg-[#1E293B] text-white text-xs px-3 py-1 rounded-full flex items-center gap-1"><Clock className="h-4 w-4" /> {program.duration}</span>
                           <span className="bg-[#7C3AED] text-white text-xs px-3 py-1 rounded-full flex items-center gap-1"><BookOpen className="h-4 w-4" /> {program.credits}</span>
                         </div>
-                        <div className="border-t border-[#334155] pt-3 mt-3 flex flex-col gap-2 text-sm text-neutral-300">
+                        <div className="border-t border-[#334155] pt-3 mt-3 flex flex-col gap-2 text-sm text-gray-700">
                           <div className="flex items-center gap-2"><Phone className="h-4 w-4" /> Contact: {program.contact}</div>
                           <div className="flex items-center gap-2"><Mail className="h-4 w-4" /> Email: {program.email}</div>
                         </div>
