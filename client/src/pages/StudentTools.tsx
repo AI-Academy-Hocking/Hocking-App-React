@@ -70,7 +70,7 @@ export default function StudentTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
-                  const displayName = tool.id === 'academic-history' ? 'Career & University Center' : (tool.id === 'advising' ? 'Administration' : tool.name);
+                  const displayName = tool.id === 'course-schedule' ? 'Office & Administration' : (tool.id === 'academic-history' ? 'Career & University Center' : (tool.id === 'advising' ? 'Administration' : tool.name));
                   return (
                     <Link
                       key={tool.id}
