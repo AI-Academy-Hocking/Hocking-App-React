@@ -455,13 +455,7 @@ export class MemStorage implements IStorage {
       url: "#",
     });
     
-    await this.createStudentTool({
-      id: "scholarships",
-      name: "Scholarships",
-      description: "Apply for available scholarships",
-      category: "financial",
-      url: "#",
-    });
+    
     
     await this.createStudentTool({
       id: "campus-resources",
