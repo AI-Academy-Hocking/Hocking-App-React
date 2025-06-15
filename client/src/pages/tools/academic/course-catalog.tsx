@@ -137,6 +137,9 @@ export default function CourseCatalog() {
   const [selectedSchool, setSelectedSchool] = useState("allied-health");
   const selectedSchoolData = courses.find(school => school.id === selectedSchool);
 
+  // Sort programs alphabetically by name for each school
+  const sortedPrograms = selectedSchoolData ? [...selectedSchoolData.programs].sort((a, b) => a.name.localeCompare(b.name)) : [];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -175,7 +178,7 @@ export default function CourseCatalog() {
                   {selectedSchoolData.name}
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2">
-                  {selectedSchoolData.programs.map((program, index) => (
+                  {sortedPrograms.map((program, index) => (
                     <Card key={index} className="bg-white border-none shadow-md shadow-gray-200 rounded-xl">
                       <CardContent className="pt-6 pb-6">
                         <div className="flex items-center gap-3 mb-2">
