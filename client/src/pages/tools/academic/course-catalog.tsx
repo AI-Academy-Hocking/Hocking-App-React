@@ -196,7 +196,14 @@ export default function CourseCatalog() {
                           <div className="flex items-center gap-2"><Mail className="h-4 w-4" /> Email: {program.email}</div>
                         </div>
                         <div className="flex justify-center mt-5">
-                          <Button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg">Learn More</Button>
+                          <a
+                            href="https://www.hocking.edu/majors"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg inline-flex items-center justify-center transition-colors"
+                          >
+                            Learn More
+                          </a>
                         </div>
                       </CardContent>
                     </Card>
