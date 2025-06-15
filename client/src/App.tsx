@@ -32,7 +32,6 @@ import Social from "./pages/housing/Social";
 import CourseCatalog from "./pages/tools/academic/course-catalog";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
 import Graduation from "./pages/tools/academic/graduation";
-import AcademicHistory from "./pages/tools/academic/academic-history";
 import Advising from "./pages/tools/academic/advising";
 import './index.css';
 import './styles/globals.css';
@@ -81,7 +80,6 @@ function Router() {
             <Route path="/tools" component={StudentTools} />
             <Route path="/tools/academic/course-catalog" component={CourseCatalog} />
             <Route path="/tools/academic/graduation" component={Graduation} />
-            <Route path="/tools/academic/academic-history" component={AcademicHistory} />
             <Route path="/tools/academic/advising" component={Advising} />
             <Route path="/tools/academic/:id" component={AcademicToolDetail} />
             <Route path="/maps" component={Maps} />

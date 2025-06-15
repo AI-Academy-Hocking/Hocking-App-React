@@ -35,7 +35,6 @@ export default function StudentTools() {
     'grades': GraduationCap,
     'course-catalog': BookOpen,
     'advising': UserCheck,
-    'academic-history': History,
     'graduation': School,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,

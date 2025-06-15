@@ -432,14 +432,6 @@ export class MemStorage implements IStorage {
     });
     
     await this.createStudentTool({
-      id: "academic-history",
-      name: "Academic History",
-      description: "View your transcript",
-      category: "academic",
-      url: "#",
-    });
-    
-    await this.createStudentTool({
       id: "graduation",
       name: "Graduation",
       description: "Track degree requirements",
