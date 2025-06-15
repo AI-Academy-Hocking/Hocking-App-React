@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, GraduationCap, Clock, BookOpen, Phone, Mail, TreePine, Stethoscope, Users, Briefcase, ShieldCheck } from "lucide-react";
+import { ArrowLeft, GraduationCap, Clock, BookOpen, Phone, Mail, TreePine, Stethoscope, Users, Briefcase, ShieldCheck, FileText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
@@ -227,7 +227,7 @@ export default function CourseCatalog() {
               <div className="w-full space-y-4">
                 <h2 className="text-xl font-semibold text-center mb-4 flex items-center justify-center gap-2">
                   {(() => {
-                    const Icon = schoolIcons[selectedSchoolData.icon] || GraduationCap;
+                    const Icon = schoolIcons[selectedSchoolData.icon as keyof typeof schoolIcons] || GraduationCap;
                     return <Icon className="text-primary h-7 w-7" />;
                   })()}
                   {selectedSchoolData.name}
