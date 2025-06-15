@@ -27,7 +27,6 @@ export default function StudentTools() {
 
   // Filter tools by category
   const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades') || [];
-  const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
@@ -53,7 +52,6 @@ export default function StudentTools() {
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
     { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
-
   ];
 
   return (
@@ -63,9 +61,8 @@ export default function StudentTools() {
         
         <Card className="overflow-hidden">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-b border-neutral-light">
+            <TabsList className="grid grid-cols-2 border-b border-neutral-light">
               <TabsTrigger value="academic">Academic</TabsTrigger>
-              <TabsTrigger value="financial">Financial</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
             </TabsList>
             
@@ -86,27 +83,6 @@ export default function StudentTools() {
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
                     </Link>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="financial" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {financialTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
-                    >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
-                      </div>
-                    </a>
                   );
                 })}
               </div>
