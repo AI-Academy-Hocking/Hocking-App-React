@@ -7,8 +7,16 @@ import {
   Users, Dumbbell, Utensils, Calendar, House 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { StudentTool } from "@shared/schema";
+// import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
+
+type StudentTool = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  url: string;
+};
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -18,13 +26,12 @@ export default function StudentTools() {
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades') || [];
   const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
-    'course-schedule': FileText,
     'grades': GraduationCap,
     'course-catalog': BookOpen,
     'advising': UserCheck,
@@ -67,18 +74,19 @@ export default function StudentTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
+                  const displayName = tool.id === 'advising' ? 'Administration' : tool.name;
                   return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
+                    <Link
+                      key={tool.id}
+                      href={`/tools/academic/${tool.id}`}
                       className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
+                        <h3 className="font-semibold">{displayName}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>

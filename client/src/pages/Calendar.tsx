@@ -193,27 +193,27 @@ export default function CalendarPage() {
               Calendar Type
             </div>
             <div className="flex gap-3">
-              <Button 
-                variant={activeCalendar === "academic" ? "default" : "ghost"}
+              <Button
+                variant="ghost"
                 size="default"
                 onClick={() => setActiveCalendar("academic")}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
-                  activeCalendar === "academic" 
-                    ? "ring-2 ring-primary-light ring-offset-2" 
-                    : ""
-                } hover:bg-primary-light/10`}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 ${
+                  activeCalendar === "academic"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-primary border-primary"
+                } hover:bg-blue-100`}
               >
                 Academic Calendar
               </Button>
-              <Button 
-                variant={activeCalendar === "activities" ? "default" : "ghost"}
+              <Button
+                variant="ghost"
                 size="default"
                 onClick={() => setActiveCalendar("activities")}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 bg-white text-primary border-primary ${
-                  activeCalendar === "activities" 
-                    ? "ring-2 ring-primary-light ring-offset-2" 
-                    : ""
-                } hover:bg-primary-light/10`}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 ${
+                  activeCalendar === "activities"
+                    ? "bg-blue-600 text-white border-blue-600"
+                    : "bg-white text-primary border-primary"
+                } hover:bg-blue-100`}
               >
                 Student Activities
               </Button>
@@ -256,19 +256,21 @@ export default function CalendarPage() {
 
 
             <div className="flex space-x-2 mb-4">
-              <Button 
-                variant={view === "month" ? "default" : "ghost"} 
-                size="default" 
+              <Button
+                variant="ghost"
+                size="default"
                 onClick={() => setView("month")}
                 aria-pressed={view === "month"}
+                className={view === "month" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-primary border-primary"}
               >
                 Month View
               </Button>
-              <Button 
-                variant={view === "list" ? "default" : "ghost"} 
-                size="default" 
+              <Button
+                variant="ghost"
+                size="default"
                 onClick={() => setView("list")}
                 aria-pressed={view === "list"}
+                className={view === "list" ? "bg-blue-600 text-white border-blue-600" : "bg-white text-primary border-primary"}
               >
                 List View
               </Button>

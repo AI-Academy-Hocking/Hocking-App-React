@@ -402,25 +402,17 @@ export class MemStorage implements IStorage {
       name: "Recreation Center",
       description: "Gym, pool, fitness classes",
       category: "housing",
-      lat: 39.5290,
-      lng: -82.4170,
+      lat: 39.529,
+      lng: -82.417
     });
     
     // Sample student tools
-    await this.createStudentTool({
-      id: "course-schedule",
-      name: "Course Schedule",
-      description: "View your current classes",
-      category: "academic",
-      url: "#",
-    });
-    
     await this.createStudentTool({
       id: "grades",
       name: "Grades",
       description: "Check your academic performance",
       category: "academic",
-      url: "#",
+      url: "#"
     });
     
     await this.createStudentTool({
