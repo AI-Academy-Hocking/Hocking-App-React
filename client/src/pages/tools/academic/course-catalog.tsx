@@ -4,48 +4,76 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Sample data for programs - replace with actual data
-const programs = [
+// Sample course data - this would be replaced with actual data from the catalog
+const courses = [
   {
-    category: "Natural Resources",
+    id: "allied-health",
+    name: "School of Allied Health and Nursing",
     programs: [
-      "Wildlife Resources Management",
-      "Forestry",
-      "Natural Resources Law Enforcement",
-      "Parks and Recreation",
-    ],
+      {
+        name: "Nursing",
+        description: "Prepare for a career in nursing with hands-on training and clinical experience.",
+        contact: "740.753.6350"
+      },
+      {
+        name: "Medical Assisting",
+        description: "Learn essential skills for medical office procedures and patient care.",
+        contact: "740.753.6350"
+      }
+    ]
   },
   {
-    category: "Public Safety",
+    id: "arts-science",
+    name: "School of Arts and Science",
     programs: [
-      "Criminal Justice",
-      "Fire Science",
-      "Emergency Medical Services",
-      "Law Enforcement",
-    ],
+      {
+        name: "Business Management",
+        description: "Develop skills in business operations, management, and leadership.",
+        contact: "740.753.7122"
+      },
+      {
+        name: "Criminal Justice",
+        description: "Prepare for careers in law enforcement, corrections, and security.",
+        contact: "740.753.7122"
+      }
+    ]
   },
   {
-    category: "Health Sciences",
+    id: "natural-resources",
+    name: "School of Natural Resources and Public Safety",
     programs: [
-      "Nursing",
-      "Physical Therapist Assistant",
-      "Medical Laboratory Technology",
-      "Radiologic Technology",
-    ],
+      {
+        name: "Wildlife Resources",
+        description: "Study wildlife management, conservation, and environmental science.",
+        contact: "740.753.6304"
+      },
+      {
+        name: "Forestry",
+        description: "Learn sustainable forest management and conservation practices.",
+        contact: "740.753.6304"
+      }
+    ]
   },
   {
-    category: "Business & Hospitality",
+    id: "workforce",
+    name: "School of Workforce Development",
     programs: [
-      "Business Management",
-      "Culinary Arts",
-      "Hospitality Management",
-      "Tourism Management",
-    ],
-  },
+      {
+        name: "Industrial Technology",
+        description: "Gain skills in manufacturing, maintenance, and industrial processes.",
+        contact: "740.753.7018"
+      },
+      {
+        name: "Welding Technology",
+        description: "Master welding techniques and industrial fabrication.",
+        contact: "740.753.7018"
+      }
+    ]
+  }
 ];
 
 export default function CourseCatalog() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("allied-health");
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -58,48 +86,40 @@ export default function CourseCatalog() {
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold text-primary mb-6">Course Catalog</h1>
-
-      <Card className="mb-6">
+      <Card>
         <CardHeader className="bg-primary-light/10">
-          <CardTitle className="text-xl text-primary">Academic Programs</CardTitle>
+          <CardTitle className="text-2xl text-primary">Course Catalog</CardTitle>
         </CardHeader>
-        <CardContent className="pt-4">
-          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-2 mb-4">
-              <TabsTrigger value="overview">Program Overview</TabsTrigger>
-              <TabsTrigger value="catalog">Full Catalog</TabsTrigger>
+        <CardContent className="pt-6">
+          <Tabs defaultValue="allied-health" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid grid-cols-4 mb-4">
+              {courses.map((school) => (
+                <TabsTrigger key={school.id} value={school.id}>
+                  {school.name}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
-            <TabsContent value="overview">
-              <div className="space-y-6">
-                {programs.map((category) => (
-                  <div key={category.category} className="space-y-2">
-                    <h3 className="text-lg font-semibold text-primary">{category.category}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {category.programs.map((program) => (
-                        <div
-                          key={program}
-                          className="p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
-                        >
-                          {program}
-                        </div>
-                      ))}
-                    </div>
+            {courses.map((school) => (
+              <TabsContent key={school.id} value={school.id}>
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">{school.name}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {school.programs.map((program, index) => (
+                      <Card key={index}>
+                        <CardContent className="pt-6">
+                          <h4 className="font-semibold mb-2">{program.name}</h4>
+                          <p className="text-sm text-neutral-dark mb-4">{program.description}</p>
+                          <p className="text-sm">
+                            <span className="font-medium">Contact:</span> {program.contact}
+                          </p>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="catalog">
-              <div className="aspect-[3/4] w-full max-w-3xl mx-auto">
-                <iframe
-                  src="https://www.hocking.edu/sites/default/files/2024-01/2023-2024%20Academic%20Catalog.pdf"
-                  className="w-full h-full rounded-lg border border-neutral-light"
-                  title="Hocking College Academic Catalog"
-                />
-              </div>
-            </TabsContent>
+                </div>
+              </TabsContent>
+            ))}
           </Tabs>
         </CardContent>
       </Card>

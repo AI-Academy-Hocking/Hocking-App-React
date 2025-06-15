@@ -1,30 +1,61 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Calendar, FileText, GraduationCap, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
-// Sample data for degree requirements - replace with actual data
-const degreeRequirements = [
+// Sample graduation requirements - this would be replaced with actual data from the catalog
+const requirements = [
   {
-    category: "General Education",
-    requirements: [
-      { name: "English Composition", credits: 6, completed: 6 },
-      { name: "Mathematics", credits: 3, completed: 3 },
-      { name: "Natural Sciences", credits: 6, completed: 3 },
-      { name: "Social Sciences", credits: 6, completed: 6 },
-      { name: "Humanities", credits: 3, completed: 3 },
-    ],
+    category: "Credit Requirements",
+    items: [
+      "Complete a minimum of 60 semester credit hours",
+      "Maintain a minimum cumulative GPA of 2.0",
+      "Complete all required courses in your program",
+      "Complete at least 15 semester credit hours at Hocking College"
+    ]
+  },
+  {
+    category: "General Education Requirements",
+    items: [
+      "Complete all required general education courses",
+      "Meet the Success Skills requirements",
+      "Complete any program-specific general education requirements"
+    ]
   },
   {
     category: "Program Requirements",
-    requirements: [
-      { name: "Core Courses", credits: 24, completed: 18 },
-      { name: "Electives", credits: 12, completed: 6 },
-      { name: "Capstone Project", credits: 3, completed: 0 },
-    ],
+    items: [
+      "Complete all required courses in your major",
+      "Meet any program-specific requirements",
+      "Complete any required internships or clinical experiences"
+    ]
+  }
+];
+
+// Sample important dates - this would be replaced with actual data from the catalog
+const importantDates = [
+  {
+    date: "March 1, 2024",
+    event: "Spring Graduation Application Deadline",
+    description: "Last day to apply for Spring 2024 graduation"
   },
+  {
+    date: "May 10, 2024",
+    event: "Spring Commencement Ceremony",
+    description: "Spring 2024 graduation ceremony"
+  },
+  {
+    date: "October 1, 2024",
+    event: "Fall Graduation Application Deadline",
+    description: "Last day to apply for Fall 2024 graduation"
+  },
+  {
+    date: "December 13, 2024",
+    event: "Fall Commencement Ceremony",
+    description: "Fall 2024 graduation ceremony"
+  }
 ];
 
 export default function Graduation() {
@@ -41,88 +72,102 @@ export default function Graduation() {
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold text-primary mb-6">Graduation Requirements</h1>
-
-      <Card className="mb-6">
+      <Card>
         <CardHeader className="bg-primary-light/10">
-          <CardTitle className="text-xl text-primary">Degree Progress</CardTitle>
+          <CardTitle className="text-2xl text-primary">Graduation</CardTitle>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="pt-6">
           <Tabs defaultValue="requirements" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-2 mb-4">
+            <TabsList className="grid grid-cols-3 mb-4">
               <TabsTrigger value="requirements">Requirements</TabsTrigger>
-              <TabsTrigger value="graduation">Graduation Info</TabsTrigger>
+              <TabsTrigger value="application">Application</TabsTrigger>
+              <TabsTrigger value="dates">Important Dates</TabsTrigger>
             </TabsList>
 
             <TabsContent value="requirements">
               <div className="space-y-6">
-                {degreeRequirements.map((category) => (
-                  <div key={category.category} className="space-y-4">
-                    <h3 className="text-lg font-semibold text-primary">{category.category}</h3>
-                    {category.requirements.map((req) => (
-                      <div key={req.name} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">{req.name}</span>
-                          <span className="text-sm text-neutral-dark">
-                            {req.completed}/{req.credits} credits
-                          </span>
-                        </div>
-                        <Progress value={(req.completed / req.credits) * 100} className="h-2" />
-                      </div>
-                    ))}
-                  </div>
+                {requirements.map((category, index) => (
+                  <Card key={index}>
+                    <CardContent className="pt-6">
+                      <h3 className="text-lg font-semibold mb-4">{category.category}</h3>
+                      <ul className="space-y-2">
+                        {category.items.map((item, itemIndex) => (
+                          <li key={itemIndex} className="flex items-start gap-2">
+                            <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </TabsContent>
 
-            <TabsContent value="graduation">
+            <TabsContent value="application">
               <div className="space-y-6">
-                <div className="bg-primary-light/5 p-4 rounded-lg">
-                  <h3 className="font-semibold mb-2">Graduation Application</h3>
-                  <p className="text-sm text-neutral-dark mb-4">
-                    Submit your graduation application at least one semester before your expected graduation date.
-                  </p>
-                  <a
-                    href="#"
-                    className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary-dark transition"
-                  >
-                    Apply for Graduation
-                  </a>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="font-semibold">Important Dates</h3>
-                  <div className="grid gap-4">
-                    <div className="p-4 border border-neutral-light rounded-lg">
-                      <h4 className="font-medium mb-1">Spring 2024 Graduation</h4>
-                      <p className="text-sm text-neutral-dark">Application Deadline: February 1, 2024</p>
-                      <p className="text-sm text-neutral-dark">Ceremony Date: May 11, 2024</p>
+                <Card>
+                  <CardContent className="pt-6">
+                    <h3 className="text-lg font-semibold mb-4">Graduation Application</h3>
+                    <div className="space-y-4">
+                      <p className="text-neutral-dark">
+                        To apply for graduation, you must complete the following steps:
+                      </p>
+                      <ol className="list-decimal list-inside space-y-2">
+                        <li>Meet with your academic advisor to review your progress</li>
+                        <li>Complete the graduation application form</li>
+                        <li>Pay the graduation fee</li>
+                        <li>Submit any required documentation</li>
+                      </ol>
+                      <div className="flex gap-4 mt-6">
+                        <Button className="flex items-center gap-2">
+                          <FileText className="h-4 w-4" />
+                          Download Application
+                        </Button>
+                        <Button variant="ghost" className="flex items-center gap-2">
+                          <GraduationCap className="h-4 w-4" />
+                          View Commencement Info
+                        </Button>
+                      </div>
                     </div>
-                    <div className="p-4 border border-neutral-light rounded-lg">
-                      <h4 className="font-medium mb-1">Summer 2024 Graduation</h4>
-                      <p className="text-sm text-neutral-dark">Application Deadline: June 1, 2024</p>
-                      <p className="text-sm text-neutral-dark">Ceremony Date: August 3, 2024</p>
-                    </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
 
-                <div className="space-y-4">
-                  <h3 className="font-semibold">Graduation Resources</h3>
-                  <div className="grid gap-4">
-                    <a href="#" className="p-4 border border-neutral-light rounded-lg hover:bg-neutral-lightest transition">
-                      <h4 className="font-medium mb-1">Graduation Checklist</h4>
-                      <p className="text-sm text-neutral-dark">Step-by-step guide to graduation</p>
-                    </a>
-                    <a href="#" className="p-4 border border-neutral-light rounded-lg hover:bg-neutral-lightest transition">
-                      <h4 className="font-medium mb-1">Cap & Gown Information</h4>
-                      <p className="text-sm text-neutral-dark">Order your graduation regalia</p>
-                    </a>
-                    <a href="#" className="p-4 border border-neutral-light rounded-lg hover:bg-neutral-lightest transition">
-                      <h4 className="font-medium mb-1">Graduation Ceremony Details</h4>
-                      <p className="text-sm text-neutral-dark">Information about the ceremony</p>
-                    </a>
-                  </div>
-                </div>
+                <Card>
+                  <CardContent className="pt-6">
+                    <h3 className="text-lg font-semibold mb-4">Graduation Resources</h3>
+                    <div className="space-y-2">
+                      <Link href="/graduation-checklist" className="block p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition">
+                        Graduation Checklist
+                      </Link>
+                      <Link href="/commencement" className="block p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition">
+                        Commencement Information
+                      </Link>
+                      <Link href="/faq" className="block p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition">
+                        Graduation FAQ
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="dates">
+              <div className="space-y-6">
+                {importantDates.map((date, index) => (
+                  <Card key={index}>
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-4">
+                        <Calendar className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                        <div>
+                          <h3 className="font-semibold">{date.event}</h3>
+                          <p className="text-sm text-neutral-dark">{date.description}</p>
+                          <p className="text-sm font-medium mt-1">{date.date}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </TabsContent>
           </Tabs>
