@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const courses = [
   {
@@ -134,7 +140,9 @@ const courses = [
 ];
 
 export default function CourseCatalog() {
-  const [activeTab, setActiveTab] = useState("allied-health");
+  const [selectedSchool, setSelectedSchool] = useState("allied-health");
+
+  const selectedSchoolData = courses.find(school => school.id === selectedSchool);
 
   return (
     <div className="space-y-6">
@@ -150,41 +158,44 @@ export default function CourseCatalog() {
           <CardTitle>Hocking College Programs</CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="allied-health" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 gap-2 mb-4">
-              {courses.map((school) => (
-                <TabsTrigger key={school.id} value={school.id}>
-                  {school.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+          <div className="flex flex-col items-center space-y-6">
+            <Select value={selectedSchool} onValueChange={setSelectedSchool}>
+              <SelectTrigger className="w-[400px]">
+                <SelectValue placeholder="Select a school" />
+              </SelectTrigger>
+              <SelectContent>
+                {courses.map((school) => (
+                  <SelectItem key={school.id} value={school.id}>
+                    {school.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            {courses.map((school) => (
-              <TabsContent key={school.id} value={school.id}>
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold">{school.name}</h2>
-                  <div className="grid gap-4">
-                    {school.programs.map((program, index) => (
-                      <Card key={index}>
-                        <CardContent className="pt-6">
-                          <h3 className="font-semibold mb-2">{program.name}</h3>
-                          <p className="text-sm text-neutral-dark mb-4">{program.description}</p>
-                          <div className="flex items-center gap-4 text-sm">
-                            <div>
-                              <span className="font-medium">Contact:</span> {program.contact}
-                            </div>
-                            <div>
-                              <span className="font-medium">Email:</span> {program.email}
-                            </div>
+            {selectedSchoolData && (
+              <div className="w-full space-y-4">
+                <h2 className="text-xl font-semibold text-center">{selectedSchoolData.name}</h2>
+                <div className="grid gap-4">
+                  {selectedSchoolData.programs.map((program, index) => (
+                    <Card key={index}>
+                      <CardContent className="pt-6">
+                        <h3 className="font-semibold mb-2">{program.name}</h3>
+                        <p className="text-sm text-neutral-dark mb-4">{program.description}</p>
+                        <div className="flex items-center gap-4 text-sm">
+                          <div>
+                            <span className="font-medium">Contact:</span> {program.contact}
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
+                          <div>
+                            <span className="font-medium">Email:</span> {program.email}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
