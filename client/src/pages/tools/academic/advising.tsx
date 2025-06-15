@@ -61,7 +61,7 @@ export default function Advising() {
           <Tabs defaultValue="advisor" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-2 mb-4">
               <TabsTrigger value="advisor">Your Advisor</TabsTrigger>
-              <TabsTrigger value="schedule">Schedule Appointment</TabsTrigger>
+              <TabsTrigger value="resources">Advising Resources</TabsTrigger>
             </TabsList>
 
             <TabsContent value="advisor">
@@ -99,52 +99,20 @@ export default function Advising() {
               </div>
             </TabsContent>
 
-            <TabsContent value="schedule">
-              <div className="space-y-6">
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="text-lg font-semibold mb-4">Schedule an Appointment</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <Calendar className="h-5 w-5 text-primary" />
-                        <div>
-                          <h4 className="font-medium">Online Scheduling</h4>
-                          <p className="text-sm text-neutral-dark">
-                            Schedule an appointment through our online system
-                          </p>
-                        </div>
-                        <Button variant="ghost" className="ml-auto">Schedule Online</Button>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Phone className="h-5 w-5 text-primary" />
-                        <div>
-                          <h4 className="font-medium">Phone Scheduling</h4>
-                          <p className="text-sm text-neutral-dark">
-                            Call the Academic Success Center at 740.753.7103
-                          </p>
-                        </div>
-                        <Button variant="ghost" className="ml-auto">Call Now</Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="text-lg font-semibold mb-4">Advising Resources</h3>
-                    <div className="space-y-2">
-                      <Link href="/academic-planning" className="block p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition">
-                        Academic Planning Guide
-                      </Link>
-                      <Link href="/degree-requirements" className="block p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition">
-                        Degree Requirements
-                      </Link>
-                      <Link href="/faq" className="block p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition">
-                        Advising FAQ
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
+            <TabsContent value="resources" className="p-4">
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg mb-2">Advising Resources</h3>
+                <ul className="list-disc list-inside text-sm text-neutral-dark space-y-1">
+                  <li>
+                    <Link href="https://www.hocking.edu/academic-success-center" target="_blank" rel="noopener noreferrer" className="text-primary underline">Academic Success Center</Link>
+                  </li>
+                  <li>
+                    <Link href="https://www.hocking.edu/advising" target="_blank" rel="noopener noreferrer" className="text-primary underline">Advising Information</Link>
+                  </li>
+                  <li>
+                    <Link href="https://www.hocking.edu/faq" target="_blank" rel="noopener noreferrer" className="text-primary underline">Advising FAQs</Link>
+                  </li>
+                </ul>
               </div>
             </TabsContent>
           </Tabs>

@@ -156,7 +156,7 @@ export default function CourseCatalog() {
         <CardContent>
           <div className="flex flex-col items-center space-y-6">
             <Select value={selectedSchool} onValueChange={setSelectedSchool}>
-              <SelectTrigger className="w-[400px]">
+              <SelectTrigger className="w-full md:w-[400px]">
                 <SelectValue placeholder="Select a school" />
               </SelectTrigger>
               <SelectContent>

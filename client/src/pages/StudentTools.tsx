@@ -26,7 +26,7 @@ export default function StudentTools() {
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades' && tool.id !== 'advising') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
@@ -70,7 +70,7 @@ export default function StudentTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
-                  const displayName = tool.id === 'advising' ? 'Administration' : tool.name;
+                  const displayName = tool.id === 'academic-history' ? 'Career & University Center' : (tool.id === 'advising' ? 'Administration' : tool.name);
                   return (
                     <Link
                       key={tool.id}
