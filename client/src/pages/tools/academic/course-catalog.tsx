@@ -234,7 +234,7 @@ export default function CourseCatalog() {
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   {selectedSchoolData.programs.map((program, index) => (
-                    <Card key={index} className="bg-[#101828] border-none shadow-lg rounded-xl">
+                    <Card key={index} className="bg-gray-100 border-none shadow-lg rounded-xl">
                       <CardContent className="pt-6 pb-6">
                         <div className="flex items-center gap-3 mb-2">
                           <BookOpen className="text-primary h-6 w-6" />
