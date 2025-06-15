@@ -29,6 +29,8 @@ import Handbook from "./pages/housing/Handbook";
 import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
+import CourseCatalog from "./pages/tools/academic/course-catalog";
+import AcademicToolDetail from "./pages/tools/academic/[id]";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -74,6 +76,8 @@ function Router() {
             <Route path="/home" component={Home} />
             <Route path="/calendar" component={Calendar} />
             <Route path="/tools" component={StudentTools} />
+            <Route path="/tools/academic/course-catalog" component={CourseCatalog} />
+            <Route path="/tools/academic/:id" component={AcademicToolDetail} />
             <Route path="/maps" component={Maps} />
             <Route path="/dining" component={DiningHall} />
             <Route path="/safety" component={CampusSafety} />
