@@ -234,11 +234,11 @@ export default function CourseCatalog() {
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   {selectedSchoolData.programs.map((program, index) => (
-                    <Card key={index} className="bg-blue-100 border-none shadow-lg rounded-xl">
+                    <Card key={index} className="bg-white border-none shadow-md shadow-gray-200 rounded-xl">
                       <CardContent className="pt-6 pb-6">
                         <div className="flex items-center gap-3 mb-2">
                           <BookOpen className="text-primary h-6 w-6" />
-                          <span className="font-bold text-lg text-white">{program.name}</span>
+                          <span className="font-bold text-lg text-black">{program.name}</span>
                         </div>
                         <p className="text-sm text-neutral-200 mb-4">{program.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
