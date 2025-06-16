@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House,
+  Users, Dumbbell, Utensils, Calendar, Home,
   MessageSquare, Pencil, Trophy,
   LucideIcon
 } from "lucide-react";
@@ -74,7 +74,7 @@ export default function StudentTools() {
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' },
+    { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
   ];
 
   // Add Testing Center to academic tools if it doesn't exist
