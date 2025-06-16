@@ -6,6 +6,8 @@ import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
+import ProgramDropdown from "@/components/ProgramDropdown";
+import { Button } from "@/components/ui/button";
 
 // Define a local Event type for type safety
 export type Event = {
@@ -15,9 +17,6 @@ export type Event = {
   time: string;
   location: string;
 };
-import ProgramDropdown from "@/components/ProgramDropdown";
-import { Button } from "@/components/ui/button";
-
 
 export default function Home() {
   const { user } = useAuth();
@@ -55,34 +54,25 @@ export default function Home() {
     },
   ];
 
-  // Format date for display
-  const formatEventDate = (date: string) => {
-    const eventDate = new Date(date);
-    return {
-      month: eventDate.toLocaleString('en-US', { month: 'short' }).toUpperCase(),
-      day: eventDate.getDate()
-    };
-  };
-
   return (
-    <div className="min-h-screen bg-white dark:bg-popover">
-      <section>
-        <h2 className="text-xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}
         </h2>
-        <Card className="overflow-hidden rounded-lg shadow-md transition border border-[var(--color-border)] dark:border-white bg-white dark:bg-[#2d3a4d]">
+        <Card className="overflow-hidden rounded-lg shadow-md transition border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <img 
             src={HockingBackground} 
             alt="Hocking College Campus" 
             className="w-full h-48 object-cover" 
           />
-          <CardContent className="p-4">
+          <CardContent className="p-6">
             <div className="space-y-4">
-              <p className="" style={{ color: 'var(--color-text)' }}>
+              <p className="text-gray-600 dark:text-gray-300">
                 Explore all that Hocking College has to offer. Access your student resources, 
                 check the academic calendar, find your way around campus, and more.
               </p>
-              <div className="w-full max-w-xs bg-white dark:bg-[#2d3a4d] rounded-lg p-4">
+              <div className="w-full max-w-xs bg-white dark:bg-gray-800 rounded-lg p-4">
                 <ProgramDropdown onChange={handleProgramChange} />
               </div>
             </div>
@@ -90,21 +80,20 @@ export default function Home() {
         </Card>
       </section>
       
-      <section>
-        <h2 className="text-xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Quick Access</h2>
+      <section className="mb-8">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Quick Access</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {quickLinks.map((link, index) => {
-            // Assign a more noticeable background color to each button
             const bgColors = [
               '#f8bbd0', // Calendar - soft pink
               '#80cbc4', // Student Tools - teal/green
               '#ffe082', // Maps & Directions - vivid yellow
-              '#ce93d8'  // Resources - vivid purple
+              '#ffe0b2'  // Resources - lighter orange
             ];
             return (
               <Link key={index} href={link.href}>
                 <a
-                  className="hover:bg-[#f4faff] rounded-lg border border-[var(--color-border)] shadow-sm p-4 flex flex-col items-center text-center transition"
+                  className="hover:bg-[#f4faff] rounded-lg border border-[var(--color-border)] shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center"
                   style={{ backgroundColor: bgColors[index] }}
                 >
                   <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
@@ -116,21 +105,19 @@ export default function Home() {
         </div>
       </section>
       
-      <section className="max-w-6xl mx-auto mt-8">
+      <section className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Academic Calendar Box */}
-          <div className="rounded-lg border border-[var(--color-border)] dark:border-white shadow-sm p-4 bg-white dark:bg-[#2d3a4d]">
-            <h3 className="font-bold mb-2 text-[#1a365d] dark:text-white">Academic Calendar</h3>
-            {/* Placeholder for academic events */}
-            <div className="text-center py-8 text-[#1a365d] dark:text-white">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
+            <h3 className="font-bold mb-4 text-gray-900 dark:text-white">Academic Calendar</h3>
+            <div className="text-center py-8 text-gray-600 dark:text-gray-300">
               No upcoming academic events
             </div>
           </div>
           {/* Student Activities Box */}
-          <div className="rounded-lg border border-[var(--color-border)] dark:border-white shadow-sm p-4 bg-white dark:bg-[#2d3a4d]">
-            <h3 className="font-bold mb-2 text-[#1a365d] dark:text-white">Student Activities</h3>
-            {/* Placeholder for student activities */}
-            <div className="text-center py-8 text-[#1a365d] dark:text-white">
+          <div className="rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
+            <h3 className="font-bold mb-4 text-gray-900 dark:text-white">Student Activities</h3>
+            <div className="text-center py-8 text-gray-600 dark:text-gray-300">
               No upcoming student activities
             </div>
           </div>

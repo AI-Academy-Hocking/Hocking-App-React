@@ -1,4 +1,4 @@
-import { Switch, Route, useLocation } from "wouter";
+import { Switch, Route, useLocation, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "./components/ui/toaster";
 import NotFound from "@/pages/not-found";
@@ -10,13 +10,12 @@ import Maps from "@/pages/Maps";
 import DiningHall from "@/pages/DiningHall";
 import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
-import { AuthProvider } from "@/lib/auth";
+import { AuthProvider, useAuth } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
 import LibraryPage from "./pages/Library";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import ProgramDetails from "./pages/ProgramDetails";
-
 import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
@@ -33,80 +32,90 @@ import Social from "./pages/housing/Social";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from 'react';
 
 const queryClient = new QueryClient();
 
 function Router() {
-  const [location] = useLocation();
-  
-  // Check if we're on the login page
-  const isLoginPage = location === "/login" || location === "/";
+  const [location, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
+  const [checkingHomeRedirect, setCheckingHomeRedirect] = useState(false);
+
+  useEffect(() => {
+    if (isAuthenticated && location === "/home") {
+      setCheckingHomeRedirect(true);
+      const hasClickedGetStarted = localStorage.getItem('hasClickedGetStarted') === 'true';
+      if (!hasClickedGetStarted) {
+        setLocation("/");
+      }
+      setCheckingHomeRedirect(false);
+    }
+  }, [isAuthenticated, location, setLocation]);
+
+  // If user is authenticated and on login page, redirect to home
+  if (isAuthenticated && location === "/login") {
+    return <Redirect to="/home" />;
+  }
+
+  // If user is not authenticated and not on login page, redirect to login
+  if (!isAuthenticated && location !== "/login" && location !== "/") {
+    return <Redirect to="/login" />;
+  }
+
+  // Show loading state while checking redirect
+  if (checkingHomeRedirect) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   // If we're on the login page, don't wrap with MainLayout
-  if (isLoginPage) {
+  if (location === "/login" || location === "/") {
     return (
-      <TransitionGroup>
-        <CSSTransition
-          key={location}
-          timeout={300}
-          classNames="page-transition"
-          in={true}
-        >
-          <Switch>
-            <Route path="/" component={Login} />
-            <Route path="/login" component={Login} />
-            <Route component={NotFound} />
-          </Switch>
-        </CSSTransition>
-      </TransitionGroup>
+      <Switch>
+        <Route path="/" component={Login} />
+        <Route path="/login" component={Login} />
+        <Route component={NotFound} />
+      </Switch>
     );
   }
 
   // For all other pages, wrap with MainLayout
   return (
     <MainLayout>
-      <TransitionGroup>
-        <CSSTransition
-          key={location}
-          timeout={300}
-          classNames="page-transition"
-          in={true}
-        >
-          <Switch>
-            <Route path="/home" component={Home} />
-            <Route path="/calendar" component={Calendar} />
-            <Route path="/tools" component={StudentTools} />
-            <Route path="/maps" component={Maps} />
-            <Route path="/dining" component={DiningHall} />
-            <Route path="/safety" component={CampusSafety} />
-            <Route path="/recreation" component={RecreationPage} />
-            <Route path="/library" component={LibraryPage} />
-            <Route path="/online-learning" component={OnlineLearningPage} />
-            <Route path="/student-organizations" component={StudentOrganizationsPage} />
-            <Route path="/housing" component={Housing} />
-            <Route path="/housing/dormitories" component={Dormitories} />
-            <Route path="/housing/amenities" component={Amenities} />
-            <Route path="/housing/application" component={ApplicationProcess} />
-            <Route path="/housing/meal-plan" component={MealPlan} />
-            <Route path="/housing/roomies" component={Roomies} />
-            <Route path="/housing/what-to-bring" component={WhatToBring} />
-            <Route path="/housing/maintenance" component={Maintenance} />
-            <Route path="/housing/contact" component={Contact} />
-            <Route path="/housing/handbook" component={Handbook} />
-            <Route path="/housing/pricing" component={Pricing} />
-            <Route path="/housing/activities" component={Activities} />
-            <Route path="/housing/social" component={Social} />
-            <Route component={NotFound} />
-          </Switch>
-        </CSSTransition>
-      </TransitionGroup>
+      <Switch>
+        <Route path="/home" component={Home} />
+        <Route path="/calendar" component={Calendar} />
+        <Route path="/tools" component={StudentTools} />
+        <Route path="/maps" component={Maps} />
+        <Route path="/dining" component={DiningHall} />
+        <Route path="/safety" component={CampusSafety} />
+        <Route path="/recreation" component={RecreationPage} />
+        <Route path="/library" component={LibraryPage} />
+        <Route path="/online-learning" component={OnlineLearningPage} />
+        <Route path="/student-organizations" component={StudentOrganizationsPage} />
+        <Route path="/housing" component={Housing} />
+        <Route path="/housing/dormitories" component={Dormitories} />
+        <Route path="/housing/amenities" component={Amenities} />
+        <Route path="/housing/application" component={ApplicationProcess} />
+        <Route path="/housing/meal-plan" component={MealPlan} />
+        <Route path="/housing/roomies" component={Roomies} />
+        <Route path="/housing/what-to-bring" component={WhatToBring} />
+        <Route path="/housing/maintenance" component={Maintenance} />
+        <Route path="/housing/contact" component={Contact} />
+        <Route path="/housing/handbook" component={Handbook} />
+        <Route path="/housing/pricing" component={Pricing} />
+        <Route path="/housing/activities" component={Activities} />
+        <Route path="/housing/social" component={Social} />
+        <Route component={NotFound} />
+      </Switch>
     </MainLayout>
   );
 }
 
-export default App;
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

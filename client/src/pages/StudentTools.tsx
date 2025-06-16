@@ -58,16 +58,16 @@ export default function StudentTools() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white dark:bg-gray-900">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Student Tools</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
         
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-3 border-b border-neutral-light">
-              <TabsTrigger value="academic">Academic</TabsTrigger>
-              <TabsTrigger value="financial">Financial</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
+              <TabsTrigger value="academic" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
+              <TabsTrigger value="financial" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
+              <TabsTrigger value="resources" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
             </TabsList>
             
             <TabsContent value="academic" className="p-4">
@@ -78,7 +78,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition bg-white dark:bg-gray-700"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
@@ -99,7 +99,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition bg-white dark:bg-gray-700"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
@@ -120,7 +120,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition bg-white dark:bg-gray-700"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
@@ -143,7 +143,7 @@ export default function StudentTools() {
             <Link 
               key={link.id} 
               href={link.path}
-              className="bg-white dark:bg-popover rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
+              className="bg-white dark:bg-gray-700 rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold">{link.label}</span>
