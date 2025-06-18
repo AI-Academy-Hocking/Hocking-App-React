@@ -220,7 +220,7 @@ export default function CalendarPage() {
           </div>
         </div>
         <div className="rounded-2xl" style={{ background: 'var(--calendar-surface)' }}>
-          <Card className="bg-transparent shadow-none border-none">
+          <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
             <CardContent className="p-0">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
@@ -380,7 +380,7 @@ export default function CalendarPage() {
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-[#2a3240]">
+          <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
             <h3 className="text-xl font-semibold mb-4">Academic Calendar</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               View important dates, deadlines, and events for the academic year.
@@ -390,7 +390,7 @@ export default function CalendarPage() {
             </Link>
           </Card>
 
-          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-[#2a3240]">
+          <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
             <h3 className="text-xl font-semibold mb-4">Student Activities</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Discover campus events, clubs, and activities to get involved.

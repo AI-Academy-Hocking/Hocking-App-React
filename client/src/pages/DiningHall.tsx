@@ -110,7 +110,7 @@ export default function DiningHall() {
             Meal Plans
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-stretch">
-            <div className="border border-neutral-200 dark:border-[#2a3240] rounded-xl p-8 flex flex-col items-center justify-between min-h-[340px] bg-white dark:bg-[#2a3240] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
               <h3 className="text-2xl font-bold mb-3 dark:text-white">Full Meal Plan</h3>
               <div className="text-2xl font-extrabold text-primary dark:text-blue-400 mb-5">19 meals/week</div>
               <ul className="space-y-3 text-neutral-700 dark:text-white mb-6 text-lg">
@@ -129,7 +129,7 @@ export default function DiningHall() {
               </ul>
               <p className="text-base text-neutral-500 dark:text-white/70">Perfect for residential students</p>
             </div>
-            <div className="border border-neutral-200 dark:border-[#2a3240] rounded-xl p-8 flex flex-col items-center justify-between min-h-[340px] bg-white dark:bg-[#2a3240] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
               <h3 className="text-2xl font-bold mb-3 dark:text-white">Partial Meal Plan</h3>
               <div className="text-2xl font-extrabold text-primary dark:text-blue-400 mb-5">14 meals/week</div>
               <ul className="space-y-3 text-neutral-700 dark:text-white mb-6 text-lg">
@@ -194,7 +194,7 @@ export default function DiningHall() {
                 dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
               }}
             ].map((day) => (
-              <div key={day.day} className="border border-neutral-200 rounded-lg overflow-hidden bg-white hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240] dark:border-[#2a3240]">
+              <div key={day.day} className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 overflow-hidden bg-white hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240] dark:border-[#2a3240]">
                 <div className="bg-primary text-white py-2 px-4 font-medium">
                   <div className="text-lg">{day.day}</div>
                   <div className="text-xs opacity-80">{day.date}</div>
@@ -228,7 +228,7 @@ export default function DiningHall() {
             Special Dietary Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-neutral-200 dark:border-[#2a3240] rounded-lg p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
               <h3 className="text-lg font-semibold mb-3 dark:text-white">Dietary Accommodations</h3>
               <p className="text-neutral-600 dark:text-white mb-4">
                 Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
@@ -253,7 +253,7 @@ export default function DiningHall() {
               </ul>
             </div>
             
-            <div className="border border-neutral-200 dark:border-[#2a3240] rounded-lg p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
               <h3 className="text-lg font-semibold mb-3 dark:text-white">Food Allergen Information</h3>
               <p className="text-neutral-600 dark:text-white mb-4">
                 All menu items are clearly labeled with the following allergen information:

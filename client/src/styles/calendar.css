@@ -273,4 +273,9 @@
 .dark .border-primary,
 .dark .border-2 {
   border-color: #2a3240 !important;
+}
+
+/* Blue outline for Academic Calendar and Student Activities buttons */
+.border-primary {
+  border-color: #2563eb !important;
 } 
