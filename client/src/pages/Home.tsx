@@ -60,7 +60,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}
         </h2>
-        <Card className="overflow-hidden rounded-lg shadow-md transition border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="overflow-hidden rounded-lg shadow-md transition border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
           <img 
             src={HockingBackground} 
             alt="Hocking College Campus" 
@@ -93,7 +93,7 @@ export default function Home() {
             return (
               <Link key={index} href={link.href}>
                 <a
-                  className="hover:bg-[#f4faff] rounded-lg border border-[var(--color-border)] shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center"
+                  className="hover:bg-[#f4faff] rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center"
                   style={{ backgroundColor: bgColors[index] }}
                 >
                   <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
@@ -108,14 +108,14 @@ export default function Home() {
       <section className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Academic Calendar Box */}
-          <div className="rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
+          <div className="rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
             <h3 className="font-bold mb-4 text-gray-900 dark:text-white">Academic Calendar</h3>
             <div className="text-center py-8 text-gray-600 dark:text-gray-300">
               No upcoming academic events
             </div>
           </div>
           {/* Student Activities Box */}
-          <div className="rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
+          <div className="rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
             <h3 className="font-bold mb-4 text-gray-900 dark:text-white">Student Activities</h3>
             <div className="text-center py-8 text-gray-600 dark:text-gray-300">
               No upcoming student activities

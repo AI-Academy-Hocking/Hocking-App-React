@@ -380,7 +380,7 @@ export default function CalendarPage() {
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-white">
+          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-[#2a3240]">
             <h3 className="text-xl font-semibold mb-4">Academic Calendar</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               View important dates, deadlines, and events for the academic year.
@@ -390,7 +390,7 @@ export default function CalendarPage() {
             </Link>
           </Card>
 
-          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-white">
+          <Card className="p-6 bg-white dark:bg-[#2d3a4d] dark:border-[#2a3240]">
             <h3 className="text-xl font-semibold mb-4">Student Activities</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Discover campus events, clubs, and activities to get involved.

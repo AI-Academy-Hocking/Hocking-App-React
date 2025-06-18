@@ -232,4 +232,45 @@
   .rbc-date-cell > a:hover {
     background: #3a4760;
   }
+}
+
+.dark .rbc-day-bg.rbc-today {
+  background-color: #20469b !important;
+}
+.dark .rbc-date-cell.rbc-today > a {
+  color: #fff !important;
+  background-color: #20469b !important;
+  border: 2px solid #20469b !important;
+  font-weight: bold;
+}
+
+.dark .rbc-day-bg,
+.dark .rbc-date-cell,
+.dark .rbc-month-view,
+.dark .rbc-row .rbc-day-bg,
+.dark .rbc-month-row .rbc-day-bg,
+.dark .rbc-row .rbc-day-bg:last-child,
+.dark .rbc-month-row .rbc-day-bg:last-child {
+  border-color: #2a3240 !important;
+  box-shadow: none !important;
+}
+.dark .rbc-month-view {
+  box-shadow: none !important;
+  border-top: 2px solid #2a3240 !important;
+  border-left: 2px solid #2a3240 !important;
+  border-bottom: 2px solid #2a3240 !important;
+  border-right: 6px solid #2a3240 !important;
+}
+.dark .rbc-header {
+  border: 2px solid #2a3240 !important;
+}
+.dark .rbc-row .rbc-day-bg:last-child,
+.dark .rbc-month-row .rbc-day-bg:last-child {
+  border-right: 2px solid #2a3240 !important;
+}
+
+.dark .calendar-type-button,
+.dark .border-primary,
+.dark .border-2 {
+  border-color: #2a3240 !important;
 } 

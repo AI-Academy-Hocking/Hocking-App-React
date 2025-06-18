@@ -317,13 +317,13 @@ export default function Maps() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6 bg-white dark:bg-[#151c26] min-h-screen">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Campus Maps</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Campus Maps</h2>
         
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden bg-white dark:bg-[#353e4a]">
           {/* Map container */}
-          <div ref={mapRef} className="h-72 bg-neutral-light relative"></div>
+          <div ref={mapRef} className="h-72 bg-neutral-light dark:bg-[#353e4a] relative"></div>
           
           {/* Map controls */}
           <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-[1000]">
@@ -333,7 +333,7 @@ export default function Maps() {
               className="rounded-full" 
               onClick={handleZoomIn}
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4 text-blue-500 dark:text-blue-400" />
             </Button>
             <Button 
               size="icon" 
@@ -341,18 +341,18 @@ export default function Maps() {
               className="rounded-full" 
               onClick={handleZoomOut}
             >
-              <Minus className="h-4 w-4" />
+              <Minus className="h-4 w-4 text-blue-500 dark:text-blue-400" />
             </Button>
           </div>
           
           {/* Map search and filters */}
-          <CardContent className="p-4 border-t border-neutral-light">
-            <div className="flex items-center bg-neutral-lightest rounded-lg p-2 mb-4">
-              <Search className="text-neutral-dark ml-1 mr-2 h-4 w-4" />
+          <CardContent className="p-4 border-t border-neutral-light bg-white dark:bg-[#353e4a]">
+            <div className="flex items-center bg-neutral-lightest dark:bg-[#2a3240] rounded-lg p-2 mb-4">
+              <Search className="text-neutral-dark dark:text-blue-400 ml-1 mr-2 h-4 w-4" />
               <Input 
                 type="text" 
                 placeholder="Search for a building..." 
-                className="bg-transparent border-none shadow-none focus:ring-0 w-full"
+                className="bg-transparent border-none shadow-none focus:ring-0 w-full text-black dark:text-white placeholder:text-neutral-400 dark:placeholder:text-white/60"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -366,8 +366,8 @@ export default function Maps() {
                   size="default"
                   className={`rounded-full text-sm ${
                     activeCategory === category.id 
-                      ? "bg-primary text-white" 
-                      : "bg-neutral-lightest text-neutral-dark"
+                      ? "bg-primary text-white dark:bg-blue-500 dark:text-white" 
+                      : "bg-neutral-lightest text-neutral-dark dark:bg-[#2a3240] dark:text-white"
                   }`}
                   onClick={() => setActiveCategory(category.id)}
                 >
@@ -381,14 +381,14 @@ export default function Maps() {
       
       {user && !user.isGuest && (
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-4">Location Sharing</h2>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Location Sharing</h2>
           
-          <Card className="p-4">
+          <Card className="p-4 bg-white dark:bg-[#353e4a]">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <Label htmlFor="location-sharing" className="text-base font-medium">
+                  <MapPin className="h-5 w-5 text-primary dark:text-blue-400" />
+                  <Label htmlFor="location-sharing" className="text-base font-medium text-black dark:text-white">
                     Share my location
                   </Label>
                 </div>
@@ -399,7 +399,7 @@ export default function Maps() {
                 />
               </div>
               
-              <p className="text-sm text-neutral-dark">
+              <p className="text-sm text-neutral-dark dark:text-white">
                 {isLocationSharing 
                   ? "Your location is currently being shared with other users."
                   : "Enable location sharing to let others see where you are on campus."}
@@ -409,7 +409,7 @@ export default function Maps() {
                 <Button 
                   variant="ghost" 
                   size="default"
-                  className="w-full"
+                  className="w-full text-primary dark:text-blue-400"
                   onClick={getUserLocation}
                 >
                   <MapPin className="h-4 w-4 mr-2" />
@@ -420,11 +420,11 @@ export default function Maps() {
           </Card>
           
           <div className="mt-4">
-            <Card className="p-4">
+            <Card className="p-4 bg-white dark:bg-[#353e4a]">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-primary" />
-                  <Label htmlFor="view-shared-locations" className="text-base font-medium">
+                  <Users className="h-5 w-5 text-primary dark:text-blue-400" />
+                  <Label htmlFor="view-shared-locations" className="text-base font-medium text-black dark:text-white">
                     View shared locations
                   </Label>
                 </div>
@@ -435,7 +435,7 @@ export default function Maps() {
                 />
               </div>
               
-              <p className="text-sm text-neutral-dark mt-2">
+              <p className="text-sm text-neutral-dark dark:text-white mt-2">
                 {viewingSharedLocations
                   ? `Showing ${sharedLocations.length} users on the map.`
                   : "Enable to see other users' locations on the map."}
@@ -446,25 +446,25 @@ export default function Maps() {
       )}
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Building Directory</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Building Directory</h2>
         
-        <Card>
-          <ul className="divide-y divide-neutral-light">
+        <Card className="bg-white dark:bg-[#353e4a]">
+          <ul className="divide-y divide-neutral-light dark:divide-[#2a3240]">
             {filteredBuildings.length > 0 ? (
               filteredBuildings.map((building) => (
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      <span className={`inline-block w-5 h-5 rounded-full border-2 transition-colors duration-200 mr-2 ${selectedBuildingId === building.id ? 'bg-blue-600 border-blue-700' : 'bg-neutral-200 border-neutral-400'}`}></span>
+                      <span className={`inline-block w-5 h-5 rounded-full border-2 transition-colors duration-200 mr-2 ${selectedBuildingId === building.id ? 'bg-blue-600 border-blue-700 dark:bg-blue-400 dark:border-blue-500' : 'bg-neutral-200 border-neutral-400 dark:bg-[#2a3240] dark:border-white'}`}></span>
                       <div>
-                        <h3 className={`font-semibold ${selectedBuildingId === building.id ? 'text-black' : ''}`}>{building.name}</h3>
-                        <p className="text-sm text-neutral-dark">{building.description}</p>
+                        <h3 className={`font-semibold ${selectedBuildingId === building.id ? 'text-black dark:text-white' : 'text-black dark:text-white'}`}>{building.name}</h3>
+                        <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>
                       </div>
                     </div>
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="text-primary hover:text-primary-dark"
+                      className="text-primary hover:text-primary-dark dark:text-blue-400"
                       onClick={() => {
                         setSelectedBuildingId(building.id);
                         if (map) map.setView([building.lat, building.lng], 18);
@@ -476,7 +476,7 @@ export default function Maps() {
                 </li>
               ))
             ) : (
-              <li className="p-4 text-center text-neutral-dark">No buildings found</li>
+              <li className="p-4 text-center text-neutral-dark dark:text-white">No buildings found</li>
             )}
           </ul>
         </Card>
