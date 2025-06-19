@@ -49,6 +49,7 @@
     "@types/ical": "^0.8.3",
     "@types/node-fetch": "^2.6.12",
     "@types/react-transition-group": "^4.4.12",
+    "cheerio": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
@@ -122,5 +123,6 @@
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }

@@ -1,4 +1,3 @@
-
 import { google } from 'googleapis';
 import { Event } from '../../shared/schema';
 
@@ -45,12 +44,12 @@ export async function getEvents(calendarType?: string): Promise<Event[]> {
       });
       
       return {
-        id: event.id || String(index),
+        id: index + 1,
         title: event.summary || 'Unnamed Event',
         date,
         time: `${startTime} - ${endTime}`,
         location: event.location || 'TBD',
-        description: event.description || '',
+        description: event.description || null,
       };
     });
   } catch (error) {

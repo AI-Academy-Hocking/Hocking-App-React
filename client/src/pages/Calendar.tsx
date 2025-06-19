@@ -10,7 +10,6 @@ import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
 import { Skeleton } from "../components/ui/skeleton";
-import { Event } from "../../../shared/schema";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/badge";
 
@@ -29,14 +28,15 @@ const localizer = dateFnsLocalizer({
 
 const CALENDAR_URL = "/api/calendar/events";
 
-interface CalendarEvent {
+// Unified Event type
+interface Event {
   id: string;
   title: string;
-  date: string | undefined;
+  date: string;
+  end?: string;
   time: string;
-  end: string | undefined;
   location: string;
-  description: string;
+  description: string | null;
 }
 
 export default function CalendarPage() {
@@ -46,44 +46,41 @@ export default function CalendarPage() {
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
   const [error, setError] = useState<string | null>(null);
   
+  // Fetch events based on calendar type
   const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events', activeCalendar],
-    // In a real app, you would fetch different events based on activeCalendar
-    // by adding a parameter to the API endpoint
+    queryKey: ['/api/calendar/events', activeCalendar],
+    queryFn: async () => {
+      const response = await fetch(`/api/calendar/events?type=${activeCalendar}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+      return response.json();
+    }
   });
+
+  // Debug logging
+  console.log("Fetched events from backend:", events);
 
   // Get current month's start and end dates
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
 
-  // Format events for the BigCalendar
-  const formattedEvents = events.map(event => {
+  // Show all events for debugging
+  const getFilteredEvents = (_calendarType: "academic" | "activities") => {
+    return events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  };
+
+  // Get events for both calendar types
+  const academicEvents = getFilteredEvents("academic");
+  const activityEvents = getFilteredEvents("activities");
+  
+  // Use the active calendar to determine which events to show in the main view
+  const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
+
+  // Format events for the BigCalendar (use filteredEvents)
+  const formattedEvents = filteredEvents.map(event => {
     const startDate = new Date(event.date);
-    const endDate = new Date(event.date); // Use same date for end if not specified
-    
-    let startHours = 0, startMinutes = 0, endHours = 23, endMinutes = 59;
-    
-    if (event.time) {
-      const [startTime, endTime] = event.time.split(" - ");
-      if (startTime) {
-        const [hours, minutes] = startTime.split(":").map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          startHours = hours;
-          startMinutes = minutes;
-        }
-      }
-      if (endTime) {
-        const [hours, minutes] = endTime.split(":").map(Number);
-        if (!isNaN(hours) && !isNaN(minutes)) {
-          endHours = hours;
-          endMinutes = minutes;
-        }
-      }
-    }
-    
-    startDate.setHours(startHours, startMinutes);
-    endDate.setHours(endHours, endMinutes);
-    
+    const endDate = new Date(event.end || event.date);
     return {
       title: event.title || "Untitled Event",
       start: startDate,
@@ -97,32 +94,8 @@ export default function CalendarPage() {
     };
   });
 
-  // Filter events based on calendar type and date range
-  const getFilteredEvents = (calendarType: "academic" | "activities") => {
-    return events
-      .filter(event => {
-        // In a real implementation, each event would have a 'calendarType' property
-        // For now, we're using an empty array so no events will show
-        return false;
-        
-        // When you add real events, uncomment this code:
-        /*
-        const eventDate = new Date(event.date);
-        if (selectedDate) {
-          return isSameDay(eventDate, selectedDate);
-        }
-        return eventDate >= monthStart && eventDate <= monthEnd;
-        */
-      })
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  };
-
-  // Get events for both calendar types
-  const academicEvents = getFilteredEvents("academic");
-  const activityEvents = getFilteredEvents("activities");
-  
-  // Use the active calendar to determine which events to show in the main view
-  const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
+  // Debug logging
+  console.log("Formatted events for calendar:", formattedEvents);
 
   // Format date for display
   const formatEventDate = (date: string) => {
