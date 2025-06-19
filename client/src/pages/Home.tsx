@@ -60,7 +60,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}
         </h2>
-        <Card className="overflow-hidden rounded-xl shadow-md transition border-2 border-blue-600 dark:border-gray-700 bg-gray-200 dark:bg-gray-700">
+        <Card className="overflow-hidden rounded-xl shadow-md transition border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
           <img 
             src={HockingBackground} 
             alt="Hocking College Campus" 
@@ -72,7 +72,7 @@ export default function Home() {
                 Explore all that Hocking College has to offer. Access your student resources, 
                 check the academic calendar, find your way around campus, and more.
               </p>
-              <div className="w-full max-w-xs bg-gray-100 dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 p-4 shadow-sm">
+              <div className="w-full max-w-xs bg-gray-900 dark:bg-gray-900 rounded-xl p-2 shadow-sm">
                 <ProgramDropdown onChange={handleProgramChange} />
               </div>
             </div>
