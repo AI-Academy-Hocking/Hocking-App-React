@@ -30,7 +30,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-blue-900 p-4 shadow-md">
+    <header className="bg-blue-900 dark:bg-slate-800 p-4 shadow-md">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -46,7 +46,7 @@ export default function Header() {
               side="left"
               className="border-none w-64 p-0 z-[2000] flex flex-col h-full bg-gray-800"
             >
-              <div className="p-4 border-b-2 border-white bg-blue-500">
+              <div className="p-4 border-b-2 border-white !bg-blue-600" style={{ backgroundColor: '#2563eb' }}>
                 <img 
                   src={HawkLogo} 
                   alt="Hocking College Logo" 

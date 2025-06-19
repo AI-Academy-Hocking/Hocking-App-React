@@ -70,7 +70,7 @@ export default function StudentTools() {
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
         
-        <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+        <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid grid-cols-3 border-b border-gray-200 dark:border-0">
               <TabsTrigger value="academic" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
@@ -86,7 +86,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -107,7 +107,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -128,7 +128,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -151,7 +151,7 @@ export default function StudentTools() {
             <Link 
               key={link.id} 
               href={link.path}
-              className="bg-white dark:bg-gray-800 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
+              className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-blue-600 dark:text-white text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold text-gray-900 dark:text-white">{link.label}</span>

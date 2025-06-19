@@ -321,7 +321,7 @@ export default function Maps() {
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Campus Maps</h2>
         
-        <Card className="border-2 border-blue-600 rounded-lg shadow-sm bg-white dark:bg-[#353e4a]">
+        <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
           {/* Map container */}
           <div ref={mapRef} className="h-72 bg-neutral-light dark:bg-[#353e4a] relative"></div>
           
@@ -347,7 +347,7 @@ export default function Maps() {
           
           {/* Map search and filters */}
           <CardContent className="p-4 border-t border-neutral-light bg-white dark:bg-[#353e4a]">
-            <div className="flex items-center bg-neutral-lightest dark:bg-[#2a3240] rounded-lg p-2 mb-4">
+            <div className="flex items-center bg-neutral-lightest dark:bg-[#2a3240] rounded-xl p-2 mb-4">
               <Search className="text-neutral-dark dark:text-blue-400 ml-1 mr-2 h-4 w-4" />
               <Input 
                 type="text" 
@@ -383,7 +383,7 @@ export default function Maps() {
         <section>
           <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Location Sharing</h2>
           
-          <Card className="border-2 border-blue-600 rounded-lg shadow-sm bg-white dark:bg-[#353e4a]">
+          <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -420,7 +420,7 @@ export default function Maps() {
           </Card>
           
           <div className="mt-4">
-            <Card className="border-2 border-blue-600 rounded-lg shadow-sm bg-white dark:bg-[#353e4a]">
+            <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="h-5 w-5 text-primary dark:text-blue-400" />
@@ -448,7 +448,7 @@ export default function Maps() {
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Building Directory</h2>
         
-        <Card className="border-2 border-blue-600 rounded-lg shadow-sm bg-white dark:bg-[#353e4a]">
+        <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
           <ul className="divide-y divide-neutral-light dark:divide-[#2a3240]">
             {filteredBuildings.length > 0 ? (
               filteredBuildings.map((building) => (

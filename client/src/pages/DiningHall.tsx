@@ -69,12 +69,12 @@ export default function DiningHall() {
 
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
-        <div className="bg-white dark:bg-[#353e4a] rounded-lg shadow-md p-6 border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+        <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
           <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
             <Clock className="h-7 w-7 text-primary dark:text-blue-400" />
             Hours of Operation
           </h2>
-          <div className="overflow-hidden rounded-lg border border-neutral-200 dark:border-[#2a3240] bg-neutral-50 dark:bg-[#2a3240]">
+          <div className="overflow-hidden rounded-xl border-2 border-blue-600 dark:border-gray-700 bg-neutral-50 dark:bg-[#2a3240]">
             <table className="w-full">
               <thead className="bg-neutral-50 dark:bg-[#2a3240]">
                 <tr>
@@ -104,13 +104,13 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "meal-plans" && (
-        <div className="bg-white dark:bg-[#353e4a] rounded-lg shadow-md p-6 border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+        <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
           <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
             <CreditCard className="h-7 w-7 text-primary dark:text-blue-400" />
             Meal Plans
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-stretch">
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
               <h3 className="text-2xl font-bold mb-3 dark:text-white">Full Meal Plan</h3>
               <div className="text-2xl font-extrabold text-primary dark:text-blue-400 mb-5">19 meals/week</div>
               <ul className="space-y-3 text-neutral-700 dark:text-white mb-6 text-lg">
@@ -129,7 +129,7 @@ export default function DiningHall() {
               </ul>
               <p className="text-base text-neutral-500 dark:text-white/70">Perfect for residential students</p>
             </div>
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
               <h3 className="text-2xl font-bold mb-3 dark:text-white">Partial Meal Plan</h3>
               <div className="text-2xl font-extrabold text-primary dark:text-blue-400 mb-5">14 meals/week</div>
               <ul className="space-y-3 text-neutral-700 dark:text-white mb-6 text-lg">
@@ -149,7 +149,7 @@ export default function DiningHall() {
               <p className="text-base text-neutral-500 dark:text-white/70">Great for most students</p>
             </div>
           </div>
-          <div className="mt-6 p-4 bg-neutral-50 dark:bg-[#2a3240] rounded-lg border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+          <div className="mt-6 p-4 bg-neutral-50 dark:bg-[#2a3240] rounded-xl border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
             <h4 className="font-medium mb-2 dark:text-white">How to Update Your Meal Plan</h4>
             <p className="text-neutral-600 dark:text-white">
               For more information about meal plans or to upgrade your current plan, 
@@ -160,7 +160,7 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "menu" && (
-        <div className="bg-white dark:bg-[#353e4a] rounded-lg shadow-md p-6 border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+        <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
           <div className="flex items-center gap-2 mb-4">
             <Calendar className="h-7 w-7 text-primary dark:text-blue-400" />
             <h2 className="text-2xl font-bold text-primary dark:text-white">This Week's Menu</h2>
@@ -194,7 +194,7 @@ export default function DiningHall() {
                 dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
               }}
             ].map((day) => (
-              <div key={day.day} className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 overflow-hidden bg-white hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240] dark:border-[#2a3240]">
+              <div key={day.day} className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 overflow-hidden bg-white hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240] dark:border-[#2a3240]">
                 <div className="bg-primary text-white py-2 px-4 font-medium">
                   <div className="text-lg">{day.day}</div>
                   <div className="text-xs opacity-80">{day.date}</div>
@@ -222,13 +222,13 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "dietary" && (
-        <div className="bg-white dark:bg-[#353e4a] rounded-lg shadow-md p-6 border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+        <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
           <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
             <Info className="h-7 w-7 text-primary dark:text-blue-400" />
             Special Dietary Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
               <h3 className="text-lg font-semibold mb-3 dark:text-white">Dietary Accommodations</h3>
               <p className="text-neutral-600 dark:text-white mb-4">
                 Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
@@ -253,7 +253,7 @@ export default function DiningHall() {
               </ul>
             </div>
             
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn dark:bg-[#2a3240]">
               <h3 className="text-lg font-semibold mb-3 dark:text-white">Food Allergen Information</h3>
               <p className="text-neutral-600 dark:text-white mb-4">
                 All menu items are clearly labeled with the following allergen information:
@@ -287,7 +287,7 @@ export default function DiningHall() {
             </div>
           </div>
           
-          <div className="mt-6 p-4 bg-neutral-50 dark:bg-[#2a3240] rounded-lg border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+          <div className="mt-6 p-4 bg-neutral-50 dark:bg-[#2a3240] rounded-xl border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
             <h4 className="font-medium mb-2 dark:text-white">Special Accommodations</h4>
             <p className="text-neutral-600 dark:text-white">
               For specific dietary accommodations or concerns, please contact Janet M.Smith
@@ -298,14 +298,14 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "locations" && (
-        <div className="bg-white dark:bg-[#353e4a] rounded-lg shadow-md p-6 border border-neutral-200 dark:border-[#2a3240] animate-fadeIn">
+        <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
           <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
             <MapPin className="h-7 w-7 text-primary dark:text-blue-400" />
             Campus Dining Locations
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col h-full animate-fadeIn">
-              <div className="rounded-lg overflow-hidden border border-neutral-200 dark:border-[#2a3240] bg-neutral-50 dark:bg-[#2a3240] h-48 mb-4 relative group">
+              <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-neutral-50 dark:bg-[#2a3240] h-48 mb-4 relative group">
                 <div className="w-full h-full flex items-center justify-center bg-primary/5">
                   {imageLoading.hawksNest && (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/80">
@@ -338,7 +338,7 @@ export default function DiningHall() {
             </div>
       
             <div className="flex flex-col h-full animate-fadeIn">
-              <div className="rounded-lg overflow-hidden border border-neutral-200 dark:border-[#2a3240] bg-neutral-50 dark:bg-[#2a3240] h-48 mb-4 relative group">
+              <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-neutral-50 dark:bg-[#2a3240] h-48 mb-4 relative group">
                 <div className="w-full h-full flex items-center justify-center bg-primary/5">
                   {imageLoading.diamondDawgs && (
                     <div className="absolute inset-0 flex items-center justify-center bg-white/80">
@@ -374,7 +374,7 @@ export default function DiningHall() {
             </div>
           </div>
       
-          <div className="mt-6 p-4 bg-neutral-50 dark:bg-[#2a3240] rounded-lg border border-neutral-200 dark:border-[#2a3240] flex flex-col md:flex-row items-start gap-4 animate-fadeIn">
+          <div className="mt-6 p-4 bg-neutral-50 dark:bg-[#2a3240] rounded-xl border-2 border-blue-600 dark:border-gray-700 flex flex-col md:flex-row items-start gap-4 animate-fadeIn">
             <div className="flex-1">
               <h3 className="font-medium mb-2">Rhapsody Restaurant</h3>
               <p className="text-neutral-600 dark:text-white mb-2">
@@ -395,7 +395,7 @@ export default function DiningHall() {
                 </li>
               </ul>
             </div>
-            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-neutral-200 dark:border-[#2a3240] relative group animate-fadeIn">
+            <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 relative group animate-fadeIn">
               {imageLoading.rhapsody && (
                 <div className="absolute inset-0 flex items-center justify-center bg-white/80">
                   <Loader2 className="h-8 w-8 animate-spin text-primary dark:text-blue-400" />

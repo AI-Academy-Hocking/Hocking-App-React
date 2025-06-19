@@ -499,7 +499,7 @@ export default function WhatToBring() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200"
+        className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
       >
         <h2 className="text-xl font-semibold mb-4">Additional Notes from Hocking College Housing</h2>
         <ul className="space-y-2 text-sm text-blue-900">

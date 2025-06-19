@@ -22,7 +22,7 @@ export default function Login() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen">
-      <Card className="w-full max-w-md p-8 bg-white/30 rounded-lg shadow-lg border border-white/30 z-10">
+      <Card className="w-full max-w-md p-8 bg-white/30 rounded-xl shadow-lg border border-white/30 z-10">
         <CardContent className="p-0">
           <div className="text-center space-y-6">
             <div>
@@ -41,7 +41,7 @@ export default function Login() {
               <Button 
                 type="button" 
                 onClick={handleGetStarted}
-                className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-lg font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
+                className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
               >
                 Get Started
               </Button>

@@ -138,7 +138,7 @@ export default function FloorPlans() {
               {buildings.map((building) => (
                 <button
                   key={building.code}
-                  className={`flex items-center gap-2 p-3 rounded-lg border border-neutral-light transition w-full text-left ${selectedBuilding.code === building.code ? 'bg-primary/10 border-primary' : 'hover:bg-neutral-lightest'}`}
+                  className={`flex items-center gap-2 p-3 rounded-xl border border-neutral-light transition w-full text-left ${selectedBuilding.code === building.code ? 'bg-primary/10 border-primary' : 'hover:bg-neutral-lightest'}`}
                   onClick={() => setSelectedBuilding(building)}
                 >
                   <Building2 className="h-5 w-5 text-primary" />

@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 const cors = require('cors');
-const { registerRoutes } = require('./routes');
+const { registerRoutes } = require('../routes');
 
 const app = express();
 const port = process.env.PORT || 3001;

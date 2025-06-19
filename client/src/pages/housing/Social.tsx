@@ -179,7 +179,7 @@ export default function Social() {
                   <div className="space-y-4">
                     <p className="text-sm">{post.content}</p>
                     {post.media && (
-                      <div className="rounded-lg overflow-hidden">
+                      <div className="rounded-xl overflow-hidden">
                         <img 
                           src={post.media.url} 
                           alt="Post media" 
