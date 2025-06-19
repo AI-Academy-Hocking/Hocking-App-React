@@ -64,11 +64,11 @@ export default function CampusSafety() {
                 <span className="text-xl font-bold text-blue-600">(740) 753-7050</span>
               </CardContent>
             </Card>
-            <Card className="bg-green-200 shadow-none border-none">
-              <CardContent className="flex flex-col items-center py-4">
-                <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
-                <span className="text-xs text-green-700">Health Services</span>
-                <span className="text-xl font-bold text-green-600">(740) 753-7070</span>
+            <Card className="bg-white/20 shadow-none border-none">
+              <CardContent className="p-4 text-center">
+                <HeartPulse className="text-white h-7 w-7 mb-1" />
+                <span className="text-xs text-white">Health Services</span>
+                <span className="text-xl font-bold text-white">(740) 753-7070</span>
               </CardContent>
             </Card>
           </div>

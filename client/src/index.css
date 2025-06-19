@@ -9,7 +9,7 @@
   --color-secondary: #ffd600;    /* Yellow accent */
   --color-background: #ffffff;   /* Light mode background */
   --color-text: #003366;         /* Dark blue text */
-  --color-accent: #00b86b;       /* Green accent */
+  --color-accent: #0057b8;       /* Blue accent instead of green */
   --color-border: #e0e0e0;       /* Optional: light border */
 }
 

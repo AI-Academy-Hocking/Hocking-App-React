@@ -12,7 +12,7 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
-import LibraryPage from "./pages/Library";
+import LibraryResourcesPage from "./pages/LibraryResources";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import ProgramDetails from "./pages/ProgramDetails";
@@ -29,6 +29,9 @@ import Handbook from "./pages/housing/Handbook";
 import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
+import Contract from "./pages/housing/Contract";
+import HowToApply from "./pages/housing/HowToApply";
+import FloorPlans from "./pages/housing/FloorPlans";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -93,7 +96,7 @@ function Router() {
         <Route path="/dining" component={DiningHall} />
         <Route path="/safety" component={CampusSafety} />
         <Route path="/recreation" component={RecreationPage} />
-        <Route path="/library" component={LibraryPage} />
+        <Route path="/library" component={LibraryResourcesPage} />
         <Route path="/online-learning" component={OnlineLearningPage} />
         <Route path="/student-organizations" component={StudentOrganizationsPage} />
         <Route path="/housing" component={Housing} />
@@ -109,6 +112,9 @@ function Router() {
         <Route path="/housing/pricing" component={Pricing} />
         <Route path="/housing/activities" component={Activities} />
         <Route path="/housing/social" component={Social} />
+        <Route path="/housing/contract" component={Contract} />
+        <Route path="/housing/how-to-apply" component={HowToApply} />
+        <Route path="/housing/floor-plans" component={FloorPlans} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

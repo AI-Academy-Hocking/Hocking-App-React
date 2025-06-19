@@ -272,7 +272,7 @@ export default function DiningHall() {
                   <span>Nuts</span>
                 </div>
                 <div className="flex items-center">
-                  <span className="inline-block w-6 h-6 rounded-full bg-green-500 text-white text-xs flex items-center justify-center mr-2">S</span>
+                  <span className="inline-block w-6 h-6 rounded-full bg-white text-gray-800 text-xs flex items-center justify-center mr-2">S</span>
                   <span>Soy</span>
                 </div>
                 <div className="flex items-center">

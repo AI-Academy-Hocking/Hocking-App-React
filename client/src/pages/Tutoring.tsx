@@ -384,13 +384,13 @@ function Tutoring() {
                             <p>Appointment: {tutor.appointmentType}</p>
                             <div className="flex gap-2">
                               {tutor.isVirtual && (
-                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-100 text-blue-800 text-sm">
+                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/20 text-white text-sm">
                                   <Video className="h-4 w-4" />
                                   Virtual
                                 </span>
                               )}
                               {tutor.isInPerson && (
-                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm">
+                                <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/20 text-white text-sm">
                                   <Users className="h-4 w-4" />
                                   In-Person
                                 </span>

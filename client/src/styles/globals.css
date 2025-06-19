@@ -76,11 +76,19 @@
   --color-surface: #f4faff;      /* Card/box background */
   --calendar-surface: #f4faff;
   --calendar-button-text: #232f3e;
-  --color-sidebar: #232f3e;      /* Sidebar background */
-  --color-sidebar-accent: #00c389; /* Sidebar active/hover green */
+  --color-sidebar: rgba(0, 0, 0, 0.5);      /* Sidebar background - transparent dark */
+  --color-sidebar-accent: rgba(255, 255, 255, 0.2); /* Sidebar active/hover - white transparent */
   --color-text: #232f3e;         /* Main text color */
-  --color-accent: #00c389;       /* Green accent */
+  --color-accent: #20469b;       /* Blue accent instead of green */
   --color-border: #e0e0e0;       /* Light border */
+  
+  /* shadcn/ui sidebar variables */
+  --sidebar: 0 0% 0%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 100%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 0 0% 100%;
+  --sidebar-ring: 0 0% 100%;
 }
 
 /* Dark mode - keeping exactly as is */
@@ -91,7 +99,17 @@
   --calendar-button-text: #fff;
   --color-text: #ffffff;
   --color-border: #181c24;
+  --color-sidebar: rgba(0, 0, 0, 0.7);      /* Darker transparent for dark mode */
+  --color-sidebar-accent: rgba(255, 255, 255, 0.3); /* Brighter transparent for dark mode */
   border-color: var(--color-border);
+  
+  /* shadcn/ui sidebar variables for dark mode */
+  --sidebar: 0 0% 0%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 100%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 0 0% 100%;
+  --sidebar-ring: 0 0% 100%;
 }
 
 /* Original base styles - keeping exactly as is */
@@ -278,6 +296,8 @@ a, .accent {
 .sidebar {
   background: var(--color-sidebar);
   color: #fff;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 .sidebar .active, .sidebar .hover {
   background: var(--color-sidebar-accent);

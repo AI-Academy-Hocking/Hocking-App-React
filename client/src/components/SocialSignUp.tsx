@@ -40,7 +40,7 @@ export default function SocialSignUp() {
     <form onSubmit={handleSignUp} className="space-y-4 max-w-md mx-auto p-4 border rounded">
       <h2 className="text-xl font-bold">Sign Up</h2>
       {error && <div className="text-red-500">{error}</div>}
-      {success && <div className="text-green-600">{success}</div>}
+      {success && <div className="text-white">{success}</div>}
       <input value={name} onChange={e => setName(e.target.value)} placeholder="Name" required className="w-full p-2 border rounded" />
       <input value={studentId} onChange={e => setStudentId(e.target.value)} placeholder="Student ID" required className="w-full p-2 border rounded" />
       <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required className="w-full p-2 border rounded" />

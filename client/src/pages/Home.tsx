@@ -83,25 +83,16 @@ export default function Home() {
       <section className="mb-8">
         <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Quick Access</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {quickLinks.map((link, index) => {
-            const bgColors = [
-              '#f8bbd0', // Calendar - soft pink
-              '#80cbc4', // Student Tools - teal/green
-              '#ffe082', // Maps & Directions - vivid yellow
-              '#ffe0b2'  // Resources - lighter orange
-            ];
-            return (
-              <Link key={index} href={link.href}>
-                <a
-                  className="hover:bg-[#f4faff] rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center"
-                  style={{ backgroundColor: bgColors[index] }}
-                >
-                  <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
-                  <span className="font-bold text-base" style={{ color: '#009e6d' }}>{link.label}</span>
-                </a>
-              </Link>
-            );
-          })}
+          {quickLinks.map((link, index) => (
+            <Link key={index} href={link.href}>
+              <a
+                className="bg-white dark:bg-gray-800 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center hover:shadow-md"
+              >
+                <link.icon className="text-blue-600 dark:text-white text-3xl mb-2 h-8 w-8" />
+                <span className="font-bold text-base text-gray-900 dark:text-white">{link.label}</span>
+              </a>
+            </Link>
+          ))}
         </div>
       </section>
       

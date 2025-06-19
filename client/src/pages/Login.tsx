@@ -3,13 +3,16 @@ import { Card, CardContent } from "../components/ui/card";
 import HockingLogo from "../components/assets/HockingLogo.png";
 import { Button } from "../components/ui/button";
 import { useLocation } from "wouter";
+import { useAuth } from "../lib/auth";
 
 export default function Login() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { guestLogin } = useAuth();
 
   const handleGetStarted = () => {
     localStorage.setItem('hasClickedGetStarted', 'true');
+    guestLogin(); // Authenticate as guest user
     toast({
       title: "Welcome",
       description: "Let's get started with your Hocking College experience",

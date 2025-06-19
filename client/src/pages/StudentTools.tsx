@@ -4,11 +4,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House 
+  Users, Dumbbell, Utensils, Calendar, Home 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
+
+// Define the StudentTool interface locally since we can't import it
+interface StudentTool {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  category: string;
+}
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -53,8 +61,7 @@ export default function StudentTools() {
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
-
+    { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
   ];
 
   return (
@@ -80,10 +87,10 @@ export default function StudentTools() {
                       href={tool.url} 
                       className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
+                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </a>
                   );
@@ -101,10 +108,10 @@ export default function StudentTools() {
                       href={tool.url} 
                       className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
+                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </a>
                   );
@@ -122,10 +129,10 @@ export default function StudentTools() {
                       href={tool.url} 
                       className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
+                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </a>
                   );
@@ -137,7 +144,7 @@ export default function StudentTools() {
       </section>
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Quick Links</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Quick Links</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {quickLinks.map((link) => (
             <Link 
@@ -145,8 +152,8 @@ export default function StudentTools() {
               href={link.path}
               className="bg-white dark:bg-gray-800 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
-              <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
-              <span className="font-semibold">{link.label}</span>
+              <link.icon className="text-blue-600 dark:text-white text-3xl mb-2 h-8 w-8" />
+              <span className="font-semibold text-gray-900 dark:text-white">{link.label}</span>
             </Link>
           ))}
         </div>
