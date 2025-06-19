@@ -1,14 +1,39 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
-  History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House 
+  History, School, MonitorSmartphone, 
+  Users, Dumbbell, Utensils, Calendar, Home,
+  MessageSquare, Pencil, Trophy,
+  LucideIcon
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
+
+// Define the StudentTool type locally since we can't import it
+interface StudentTool {
+  id: string;
+  name: string;
+  description: string;
+  url: string;
+  category: string;
+}
+
+interface QuickLink {
+  id: string;
+  label: string;
+  icon: LucideIcon | React.ComponentType;
+  path: string;
+}
+
+// Custom icon for Academic Success Center
+const ChatWithPencil = () => (
+  <div className="relative">
+    <MessageSquare className="h-8 w-8 text-blue-600" />
+    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
+  </div>
+);
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -30,32 +55,35 @@ export default function StudentTools() {
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
-  const toolIcons: Record<string, any> = {
+  const toolIcons: Record<string, LucideIcon> = {
     'course-schedule': FileText,
     'grades': GraduationCap,
     'course-catalog': BookOpen,
     'advising': UserCheck,
     'academic-history': History,
     'graduation': School,
-    'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
     'recreation': Dumbbell,
     'dining': Utensils,
     'events': Calendar,
+    'athletics': Trophy,
   };
 
   // Quick links for bottom section
-  const quickLinks = [
-    { id: 'library', label: 'Library', icon: LibraryBig, path: '/library' },
+  const quickLinks: QuickLink[] = [
+    { id: 'academic-success', label: 'Academic Success Center', icon: ChatWithPencil, path: '/academic-success' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
+    { id: 'athletics', label: 'Athletics', icon: Trophy, path: '/athletics' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
-
+    { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
   ];
+
+  // Add Testing Center to academic tools if it doesn't exist
+
 
   return (
     <div className="space-y-6">
@@ -75,9 +103,9 @@ export default function StudentTools() {
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
-                    <a 
+                    <Link 
                       key={tool.id} 
-                      href={tool.url} 
+                      href={tool.url}
                       className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
@@ -85,7 +113,7 @@ export default function StudentTools() {
                         <h3 className="font-semibold">{tool.name}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>

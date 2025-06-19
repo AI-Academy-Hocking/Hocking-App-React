@@ -12,7 +12,7 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
 import RecreationPage from "./pages/Recreation";
-import LibraryPage from "./pages/Library";
+import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import ProgramDetails from "./pages/ProgramDetails";
@@ -30,10 +30,19 @@ import Handbook from "./pages/housing/Handbook";
 import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
+import Contract from "./pages/housing/Contract";
+import HowToApply from "./pages/housing/HowToApply";
+import FloorPlans from "./pages/housing/FloorPlans";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { Button } from "@/components/ui/button";
+import Tutoring from './pages/Tutoring';
+import LibraryResources from './pages/LibraryResources';
+import LearningLabs from './pages/LearningLabs';
+import AccessibilityResources from './pages/AccessibilityResources';
+import TrioServices from './pages/TrioServices';
+import TestingCenter from './pages/TestingCenter';
+import Athletics from './pages/Athletics';
 
 const queryClient = new QueryClient();
 
@@ -81,9 +90,16 @@ function Router() {
             <Route path="/dining" component={DiningHall} />
             <Route path="/safety" component={CampusSafety} />
             <Route path="/recreation" component={RecreationPage} />
-            <Route path="/library" component={LibraryPage} />
+            <Route path="/academic-success" component={AcademicSuccessCenter} />
+            <Route path="/tutoring" component={Tutoring} />
+            <Route path="/library-resources" component={LibraryResources} />
+            <Route path="/learning-labs" component={LearningLabs} />
+            <Route path="/testing-center" component={TestingCenter} />
+            <Route path="/accessibility-resources" component={AccessibilityResources} />
+            <Route path="/trio-services" component={TrioServices} />
             <Route path="/online-learning" component={OnlineLearningPage} />
             <Route path="/student-organizations" component={StudentOrganizationsPage} />
+            <Route path="/athletics" component={Athletics} />
             <Route path="/housing" component={Housing} />
             <Route path="/housing/dormitories" component={Dormitories} />
             <Route path="/housing/amenities" component={Amenities} />
@@ -97,6 +113,9 @@ function Router() {
             <Route path="/housing/pricing" component={Pricing} />
             <Route path="/housing/activities" component={Activities} />
             <Route path="/housing/social" component={Social} />
+            <Route path="/housing/contract" component={Contract} />
+            <Route path="/housing/how-to-apply" component={HowToApply} />
+            <Route path="/housing/floor-plans" component={FloorPlans} />
             <Route component={NotFound} />
           </Switch>
         </CSSTransition>
@@ -105,8 +124,7 @@ function Router() {
   );
 }
 
-export default App;
-function App() {
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

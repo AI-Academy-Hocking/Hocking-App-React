@@ -1,4 +1,4 @@
-import { Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image } from 'lucide-react';
+import { Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
@@ -94,6 +94,27 @@ const housingOptions: HousingOption[] = [
     icon: <Mail className="h-8 w-8" />,
     path: "/housing/contact",
     description: "Get in touch with housing services"
+  },
+  {
+    title: "Residence Hall Contract",
+    icon: <div className="relative">
+            <FileText className="h-8 w-8" />
+            <FileCheck className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+          </div>,
+    path: "/housing/contract",
+    description: "View and sign the residence hall contract"
+  },
+  {
+    title: "How to Apply",
+    description: "Step-by-step guide to complete your housing application",
+    icon: <FileText className="h-6 w-6" />,
+    path: "/housing/how-to-apply"
+  },
+  {
+    title: "Floor Plans",
+    description: "View detailed floor plans for each residence hall",
+    icon: <Building2 className="h-6 w-6" />,
+    path: "/housing/floor-plans"
   }
 ];
 
