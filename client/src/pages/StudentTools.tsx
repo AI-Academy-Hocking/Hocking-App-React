@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, Home 
+  Users, Dumbbell, Utensils, Calendar, Home, Trophy
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -55,10 +55,11 @@ export default function StudentTools() {
 
   // Quick links for bottom section
   const quickLinks = [
-    { id: 'library', label: 'Library', icon: LibraryBig, path: '/library' },
+    { id: 'library', label: 'Library', icon: LibraryBig, path: '/academic-success-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
+    { id: 'athletics', label: 'Athletics', icon: Trophy, path: '/athletics' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
     { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
