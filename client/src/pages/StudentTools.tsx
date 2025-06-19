@@ -36,7 +36,7 @@ export default function StudentTools() {
   // Filter tools by category
   const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
   const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
-  const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
+  const resourceTools = tools?.filter(tool => tool.category === 'resources' && tool.id !== 'campus-resources') || [];
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {

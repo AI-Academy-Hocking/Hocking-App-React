@@ -346,7 +346,7 @@ class MemStorage {
         });
         await this.createStudentTool({
             id: "health-services",
-            name: "Health Services",
+            name: "Campus Health and Wellness",
             description: "Schedule health appointments",
             category: "resources",
             url: "#",

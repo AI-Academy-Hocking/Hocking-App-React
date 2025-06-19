@@ -489,7 +489,7 @@ export class MemStorage implements IStorage {
     
     await this.createStudentTool({
       id: "health-services",
-      name: "Health Services",
+      name: "Campus Health and Wellness",
       description: "Schedule health appointments",
       category: "resources",
       url: "#",
