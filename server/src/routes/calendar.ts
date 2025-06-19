@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express from 'express';
 import * as ical from 'ical';
 import fetch from 'node-fetch';
 
@@ -12,7 +12,7 @@ type CalendarEvent = {
   description?: string;
 };
 
-const router = Router();
+const router = express.Router();
 
 // Academic calendar URL
 const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
@@ -55,6 +55,7 @@ async function fetchCalendarEvents(url: string) {
   return events;
 }
 
+// GET /api/calendar/events
 router.get('/events', async (req, res) => {
   try {
     const calendarType = req.query.type as string;

@@ -1,0 +1,224 @@
+.rbc-month-view {
+  border-radius: 8px;
+  overflow: hidden;
+  border-top: 2px solid #1e40af;
+  border-left: 2px solid #1e40af;
+  border-bottom: 2px solid #1e40af;
+  border-right: 6px solid #1e40af;
+  box-shadow: 0 0 0 1px #1e40af, 0 0 5px #1e40af, 0 0 10px #1e40af;
+  background-color: #dbeafe;
+  margin-right: -2px;
+}
+
+.rbc-header {
+  padding: 0;
+  background-color: #dbeafe !important;
+  font-weight: 600;
+  text-align: center;
+  border: 2px solid #1e40af;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  color: #1e40af;
+  margin-right: -1px;
+  width: calc(100% / 7);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.rbc-header.rbc-today {
+  background-color: #1e40af !important;
+  color: white;
+}
+
+.rbc-header + .rbc-header {
+  border-left: none;
+}
+
+.rbc-header:last-child {
+  width: calc(100% / 7 + 3px);
+}
+
+.rbc-header:first-child,
+.rbc-row .rbc-day-bg:first-child,
+.rbc-month-row .rbc-day-bg:first-child {
+  width: calc(100% / 7);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-left: none;
+}
+
+.rbc-header:nth-child(2),
+.rbc-row .rbc-day-bg:nth-child(2),
+.rbc-month-row .rbc-day-bg:nth-child(2) {
+  width: calc(100% / 7);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.rbc-header:nth-child(3),
+.rbc-row .rbc-day-bg:nth-child(3),
+.rbc-month-row .rbc-day-bg:nth-child(3) {
+  width: calc(100% / 7 - 8px);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.rbc-header:nth-child(4) {
+  background: #ffe4b2 !important;
+}
+
+.rbc-row .rbc-day-bg:nth-child(4),
+.rbc-month-row .rbc-day-bg:nth-child(4) {
+  width: calc(100% / 7 - 12px);
+}
+
+.rbc-date-cell {
+  padding: 0;
+  text-align: center;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  width: calc(100% / 7);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.rbc-day-bg {
+  background-color: #dbeafe;
+  border: 2px solid #1e40af;
+  flex: 1;
+  min-width: 0;
+  width: calc(100% / 7);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.rbc-row,
+.rbc-row-content,
+.rbc-month-row {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  gap: 0 !important;
+}
+
+.rbc-row-content {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.rbc-month-row {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.rbc-month-row + .rbc-month-row {
+  border-top: 2px solid #1e40af;
+}
+
+.rbc-date-cell > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.rbc-day-bg.selected-day {
+  background-color: var(--primary-light);
+  border-radius: 50%;
+}
+
+.rbc-day-bg.today-date {
+  position: relative;
+}
+
+.rbc-day-bg.has-events:before {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: var(--primary);
+  border-radius: 50%;
+}
+
+.rbc-event {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.event-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  margin: 2px auto;
+}
+
+.rbc-event-content {
+  display: flex;
+  justify-content: center;
+}
+
+.rbc-day-bg.rbc-today {
+  background-color: #eab308;
+}
+
+.rbc-date-cell.rbc-today > a {
+  color: #1e40af;
+  background-color: #eab308;
+  font-weight: bold;
+}
+
+.rbc-row .rbc-day-bg:last-child,
+.rbc-month-row .rbc-day-bg:last-child {
+  border-right: none;
+  outline: 1px solid #1e40af;
+  outline-offset: -1px;
+  width: calc(100% / 7 + 3px);
+  margin-right: -2px;
+}
+
+.rbc-header,
+.rbc-day-bg,
+.rbc-date-cell {
+  box-sizing: border-box;
+}
+
+.rbc-row .rbc-day-bg:nth-child(3),
+.rbc-month-row .rbc-day-bg:nth-child(3),
+.rbc-row .rbc-day-bg:nth-child(4),
+.rbc-month-row .rbc-day-bg:nth-child(4) {
+  width: calc(100% / 7 - 8px);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+} 

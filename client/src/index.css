@@ -4,7 +4,7 @@
 
 /* Removed @tailwind directives because Tailwind CSS is not configured or not being used */
 
- :root {
+:root {
   --color-primary: #0057b8;      /* Hocking's main blue */
   --color-secondary: #ffd600;    /* Yellow accent */
   --color-background: #ffffff;   /* Light mode background */
@@ -18,7 +18,6 @@
   --color-text: #ffffff;         /* White text */
   border-color: var(--color-border);
 }
-
 
 body {
   font-family: var(--font-sans, sans-serif);

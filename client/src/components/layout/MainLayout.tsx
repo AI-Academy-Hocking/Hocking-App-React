@@ -36,7 +36,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <Header />
         
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto p-0">
           {children}
         </main>
         
