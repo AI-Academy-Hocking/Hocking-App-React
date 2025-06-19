@@ -60,14 +60,12 @@ export default function StudentTools() {
     'recreation': Dumbbell,
     'dining': Utensils,
     'events': Calendar,
-    'testing-center': FileText,
     'athletics': Trophy,
   };
 
   // Quick links for bottom section
   const quickLinks: QuickLink[] = [
     { id: 'academic-success', label: 'Academic Success Center', icon: ChatWithPencil, path: '/academic-success' },
-    { id: 'testing-center', label: 'Testing Center', icon: FileText, path: '/testing-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'athletics', label: 'Athletics', icon: Trophy, path: '/athletics' },
@@ -78,16 +76,7 @@ export default function StudentTools() {
   ];
 
   // Add Testing Center to academic tools if it doesn't exist
-  const academicToolsWithTesting = [
-    {
-      id: 'testing-center',
-      name: 'Testing Center',
-      description: 'Schedule and take tests',
-      url: '/testing-center',
-      category: 'academic'
-    },
-    ...(academicTools || [])
-  ];
+
 
   return (
     <div className="space-y-6">
@@ -104,7 +93,7 @@ export default function StudentTools() {
             
             <TabsContent value="academic" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {academicToolsWithTesting.map((tool) => {
+                {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
                     <Link 
