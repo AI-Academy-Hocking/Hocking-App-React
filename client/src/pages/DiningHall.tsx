@@ -1,4 +1,3 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import "../styles/animations.css";

@@ -186,7 +186,7 @@ export default function Roomies() {
                   </div>
                   <Button 
                     className="w-full"
-                    variant={profile.status === "available" ? "default" : "secondary"}
+                    variant={profile.status === "available" ? "default" : "ghost"}
                     disabled={profile.status !== "available"}
                   >
                     {profile.status === "available" ? "Connect" : 

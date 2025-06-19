@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, MessageSquare, Pencil, Clock, MapPin, Mail, Phone, ChevronDown, ChevronUp, Calendar, Video, Users, Search, Filter } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Pencil, Clock, MapPin, Mail, ChevronDown, ChevronUp, Calendar, Video, Users, Search } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";

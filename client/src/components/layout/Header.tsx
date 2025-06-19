@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useState } from "react";
 import { Menu, Moon, Sun, LogOut, Home, Calendar, Wrench, Map, UtensilsCrossed, Shield } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
@@ -17,7 +16,7 @@ const navItems = [
 ];
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   const [location] = useLocation();

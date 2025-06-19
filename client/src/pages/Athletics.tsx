@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowLeft, Trophy, Users, Calendar, MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";

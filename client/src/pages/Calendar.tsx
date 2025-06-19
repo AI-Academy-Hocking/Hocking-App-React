@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../styles/calendar.css";
-import { format, parse, startOfWeek, getDay, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
+import { format, parse, startOfWeek, getDay, isSameDay, addMonths, subMonths, isToday } from "date-fns";
 import { enUS } from "date-fns/locale";
 
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
-import { Skeleton } from "../components/ui/skeleton";
-import { Event } from "../../../shared/schema";
-import { cn } from "../lib/utils";
-import { Badge } from "../components/ui/badge";
 import { Link } from "wouter";
+import { cn } from "../lib/utils";
 
 const locales = {
   "en-US": enUS,
@@ -27,96 +24,40 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const CALENDAR_URL = "/api/calendar/events";
-
+// Define a local Event type for type safety
 interface CalendarEvent {
   id: string;
   title: string;
-  date: string | undefined;
-  time: string;
-  end: string | undefined;
+  startTime: string;
+  endTime: string;
   location: string;
   description: string;
 }
-
-// Custom gutter header for day view to show abbreviated day of the week
-const CustomTimeGutterHeader = ({ date }: any) => (
-  <div className="text-base font-bold text-white text-center py-2">
-    {format(date, 'EEE')}
-  </div>
-);
 
 export default function CalendarPage() {
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
   
-  const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events', activeCalendar],
-    // In a real app, you would fetch different events based on activeCalendar
+  const { data: events = [], isLoading } = useQuery<CalendarEvent[]>({
+    queryKey: ['/api/events'],
+    // In a real implementation, you would pass the calendar type
     // by adding a parameter to the API endpoint
   });
 
-  // Get current month's start and end dates
-  const monthStart = startOfMonth(date);
-  const monthEnd = endOfMonth(date);
-
   // Format events for the BigCalendar
-  const formattedEvents = events.map(event => {
-    const startDate = new Date(event.startTime);
-    const endDate = new Date(event.endTime);
-    
+  const formattedEvents = events.map((event: CalendarEvent) => {
     return {
-      title: event.title || "Untitled Event",
-      start: startDate,
-      end: endDate,
-      resource: { 
-        location: event.location || "No Location", 
-        description: event.description || "No Description",
-        id: event.id,
-        originalEvent: event
-      },
+      id: event.id,
+      title: event.title,
+      start: new Date(event.startTime),
+      end: new Date(event.endTime),
+      location: event.location,
+      description: event.description,
     };
   });
-
-  // Filter events based on calendar type and date range
-  const getFilteredEvents = (calendarType: "academic" | "activities") => {
-    return events
-      .filter(event => {
-        // In a real implementation, each event would have a 'calendarType' property
-        // For now, we're using an empty array so no events will show
-        return false;
-        
-        // When you add real events, uncomment this code:
-        /*
-        const eventDate = new Date(event.startTime);
-        if (selectedDate) {
-          return isSameDay(eventDate, selectedDate);
-        }
-        return eventDate >= monthStart && eventDate <= monthEnd;
-        */
-      })
-      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-  };
-
-  // Get events for both calendar types
-  const academicEvents = getFilteredEvents("academic");
-  const activityEvents = getFilteredEvents("activities");
-  
-  // Use the active calendar to determine which events to show in the main view
-  const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
-
-  // Format date for display
-  const formatEventDate = (date: string | Date) => {
-    const eventDate = new Date(date);
-    return {
-      weekday: eventDate.toLocaleString('en-US', { weekday: 'short' }),
-      month: eventDate.toLocaleString('en-US', { month: 'short' }),
-      day: eventDate.getDate()
-    };
-  };
 
   // Navigate between months
   const handlePreviousMonth = () => {
@@ -155,31 +96,25 @@ export default function CalendarPage() {
     };
   };
 
-  // Helper to get events for each day in the current week
-  const getEventsForWeek = (date: Date) => {
-    const start = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
-    const days = Array.from({ length: 7 }, (_, i) => {
-      const day = new Date(start);
-      day.setDate(start.getDate() + i);
-      return day;
-    });
-    return days.map(day => ({
-      day,
-      events: formattedEvents.filter(event =>
-        event.start.toDateString() === day.toDateString()
-      ),
-    }));
-  };
-
   // Group events by date
-  const groupedEvents = filteredEvents.reduce((acc, event) => {
+  const groupedEvents = events.reduce((acc, event: CalendarEvent) => {
     const date = new Date(event.startTime).toISOString().split('T')[0];
     if (!acc[date]) {
       acc[date] = [];
     }
     acc[date].push(event);
     return acc;
-  }, {} as Record<string, Event[]>);
+  }, {} as Record<string, CalendarEvent[]>);
+
+  // Format date for display
+  const formatEventDate = (date: string | Date) => {
+    const eventDate = new Date(date);
+    return {
+      weekday: eventDate.toLocaleString('en-US', { weekday: 'short' }),
+      month: eventDate.toLocaleString('en-US', { month: 'short' }),
+      day: eventDate.getDate()
+    };
+  };
 
   // Helper to format time range
   const formatTimeRange = (start: Date, end: Date) => {

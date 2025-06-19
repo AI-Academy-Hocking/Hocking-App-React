@@ -1,6 +1,6 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "../../lib/auth";
-import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, Shield } from "lucide-react";
 import HockingLogo from "../../assets/HawkLogo.png";
 import { LucideIcon } from "lucide-react";
 

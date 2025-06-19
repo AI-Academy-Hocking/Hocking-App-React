@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, Home, Trophy
+  Users, Dumbbell, Utensils, Calendar, Home, Trophy,
+  Globe, PawPrint
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -55,7 +56,7 @@ export default function StudentTools() {
 
   // Quick links for bottom section
   const quickLinks = [
-    { id: 'library', label: 'Library', icon: LibraryBig, path: '/academic-success-center' },
+    { id: 'library', label: 'Academic Success Center', icon: LibraryBig, path: '/academic-success-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
@@ -122,6 +123,28 @@ export default function StudentTools() {
             
             <TabsContent value="resources" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* International Students */}
+                <Link href="/international-students">
+                  <a className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                    <Globe className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">International Students</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">Resources and support for international students</p>
+                    </div>
+                  </a>
+                </Link>
+                
+                {/* Canine Boarding & Grooming Facility */}
+                <Link href="/canine-facility">
+                  <a className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                    <PawPrint className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                    <div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">Canine Boarding & Grooming Facility</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">Professional dog boarding and grooming services</p>
+                    </div>
+                  </a>
+                </Link>
+                
                 {resourceTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (

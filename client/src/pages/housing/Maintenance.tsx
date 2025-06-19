@@ -203,8 +203,8 @@ export default function Maintenance() {
                       </div>
                     )}
                     <div className="flex justify-end gap-2">
-                      <Button variant="outline" size="sm">Update</Button>
-                      <Button variant="destructive" size="sm">Cancel</Button>
+                      <Button variant="ghost" size="sm">Update</Button>
+                      <Button variant="ghost" size="sm">Cancel</Button>
                     </div>
                   </div>
                 </CardContent>

@@ -265,7 +265,7 @@ export default function Maps() {
     if (filteredBuildings) {
       filteredBuildings.forEach((building: Building) => {
         // Use colored icon based on building type
-        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
+        L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
       });

@@ -99,11 +99,6 @@ const container = {
   }
 };
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
-
 export default function FloorPlans() {
   const [selectedBuilding, setSelectedBuilding] = useState<Building>(buildings[0]);
   return (

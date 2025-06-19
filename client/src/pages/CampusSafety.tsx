@@ -1,44 +1,8 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PhoneCall, Shield, HeartPulse, AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-interface SafetyResource {
-  id: number;
-  title: string;
-  description: string;
-  category: string;
-  phoneNumber: string | null;
-  url: string | null;
-  icon: string | null;
-  order: number | null;
-}
 
 export default function CampusSafety() {
-  const [resourceCategory, setResourceCategory] = useState<string>("all");
-
-  // Fetch safety resources (filtered by category if selected)
-  const { data: resources = [], isLoading: resourcesLoading } = useQuery({
-    queryKey: ["/api/safety/resources", resourceCategory],
-    queryFn: async () => {
-      const url = resourceCategory !== "all" 
-        ? `/api/safety/resources?category=${resourceCategory}`
-        : "/api/safety/resources";
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch safety resources");
-      }
-      return response.json() as Promise<SafetyResource[]>;
-    }
-  });
-
-  // Get unique resource categories
-  const categories = resources && resources.length > 0
-    ? Array.from(new Set(resources.map(resource => resource.category)))
-    : [];
-
   return (
     <div className="container py-6 max-w-2xl bg-white dark:bg-[#151c26] min-h-screen rounded-xl">
       <h1 className="text-3xl font-bold mb-2 text-primary dark:text-white">Campus Safety</h1>

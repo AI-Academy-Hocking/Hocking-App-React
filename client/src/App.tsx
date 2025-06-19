@@ -17,7 +17,6 @@ import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
 import Athletics from "./pages/Athletics";
-import ProgramDetails from "./pages/ProgramDetails";
 import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
@@ -39,9 +38,10 @@ import TestingCenter from "./pages/TestingCenter";
 import TrioServices from "./pages/TrioServices";
 import LearningLabs from "./pages/LearningLabs";
 import AccessibilityResources from "./pages/AccessibilityResources";
+import InternationalStudents from "./pages/InternationalStudents";
+import CanineFacility from "./pages/CanineFacility";
 import './index.css';
 import './styles/globals.css';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useEffect, useState } from 'react';
 
 const queryClient = new QueryClient();
@@ -129,6 +129,8 @@ function Router() {
         <Route path="/trio-services" component={TrioServices} />
         <Route path="/learning-labs" component={LearningLabs} />
         <Route path="/accessibility-resources" component={AccessibilityResources} />
+        <Route path="/international-students" component={InternationalStudents} />
+        <Route path="/canine-facility" component={CanineFacility} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

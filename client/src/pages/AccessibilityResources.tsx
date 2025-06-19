@@ -1,5 +1,4 @@
-import React from 'react';
-import { ArrowLeft, Accessibility, Phone, Mail, FileText, Users, Clock, Heart, Utensils, Home, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Accessibility, Phone, Mail, FileText, Clock, Heart, Utensils, Home, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";

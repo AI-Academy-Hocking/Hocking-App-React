@@ -1,4 +1,3 @@
-import React from 'react';
 import { Phone, Mail, Clock, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import studentCenterImage from "@/components/assets/studentCenter.jpg"; // Import the image

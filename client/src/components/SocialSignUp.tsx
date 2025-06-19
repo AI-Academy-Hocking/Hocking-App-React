@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { auth, db } from "../firebase";
+import { auth, db } from "../lib/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 
@@ -11,7 +11,7 @@ export default function SocialSignUp() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -32,7 +32,7 @@ export default function SocialSignUp() {
       setSuccess("Account created! You can now log in.");
       setEmail(""); setStudentId(""); setPassword(""); setName("");
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) setError(err.message);
     }
   };
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { db, auth } from "../firebase";
+import { db, auth } from "../lib/firebase";
 import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from "firebase/firestore";
 
+type Notification = { id: string; text: string; read: boolean; createdAt?: any };
+
 export default function SocialNotifications() {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -14,12 +16,20 @@ export default function SocialNotifications() {
       orderBy("createdAt", "desc")
     );
     const unsub = onSnapshot(q, (snapshot) => {
-      setNotifications(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setNotifications(snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          text: data.text || '',
+          read: data.read ?? false,
+          createdAt: data.createdAt
+        };
+      }));
     });
     return unsub;
   }, []);
 
-  const markAsRead = async (id) => {
+  const markAsRead = async (id: string) => {
     await updateDoc(doc(db, "notifications", id), { read: true });
   };
 
