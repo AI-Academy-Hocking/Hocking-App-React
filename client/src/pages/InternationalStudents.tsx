@@ -1,4 +1,4 @@
-import { ArrowLeft, Globe, Phone, Mail, MapPin, Clock, FileText, Users, GraduationCap, Shield, Heart, CheckCircle, DollarSign, Home, Plane, BookOpen, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Globe, Phone, Mail, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 

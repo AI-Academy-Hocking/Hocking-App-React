@@ -34,7 +34,7 @@ export default function StudentTools() {
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
   const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
@@ -81,6 +81,15 @@ export default function StudentTools() {
             
             <TabsContent value="academic" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Graduation */}
+                <Link href="/graduation" className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                  <GraduationCap className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">Graduation</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Graduation requirements, ceremony details, and diploma information</p>
+                  </div>
+                </Link>
+                
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
@@ -124,25 +133,21 @@ export default function StudentTools() {
             <TabsContent value="resources" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* International Students */}
-                <Link href="/international-students">
-                  <a className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
-                    <Globe className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">International Students</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">Resources and support for international students</p>
-                    </div>
-                  </a>
+                <Link href="/international-students" className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                  <Globe className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">International Students</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Resources and support for international students</p>
+                  </div>
                 </Link>
                 
                 {/* Canine Boarding & Grooming Facility */}
-                <Link href="/canine-facility">
-                  <a className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
-                    <PawPrint className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white">Canine Boarding & Grooming Facility</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-300">Professional dog boarding and grooming services</p>
-                    </div>
-                  </a>
+                <Link href="/canine-facility" className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                  <PawPrint className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">Canine Boarding & Grooming Facility</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Professional dog boarding and grooming services</p>
+                  </div>
                 </Link>
                 
                 {resourceTools.map((tool) => {

@@ -1,4 +1,4 @@
-import { ArrowLeft, PawPrint, Phone, Mail, MapPin, Clock, Scissors, Home, Users, Star, Calendar, Award, Shield, Heart, DollarSign } from 'lucide-react';
+import { ArrowLeft, PawPrint, Phone, Mail, MapPin, Clock, Star, Award, Shield } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 
