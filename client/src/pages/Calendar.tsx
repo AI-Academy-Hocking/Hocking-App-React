@@ -71,9 +71,24 @@ export default function CalendarPage() {
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
 
-  // Show all events for debugging
-  const getFilteredEvents = (_calendarType: "academic" | "activities") => {
-    return events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  // Filter events based on calendar type and date range
+  const getFilteredEvents = (calendarType: "academic" | "activities") => {
+    return events
+      .filter(event => {
+        // In a real implementation, each event would have a 'calendarType' property
+        // For now, we're using an empty array so no events will show
+        return false;
+        
+        // When you add real events, uncomment this code:
+        /*
+        const eventDate = new Date(event.date);
+        if (selectedDate) {
+          return isSameDay(eventDate, selectedDate);
+        }
+        return eventDate >= monthStart && eventDate <= monthEnd;
+        */
+      })
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   };
 
   // Get events for both calendar types
@@ -99,33 +114,6 @@ export default function CalendarPage() {
       },
     };
   });
-
-  // Filter events based on calendar type and date range
-  const getFilteredEvents = (calendarType: "academic" | "activities") => {
-    return events
-      .filter(event => {
-        // In a real implementation, each event would have a 'calendarType' property
-        // For now, we're using an empty array so no events will show
-        return false;
-        
-        // When you add real events, uncomment this code:
-        /*
-        const eventDate = new Date(event.startTime);
-        if (selectedDate) {
-          return isSameDay(eventDate, selectedDate);
-        }
-        return eventDate >= monthStart && eventDate <= monthEnd;
-        */
-      })
-      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-  };
-
-  // Get events for both calendar types
-  const academicEvents = getFilteredEvents("academic");
-  const activityEvents = getFilteredEvents("activities");
-  
-  // Use the active calendar to determine which events to show in the main view
-  const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
 
   // Format date for display
   const formatEventDate = (date: string | Date) => {
@@ -155,7 +143,7 @@ export default function CalendarPage() {
 
   // Custom day renderer for the calendar
   const dayPropGetter = (date: Date) => {
-    const hasEvents = events.some(event => isSameDay(new Date(event.startTime), date));
+    const hasEvents = events.some(event => isSameDay(new Date(event.date), date));
     const isSelectedDay = selectedDate && isSameDay(date, selectedDate);
     const isTodayDate = isToday(date);
     
@@ -192,7 +180,7 @@ export default function CalendarPage() {
 
   // Group events by date
   const groupedEvents = filteredEvents.reduce((acc, event) => {
-    const date = new Date(event.startTime).toISOString().split('T')[0];
+    const date = new Date(event.date).toISOString().split('T')[0];
     if (!acc[date]) {
       acc[date] = [];
     }
@@ -365,7 +353,7 @@ export default function CalendarPage() {
                             >
                               <h4 className="font-medium">{event.title}</h4>
                               <div className="text-sm text-neutral-dark mt-1 flex items-center">
-                                <Clock className="h-3.5 w-3.5 mr-1 inline" /> {formatTimeRange(new Date(event.startTime), new Date(event.endTime))}
+                                <Clock className="h-3.5 w-3.5 mr-1 inline" /> {formatTimeRange(new Date(event.date), new Date(event.end || event.date))}
                                 {event.location && (
                                   <span className="ml-2 flex items-center">
                                     <MapPin className="h-3.5 w-3.5 mr-1 inline" /> {event.location}
@@ -466,7 +454,7 @@ export default function CalendarPage() {
               <ul className="divide-y divide-neutral-light">
                 {activityEvents.length > 0 ? (
                   activityEvents.map((event) => {
-                    const { weekday, month, day } = formatEventDate(event.startTime);
+                    const { weekday, month, day } = formatEventDate(event.date);
                     return (
                       <li key={event.id} className="p-4 hover:bg-neutral-50 transition-colors">
                         <div className="flex items-start">
@@ -481,7 +469,7 @@ export default function CalendarPage() {
                             <div className="flex justify-between">
                               <h3 className="font-semibold">{event.title}</h3>
                               <Badge variant="outline" className="ml-2">
-                                {formatTimeRange(new Date(event.startTime), new Date(event.endTime))}
+                                {formatTimeRange(new Date(event.date), new Date(event.end || event.date))}
                               </Badge>
                             </div>
                             <div className="flex items-center text-sm text-neutral-dark mt-1">
