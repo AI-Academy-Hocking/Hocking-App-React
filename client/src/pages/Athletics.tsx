@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Trophy, Phone, Mail, Users, Award, Target, Circle, Volleyball, Gamepad2 } from 'lucide-react';
+import { ArrowLeft, Trophy, Phone, Mail, Users, Award, Target, Circle, Gamepad2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -17,7 +17,7 @@ function Athletics() {
     { name: "Women's Basketball", icon: Circle },
     { name: "Cheerleading", icon: Users },
     { name: "Football", icon: Circle },
-    { name: "Women's Volleyball", icon: Volleyball },
+    { name: "Women's Volleyball", icon: Trophy },
     { name: "Baseball", icon: Circle },
     { name: "Softball", icon: Circle },
     { name: "Cross Country", icon: Award },
