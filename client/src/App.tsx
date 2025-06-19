@@ -15,6 +15,8 @@ import RecreationPage from "./pages/Recreation";
 import LibraryResourcesPage from "./pages/LibraryResources";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
+import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
+import Athletics from "./pages/Athletics";
 import ProgramDetails from "./pages/ProgramDetails";
 import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
@@ -32,6 +34,11 @@ import Social from "./pages/housing/Social";
 import Contract from "./pages/housing/Contract";
 import HowToApply from "./pages/housing/HowToApply";
 import FloorPlans from "./pages/housing/FloorPlans";
+import Tutoring from "./pages/Tutoring";
+import TestingCenter from "./pages/TestingCenter";
+import TrioServices from "./pages/TrioServices";
+import LearningLabs from "./pages/LearningLabs";
+import AccessibilityResources from "./pages/AccessibilityResources";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -99,6 +106,8 @@ function Router() {
         <Route path="/library" component={LibraryResourcesPage} />
         <Route path="/online-learning" component={OnlineLearningPage} />
         <Route path="/student-organizations" component={StudentOrganizationsPage} />
+        <Route path="/academic-success-center" component={AcademicSuccessCenter} />
+        <Route path="/athletics" component={Athletics} />
         <Route path="/housing" component={Housing} />
         <Route path="/housing/dormitories" component={Dormitories} />
         <Route path="/housing/amenities" component={Amenities} />
@@ -115,6 +124,11 @@ function Router() {
         <Route path="/housing/contract" component={Contract} />
         <Route path="/housing/how-to-apply" component={HowToApply} />
         <Route path="/housing/floor-plans" component={FloorPlans} />
+        <Route path="/tutoring" component={Tutoring} />
+        <Route path="/testing-center" component={TestingCenter} />
+        <Route path="/trio-services" component={TrioServices} />
+        <Route path="/learning-labs" component={LearningLabs} />
+        <Route path="/accessibility-resources" component={AccessibilityResources} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

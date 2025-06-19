@@ -35,7 +35,7 @@ function AcademicSuccessCenter() {
       icon: LibraryBig,
       description: "Access books, databases, and study materials",
       color: "text-blue-600",
-      path: "/library-resources"
+      path: "/library"
     },
     {
       title: "Learning Labs",
@@ -70,7 +70,7 @@ function AcademicSuccessCenter() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
-        <Link href="/student-tools">
+        <Link href="/tools">
           <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
