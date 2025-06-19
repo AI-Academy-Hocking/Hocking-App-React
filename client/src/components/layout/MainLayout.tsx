@@ -10,7 +10,7 @@ interface MainLayoutProps {
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [, setLocation] = useLocation();
 
   // Redirect to login if not authenticated
@@ -20,9 +20,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
     }
   }, [isAuthenticated, setLocation]);
 
-  // Don't render the layout if not authenticated
-  if (!isAuthenticated) {
-    return null;
+  // Show loading state while checking authentication
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
@@ -36,7 +40,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <Header />
         
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-0">
+        <main className="flex-1 overflow-y-auto p-4">
           {children}
         </main>
         

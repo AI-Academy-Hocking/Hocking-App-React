@@ -1,64 +1,63 @@
-import { useAuth } from "../lib/auth";
-import { Button } from "../components/ui/button";
 import { useToast } from "../hooks/use-toast";
 import { Card, CardContent } from "../components/ui/card";
 import HockingLogo from "../components/assets/HockingLogo.png";
+import { Button } from "../components/ui/button";
+import { useLocation } from "wouter";
 
 export default function Login() {
-  const { guestLogin } = useAuth();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
-  const handleGuestLogin = () => {
-    guestLogin();
+  const handleGetStarted = () => {
+    localStorage.setItem('hasClickedGetStarted', 'true');
     toast({
-      title: "Welcome Guest",
-      description: "You are now logged in as a guest",
+      title: "Welcome",
+      description: "Let's get started with your Hocking College experience",
     });
+    setLocation("/home");
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen relative overflow-hidden">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source src="/src/components/assets/campus-video.mp4" type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-black/50" /> {/* Overlay for better text readability */}
-      <Card className="w-full max-w-md p-8 bg-gray-100/90 backdrop-blur-sm rounded-lg shadow-lg relative z-10 border border-black">
+    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen">
+      <Card className="w-full max-w-md p-8 bg-white/30 rounded-lg shadow-lg border border-white/30 z-10">
         <CardContent className="p-0">
           <div className="text-center space-y-6">
             <div>
-              <img 
-                src={HockingLogo}
-                alt="Hocking College Logo" 
-                className="h-20 mx-auto mb-6" 
-              />
-              <h1 className="text-3xl font-bold text-primary mb-3">Welcome to Hocking College</h1>
-              <p className="text-base text-neutral-dark">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-white/60 to-white/40 rounded-full blur-xl transform scale-125"></div>
+                <img 
+                  src={HockingLogo}
+                  alt="Hocking College Logo" 
+                  className="h-20 mx-auto mb-6 relative z-10" 
+                />
+              </div>
+              <h1 className="text-3xl font-bold text-white mb-3">Welcome to Hocking College</h1>
+              <p className="text-base text-white">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
             </div>
-            
-            <div className="pt-4 space-y-4">
+            <div className="pt-4">
               <Button 
                 type="button" 
-                onClick={handleGuestLogin}
-                className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
+                onClick={handleGetStarted}
+                className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-lg font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
               >
-                Enter as Guest
-              </Button>
-              <Button 
-                type="button" 
-                className="w-full bg-navy-600 text-black py-3 text-lg rounded-lg font-semibold hover:bg-navy-700 transition shadow-md border-2 border-black"
-              >
-                Enter as Student
+                Get Started
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
+      <div className="fixed inset-0 -z-10">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/src/assets/AIProjectRoughCut.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/40"></div>
+      </div>
     </div>
   );
 }

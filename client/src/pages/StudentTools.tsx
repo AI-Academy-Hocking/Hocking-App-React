@@ -1,39 +1,14 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
-  History, School, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, Home,
-  MessageSquare, Pencil, Trophy,
-  LucideIcon
+  History, School, LibraryBig, MonitorSmartphone, 
+  Users, Dumbbell, Utensils, Calendar, House 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
-
-// Define the StudentTool type locally since we can't import it
-interface StudentTool {
-  id: string;
-  name: string;
-  description: string;
-  url: string;
-  category: string;
-}
-
-interface QuickLink {
-  id: string;
-  label: string;
-  icon: LucideIcon | React.ComponentType;
-  path: string;
-}
-
-// Custom icon for Academic Success Center
-const ChatWithPencil = () => (
-  <div className="relative">
-    <MessageSquare className="h-8 w-8 text-blue-600" />
-    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
-  </div>
-);
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -55,47 +30,44 @@ export default function StudentTools() {
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
-  const toolIcons: Record<string, LucideIcon> = {
+  const toolIcons: Record<string, any> = {
     'course-schedule': FileText,
     'grades': GraduationCap,
     'course-catalog': BookOpen,
     'advising': UserCheck,
     'academic-history': History,
     'graduation': School,
+    'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
     'recreation': Dumbbell,
     'dining': Utensils,
     'events': Calendar,
-    'athletics': Trophy,
   };
 
   // Quick links for bottom section
-  const quickLinks: QuickLink[] = [
-    { id: 'academic-success', label: 'Academic Success Center', icon: ChatWithPencil, path: '/academic-success' },
+  const quickLinks = [
+    { id: 'library', label: 'Library', icon: LibraryBig, path: '/library' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
-    { id: 'athletics', label: 'Athletics', icon: Trophy, path: '/athletics' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
+    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
+
   ];
 
-  // Add Testing Center to academic tools if it doesn't exist
-
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-white dark:bg-gray-900">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Student Tools</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
         
-        <Card className="overflow-hidden">
+        <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-b border-neutral-light">
-              <TabsTrigger value="academic">Academic</TabsTrigger>
-              <TabsTrigger value="financial">Financial</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
+            <TabsList className="grid grid-cols-3 border-b border-gray-200 dark:border-0">
+              <TabsTrigger value="academic" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
+              <TabsTrigger value="financial" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
+              <TabsTrigger value="resources" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
             </TabsList>
             
             <TabsContent value="academic" className="p-4">
@@ -103,17 +75,17 @@ export default function StudentTools() {
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
-                    <Link 
+                    <a 
                       key={tool.id} 
-                      href={tool.url}
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      href={tool.url} 
+                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
                         <h3 className="font-semibold">{tool.name}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
-                    </Link>
+                    </a>
                   );
                 })}
               </div>
@@ -127,7 +99,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
@@ -148,7 +120,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
@@ -171,7 +143,7 @@ export default function StudentTools() {
             <Link 
               key={link.id} 
               href={link.path}
-              className="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
+              className="bg-white dark:bg-gray-800 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold">{link.label}</span>

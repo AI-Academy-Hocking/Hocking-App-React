@@ -1,5 +1,5 @@
 import { useLocation, Link } from "wouter";
-import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield } from "lucide-react";
 
 export default function MobileNav() {
   const [location] = useLocation();
@@ -16,15 +16,17 @@ export default function MobileNav() {
   ];
 
   return (
-    <nav className="md:hidden bg-white border-t border-neutral-light">
+    <nav className="md:hidden bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
       <div className="flex justify-around">
         {navItems.map((item) => (
           <Link key={item.path} href={item.path}>
-            <a className={`flex flex-col items-center py-2 ${
-              isActive(item.path) ? 'text-primary' : 'text-neutral-dark'
+            <a className={`flex flex-col items-center py-2 px-1 ${
+              isActive(item.path) 
+                ? 'text-blue-600 dark:text-blue-400' 
+                : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400'
             }`}>
               <item.icon className="h-5 w-5" />
-              <span className="text-xs">{item.label}</span>
+              <span className="text-xs mt-1">{item.label}</span>
             </a>
           </Link>
         ))}
