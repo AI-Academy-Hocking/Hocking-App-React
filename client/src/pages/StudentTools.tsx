@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  BookOpen, FileText, GraduationCap, Briefcase,
-  School, LibraryBig, MonitorSmartphone, 
+  BookOpen, FileText, GraduationCap, UserCheck, 
+  History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, House 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -26,15 +26,15 @@ export default function StudentTools() {
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades' && tool.id !== 'advising') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
+    'grades': GraduationCap,
     'course-catalog': BookOpen,
+    'advising': UserCheck,
     'graduation': School,
-    'office-administration': Briefcase,
-    'career-university-center': Briefcase, // Or another relevant icon
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
@@ -70,15 +70,16 @@ export default function StudentTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
+                  const displayName = tool.id === 'course-schedule' ? 'Office & Administration' : (tool.id === 'academic-history' ? 'Career & University Center' : tool.name);
                   return (
                     <Link
                       key={tool.id}
-                      href={tool.url}
+                      href={`/tools/academic/${tool.id}`}
                       className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
+                        <h3 className="font-semibold">{displayName}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
                     </Link>

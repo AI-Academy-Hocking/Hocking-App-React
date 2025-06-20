@@ -367,6 +367,14 @@ export class MemStorage implements IStorage {
     
     // Sample student tools
     await this.createStudentTool({
+      id: "grades",
+      name: "Grades",
+      description: "Check your academic performance",
+      category: "academic",
+      url: "#"
+    });
+    
+    await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
@@ -375,11 +383,35 @@ export class MemStorage implements IStorage {
     });
 
     await this.createStudentTool({
+      id: "course-schedule",
+      name: "Course Schedule",
+      description: "View your current classes",
+      category: "academic",
+      url: "#",
+    });
+
+    await this.createStudentTool({
+      id: "advising",
+      name: "Advising",
+      description: "Connect with your advisor",
+      category: "academic",
+      url: "/tools/academic/advising",
+    });
+    
+    await this.createStudentTool({
       id: "graduation",
       name: "Graduation",
       description: "Apply for graduation and view commencement info",
       category: "academic",
       url: "/tools/academic/graduation",
+    });
+
+    await this.createStudentTool({
+      id: "academic-history",
+      name: "Academic History",
+      description: "View your transcript",
+      category: "academic",
+      url: "#",
     });
 
     await this.createStudentTool({
