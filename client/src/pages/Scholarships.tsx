@@ -4,7 +4,7 @@ import {
   GraduationCap, Building, Clock, ArrowLeft,
   Download, BookOpen, Shield, CreditCard, Briefcase,
   Car, Home, Utensils, Calculator, Receipt, MapPin,
-  Award, Music, Star, Globe, UserCheck, Target
+  Award, Music, Star, Globe, UserCheck, Target, RotateCcw
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -333,7 +333,7 @@ export default function Scholarships() {
       <Card className="mb-8 border-2 border-indigo-600">
         <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
           <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <RefreshCw className="mr-3 h-6 w-6" />
+            <RotateCcw className="mr-3 h-6 w-6" />
             Renewal & Award Conditions
           </CardTitle>
         </CardHeader>
