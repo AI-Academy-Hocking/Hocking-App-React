@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  BookOpen, FileText, GraduationCap, UserCheck, 
-  History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House 
+  BookOpen, FileText, GraduationCap, Briefcase,
+  School, LibraryBig, MonitorSmartphone, 
+  Users, Dumbbell, Utensils, Calendar,
+  DoorOpen  
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 // import { StudentTool } from "@shared/schema";
@@ -21,20 +22,55 @@ type StudentTool = {
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
   
-  const { data: tools } = useQuery<StudentTool[]>({
-    queryKey: ['/api/student-tools'],
-  });
+  // Define academic tools with proper routing to the academic tool pages
+  const academicTools = [
+    {
+      id: 'course-catalog',
+      name: 'Course Catalog',
+      description: 'Browse all academic programs and course offerings',
+      category: 'academic',
+      url: '/tools/academic/course-catalog'
+    },
+    {
+      id: 'graduation',
+      name: 'Graduation',
+      description: 'Graduation requirements, application process, and important dates',
+      category: 'academic',
+      url: '/tools/academic/graduation'
+    },
+    {
+      id: 'office-administration',
+      name: 'Office & Administration',
+      description: 'Contact information for key administrative offices',
+      category: 'academic',
+      url: '/tools/academic/office-administration'
+    },
+    {
+      id: 'career-university-center',
+      name: 'Career & University Center',
+      description: 'Career counseling, resume building, and transfer services',
+      category: 'academic',
+      url: '/tools/academic/career-university-center'
+    },
+    {
+      id: 'advising',
+      name: 'Academic Advising',
+      description: 'Connect with your academic advisor and access advising resources',
+      category: 'academic',
+      url: '/tools/academic/advising'
+    }
+  ];
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades' && tool.id !== 'advising') || [];
-  const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
+  const resourceTools: StudentTool[] = []; // You can add resource tools here if needed
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
-    'grades': GraduationCap,
     'course-catalog': BookOpen,
-    'advising': UserCheck,
-    'graduation': School,
+    'graduation': GraduationCap,
+    'office-administration': Briefcase,
+    'career-university-center': Briefcase,
+    'advising': School,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
@@ -51,7 +87,7 @@ export default function StudentTools() {
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, 
+    { id: 'housing', label: 'Housing', icon: DoorOpen, path: '/housing' }, 
   ];
 
   return (
@@ -70,16 +106,15 @@ export default function StudentTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
-                  const displayName = tool.id === 'course-schedule' ? 'Office & Administration' : (tool.id === 'academic-history' ? 'Career & University Center' : tool.name);
                   return (
                     <Link
                       key={tool.id}
-                      href={`/tools/academic/${tool.id}`}
+                      href={tool.url}
                       className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{displayName}</h3>
+                        <h3 className="font-semibold">{tool.name}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
                     </Link>
