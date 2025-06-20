@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  BookOpen, FileText, GraduationCap, UserCheck, 
-  History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House, Briefcase 
+  BookOpen, FileText, GraduationCap, Briefcase,
+  School, LibraryBig, MonitorSmartphone, 
+  Users, Dumbbell, Utensils, Calendar, House 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 // import { StudentTool } from "@shared/schema";
@@ -26,16 +26,15 @@ export default function StudentTools() {
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'grades' && tool.id !== 'advising') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
-    'grades': GraduationCap,
     'course-catalog': BookOpen,
-    'office-administration': Briefcase,
-    'advising': UserCheck,
     'graduation': School,
+    'office-administration': Briefcase,
+    'career-university-center': Briefcase, // Or another relevant icon
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
@@ -52,7 +51,7 @@ export default function StudentTools() {
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, // Use an appropriate icon
+    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, 
   ];
 
   return (

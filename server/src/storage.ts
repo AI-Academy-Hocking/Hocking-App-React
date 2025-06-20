@@ -367,27 +367,35 @@ export class MemStorage implements IStorage {
     
     // Sample student tools
     await this.createStudentTool({
-      id: "grades",
-      name: "Grades",
-      description: "Check your academic performance",
-      category: "academic",
-      url: "#"
-    });
-    
-    await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
       url: "/tools/academic/course-catalog",
     });
-    
+
+    await this.createStudentTool({
+      id: "graduation",
+      name: "Graduation",
+      description: "Apply for graduation and view commencement info",
+      category: "academic",
+      url: "/tools/academic/graduation",
+    });
+
     await this.createStudentTool({
       id: "office-administration",
       name: "Office & Administration",
       description: "Info on Registrar, Financial Aid, and more",
       category: "academic",
       url: "/tools/academic/office-administration",
+    });
+
+    await this.createStudentTool({
+      id: "career-university-center",
+      name: "Career & University Center",
+      description: "Career counseling, job fairs, and transfer services",
+      category: "academic",
+      url: "/tools/academic/career-university-center",
     });
     
     await this.createStudentTool({
