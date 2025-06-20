@@ -33,8 +33,10 @@ import CourseCatalog from "./pages/tools/academic/course-catalog";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
 import Graduation from "./pages/tools/academic/graduation";
 import Advising from "./pages/tools/academic/advising";
-import './index.css';
-import './styles/globals.css';
+import OfficeAdministration from "./pages/tools/academic/office-administration";
+import CareerUniversityCenter from "./pages/tools/academic/career-university-center";
+import "./index.css";
+import "./styles/globals.css";
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { Button } from "@/components/ui/button";
 
@@ -81,6 +83,8 @@ function Router() {
             <Route path="/tools/academic/course-catalog" component={CourseCatalog} />
             <Route path="/tools/academic/graduation" component={Graduation} />
             <Route path="/tools/academic/advising" component={Advising} />
+            <Route path="/tools/academic/office-administration" component={OfficeAdministration} />
+            <Route path="/tools/academic/career-university-center" component={CareerUniversityCenter} />
             <Route path="/tools/academic/:id" component={AcademicToolDetail} />
             <Route path="/maps" component={Maps} />
             <Route path="/dining" component={DiningHall} />

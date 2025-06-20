@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House 
+  Users, Dumbbell, Utensils, Calendar, House, Briefcase 
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 // import { StudentTool } from "@shared/schema";
@@ -33,7 +33,7 @@ export default function StudentTools() {
   const toolIcons: Record<string, any> = {
     'grades': GraduationCap,
     'course-catalog': BookOpen,
-    'advising': UserCheck,
+    'career-university-center': Briefcase,
     'graduation': School,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
@@ -70,16 +70,15 @@ export default function StudentTools() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
-                  const displayName = tool.id === 'course-schedule' ? 'Office & Administration' : (tool.id === 'academic-history' ? 'Career & University Center' : (tool.id === 'advising' ? 'Administration' : tool.name));
                   return (
                     <Link
                       key={tool.id}
-                      href={`/tools/academic/${tool.id}`}
+                      href={tool.url}
                       className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                     >
                       <Icon className="text-primary mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold">{displayName}</h3>
+                        <h3 className="font-semibold">{tool.name}</h3>
                         <p className="text-sm text-neutral-dark">{tool.description}</p>
                       </div>
                     </Link>

@@ -434,9 +434,17 @@ export class MemStorage implements IStorage {
     await this.createStudentTool({
       id: "graduation",
       name: "Graduation",
-      description: "Track degree requirements",
+      description: "Apply for graduation and view commencement info",
       category: "academic",
-      url: "#",
+      url: "/tools/academic/graduation",
+    });
+    
+    await this.createStudentTool({
+      id: "career-university-center",
+      name: "Career & University Center",
+      description: "Career counseling, job fairs, and transfer services",
+      category: "academic",
+      url: "/tools/academic/career-university-center",
     });
     
     await this.createStudentTool({
@@ -454,8 +462,6 @@ export class MemStorage implements IStorage {
       category: "financial",
       url: "#",
     });
-    
-    
     
     await this.createStudentTool({
       id: "campus-resources",
