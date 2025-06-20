@@ -42,6 +42,8 @@ import InternationalStudents from "./pages/InternationalStudents";
 import CanineFacility from "./pages/CanineFacility";
 import Graduation from "./pages/Graduation";
 import FinancialAid from "./pages/FinancialAid";
+import Billing from "./pages/Billing";
+import Scholarships from "./pages/Scholarships";
 import './index.css';
 import './styles/globals.css';
 import { useEffect, useState } from 'react';
@@ -135,6 +137,8 @@ function Router() {
         <Route path="/canine-facility" component={CanineFacility} />
         <Route path="/graduation" component={Graduation} />
         <Route path="/financial-aid" component={FinancialAid} />
+        <Route path="/billing" component={Billing} />
+        <Route path="/scholarships" component={Scholarships} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

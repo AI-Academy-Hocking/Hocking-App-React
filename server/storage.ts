@@ -396,7 +396,7 @@ export class MemStorage implements IStorage {
       name: "Billing",
       description: "Pay tuition and view statements",
       category: "financial",
-      url: "#",
+      url: "/billing",
       isActive: true,
     });
     
@@ -405,7 +405,7 @@ export class MemStorage implements IStorage {
       name: "Scholarships",
       description: "Apply for available scholarships",
       category: "financial",
-      url: "#",
+      url: "/scholarships",
       isActive: true,
     });
     

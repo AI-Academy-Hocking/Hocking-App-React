@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  Globe, PawPrint, DollarSign
+  Globe, PawPrint, DollarSign, CreditCard, Award
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -53,6 +53,8 @@ export default function StudentTools() {
     'dining': Utensils,
     'events': Calendar,
     'financial-aid': DollarSign,
+    'billing': CreditCard,
+    'scholarships': Award,
   };
 
   // Quick links for bottom section
