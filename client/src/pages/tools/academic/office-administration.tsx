@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Mail, Phone, MapPin, Clock, Users, Briefcase } from "lucide-react";
 
 const offices = [
   {
@@ -114,66 +115,183 @@ const offices = [
       { name: "Rachel Green", title: "Student Activities Coordinator", email: "rgreen@hocking.edu" },
     ],
   },
+  {
+    id: "academic-advising",
+    name: "Academic Advising Center",
+    description: "Academic planning, course selection, and degree progress tracking",
+    location: "Student Center, Room 203",
+    phone: "740.753.7054",
+    email: "advising@hocking.edu",
+    color: "bg-indigo-100 text-indigo-700",
+    iconBg: "bg-indigo-500",
+    icon: <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
+    hours: [
+      { days: "Monday:", time: "8:00 AM - 5:00 PM" },
+      { days: "Tuesday-Thursday:", time: "8:00 AM - 5:00 PM" },
+      { days: "Friday:", time: "8:00 AM - 4:30 PM" },
+    ],
+    services: [
+      "Degree Planning",
+      "Course Selection",
+      "Transfer Credit Advising",
+      "Academic Probation Support",
+      "Graduation Planning"
+    ],
+    staff: [
+      { name: "Dr. Emily Rodriguez", title: "Director of Academic Advising", email: "erodriguez@hocking.edu" },
+      { name: "James Wilson", title: "Academic Advisor", email: "jwilson@hocking.edu" },
+      { name: "Maria Garcia", title: "Transfer Student Advisor", email: "mgarcia@hocking.edu" },
+    ],
+  },
+  {
+    id: "career-services",
+    name: "Career Services",
+    description: "Career counseling, job placement, and professional development",
+    location: "Student Center, Room 204",
+    phone: "740.753.7055",
+    email: "careers@hocking.edu",
+    color: "bg-teal-100 text-teal-700",
+    iconBg: "bg-teal-500",
+    icon: <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6" /></svg>,
+    hours: [
+      { days: "Monday:", time: "8:00 AM - 5:00 PM" },
+      { days: "Tuesday-Thursday:", time: "8:00 AM - 5:00 PM" },
+      { days: "Friday:", time: "8:00 AM - 4:30 PM" },
+    ],
+    services: [
+      "Resume Writing",
+      "Interview Preparation",
+      "Job Search Assistance",
+      "Internship Placement",
+      "Career Fairs"
+    ],
+    staff: [
+      { name: "Thomas Chen", title: "Director of Career Services", email: "tchen@hocking.edu" },
+      { name: "Jessica Park", title: "Career Counselor", email: "jpark@hocking.edu" },
+      { name: "Alex Johnson", title: "Employer Relations Coordinator", email: "ajohnson@hocking.edu" },
+    ],
+  },
 ];
 
 export default function OfficeAdministration() {
   return (
-    <div className="space-y-8 max-w-2xl mx-auto py-8">
-      <h1 className="text-2xl font-heading font-semibold mb-4">Office & Administration</h1>
-      {offices.map((office) => (
-        <Card key={office.id} className="p-0">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <div className={`rounded-full p-2 ${office.iconBg}`}>{office.icon}</div>
-              <div>
-                <h2 className={`text-lg font-bold ${office.color}`}>{office.name}</h2>
-                <p className="text-sm text-gray-700">{office.description}</p>
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-heading font-bold mb-2">Office & Administration</h1>
+        <p className="text-gray-600">Select an office or service below to view detailed information, contact details, and available services.</p>
+      </div>
+
+      <Accordion type="single" collapsible className="w-full space-y-4">
+        {offices.map((office) => (
+          <AccordionItem key={office.id} value={office.id} className="border rounded-lg">
+            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+              <div className="flex items-center gap-4 w-full">
+                <div className={`rounded-full p-2 ${office.iconBg}`}>
+                  {office.icon}
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className={`text-lg font-semibold ${office.color}`}>{office.name}</h3>
+                  <p className="text-sm text-gray-600">{office.description}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <MapPin className="h-4 w-4" /> {office.location}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Phone className="h-4 w-4" /> {office.phone}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Mail className="h-4 w-4" /> {office.email}
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-              <Clock className="h-4 w-4" /> <span className="font-medium">Office Hours:</span>
-            </div>
-            <ul className="ml-7 text-sm text-gray-700">
-              {office.hours.map((h, i) => (
-                <li key={i}>{h.days} <span className="font-mono">{h.time}</span></li>
-              ))}
-            </ul>
-            <div className="mt-4">
-              <span className="font-medium text-gray-700">Services Offered</span>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {office.services.map((service, i) => (
-                  <span key={i} className="bg-gray-100 border border-gray-300 text-xs px-3 py-1 rounded-full text-gray-700">{service}</span>
-                ))}
-              </div>
-            </div>
-            <div className="mt-4">
-              <span className="font-medium text-gray-700">Key Staff</span>
-              <div className="mt-2 space-y-2">
-                {office.staff.map((person, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-3 flex flex-col">
-                    <span className="font-semibold text-gray-900">{person.name}</span>
-                    <span className="text-xs text-gray-600">{person.title}</span>
-                    <a href={`mailto:${person.email}`} className="text-primary text-xs underline mt-1">{person.email}</a>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <div className="space-y-6">
+                {/* Contact Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm">
+                      <MapPin className="h-4 w-4 text-gray-500" />
+                      <span className="font-medium">Location:</span>
+                      <span>{office.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="h-4 w-4 text-gray-500" />
+                      <span className="font-medium">Phone:</span>
+                      <a href={`tel:${office.phone.replace(/[^\d]/g, "")}`} className="text-primary hover:underline">
+                        {office.phone}
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Mail className="h-4 w-4 text-gray-500" />
+                      <span className="font-medium">Email:</span>
+                      <a href={`mailto:${office.email}`} className="text-primary hover:underline">
+                        {office.email}
+                      </a>
+                    </div>
                   </div>
-                ))}
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-2 text-sm">
+                      <Clock className="h-4 w-4 text-gray-500 mt-0.5" />
+                      <div>
+                        <span className="font-medium">Office Hours:</span>
+                        <ul className="mt-1 space-y-1">
+                          {office.hours.map((h, i) => (
+                            <li key={i} className="text-gray-600">
+                              {h.days} <span className="font-mono">{h.time}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Services */}
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Briefcase className="h-4 w-4 text-gray-500" />
+                    <h4 className="font-semibold text-gray-900">Services Offered</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {office.services.map((service, i) => (
+                      <span key={i} className="bg-gray-100 border border-gray-300 text-sm px-3 py-1 rounded-full text-gray-700">
+                        {service}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Staff */}
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Users className="h-4 w-4 text-gray-500" />
+                    <h4 className="font-semibold text-gray-900">Key Staff</h4>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {office.staff.map((person, i) => (
+                      <div key={i} className="bg-gray-50 rounded-lg p-3 border">
+                        <div className="font-semibold text-gray-900 text-sm">{person.name}</div>
+                        <div className="text-xs text-gray-600 mb-1">{person.title}</div>
+                        <a href={`mailto:${person.email}`} className="text-primary text-xs hover:underline">
+                          {person.email}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-3 pt-4 border-t">
+                  <a 
+                    href={`tel:${office.phone.replace(/[^\d]/g, "")}`} 
+                    className={`px-4 py-2 rounded-lg font-semibold flex items-center gap-2 ${office.iconBg} text-white hover:opacity-90 transition-opacity`}
+                  >
+                    <Phone className="h-4 w-4" /> Call Office
+                  </a>
+                  <a 
+                    href={`mailto:${office.email}`} 
+                    className="bg-white border border-primary text-primary px-4 py-2 rounded-lg font-semibold flex items-center gap-2 hover:bg-primary hover:text-white transition-colors"
+                  >
+                    <Mail className="h-4 w-4" /> Send Email
+                  </a>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-3 mt-4">
-              <a href={`tel:${office.phone.replace(/[^\d]/g, "")}`} className={`px-4 py-2 rounded-lg font-semibold flex items-center gap-2 ${office.iconBg} text-white`}><Phone className="h-4 w-4" /> Call Office</a>
-              <a href={`mailto:${office.email}`} className="bg-white border border-primary text-primary px-4 py-2 rounded-lg font-semibold flex items-center gap-2"><Mail className="h-4 w-4" /> Send Email</a>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 } 
