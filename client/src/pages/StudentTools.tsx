@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  Globe, PawPrint, DollarSign, CreditCard, Award
+  Globe, PawPrint, DollarSign, CreditCard, Award, Heart
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -55,6 +55,7 @@ export default function StudentTools() {
     'financial-aid': DollarSign,
     'billing': CreditCard,
     'scholarships': Award,
+    'health-services': Heart,
   };
 
   // Quick links for bottom section
@@ -174,6 +175,25 @@ export default function StudentTools() {
                 
                 {resourceTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
+                  
+                  // Check if the URL is an internal route (starts with /)
+                  if (tool.url.startsWith('/')) {
+                    return (
+                      <Link 
+                        key={tool.id} 
+                        href={tool.url}
+                        className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      >
+                        <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                        <div>
+                          <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
+                        </div>
+                      </Link>
+                    );
+                  }
+                  
+                  // External URL - use anchor tag
                   return (
                     <a 
                       key={tool.id} 

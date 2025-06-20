@@ -423,7 +423,7 @@ export class MemStorage implements IStorage {
       name: "Campus Health and Wellness",
       description: "Schedule health appointments",
       category: "resources",
-      url: "#",
+      url: "/campus-health",
       isActive: true,
     });
     
