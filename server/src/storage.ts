@@ -383,27 +383,11 @@ export class MemStorage implements IStorage {
     });
     
     await this.createStudentTool({
-      id: "office-administration",
-      name: "Office & Administration",
-      description: "Info on Registrar, Financial Aid, and more",
-      category: "academic",
-      url: "/tools/academic/office-administration",
-    });
-    
-    await this.createStudentTool({
-      id: "advising",
-      name: "Advising",
-      description: "Connect with your advisor",
+      id: "course-schedule",
+      name: "Course Schedule",
+      description: "View your current classes",
       category: "academic",
       url: "#",
-    });
-    
-    await this.createStudentTool({
-      id: "graduation",
-      name: "Graduation",
-      description: "Apply for graduation and view commencement info",
-      category: "academic",
-      url: "/tools/academic/graduation",
     });
     
     await this.createStudentTool({
