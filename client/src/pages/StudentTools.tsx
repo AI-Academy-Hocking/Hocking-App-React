@@ -33,7 +33,8 @@ export default function StudentTools() {
   const toolIcons: Record<string, any> = {
     'grades': GraduationCap,
     'course-catalog': BookOpen,
-    'career-university-center': Briefcase,
+    'office-administration': Briefcase,
+    'advising': UserCheck,
     'graduation': School,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,

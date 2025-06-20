@@ -3,7 +3,6 @@ import {
   events, type Event, type InsertEvent, 
   buildings, type Building, type InsertBuilding, 
   studentTools, type StudentTool, type InsertStudentTool, 
-  discussions, type Discussion, type InsertDiscussion,
   comments, type Comment, type InsertComment,
   safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
   safetyResources, type SafetyResource, type InsertSafetyResource,
@@ -34,12 +33,6 @@ export interface IStorage {
   getStudentTool(id: string): Promise<StudentTool | undefined>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
   
-  // Discussion operations
-  getDiscussions(): Promise<Discussion[]>;
-  getDiscussion(id: number): Promise<Discussion | undefined>;
-  createDiscussion(discussion: InsertDiscussion): Promise<Discussion>;
-  getDiscussionsByCategory(category: string): Promise<Discussion[]>;
-  
   // Comment operations
   getComments(discussionId: number): Promise<Comment[]>;
   getCommentReplies(commentId: number): Promise<Comment[]>;
@@ -65,7 +58,6 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
-  private discussions: Map<number, Discussion>;
   private comments: Map<number, Comment>;
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
@@ -73,7 +65,6 @@ export class MemStorage implements IStorage {
   private currentUserId: number;
   private currentEventId: number;
   private currentBuildingId: number;
-  private currentDiscussionId: number;
   private currentCommentId: number;
   private currentSafetyAlertId: number;
   private currentSafetyResourceId: number;
@@ -83,7 +74,6 @@ export class MemStorage implements IStorage {
     this.events = new Map();
     this.buildings = new Map();
     this.studentTools = new Map();
-    this.discussions = new Map();
     this.comments = new Map();
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
@@ -91,7 +81,6 @@ export class MemStorage implements IStorage {
     this.currentUserId = 1;
     this.currentEventId = 1;
     this.currentBuildingId = 1;
-    this.currentDiscussionId = 1;
     this.currentCommentId = 1;
     this.currentSafetyAlertId = 1;
     this.currentSafetyResourceId = 1;
@@ -210,36 +199,6 @@ export class MemStorage implements IStorage {
   async createStudentTool(tool: InsertStudentTool): Promise<StudentTool> {
     this.studentTools.set(tool.id, tool);
     return tool;
-  }
-  
-  // Discussion operations
-  async getDiscussions(): Promise<Discussion[]> {
-    return Array.from(this.discussions.values());
-  }
-  
-  async getDiscussion(id: number): Promise<Discussion | undefined> {
-    return this.discussions.get(id);
-  }
-  
-  async createDiscussion(insertDiscussion: InsertDiscussion): Promise<Discussion> {
-    const id = this.currentDiscussionId++;
-    const discussion: Discussion = {
-      id,
-      title: insertDiscussion.title,
-      content: insertDiscussion.content,
-      authorId: insertDiscussion.authorId ?? null,
-      createdAt: new Date(),
-      isPinned: insertDiscussion.isPinned ?? false,
-      category: insertDiscussion.category ?? "general"
-    };
-    this.discussions.set(id, discussion);
-    return discussion;
-  }
-  
-  async getDiscussionsByCategory(category: string): Promise<Discussion[]> {
-    return Array.from(this.discussions.values()).filter(
-      (discussion) => discussion.category === category
-    );
   }
   
   // Comment operations
@@ -420,7 +379,15 @@ export class MemStorage implements IStorage {
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
-      url: "#",
+      url: "/tools/academic/course-catalog",
+    });
+    
+    await this.createStudentTool({
+      id: "office-administration",
+      name: "Office & Administration",
+      description: "Info on Registrar, Financial Aid, and more",
+      category: "academic",
+      url: "/tools/academic/office-administration",
     });
     
     await this.createStudentTool({
@@ -437,14 +404,6 @@ export class MemStorage implements IStorage {
       description: "Apply for graduation and view commencement info",
       category: "academic",
       url: "/tools/academic/graduation",
-    });
-    
-    await this.createStudentTool({
-      id: "career-university-center",
-      name: "Career & University Center",
-      description: "Career counseling, job fairs, and transfer services",
-      category: "academic",
-      url: "/tools/academic/career-university-center",
     });
     
     await this.createStudentTool({
@@ -487,68 +446,9 @@ export class MemStorage implements IStorage {
       url: "#",
     });
     
-    // Sample discussions
-    const discussion1 = await this.createDiscussion({
-      title: "Tips for new students",
-      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
-      authorId: 1,
-      category: "general",
-      isPinned: true
-    });
-    
-    const discussion2 = await this.createDiscussion({
-      title: "Study group for Biology 101",
-      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
-      authorId: 2,
-      category: "academic"
-    });
-    
-    const discussion3 = await this.createDiscussion({
-      title: "Campus food recommendations",
-      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
-      authorId: 1,
-      category: "social"
-    });
-    
-    // Sample comments
-    await this.createComment({
-      content: "Always check Rate My Professor before signing up for classes!",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    
-    const comment1 = await this.createComment({
-      content: "Get involved in campus clubs early - it's the best way to make friends!",
-      authorId: 1,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    
-    await this.createComment({
-      content: "I totally agree! I joined the hiking club and met my best friends there.",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: comment1.id
-    });
-    
-    await this.createComment({
-      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
-      authorId: 1,
-      discussionId: discussion2.id,
-      parentId: null
-    });
-    
-    await this.createComment({
-      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
-      authorId: 2,
-      discussionId: discussion3.id,
-      parentId: null
-    });
-    
     // Sample safety alerts
     await this.createSafetyAlert({
-      title: "Weather Alert: Winter Storm Warning",
+      title: "Weather Advisory",
       content: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
       severity: "warning",
       startDate: new Date(),
