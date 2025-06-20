@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, Briefcase,
   School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, House 
+  Users, Dumbbell, Utensils, Calendar,
+  DoorOpen  
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 // import { StudentTool } from "@shared/schema";
@@ -21,20 +22,55 @@ type StudentTool = {
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
   
-  const { data: tools } = useQuery<StudentTool[]>({
-    queryKey: ['/api/student-tools'],
-  });
+  // Define academic tools with proper routing to the academic tool pages
+  const academicTools = [
+    {
+      id: 'course-catalog',
+      name: 'Course Catalog',
+      description: 'Browse all academic programs and course offerings',
+      category: 'academic',
+      url: '/tools/academic/course-catalog'
+    },
+    {
+      id: 'graduation',
+      name: 'Graduation',
+      description: 'Graduation requirements, application process, and important dates',
+      category: 'academic',
+      url: '/tools/academic/graduation'
+    },
+    {
+      id: 'office-administration',
+      name: 'Office & Administration',
+      description: 'Contact information for key administrative offices',
+      category: 'academic',
+      url: '/tools/academic/office-administration'
+    },
+    {
+      id: 'career-university-center',
+      name: 'Career & University Center',
+      description: 'Career counseling, resume building, and transfer services',
+      category: 'academic',
+      url: '/tools/academic/career-university-center'
+    },
+    {
+      id: 'advising',
+      name: 'Academic Advising',
+      description: 'Connect with your academic advisor and access advising resources',
+      category: 'academic',
+      url: '/tools/academic/advising'
+    }
+  ];
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
-  const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
+  const resourceTools: StudentTool[] = []; // You can add resource tools here if needed
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
     'course-catalog': BookOpen,
-    'graduation': School,
+    'graduation': GraduationCap,
     'office-administration': Briefcase,
-    'career-university-center': Briefcase, // Or another relevant icon
+    'career-university-center': Briefcase,
+    'advising': School,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
@@ -51,7 +87,7 @@ export default function StudentTools() {
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-    { id: 'housing', label: 'Housing', icon: House, path: '/housing' }, 
+    { id: 'housing', label: 'Housing', icon: DoorOpen, path: '/housing' }, 
   ];
 
   return (
