@@ -119,7 +119,7 @@ export default function StudentTools() {
               className="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-blue-600 text-3xl mb-2 h-8 w-8" />
-              <span className={`font-semibold ${link.id !== 'housing' ? 'text-blue-600' : ''}`}>{link.label}</span>
+              <span className="font-semibold text-blue-600">{link.label}</span>
             </Link>
           ))}
         </div>
