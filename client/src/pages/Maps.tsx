@@ -323,7 +323,7 @@ export default function Maps() {
         
         <Card className="overflow-hidden">
           {/* Map container */}
-          <div ref={mapRef} className="h-72 bg-neutral-light relative"></div>
+          <div ref={mapRef} className="h-72 bg-neutral-light relative z-0"></div>
           
           {/* Map controls */}
           <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-[1000]">

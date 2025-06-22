@@ -106,7 +106,7 @@ export default function CampusSafety() {
               <CardContent className="flex flex-col items-center py-4">
                 <Shield className="text-blue-600 h-7 w-7 mb-1" />
                 <span className="text-xs text-neutral-700">Campus Alerts</span>
-                <span className="text-base font-bold text-blue-600">Follow instructions from authorities.</span>
+                <span className="text-base font-bold text-blue-600 text-center">Follow instructions from authorities.</span>
               </CardContent>
             </Card>
           </div>
