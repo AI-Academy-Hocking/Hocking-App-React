@@ -1,9 +1,8 @@
 .outlined-text {
-  text-shadow:
-    -1px -1px 0 #000,
-     1px -1px 0 #000,
-    -1px  1px 0 #000,
-     1px  1px 0 #000;
+  text-shadow: -1px -1px 0 #0000ff, /* Top-left */
+               1px -1px 0 #0000ff,  /* Top-right */
+               -1px 1px 0 #0000ff,  /* Bottom-left */
+               1px 1px 0 #0000ff;   /* Bottom-right */
 }
 
 /* Page transition classes */
