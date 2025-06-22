@@ -85,7 +85,7 @@ export default function StudentTools() {
   return (
     <div className="space-y-6">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Academic Tools</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-center">Academic Tools</h2>
         
         <Card className="overflow-hidden p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -97,7 +97,7 @@ export default function StudentTools() {
                   href={tool.url}
                   className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
                 >
-                  <Icon className="text-primary mr-3 h-5 w-5" />
+                  <Icon className="text-blue-600 mr-3 h-5 w-5" />
                   <div>
                     <h3 className="font-semibold">{tool.name}</h3>
                     <p className="text-sm text-neutral-dark">{tool.description}</p>
@@ -118,7 +118,7 @@ export default function StudentTools() {
               href={link.path}
               className="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
-              <link.icon className="text-primary text-3xl mb-2 h-8 w-8" />
+              <link.icon className="text-blue-600 text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold">{link.label}</span>
             </Link>
           ))}
