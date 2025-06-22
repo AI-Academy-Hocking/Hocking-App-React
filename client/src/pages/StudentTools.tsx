@@ -99,8 +99,8 @@ export default function StudentTools() {
                 >
                   <Icon className="text-blue-600 mr-3 h-5 w-5" />
                   <div>
-                    <h3 className={`font-semibold ${tool.id === 'course-catalog' || tool.id === 'graduation' ? 'text-blue-600' : ''}`}>{tool.name}</h3>
-                    <p className={`text-sm ${tool.id === 'course-catalog' || tool.id === 'graduation' ? 'text-blue-600' : 'text-neutral-dark'}`}>{tool.description}</p>
+                    <h3 className="font-semibold text-blue-600">{tool.name}</h3>
+                    <p className="text-sm text-blue-600">{tool.description}</p>
                   </div>
                 </Link>
               );
