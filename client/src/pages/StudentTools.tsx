@@ -1,14 +1,10 @@
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
 import { 
   BookOpen, FileText, GraduationCap, Briefcase,
   School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar,
   DoorOpen  
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-// import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
 
 type StudentTool = {
@@ -20,7 +16,6 @@ type StudentTool = {
 };
 
 export default function StudentTools() {
-  const [activeTab, setActiveTab] = useState("academic");
   
   // Define academic tools with proper routing to the academic tool pages
   const academicTools = [
@@ -61,9 +56,6 @@ export default function StudentTools() {
     }
   ];
 
-  // Filter tools by category
-  const resourceTools: StudentTool[] = []; // You can add resource tools here if needed
-
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
     'course-catalog': BookOpen,
@@ -93,57 +85,27 @@ export default function StudentTools() {
   return (
     <div className="space-y-6">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Student Tools</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4">Academic Tools</h2>
         
-        <Card className="overflow-hidden">
-          <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-2 border-b border-neutral-light">
-              <TabsTrigger value="academic">Academic</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="academic" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {academicTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <Link
-                      key={tool.id}
-                      href={tool.url}
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
-                    >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="resources" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {resourceTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
-                    >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </TabsContent>
-          </Tabs>
+        <Card className="overflow-hidden p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {academicTools.map((tool) => {
+              const Icon = toolIcons[tool.id] || FileText;
+              return (
+                <Link
+                  key={tool.id}
+                  href={tool.url}
+                  className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                >
+                  <Icon className="text-primary mr-3 h-5 w-5" />
+                  <div>
+                    <h3 className="font-semibold">{tool.name}</h3>
+                    <p className="text-sm text-neutral-dark">{tool.description}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </Card>
       </section>
       

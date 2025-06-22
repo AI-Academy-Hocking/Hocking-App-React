@@ -18,27 +18,27 @@ const careerResources = [
     icon: FileText,
     description: "Create professional resumes with our online tool.",
     internal: true,
-    href: "#",
+    href: "https://skillsfirst.com/organizations/hocking",
   },
   {
     title: "Interview Prep",
     icon: Mic,
     description: "Practice interviews and get feedback.",
     internal: true,
-    href: "#",
+    href: "https://www.hocking.edu/career-services",
   },
   {
-    title: "Career Workshops",
+    title: "Career Planning",
     icon: Briefcase,
     description: "Join workshops to enhance your career skills.",
     internal: false,
-    href: "#",
+    href: "https://www.hocking.edu/career-services",
   },
 ];
 
 const officeInfo = {
   location: "John Light Hall 193",
-  phone: "740.753.7055",
+  phone: "740-753-6076",
   email: "careers@hocking.edu",
   hours: [
     { days: "Monday - Friday:", time: "8am - 5pm" },
@@ -114,7 +114,7 @@ export default function CareerUniversityCenter() {
                     <p className="text-gray-600 mb-4">{resource.description}</p>
                     <Button asChild className="w-full bg-purple-600 hover:bg-purple-700 text-white">
                        <a href={resource.href}>
-                         <ArrowRight className="h-4 w-4 mr-2" /> Access
+                         <ArrowRight className="h-4 w-4 mr-2" /> Go To
                        </a>
                     </Button>
                   </CardContent>

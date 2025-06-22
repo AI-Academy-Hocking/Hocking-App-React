@@ -55,67 +55,41 @@ export default function Advising() {
 
       <Card>
         <CardHeader className="bg-primary-light/10">
-          <CardTitle className="text-2xl text-primary">Administration</CardTitle>
+          <CardTitle className="text-2xl text-primary">Academic Advising</CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
-          <Tabs defaultValue="advisor" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-2 mb-4">
-              <TabsTrigger value="advisor">Your Advisor</TabsTrigger>
-              <TabsTrigger value="resources">Advising Resources</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="advisor">
-              <div className="space-y-6">
-                {advisors.map((advisor, index) => (
-                  <Card key={index}>
-                    <CardContent className="pt-6">
-                      <div className="flex flex-col md:flex-row gap-6">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold mb-2">{advisor.name}</h3>
-                          <p className="text-sm text-neutral-dark mb-4">{advisor.description}</p>
-                          <div className="space-y-2">
-                            <div className="flex items-center text-sm">
-                              <Phone className="h-4 w-4 mr-2 text-primary" />
-                              <span>{advisor.phone}</span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                              <Mail className="h-4 w-4 mr-2 text-primary" />
-                              <span>{advisor.email}</span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                              <MapPin className="h-4 w-4 mr-2 text-primary" />
-                              <span>{advisor.office}</span>
-                            </div>
-                            <div className="flex items-center text-sm">
-                              <Clock className="h-4 w-4 mr-2 text-primary" />
-                              <span>{advisor.availability}</span>
-                            </div>
-                          </div>
+          <div className="space-y-6">
+            {advisors.map((advisor, index) => (
+              <Card key={index}>
+                <CardContent className="pt-6">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold mb-2">{advisor.name}</h3>
+                      <p className="text-sm text-neutral-dark mb-4">{advisor.description}</p>
+                      <div className="space-y-2">
+                        <div className="flex items-center text-sm">
+                          <Phone className="h-4 w-4 mr-2 text-primary" />
+                          <span>{advisor.phone}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <Mail className="h-4 w-4 mr-2 text-primary" />
+                          <span>{advisor.email}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <MapPin className="h-4 w-4 mr-2 text-primary" />
+                          <span>{advisor.office}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <Clock className="h-4 w-4 mr-2 text-primary" />
+                          <span>{advisor.availability}</span>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="resources" className="p-4">
-              <div className="space-y-4">
-                <h3 className="font-semibold text-lg mb-2">Advising Resources</h3>
-                <ul className="list-disc list-inside text-sm text-neutral-dark space-y-1">
-                  <li>
-                    <Link href="https://www.hocking.edu/academic-success-center" target="_blank" rel="noopener noreferrer" className="text-primary underline">Academic Success Center</Link>
-                  </li>
-                  <li>
-                    <Link href="https://www.hocking.edu/advising" target="_blank" rel="noopener noreferrer" className="text-primary underline">Advising Information</Link>
-                  </li>
-                  <li>
-                    <Link href="https://www.hocking.edu/faq" target="_blank" rel="noopener noreferrer" className="text-primary underline">Advising FAQs</Link>
-                  </li>
-                </ul>
-              </div>
-            </TabsContent>
-          </Tabs>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>
