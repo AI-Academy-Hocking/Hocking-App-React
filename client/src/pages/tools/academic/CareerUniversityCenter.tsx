@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Briefcase, ExternalLink, Search, ArrowRight, FileText, Mic, MapPin, Phone, Mail, Clock, Users } from "lucide-react";
+import { Briefcase, ExternalLink, Search, ArrowRight, FileText, Mic, MapPin, Phone, Mail, Clock, Users, Target, Info } from "lucide-react";
 
 // Placeholder data
 const quickAccessLinks = [
-  { name: "LinkedIn", icon: ExternalLink, href: "#", color: "bg-blue-600 hover:bg-blue-700" },
-  { name: "Handshake", icon: ExternalLink, href: "#", color: "bg-green-600 hover:bg-green-700" },
-  { name: "Job Board", icon: Search, href: "#", color: "bg-purple-600 hover:bg-purple-700" },
-  { name: "Transfer Portal", icon: ArrowRight, href: "#", color: "bg-orange-600 hover:bg-orange-700" },
+  { name: "LinkedIn", icon: ExternalLink, href: "https://www.linkedin.com/school/hocking-college", color: "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700" },
+  { name: "Handshake", icon: ExternalLink, href: "https://joinhandshake.com/", color: "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700" },
+  { name: "Job Board", icon: Search, href: "https://www.hocking.edu/career-and-university-center-job-board", color: "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700" },
+  { name: "Transfer Portal", icon: ArrowRight, href: "https://www.hocking.edu/transfer-resource-center", color: "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600" },
 ];
 
 const careerResources = [
@@ -37,19 +37,17 @@ const careerResources = [
 ];
 
 const officeInfo = {
-  location: "Student Center, Room 204",
+  location: "John Light Hall 193",
   phone: "740.753.7055",
   email: "careers@hocking.edu",
   hours: [
-    { days: "Monday-Friday:", time: "9:00 AM - 5:00 PM" },
-    { days: "Saturday-Sunday:", time: "Closed" },
+    { days: "Monday - Friday:", time: "8am - 5pm" },
   ],
+  about: "This session is dedicated to those who want more traditional face-to-face assistance. Please note that drop-ins are accepted on a first-come, first-served basis."
 };
 
 const teamMembers = [
-  { name: "Thomas Chen", title: "Director of Career Services", email: "tchen@hocking.edu" },
-  { name: "Jessica Park", title: "Career Counselor", email: "jpark@hocking.edu" },
-  { name: "Alex Johnson", title: "Employer Relations Coordinator", email: "ajohnson@hocking.edu" },
+  { name: "Terry Koons", title: "Executive Director for student engagement and success", email: "koonst@hocking.edu" },
 ];
 
 export default function CareerUniversityCenter() {
@@ -69,12 +67,16 @@ export default function CareerUniversityCenter() {
       {/* Quick Access Links */}
       <section className="mb-12">
         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <ArrowRight className="h-6 w-6 text-primary" /> Quick Access Links
+          <Target className="h-6 w-6 text-primary" /> Quick Access Links
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {quickAccessLinks.map((link) => (
-            <Button key={link.name} asChild className={`text-white ${link.color}`}>
-              <a href={link.href} target="_blank" rel="noopener noreferrer">
+            <Button 
+              key={link.name} 
+              asChild 
+              className={`text-white font-semibold shadow-md transition-all duration-300 ease-in-out transform hover:scale-105 ${link.color}`}
+            >
+              <a href={link.href} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center">
                 <link.icon className="h-4 w-4 mr-2" />
                 {link.name}
               </a>
@@ -132,6 +134,13 @@ export default function CareerUniversityCenter() {
           <h2 className="text-2xl font-bold mb-4">Visit Our Office</h2>
           <Card>
             <CardContent className="pt-6 space-y-4">
+              <div className="flex items-start gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <Info className="h-5 w-5 text-blue-600 mt-1 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-blue-800">About In-Person Visits</h3>
+                  <p className="text-gray-700 text-sm">{officeInfo.about}</p>
+                </div>
+              </div>
               <div className="flex items-start gap-3">
                 <MapPin className="h-5 w-5 text-gray-500 mt-1" />
                 <div>
