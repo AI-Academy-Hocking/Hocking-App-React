@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { createElement } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -27,8 +26,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('user');
+      }
     }
   }, []);
 
@@ -43,7 +48,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
-      // In a real app, this would be an API call
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -67,7 +71,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const guestLogin = () => {
-    // Create a guest user
     const guestUser: User = {
       id: 0,
       username: 'Guest User',
@@ -76,7 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setUser(guestUser);
     setIsAuthenticated(true);
-    setLocation('/home');
   };
 
   const logout = () => {
@@ -86,10 +88,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLocation('/login');
   };
 
-  return createElement(
-    AuthContext.Provider,
-    { value: { isAuthenticated, user, login, guestLogin, logout } },
-    children
+  return (
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        user,
+        login,
+        guestLogin,
+        logout
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 }
 
@@ -99,4 +109,4 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+} 

@@ -9,86 +9,100 @@ interface Amenity {
   description: string;
   features: string[];
   location: string;
+  hours?: string[];
 }
 
 const amenities: Amenity[] = [
   {
     name: "Fitness Center",
-    category: "Recreation",
-    description: "State-of-the-art fitness facility available to all residents.",
+    category: "Wellness",
+    description: "State-of-the-art fitness facilities for all students",
     features: [
-      "Cardio equipment",
+      "Modern exercise equipment",
+      "Cardio machines",
       "Weight training area",
-      "Group exercise rooms",
-      "Locker rooms",
-      "Fitness classes"
+      "Group exercise space",
+      "Locker rooms"
     ],
-    location: "Main Campus Center"
+    location: "Student's Center"
   },
   {
     name: "Study Spaces",
     category: "Academic",
-    description: "Dedicated areas for individual and group study.",
+    description: "Dedicated spaces for studying and group work",
     features: [
-      "Quiet study rooms",
-      "Group study areas",
-      "Computer labs",
-      "Printing facilities",
-      "24/7 access"
+      "Quiet study areas",
+      "Group study rooms",
+      "TV for movie watching",
+      "Projectors for presentations",
+      "Comfortable seating"
     ],
-    location: "All Residence Halls"
+    location: "Various locations across campus"
   },
   {
     name: "Laundry Facilities",
-    category: "Essential",
-    description: "Convenient laundry services in each residence hall.",
+    category: "Convenience",
+    description: "Free laundry services for all residents",
     features: [
-      "Washers and dryers",
-      "Mobile payment options",
-      "Laundry alerts",
-      "Ironing stations",
-      "Folding areas"
+      "Free washers and dryers",
+      "Folding areas",
+      "Waiting areas",
+      "24/7 access",
+      "Multiple locations"
     ],
-    location: "All Residence Halls"
+    location: "All residence halls"
   },
   {
-    name: "Dining Halls",
+    name: "Dining Hall",
     category: "Dining",
-    description: "Multiple dining options with diverse meal choices.",
+    description: "Main campus dining facility offering diverse meal options",
     features: [
-      "All-you-can-eat meals",
-      "Special dietary options",
-      "Late-night dining",
-      "Grab-and-go options",
-      "Meal plan flexibility"
+      "Breakfast service",
+      "Lunch service",
+      "Dinner service",
+      "Diverse menu options",
+      "All-you-can-eat dining"
     ],
-    location: "Campus Center"
+    location: "Second floor of John Light Hall"
   },
   {
-    name: "Recreation Center",
+    name: "Student's Center",
     category: "Recreation",
-    description: "Comprehensive recreation facility for sports and activities.",
+    description: "Central hub for student activities and recreation",
     features: [
-      "Indoor basketball courts",
-      "Swimming pool",
-      "Racquetball courts",
-      "Fitness classes",
-      "Equipment rental"
+      "Gym",
+      "Rock wall climbing",
+      "Indoor track",
+      "Pool",
+      "Club activities",
+      "Sports facilities",
+      "Fitness areas",
+      "Aerobics room",
+      "Aquatics center",
+      "Flag Football Intramural League",
+      "Basketball courts",
+      "Pickleball courts",
+      "Table Tennis",
+      "Golf Driving Range",
+      "Basketball and Softball Intramural Leagues",
+      "Volleyball courts",
+      "Hawk Shop"
     ],
-    location: "Campus Center"
-  },
-  {
-    name: "Common Areas",
-    category: "Social",
-    description: "Spaces for socializing and community building.",
-    features: [
-      "TV lounges",
-      "Game rooms",
-      "Outdoor spaces",
-      "BBQ areas",
-      "Community kitchens"
-    ],
-    location: "All Residence Halls"
+    location: "Central Campus",
+    hours: [
+      "Main Facility:",
+      "Weekdays: 8 AM - 8 PM",
+      "Weekends: 11 AM - 6 PM",
+      "",
+      "Pool:",
+      "Weekdays: 8 AM - 12 PM",
+      "",
+      "Climbing Wall:",
+      "Please call to request a climbing time",
+      "",
+      "Hawk Shop:",
+      "Monday-Friday: 1-4 PM"
+    ]
   }
 ];
 
@@ -120,8 +134,8 @@ export default function Amenities() {
           <Sparkles className="h-8 w-8 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">Amenities</h1>
-          <p className="text-muted-foreground">Discover the facilities and services available to residents</p>
+          <h1 className="text-3xl font-bold">Campus Amenities</h1>
+          <p className="text-muted-foreground">Discover the facilities and services available to you</p>
         </div>
       </motion.div>
 
@@ -152,6 +166,18 @@ export default function Amenities() {
                     </li>
                   ))}
                 </ul>
+                {amenity.hours && (
+                  <div className="mt-4">
+                    <h3 className="text-sm font-semibold mb-3">Hours</h3>
+                    <ul className="space-y-1">
+                      {amenity.hours.map((hour, index) => (
+                        <li key={index} className="text-sm text-muted-foreground">
+                          {hour}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>

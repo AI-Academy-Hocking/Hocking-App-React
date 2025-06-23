@@ -1,4 +1,3 @@
-
 import { useLocation, Link } from "wouter";
 import { useAuth } from "../../lib/auth";
 import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
@@ -27,8 +26,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="hidden md:flex flex-col w-64 bg-gray-800 text-gray-100 h-full">
-      <div className="p-4 border-b border-primary-light bg-blue-500">
+    <div className="hidden md:flex flex-col w-64 bg-black/50 backdrop-blur-sm text-white h-full">
+      <div className="p-4 border-b border-white/20 bg-black/30">
         <img 
           src={HockingLogo} 
           alt="Hocking College Logo" 
@@ -42,24 +41,24 @@ export default function Sidebar() {
             <li key={item.path} className="mb-2">
               <Link 
                 href={item.path}
-                className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition ${
-                  isActive(item.path) ? 'bg-gray-700' : ''
+                className={`flex items-center p-2 rounded-lg hover:bg-white/20 transition ${
+                  isActive(item.path) ? 'bg-white/30' : ''
                 }`}
               >
-                <item.icon className="mr-3 h-5 w-5" />
-                <span>{item.label}</span>
+                <item.icon className="mr-3 h-5 w-5 text-white" />
+                <span className="text-white">{item.label}</span>
               </Link>
             </li>
           ))}
         </ul>
       </nav>
       
-      <div className="p-4 border-t border-primary-light">
+      <div className="p-4 border-t border-white/20 bg-black/30">
         <button 
           onClick={logout} 
-          className="flex items-center text-sm hover:text-gray-300 transition"
+          className="flex items-center text-sm text-white hover:text-white/80 transition"
         >
-          <LogOut className="mr-1 h-4 w-4" />
+          <LogOut className="mr-1 h-4 w-4 text-white" />
           <span>Return To Welcome Page</span>
         </button>
       </div>

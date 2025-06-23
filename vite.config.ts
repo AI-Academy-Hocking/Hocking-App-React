@@ -47,6 +47,9 @@ export default defineConfig({
     fs: {
       strict: false,
       allow: ['..', 'node_modules']
+    },
+    proxy: {
+      '/api': 'http://localhost:3001',
     }
   }
 });

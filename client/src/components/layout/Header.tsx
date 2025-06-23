@@ -1,15 +1,33 @@
 import * as React from "react";
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, Moon, Sun, LogOut, Home, Calendar, Wrench, Map, UtensilsCrossed, Shield } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import HawkLogo from "../../assets/HawkLogo.png";
+
+const navItems = [
+  { path: "/home", label: "Home", icon: Home },
+  { path: "/calendar", label: "Calendar", icon: Calendar },
+  { path: "/tools", label: "Student Tools", icon: Wrench },
+  { path: "/maps", label: "Maps & Directions", icon: Map },
+  { path: "/dining", label: "Dining Hall", icon: UtensilsCrossed },
+  { path: "/safety", label: "Campus Safety", icon: Shield },
+];
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
+  const [location] = useLocation();
+
+  const isActive = (path: string) => location === path;
+
+  const toggleTheme = () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    setDarkMode(isDark);
+  };
 
   return (
     <header className="bg-blue-900 p-4 shadow-md">
@@ -26,52 +44,40 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="bg-primary text-white border-none w-64 p-0 z-[2000]"
+              className="border-none w-64 p-0 z-[2000] flex flex-col h-full bg-gray-800"
             >
-              <div className="p-4 border-b border-primary-light">
+              <div className="p-4 border-b-2 border-white bg-blue-500">
                 <img 
                   src={HawkLogo} 
                   alt="Hocking College Logo" 
                   className="h-8 w-auto object-contain" 
                 />
               </div>
-              
-              <nav className="p-4">
+              <nav className="flex-1 p-4">
                 <ul className="space-y-2">
-                  <li>
-                    <Link href="/home" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
-                      <span className="material-icons mr-3">home</span>
-                      <span>Home</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/calendar" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
-                      <span className="material-icons mr-3">calendar_today</span>
-                      <span>Calendar</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/tools" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
-                      <span className="material-icons mr-3">build</span>
-                      <span>Student Tools</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/maps" className="flex items-center p-2 rounded-lg hover:bg-gray-100 transition text-blue-800">
-                      <span className="material-icons mr-3">map</span>
-                      <span>Maps & Directions</span>
-                    </Link>
-                  </li>
+                  {navItems.map((item) => (
+                    <li key={item.path}>
+                      <Link 
+                        href={item.path}
+                        className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-[#00b86b] ${
+                          isActive(item.path) ? 'bg-gray-700' : ''
+                        }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <item.icon className="mr-3 h-5 w-5" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </nav>
-              
-              <div className="p-4 mt-auto border-t border-gray-200">
+              <div className="p-4 border-t border-gray-700">
                 <button 
                   onClick={logout} 
-                  className="flex items-center text-sm hover:text-gray-600 transition text-blue-800"
+                  className="flex items-center text-sm text-white hover:text-gray-300 transition w-full"
                 >
-                  <span className="material-icons mr-1 text-sm">logout</span>
-                  <span>Log Out</span>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Return To Welcome Page</span>
                 </button>
               </div>
             </SheetContent>
@@ -81,10 +87,17 @@ export default function Header() {
             alt="Hocking College Logo" 
             className="h-8 w-auto object-contain" 
           />
-          <h1 className="text-xl font-heading font-bold text-yellow-400 [text-shadow:_1px_1px_1px_rgb(0_0_0_/_100%)]">
+          <h1 className="text-xl font-bold text-yellow-400 [text-shadow:_1px_1px_1px_rgb(0_0_0_/_100%)]">
             Hocking College
           </h1>
         </div>
+        <button
+          onClick={toggleTheme}
+          className="ml-4 p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+          aria-label="Toggle light/dark mode"
+        >
+          {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+        </button>
       </div>
     </header>
   );

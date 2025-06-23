@@ -4,12 +4,12 @@
 
 /* Removed @tailwind directives because Tailwind CSS is not configured or not being used */
 
- :root {
+:root {
   --color-primary: #0057b8;      /* Hocking's main blue */
   --color-secondary: #ffd600;    /* Yellow accent */
   --color-background: #ffffff;   /* Light mode background */
   --color-text: #003366;         /* Dark blue text */
-  --color-accent: #00b86b;       /* Green accent */
+  --color-accent: #0057b8;       /* Blue accent instead of green */
   --color-border: #e0e0e0;       /* Optional: light border */
 }
 
@@ -18,7 +18,6 @@
   --color-text: #ffffff;         /* White text */
   border-color: var(--color-border);
 }
-
 
 body {
   font-family: var(--font-sans, sans-serif);
@@ -44,4 +43,12 @@ a, .accent {
   --foreground: 222.2 84% 4.9%;
   --primary: #3b82f6;
   --primary-light: #60a5fa;
+}
+
+/* Aggressively override all outlines and box-shadows for select triggers and their children */
+.select-trigger, .select-trigger *,
+.select-trigger:focus, .select-trigger:active, .select-trigger:hover,
+.select-trigger *:focus, .select-trigger *:active, .select-trigger *:hover {
+  outline: 1.5px solid #fff !important;
+  box-shadow: 0 0 0 1.5px #fff !important;
 }

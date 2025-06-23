@@ -1,6 +1,6 @@
-import express from 'express';
-import cors from 'cors';
-import calendarRouter from './routes/calendar';
+import express, { Express } from 'express';
+const cors = require('cors');
+const { registerRoutes } = require('./routes');
 import { MemStorage } from './storage';
 
 const app = express();
