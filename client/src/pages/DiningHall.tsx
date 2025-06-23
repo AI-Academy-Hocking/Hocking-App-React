@@ -44,7 +44,7 @@ export default function DiningHall() {
     <div className="container mx-auto py-6 px-4 bg-white dark:bg-[#151c26] min-h-screen">
       <div className="flex items-center gap-2 mb-2">
         <UtensilsCrossed className="h-8 w-8 text-primary dark:text-blue-400" />
-        <h1 className="text-3xl font-bold text-primary dark:text-white">
+        <h1 className="text-3xl font-bold text-black dark:text-blue-300">
           Hocking College Dining
         </h1>
       </div>
@@ -57,7 +57,7 @@ export default function DiningHall() {
         <select
           value={selectedTab}
           onChange={(e) => setSelectedTab(e.target.value)}
-          className="p-2 border border-neutral-300 rounded-md w-full md:w-auto dark:bg-[#353e4a] dark:text-white dark:border-[#2a3240]"
+          className="p-2 border-2 border-blue-600 rounded-md w-full md:w-auto dark:bg-[#353e4a] dark:text-white dark:border-gray-700"
         >
           <option value="hours">Hours Of Operation</option>
           <option value="meal-plans">Meal Plans</option>
@@ -70,7 +70,7 @@ export default function DiningHall() {
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
         <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
-          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-black dark:text-blue-300 mb-4">
             <Clock className="h-7 w-7 text-primary dark:text-blue-400" />
             Hours of Operation
           </h2>
@@ -105,7 +105,7 @@ export default function DiningHall() {
 
       {selectedTab === "meal-plans" && (
         <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
-          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-black dark:text-blue-300 mb-4">
             <CreditCard className="h-7 w-7 text-primary dark:text-blue-400" />
             Meal Plans
           </h2>
@@ -163,7 +163,7 @@ export default function DiningHall() {
         <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
           <div className="flex items-center gap-2 mb-4">
             <Calendar className="h-7 w-7 text-primary dark:text-blue-400" />
-            <h2 className="text-2xl font-bold text-primary dark:text-white">This Week's Menu</h2>
+            <h2 className="text-2xl font-bold text-black dark:text-blue-300">This Week's Menu</h2>
             <span className="text-sm bg-primary/10 text-primary dark:bg-blue-500/20 dark:text-white px-3 py-1 rounded-full ml-auto">March 31 - April 6</span>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
@@ -223,7 +223,7 @@ export default function DiningHall() {
 
       {selectedTab === "dietary" && (
         <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
-          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-black dark:text-blue-300 mb-4">
             <Info className="h-7 w-7 text-primary dark:text-blue-400" />
             Special Dietary Information
           </h2>
@@ -299,7 +299,7 @@ export default function DiningHall() {
 
       {selectedTab === "locations" && (
         <div className="bg-white dark:bg-[#353e4a] rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
-          <h2 className="flex items-center gap-2 text-2xl font-bold text-primary dark:text-white mb-4">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-black dark:text-blue-300 mb-4">
             <MapPin className="h-7 w-7 text-primary dark:text-blue-400" />
             Campus Dining Locations
           </h2>

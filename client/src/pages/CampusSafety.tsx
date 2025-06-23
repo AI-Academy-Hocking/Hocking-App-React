@@ -41,7 +41,7 @@ export default function CampusSafety() {
 
   return (
     <div className="container py-6 max-w-2xl bg-white dark:bg-[#151c26] min-h-screen rounded-xl">
-      <h1 className="text-3xl font-bold mb-2 text-primary dark:text-white">Campus Safety</h1>
+      <h1 className="text-3xl font-bold mb-2 text-black dark:text-blue-300">Campus Safety</h1>
       <div className="space-y-6">
         {/* Emergency Contacts Section */}
         <div className="border border-red-500 rounded-xl bg-neutral-100 dark:bg-[#353e4a] p-4 mb-6">
@@ -78,7 +78,7 @@ export default function CampusSafety() {
         <div className="bg-neutral-100 dark:bg-[#353e4a] rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
             <Shield className="text-blue-600 h-5 w-5" />
-            <span className="text-base font-semibold text-neutral-900 dark:text-white">Safety Procedures</span>
+            <span className="text-base font-semibold text-black dark:text-blue-300">Safety Procedures</span>
           </div>
           <Separator className="bg-neutral-300 dark:bg-[#2a3240] my-3" />
           <ul className="text-neutral-800 dark:text-white text-sm space-y-2">

@@ -87,8 +87,8 @@
   box-sizing: border-box;
   margin: 0;
   background: var(--calendar-day-bg) !important;
-  border-right: 2px solid #4a5670 !important;
-  border-bottom: 2px solid #4a5670 !important;
+  border-right: 2px solid #4a5568 !important;
+  border-bottom: 2px solid #4a5568 !important;
   border-top: none !important;
   border-left: none !important;
   overflow: hidden;
@@ -216,6 +216,8 @@
 [data-theme="dark"] .rbc-date-cell {
   background: #2d3a4d !important;
   box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15);
+  border-right: 2px solid #2a3240 !important;
+  border-bottom: 2px solid #2a3240 !important;
 }
 
 @media (prefers-color-scheme: dark) {

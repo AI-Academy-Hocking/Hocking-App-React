@@ -192,9 +192,9 @@ export default function CalendarPage() {
     <div className="min-h-screen" style={{ background: 'var(--color-background)' }}>
       <section>
         <div className="flex flex-col items-center mb-6">
-          <h2 className="text-3xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Calendar</h2>
+          <h2 className="text-3xl font-heading font-semibold mb-4 text-gray-900 dark:text-blue-300">Calendar</h2>
           <div className="flex flex-col gap-2 items-center">
-            <div className="text-sm font-medium text-[var(--color-text)] text-center mb-2">
+            <div className="text-sm font-medium text-gray-900 dark:text-white text-center mb-2">
               Calendar Type
             </div>
             <div className="flex gap-3">
@@ -237,10 +237,10 @@ export default function CalendarPage() {
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
                 <div className="text-center">
-                  <h3 className="font-semibold text-lg" style={{ color: 'var(--color-text)' }}>
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-blue-300">
                     {format(date, 'MMMM yyyy')}
                   </h3>
-                  <div className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
+                  <div className="text-sm font-medium text-gray-900 dark:text-white">
                     {activeCalendar === "academic" ? "Academic Calendar" : "Student Activities Calendar"}
                   </div>
                 </div>
@@ -375,14 +375,14 @@ export default function CalendarPage() {
 
       <section className="max-w-6xl mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-heading font-semibold" style={{ color: 'var(--color-text)' }}>
+          <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-blue-300">
             Upcoming Events
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
             <h3 className="text-xl font-semibold mb-4">Academic Calendar</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-gray-600 dark:text-white mb-4">
               View important dates, deadlines, and events for the academic year.
             </p>
             <Link href="/calendar">
@@ -392,7 +392,7 @@ export default function CalendarPage() {
 
           <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
             <h3 className="text-xl font-semibold mb-4">Student Activities</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
+            <p className="text-gray-600 dark:text-white mb-4">
               Discover campus events, clubs, and activities to get involved.
             </p>
             <Link href="/activities">
@@ -421,6 +421,15 @@ export default function CalendarPage() {
           padding: 8px;
           text-align: center;
           background-color: #e5e7eb;
+          border-right: 1px solid #4a5568 !important;
+        }
+
+        .rbc-row > .rbc-date-cell:last-child {
+          border-right: none;
+        }
+
+        .dark .rbc-date-cell {
+          border-right: 1px solid #2a3240 !important;
         }
 
         .rbc-month-row {

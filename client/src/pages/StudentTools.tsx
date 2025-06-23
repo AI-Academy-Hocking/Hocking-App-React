@@ -72,10 +72,10 @@ export default function StudentTools() {
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-b border-gray-200 dark:border-0">
-              <TabsTrigger value="academic" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
-              <TabsTrigger value="resources" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
+            <TabsList className="grid grid-cols-3 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-1">
+              <TabsTrigger value="academic" className="py-1 flex items-center justify-center data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
+              <TabsTrigger value="financial" className="py-1 flex items-center justify-center data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
+              <TabsTrigger value="resources" className="py-1 flex items-center justify-center data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
             </TabsList>
             
             <TabsContent value="academic" className="p-4">
@@ -86,7 +86,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -107,7 +107,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -128,7 +128,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>

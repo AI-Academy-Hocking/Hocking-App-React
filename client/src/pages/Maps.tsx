@@ -319,31 +319,11 @@ export default function Maps() {
   return (
     <div className="space-y-6 p-6 bg-white dark:bg-[#151c26] min-h-screen">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Campus Maps</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Campus Maps</h2>
         
-        <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
+        <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a] overflow-hidden">
           {/* Map container */}
           <div ref={mapRef} className="h-72 bg-neutral-light dark:bg-[#353e4a] relative"></div>
-          
-          {/* Map controls */}
-          <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-[1000]">
-            <Button 
-              size="icon" 
-              variant="default" 
-              className="rounded-full" 
-              onClick={handleZoomIn}
-            >
-              <Plus className="h-4 w-4 text-blue-500 dark:text-blue-400" />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="default" 
-              className="rounded-full" 
-              onClick={handleZoomOut}
-            >
-              <Minus className="h-4 w-4 text-blue-500 dark:text-blue-400" />
-            </Button>
-          </div>
           
           {/* Map search and filters */}
           <CardContent className="p-4 border-t border-neutral-light bg-white dark:bg-[#353e4a]">
@@ -381,7 +361,7 @@ export default function Maps() {
       
       {user && !user.isGuest && (
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Location Sharing</h2>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Location Sharing</h2>
           
           <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
             <div className="space-y-4">
@@ -446,7 +426,7 @@ export default function Maps() {
       )}
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Building Directory</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Building Directory</h2>
         
         <Card className="border-2 border-blue-600 rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
           <ul className="divide-y divide-neutral-light dark:divide-[#2a3240]">
@@ -455,9 +435,9 @@ export default function Maps() {
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      <span className={`inline-block w-5 h-5 rounded-full border-2 transition-colors duration-200 mr-2 ${selectedBuildingId === building.id ? 'bg-blue-600 border-blue-700 dark:bg-blue-400 dark:border-blue-500' : 'bg-neutral-200 border-neutral-400 dark:bg-[#2a3240] dark:border-white'}`}></span>
+                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-white dark:border-white mr-2"></span>
                       <div>
-                        <h3 className={`font-semibold ${selectedBuildingId === building.id ? 'text-black dark:text-white' : 'text-black dark:text-white'}`}>{building.name}</h3>
+                        <h3 className="font-semibold text-black dark:text-blue-300">{building.name}</h3>
                         <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>
                       </div>
                     </div>
