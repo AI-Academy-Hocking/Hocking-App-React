@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import MobileNav from "./MobileNav";
 import Header from "./Header";
@@ -12,6 +12,7 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   const { isAuthenticated, user } = useAuth();
   const [, setLocation] = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -35,9 +36,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Sidebar />
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isMobileMenuOpen ? 'blur-md' : ''}`}>
         {/* Header */}
-        <Header />
+        <Header onMobileMenuChange={setIsMobileMenuOpen} />
         
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto p-4">

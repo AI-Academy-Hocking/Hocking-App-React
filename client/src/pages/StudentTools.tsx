@@ -68,7 +68,7 @@ export default function StudentTools() {
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Tools</h2>
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
@@ -88,9 +88,9 @@ export default function StudentTools() {
                       href={tool.url} 
                       className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
-                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                      <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </a>
@@ -109,9 +109,9 @@ export default function StudentTools() {
                       href={tool.url} 
                       className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
-                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                      <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </a>
@@ -130,9 +130,9 @@ export default function StudentTools() {
                       href={tool.url} 
                       className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
-                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                      <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
                       <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </a>
@@ -145,7 +145,7 @@ export default function StudentTools() {
       </section>
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Quick Links</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-blue-300">Quick Links</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {quickLinks.map((link) => (
             <Link 
@@ -153,8 +153,8 @@ export default function StudentTools() {
               href={link.path}
               className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
-              <link.icon className="text-blue-600 dark:text-white text-3xl mb-2 h-8 w-8" />
-              <span className="font-semibold text-gray-900 dark:text-white">{link.label}</span>
+              <link.icon className="text-blue-600 dark:text-blue-400 text-3xl mb-2 h-8 w-8" />
+              <span className="font-semibold text-gray-900 dark:text-blue-300">{link.label}</span>
             </Link>
           ))}
         </div>

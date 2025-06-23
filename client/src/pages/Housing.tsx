@@ -21,7 +21,7 @@ const housingOptions: HousingOption[] = [
     title: "Residence Life Handbook",
     icon: <div className="relative">
             <Book className="h-8 w-8" />
-            <Building2 className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+            <Building2 className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
           </div>,
     path: "/housing/handbook",
     description: "Access the complete guide to living on campus"
@@ -39,7 +39,7 @@ const housingOptions: HousingOption[] = [
     title: "Campus Life & Activities",
     icon: <div className="relative">
             <PartyPopper className="h-8 w-8" />
-            <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+            <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
           </div>,
     path: "/housing/activities",
     description: "Discover events and activities for an amazing college experience"
@@ -48,7 +48,7 @@ const housingOptions: HousingOption[] = [
     title: "Campus Social Hub",
     icon: <div className="relative">
             <MessageSquare className="h-8 w-8" />
-            <Image className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+            <Image className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
           </div>,
     path: "/housing/social",
     description: "Share your campus life experiences and connect with others"
@@ -99,7 +99,7 @@ const housingOptions: HousingOption[] = [
     title: "Residence Hall Contract",
     icon: <div className="relative">
             <FileText className="h-8 w-8" />
-            <FileCheck className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
+            <FileCheck className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
           </div>,
     path: "/housing/contract",
     description: "View and sign the residence hall contract"
@@ -137,15 +137,15 @@ export default function Housing() {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 bg-white dark:bg-gray-900">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="text-center mb-12"
       >
-        <h1 className="text-4xl font-bold mb-4">Housing Services</h1>
-        <p className="text-lg text-muted-foreground">
+        <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-blue-300">Housing Services</h1>
+        <p className="text-lg text-gray-600 dark:text-white">
           Everything you need to know about living on campus
         </p>
       </motion.div>
@@ -159,19 +159,19 @@ export default function Housing() {
         {housingOptions.map((option) => (
           <motion.div key={option.title} variants={item}>
             <Card
-              className="hover-card cursor-pointer h-full"
+              className="hover-card cursor-pointer h-full border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow"
               onClick={() => setLocation(option.path)}
             >
               <CardHeader>
                 <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-primary/10 rounded-full text-primary">
+                  <div className="text-blue-600 dark:text-blue-400">
                     {option.icon}
                   </div>
                 </div>
-                <CardTitle className="text-center">{option.title}</CardTitle>
+                <CardTitle className="text-center text-gray-900 dark:text-blue-300">{option.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-center text-sm text-muted-foreground">
+                <p className="text-center text-sm text-gray-600 dark:text-white">
                   {option.description}
                 </p>
               </CardContent>

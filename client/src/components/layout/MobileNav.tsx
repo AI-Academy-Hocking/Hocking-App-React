@@ -16,7 +16,7 @@ export default function MobileNav() {
   ];
 
   return (
-    <nav className="md:hidden bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700">
+    <nav className="md:hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-t border-gray-200 dark:border-gray-700">
       <div className="flex justify-around">
         {navItems.map((item) => (
           <Link key={item.path} href={item.path}>
