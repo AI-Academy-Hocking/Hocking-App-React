@@ -53,13 +53,20 @@ export default function Sidebar() {
         </ul>
       </nav>
       
-      <div className="p-4 border-t border-white/20 bg-black/30">
+      <div className="p-4 border-t border-white/20 bg-black/30 flex flex-col gap-2">
+        <Link 
+          href="/"
+          className="flex items-center text-sm text-white hover:text-white/80 transition mb-2"
+        >
+          <Home className="mr-1 h-4 w-4 text-white" />
+          <span>Back to Landing Page</span>
+        </Link>
         <button 
           onClick={logout} 
           className="flex items-center text-sm text-white hover:text-white/80 transition"
         >
           <LogOut className="mr-1 h-4 w-4 text-white" />
-          <span>Return To Welcome Page</span>
+          <span>Log Out</span>
         </button>
       </div>
     </div>

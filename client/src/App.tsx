@@ -39,6 +39,12 @@ import TestingCenter from "./pages/TestingCenter";
 import TrioServices from "./pages/TrioServices";
 import LearningLabs from "./pages/LearningLabs";
 import AccessibilityResources from "./pages/AccessibilityResources";
+import CourseCatalog from "./pages/tools/academic/course-catalog";
+import Graduation from "./pages/tools/academic/graduation";
+import Advising from "./pages/tools/academic/advising";
+import OfficeAdministration from "./pages/tools/academic/office-administration";
+import CareerUniversityCenter from "./pages/tools/academic/CareerUniversityCenter";
+import AcademicToolDetail from "./pages/tools/academic/[id]";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -47,42 +53,19 @@ import { useEffect, useState } from 'react';
 const queryClient = new QueryClient();
 
 function Router() {
-  const [location, setLocation] = useLocation();
-  const { isAuthenticated } = useAuth();
-  const [checkingHomeRedirect, setCheckingHomeRedirect] = useState(false);
+  const [location] = useLocation();
 
-  useEffect(() => {
-    if (isAuthenticated && location === "/home") {
-      setCheckingHomeRedirect(true);
-      const hasClickedGetStarted = localStorage.getItem('hasClickedGetStarted') === 'true';
-      if (!hasClickedGetStarted) {
-        setLocation("/");
-      }
-      setCheckingHomeRedirect(false);
-    }
-  }, [isAuthenticated, location, setLocation]);
+  const hasClickedGetStarted = localStorage.getItem('hasClickedGetStarted') === 'true';
+  const isLoginPage = location === '/' || location === '/login';
 
-  // If user is authenticated and on login page, redirect to home
-  if (isAuthenticated && location === "/login") {
-    return <Redirect to="/home" />;
+  // If the user hasn't "gotten started" and they are not on the login page,
+  // force them to the landing page. This is the only redirect we need for this logic.
+  if (!hasClickedGetStarted && !isLoginPage) {
+    return <Redirect to="/" />;
   }
 
-  // If user is not authenticated and not on login page, redirect to login
-  if (!isAuthenticated && location !== "/login" && location !== "/") {
-    return <Redirect to="/login" />;
-  }
-
-  // Show loading state while checking redirect
-  if (checkingHomeRedirect) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  // If we're on the login page, don't wrap with MainLayout
-  if (location === "/login" || location === "/") {
+  // If we're on the login page, render it without the main layout.
+  if (isLoginPage) {
     return (
       <Switch>
         <Route path="/" component={Login} />
@@ -92,7 +75,7 @@ function Router() {
     );
   }
 
-  // For all other pages, wrap with MainLayout
+  // For all other pages that have been "unlocked", wrap them with MainLayout.
   return (
     <MainLayout>
       <Switch>
@@ -129,6 +112,12 @@ function Router() {
         <Route path="/trio-services" component={TrioServices} />
         <Route path="/learning-labs" component={LearningLabs} />
         <Route path="/accessibility-resources" component={AccessibilityResources} />
+        <Route path="/tools/academic/course-catalog" component={CourseCatalog} />
+        <Route path="/tools/academic/graduation" component={Graduation} />
+        <Route path="/tools/academic/advising" component={Advising} />
+        <Route path="/tools/academic/office-administration" component={OfficeAdministration} />
+        <Route path="/tools/academic/career-university-center" component={CareerUniversityCenter} />
+        <Route path="/tools/academic/:id" component={AcademicToolDetail} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

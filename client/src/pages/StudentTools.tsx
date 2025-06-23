@@ -1,26 +1,11 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-<<<<<<< HEAD
-  BookOpen, FileText, GraduationCap, Briefcase,
-  School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar,
-  DoorOpen  
-} from "lucide-react";
-import { Link } from "wouter";
-
-type StudentTool = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  url: string;
-};
-=======
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, Home, Trophy
+  Users, Dumbbell, Utensils, Calendar, Home, Trophy, Briefcase
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 
 // Define the StudentTool interface locally since we can't import it
@@ -34,20 +19,6 @@ interface StudentTool {
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
-  
-  const { data: tools } = useQuery<StudentTool[]>({
-    queryKey: ['/api/student-tools'],
-    queryFn: async () => {
-      const response = await fetch('/api/student-tools');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    },
-  });
->>>>>>> master
-
-export default function StudentTools() {
   
   // Define academic tools with proper routing to the academic tool pages
   const academicTools = [
@@ -88,6 +59,42 @@ export default function StudentTools() {
     }
   ];
 
+  // Define financial tools
+  const financialTools: StudentTool[] = [
+    {
+      id: 'financial-aid',
+      name: 'Financial Aid',
+      description: 'Apply for financial aid, scholarships, and payment plans',
+      category: 'financial',
+      url: '/financial-aid'
+    },
+    {
+      id: 'payment-plan',
+      name: 'Payment Plans',
+      description: 'Set up payment plans and manage your account',
+      category: 'financial',
+      url: '/payment-plan'
+    }
+  ];
+
+  // Define resource tools
+  const resourceTools: StudentTool[] = [
+    {
+      id: 'library',
+      name: 'Library',
+      description: 'Access library resources and study materials',
+      category: 'resources',
+      url: '/library'
+    },
+    {
+      id: 'online-learning',
+      name: 'Online Learning',
+      description: 'Access online courses and learning resources',
+      category: 'resources',
+      url: '/online-learning'
+    }
+  ];
+
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
     'course-catalog': BookOpen,
@@ -95,6 +102,8 @@ export default function StudentTools() {
     'office-administration': Briefcase,
     'career-university-center': Briefcase,
     'advising': School,
+    'financial-aid': UserCheck,
+    'payment-plan': History,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
@@ -112,39 +121,12 @@ export default function StudentTools() {
     { id: 'athletics', label: 'Athletics', icon: Trophy, path: '/athletics' },
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
-<<<<<<< HEAD
-    { id: 'housing', label: 'Housing', icon: DoorOpen, path: '/housing' }, 
-=======
     { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
->>>>>>> master
   ];
 
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
       <section>
-<<<<<<< HEAD
-        <h2 className="text-xl font-heading font-semibold mb-4 text-center">Academic Tools</h2>
-        
-        <Card className="overflow-hidden p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {academicTools.map((tool) => {
-              const Icon = toolIcons[tool.id] || FileText;
-              return (
-                <Link
-                  key={tool.id}
-                  href={tool.url}
-                  className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
-                >
-                  <Icon className="text-blue-600 mr-3 h-5 w-5" />
-                  <div>
-                    <h3 className="font-semibold text-blue-600">{tool.name}</h3>
-                    <p className="text-sm text-blue-600">{tool.description}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-=======
         <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
@@ -160,9 +142,9 @@ export default function StudentTools() {
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
+                    <Link
+                      key={tool.id}
+                      href={tool.url}
                       className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
@@ -170,7 +152,7 @@ export default function StudentTools() {
                         <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
@@ -218,7 +200,6 @@ export default function StudentTools() {
               </div>
             </TabsContent>
           </Tabs>
->>>>>>> master
         </Card>
       </section>
       
@@ -231,13 +212,8 @@ export default function StudentTools() {
               href={link.path}
               className="bg-white dark:bg-gray-800 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
-<<<<<<< HEAD
-              <link.icon className="text-blue-600 text-3xl mb-2 h-8 w-8" />
-              <span className="font-semibold text-blue-600">{link.label}</span>
-=======
               <link.icon className="text-blue-600 dark:text-white text-3xl mb-2 h-8 w-8" />
               <span className="font-semibold text-gray-900 dark:text-white">{link.label}</span>
->>>>>>> master
             </Link>
           ))}
         </div>
