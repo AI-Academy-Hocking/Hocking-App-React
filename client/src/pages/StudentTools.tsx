@@ -59,24 +59,6 @@ export default function StudentTools() {
     }
   ];
 
-  // Define financial tools
-  const financialTools: StudentTool[] = [
-    {
-      id: 'financial-aid',
-      name: 'Financial Aid',
-      description: 'Apply for financial aid, scholarships, and payment plans',
-      category: 'financial',
-      url: '/financial-aid'
-    },
-    {
-      id: 'payment-plan',
-      name: 'Payment Plans',
-      description: 'Set up payment plans and manage your account',
-      category: 'financial',
-      url: '/payment-plan'
-    }
-  ];
-
   // Define resource tools
   const resourceTools: StudentTool[] = [
     {
@@ -102,14 +84,8 @@ export default function StudentTools() {
     'office-administration': Briefcase,
     'career-university-center': Briefcase,
     'advising': School,
-    'financial-aid': UserCheck,
-    'payment-plan': History,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
-    'student-organizations': Users,
-    'recreation': Dumbbell,
-    'dining': Utensils,
-    'events': Calendar,
   };
 
   // Quick links for bottom section
@@ -131,9 +107,8 @@ export default function StudentTools() {
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-b border-gray-200 dark:border-0">
+            <TabsList className="grid grid-cols-2 border-b border-gray-200 dark:border-0">
               <TabsTrigger value="academic" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
               <TabsTrigger value="resources" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
             </TabsList>
             
@@ -153,27 +128,6 @@ export default function StudentTools() {
                         <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
                       </div>
                     </Link>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="financial" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {financialTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
-                    >
-                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
-                      </div>
-                    </a>
                   );
                 })}
               </div>
