@@ -57,7 +57,7 @@ export default function Login() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/src/assets/AIProjectRoughCut.mp4" type="video/mp4" />
+          <source src="/src/assets/AISecondCut.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40"></div>
       </div>

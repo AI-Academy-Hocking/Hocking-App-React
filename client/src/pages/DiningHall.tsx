@@ -72,7 +72,7 @@ export default function DiningHall() {
         <select
           value={selectedTab}
           onChange={(e) => handleTabChange(e.target.value)}
-          className="p-2 border-2 border-blue-600 rounded-md w-full md:w-auto dark:bg-gray-800 dark:text-white dark:border-gray-700"
+          className="p-2 border-2 border-blue-600 rounded-md w-full md:w-auto dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:outline-none"
         >
           <option value="hours">Hours Of Operation</option>
           <option value="meal-plans">Meal Plans</option>
@@ -85,35 +85,55 @@ export default function DiningHall() {
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
-          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-6">
             <Clock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             Hours of Operation
           </h2>
-          <div className="overflow-hidden rounded-xl border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
-            <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th className="py-3 px-4 text-left font-semibold text-gray-900 dark:text-blue-300">Days</th>
-                  <th className="py-3 px-4 text-left font-semibold text-gray-900 dark:text-blue-300">Breakfast</th>
-                  <th className="py-3 px-4 text-left font-semibold text-gray-900 dark:text-blue-300">Dinner</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                <tr className="hover:bg-blue-50 dark:hover:bg-blue-500/20 transition-colors duration-200">
-                  <td className="py-3 px-4 font-medium dark:text-white">Monday - Friday</td>
-                  <td className="py-3 px-4 dark:text-white">7:00 AM - 10:00 AM</td>
-                  <td className="py-3 px-4 dark:text-white">10:30 AM - 7:00 PM</td>
-                </tr>
-                <tr className="hover:bg-blue-50 dark:hover:bg-blue-500/20 transition-colors duration-200">
-                  <td className="py-3 px-4 font-medium dark:text-white">Saturday - Sunday</td>
-                  <td className="py-3 px-4 dark:text-white">11:00 AM - 1:00 PM</td>
-                  <td className="py-3 px-4 dark:text-white">11:00 AM - 5:00 PM</td>
-                </tr>
-              </tbody>
-            </table>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Weekdays Card */}
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 mb-4 text-center">Monday - Friday</h3>
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">BREAKFAST</div>
+                  <div className="text-lg font-medium text-gray-900 dark:text-white">7:00 AM - 10:00 AM</div>
+                </div>
+                <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">DINNER</div>
+                    <div className="text-lg font-medium text-gray-900 dark:text-white">10:30 AM - 7:00 PM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Weekend Card */}
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 mb-4 text-center">Saturday - Sunday</h3>
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">BRUNCH</div>
+                  <div className="text-lg font-medium text-gray-900 dark:text-white">11:00 AM - 1:00 PM</div>
+                </div>
+                <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">DINNER</div>
+                    <div className="text-lg font-medium text-gray-900 dark:text-white">11:00 AM - 5:00 PM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="mt-4 text-sm text-gray-600 dark:text-white">
-            <p>* Holiday hours may vary. Check announcements for special hours.</p>
+
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-blue-600 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-2">
+              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <span className="text-sm font-medium text-gray-900 dark:text-blue-300">Important Note</span>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-white">
+              Holiday hours may vary. Check announcements for special hours during breaks and holidays.
+            </p>
           </div>
         </div>
       )}
@@ -125,43 +145,31 @@ export default function DiningHall() {
             Meal Plans
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-stretch">
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-              <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-blue-300">Full Meal Plan</h3>
-              <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mb-5">19 meals/week</div>
-              <ul className="space-y-3 text-gray-700 dark:text-white mb-6 text-lg">
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>3 meals per day (Mon-Fri)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>2 meals per day (Sat-Sun)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>$100 in Hawk Bucks per semester</span>
-                </li>
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-4 flex flex-col items-center hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-blue-300 text-center">Full Meal Plan</h3>
+              <div className="text-center mb-3">
+                <span className="text-2xl text-gray-900 dark:text-white">19</span>
+                <span className="text-2xl text-gray-900 dark:text-white ml-2">meals per week</span>
+              </div>
+              <ul className="space-y-1 text-gray-700 dark:text-white text-sm mb-4">
+                <li>• 3 meals per day (Mon-Fri)</li>
+                <li>• 2 meals per day (Sat-Sun)</li>
+                <li>• $100 in Hawk Bucks per semester</li>
               </ul>
-              <p className="text-base text-gray-500 dark:text-gray-300">Perfect for residential students</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-center">Perfect for residential students</p>
             </div>
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-              <h3 className="text-2xl font-bold mb-3 text-gray-900 dark:text-blue-300">Partial Meal Plan</h3>
-              <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mb-5">14 meals/week</div>
-              <ul className="space-y-3 text-gray-700 dark:text-white mb-6 text-lg">
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>2 meals per day (Mon-Fri)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>2 meals per day (Sat-Sun)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="inline-flex mr-2 mt-1">•</span>
-                  <span>$75 in Hawk Dollars per semester</span>
-                </li>
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-4 flex flex-col items-center hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-blue-300 text-center">Partial Meal Plan</h3>
+              <div className="text-center mb-3">
+                <span className="text-2xl text-gray-900 dark:text-white">14</span>
+                <span className="text-2xl text-gray-900 dark:text-white ml-2">meals per week</span>
+              </div>
+              <ul className="space-y-1 text-gray-700 dark:text-white text-sm mb-4">
+                <li>• 2 meals per day (Mon-Fri)</li>
+                <li>• 2 meals per day (Sat-Sun)</li>
+                <li>• $75 in Hawk Dollars per semester</li>
               </ul>
-              <p className="text-base text-gray-500 dark:text-gray-300">Great for most students</p>
+              <p className="text-sm text-gray-500 dark:text-gray-300 text-center">Great for most students</p>
             </div>
           </div>
           <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
@@ -209,7 +217,7 @@ export default function DiningHall() {
                 dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
               }}
             ].map((day) => (
-              <div key={day.day} className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <div key={day.day} className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
                 <div className="bg-blue-600 text-white py-2 px-4 font-medium">
                   <div className="text-lg">{day.day}</div>
                   <div className="text-xs opacity-80">{day.date}</div>
@@ -243,7 +251,7 @@ export default function DiningHall() {
             Special Dietary Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
               <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-blue-300">Dietary Accommodations</h3>
               <p className="text-gray-600 dark:text-white mb-4">
                 Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
@@ -268,7 +276,7 @@ export default function DiningHall() {
               </ul>
             </div>
             
-            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
               <h3 className="text-lg font-semibold mb-3 text-gray-900 dark:text-blue-300">Food Allergen Information</h3>
               <p className="text-gray-600 dark:text-white mb-4">
                 All menu items are clearly labeled with the following allergen information:

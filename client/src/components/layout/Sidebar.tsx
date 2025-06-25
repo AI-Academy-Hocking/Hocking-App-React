@@ -120,13 +120,26 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="hidden md:flex flex-col w-64 bg-slate-900/90 backdrop-blur-sm text-white h-full shadow-lg">
-      <div className="p-4 border-b border-slate-700 bg-blue-600/95 backdrop-blur-sm">
-        <img 
-          src={HockingLogo} 
-          alt="Hocking College Logo" 
-          className="h-12" 
-        />
+    <div className="hidden md:flex flex-col w-64 bg-slate-900/90 backdrop-blur-sm text-white h-full relative sidebar-fade">
+      {/* Soft fade overlay */}
+      <div 
+        className="absolute top-0 right-0 w-24 h-full pointer-events-none z-50"
+        style={{
+          background: 'linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.15) 70%, rgba(255,255,255,0.4) 100%)',
+          mixBlendMode: 'overlay',
+          filter: 'blur(12px)'
+        }}
+      ></div>
+      
+      <div className="p-4 border-b border-slate-700 bg-blue-600/95 dark:bg-blue-900/95 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <img 
+            src={HockingLogo} 
+            alt="Hocking College Logo" 
+            className="h-12" 
+          />
+          <span className="text-white font-bold text-xl">Menu</span>
+        </div>
       </div>
       
       <nav className="flex-1 overflow-y-auto no-scrollbar p-4">

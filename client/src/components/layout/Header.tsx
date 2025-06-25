@@ -121,7 +121,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
   const handleDiningNavigation = handleNavigation;
 
   return (
-    <header className="bg-blue-900 dark:bg-slate-800 p-4 shadow-md">
+    <header className="bg-blue-900 dark:bg-blue-950 p-4 shadow-md">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Sheet open={isMenuOpen} onOpenChange={handleMenuOpenChange}>
@@ -139,12 +139,17 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
                 onClick={() => handleMenuOpenChange(false)}
               />
               <div className="fixed inset-y-0 left-0 z-[2000] h-full w-64 bg-gray-800/60 backdrop-blur-sm border-none p-0 flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:duration-300 data-[state=open]:duration-500">
-                <div className="p-4 border-b-2 border-white !bg-blue-600/70 backdrop-blur-sm" style={{ backgroundColor: 'rgba(37, 99, 235, 0.7)' }}>
-                  <img 
-                    src={HawkLogo} 
-                    alt="Hocking College Logo" 
-                    className="h-8 w-auto object-contain" 
-                  />
+                <div className="p-4 border-b-2 border-white !bg-blue-600/70 dark:!bg-blue-900/70 backdrop-blur-sm" style={{ backgroundColor: 'rgba(37, 99, 235, 0.7)' }}>
+                  <div className="flex items-center">
+                    <img 
+                      src={HawkLogo} 
+                      alt="Hocking College Logo" 
+                      className="h-8 w-auto object-contain" 
+                    />
+                    <div className="flex-1 flex justify-center">
+                      <span className="text-white font-bold text-lg">Menu</span>
+                    </div>
+                  </div>
                 </div>
                 <nav className="flex-1 p-4 overflow-y-auto">
                   <ul className="space-y-2">

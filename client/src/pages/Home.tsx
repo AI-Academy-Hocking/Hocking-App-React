@@ -57,7 +57,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-popover p-4">
       <section className="mb-8">
-        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-blue-300">
           {user?.isGuest ? "Welcome Guest" : "Welcome to Hocking College"}
         </h2>
         <Card className="overflow-hidden rounded-xl shadow-md transition border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
@@ -89,7 +89,7 @@ export default function Home() {
                 className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center hover:shadow-md"
               >
                 <link.icon className="text-blue-600 dark:text-blue-400 text-3xl mb-2 h-8 w-8" />
-                <span className="font-bold text-base text-gray-900 dark:text-blue-300">{link.label}</span>
+                <span className="font-bold text-base text-white">{link.label}</span>
               </a>
             </Link>
           ))}

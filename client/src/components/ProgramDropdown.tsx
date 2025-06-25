@@ -106,7 +106,7 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
     <div className="space-y-3">
       {/* Category Selection */}
       <Select onValueChange={handleCategoryChange} value={selectedCategory || undefined}>
-        <SelectTrigger className="w-full bg-white dark:bg-gray-900 border rounded-md">
+        <SelectTrigger className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-md">
           <SelectValue placeholder="Select a category" className="text-gray-900 dark:text-white" />
         </SelectTrigger>
         <SelectContent>
