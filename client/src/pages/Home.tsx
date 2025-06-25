@@ -6,7 +6,6 @@ import { Calendar, MapPin, Wrench, School } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Event } from "@shared/schema";
 import HockingBackground from "../components/assets/Campus.jpeg";  
-import ProgramDropdown from "@/components/ProgramDropdown";
 import { Button } from "@/components/ui/button";
 
 
@@ -16,11 +15,6 @@ export default function Home() {
   const { data: events, isLoading: eventsLoading } = useQuery<Event[]>({
     queryKey: ['/api/events'],
   });
-
-  const handleProgramChange = (program: string) => {
-    console.log('Selected program:', program);
-    // Add any additional program selection logic here
-  };
 
   const quickLinks = [
     { 
@@ -72,9 +66,6 @@ export default function Home() {
                 Explore all that Hocking College has to offer. Access your student resources, 
                 check the academic calendar, find your way around campus, and more.
               </p>
-              <div className="w-full max-w-xs">
-                <ProgramDropdown onChange={handleProgramChange} />
-              </div>
             </div>
           </CardContent>
         </Card>

@@ -56,7 +56,13 @@ async function fetchProgramDetails(programId) {
             `https://www.hocking.edu/${programId}`,
             `https://www.hocking.edu/majors/${programId}`,
             `https://www.hocking.edu/academics/${programId}`,
-            `https://www.hocking.edu/programs/${programId}`
+            `https://www.hocking.edu/programs/${programId}`,
+            `https://www.hocking.edu/natural-resources/${programId}`,
+            `https://www.hocking.edu/public-safety/${programId}`,
+            `https://www.hocking.edu/equine/${programId}`,
+            `https://www.hocking.edu/canine/${programId}`,
+            `https://www.hocking.edu/fire-emergency/${programId}`,
+            `https://www.hocking.edu/law-enforcement/${programId}`
         ];
         let response = null;
         let url = '';

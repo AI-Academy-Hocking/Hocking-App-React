@@ -9,6 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { StudentTool } from "@shared/schema";
 import { Link } from "wouter";
+import ProgramDropdown from "@/components/ProgramDropdown";
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
@@ -23,6 +24,11 @@ export default function StudentTools() {
       return response.json();
     },
   });
+
+  const handleProgramChange = (program: string) => {
+    console.log('Selected program:', program);
+    // Add any additional program selection logic here
+  };
 
   // Filter tools by category
   const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
@@ -71,23 +77,32 @@ export default function StudentTools() {
             </TabsList>
             
             <TabsContent value="academic" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {academicTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
-                    >
-                      <Icon className="text-primary mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold">{tool.name}</h3>
-                        <p className="text-sm text-neutral-dark">{tool.description}</p>
-                      </div>
-                    </a>
-                  );
-                })}
+              <div className="space-y-6">
+                {/* Program Selection */}
+                <div className="bg-white rounded-lg border border-neutral-light p-4">
+                  <h3 className="font-semibold mb-3">Program Selection</h3>
+                  <ProgramDropdown onChange={handleProgramChange} />
+                </div>
+
+                {/* Academic Tools Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {academicTools.map((tool) => {
+                    const Icon = toolIcons[tool.id] || FileText;
+                    return (
+                      <a 
+                        key={tool.id} 
+                        href={tool.url} 
+                        className="flex items-center p-3 rounded-lg border border-neutral-light hover:bg-neutral-lightest transition"
+                      >
+                        <Icon className="text-primary mr-3 h-5 w-5" />
+                        <div>
+                          <h3 className="font-semibold">{tool.name}</h3>
+                          <p className="text-sm text-neutral-dark">{tool.description}</p>
+                        </div>
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </TabsContent>
             

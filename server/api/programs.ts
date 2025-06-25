@@ -4,11 +4,95 @@ import * as cheerio from 'cheerio';
 
 const router = Router();
 
-// Cache object to store program details
+// Cache configuration
 let programCache: Record<string, any> = {};
 let lastFetchTime = 0;
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
+// URL patterns for program pages
+const PROGRAM_URLS = [
+  'https://www.hocking.edu/{id}',
+  'https://www.hocking.edu/majors/{id}',
+  'https://www.hocking.edu/academics/{id}',
+  'https://www.hocking.edu/programs/{id}',
+  'https://www.hocking.edu/natural-resources/{id}',
+  'https://www.hocking.edu/public-safety/{id}',
+  'https://www.hocking.edu/equine/{id}',
+  'https://www.hocking.edu/canine/{id}',
+  'https://www.hocking.edu/fire-emergency/{id}',
+  'https://www.hocking.edu/law-enforcement/{id}'
+];
+
+// Helper functions
+const cleanText = (text: string): string => {
+  return text
+    .replace(/\s+/g, ' ')
+    .replace(/[\r\n]+/g, ' ')
+    .replace(/https?:\/\/[^\s]+/g, '')
+    .replace(/\[.*?\]|\(.*?\)/g, '')
+    .replace(/(Click here|Learn more|Visit|For more information).*?\./g, '')
+    .trim();
+};
+
+const extractListItems = (section: cheerio.Cheerio, $: cheerio.Root): string[] => {
+  const items: string[] = [];
+  let currentElement = section.next();
+  
+  while (currentElement.length && !currentElement.is('h1, h2, h3')) {
+    if (currentElement.is('ul, ol')) {
+      currentElement.find('li').each((_, element) => {
+        const text = cleanText($(element).text());
+        if (text) items.push(text);
+      });
+    }
+    currentElement = currentElement.next();
+  }
+  
+  return items;
+};
+
+const extractSectionContent = (section: cheerio.Cheerio, $: cheerio.Root): string => {
+  let content = '';
+  let currentElement = section.next();
+  
+  while (currentElement.length && !currentElement.is('h1, h2, h3')) {
+    if (currentElement.is('p, ul, ol')) {
+      currentElement.find('a').remove();
+      content += cleanText(currentElement.text()) + ' ';
+    }
+    currentElement = currentElement.next();
+  }
+  
+  return content.trim();
+};
+
+const findSectionContent = ($: cheerio.Root, sectionNames: string[], extractor: (section: cheerio.Cheerio, $: cheerio.Root) => any): any => {
+  for (const name of sectionNames) {
+    const section = $(`h2:contains("${name}"), h1:contains("${name}")`);
+    if (section.length) {
+      const result = extractor(section, $);
+      if (result && (typeof result === 'string' ? result.length > 0 : result.length > 0)) {
+        return result;
+      }
+    }
+  }
+  return typeof extractor === 'function' && extractor.toString().includes('extractListItems') ? [] : '';
+};
+
+const findProgramPage = async (programId: string): Promise<string | null> => {
+  for (const urlPattern of PROGRAM_URLS) {
+    try {
+      const url = urlPattern.replace('{id}', programId);
+      const response = await fetch(url);
+      if (response.ok) return url;
+    } catch (error) {
+      continue;
+    }
+  }
+  return null;
+};
+
+// Main scraping function
 async function fetchProgramDetails(programId: string): Promise<any> {
   try {
     const program = programCache[programId];
@@ -17,32 +101,8 @@ async function fetchProgramDetails(programId: string): Promise<any> {
       return null;
     }
 
-    // Try multiple possible URLs
-    const urls = [
-      `https://www.hocking.edu/${programId}`,
-      `https://www.hocking.edu/majors/${programId}`,
-      `https://www.hocking.edu/academics/${programId}`,
-      `https://www.hocking.edu/programs/${programId}`
-    ];
-
-    let response = null;
-    let url = '';
-
-    // Try each URL until we get a successful response
-    for (const testUrl of urls) {
-      try {
-        response = await fetch(testUrl);
-        if (response.ok) {
-          url = testUrl;
-          break;
-        }
-      } catch (error) {
-        continue;
-      }
-    }
-
-    if (!response || !response.ok) {
-      console.error(`Failed to fetch program details for ${programId}`);
+    const url = await findProgramPage(programId);
+    if (!url) {
       return {
         title: program.name,
         description: "Program details are currently being updated. Please visit Hocking College's website for the latest information.",
@@ -54,61 +114,18 @@ async function fetchProgramDetails(programId: string): Promise<any> {
       };
     }
 
+    const response = await fetch(url);
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    // Helper function to clean text
-    const cleanText = (text: string) => {
-      return text
-        .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-        .replace(/[\r\n]+/g, ' ')  // Replace newlines with space
-        .replace(/https?:\/\/[^\s]+/g, '')  // Remove URLs
-        .replace(/\[.*?\]/g, '')  // Remove text in square brackets
-        .replace(/\(.*?\)/g, '')  // Remove text in parentheses
-        .replace(/Click here.*?\./g, '')  // Remove "Click here" phrases
-        .replace(/Learn more.*?\./g, '')  // Remove "Learn more" phrases
-        .replace(/Visit.*?\./g, '')  // Remove "Visit" phrases
-        .replace(/For more information.*?\./g, '')  // Remove "For more information" phrases
-        .replace(/\s+/g, ' ')  // Clean up any extra spaces created by removals
-        .trim();
-    };
+    // Extract content using helper functions
+    const description = findSectionContent($, ['Program Description', 'About', 'Overview'], extractSectionContent);
+    const courses = findSectionContent($, ['Course Curriculum', 'Courses', 'Curriculum'], extractListItems);
+    const careers = findSectionContent($, ['Career Options', 'Careers', 'Career Paths'], extractListItems);
 
-    // Helper function to extract section content
-    const extractSectionContent = (section: cheerio.Cheerio, $: cheerio.Root) => {
-      let content = '';
-      let currentElement = section.next();
-      
-      while (currentElement.length && !currentElement.is('h1, h2, h3')) {
-        if (currentElement.is('p, ul, ol')) {
-          // Remove any links from the content
-          currentElement.find('a').remove();
-          content += cleanText(currentElement.text()) + ' ';
-        }
-        currentElement = currentElement.next();
-      }
-      
-      return content.trim();
-    };
-
-    // Get program description
-    let description = '';
-    const descriptionSections = [
-      $('h2:contains("Program Description"), h1:contains("Program Description")'),
-      $('h2:contains("About"), h1:contains("About")'),
-      $('h2:contains("Overview"), h1:contains("Overview")')
-    ];
-
-    for (const section of descriptionSections) {
-      if (section.length) {
-        description = extractSectionContent(section, $);
-        if (description) break;
-      }
-    }
-
-    // Get degree type and program length
+    // Extract degree type and program length
     let degreeType = '';
     let programLength = '';
-    
     $('p, li').each((_, element) => {
       const text = cleanText($(element).text());
       if (text.includes('Degree Type:')) {
@@ -119,84 +136,32 @@ async function fetchProgramDetails(programId: string): Promise<any> {
       }
     });
 
-    // Get course information
-    let courses: string[] = [];
-    const courseSections = [
-      $('h2:contains("Course Curriculum"), h1:contains("Course Curriculum")'),
-      $('h2:contains("Courses"), h1:contains("Courses")'),
-      $('h2:contains("Curriculum"), h1:contains("Curriculum")')
-    ];
-
-    for (const section of courseSections) {
-      if (section.length) {
-        let currentElement = section.next();
-        while (currentElement.length && !currentElement.is('h1, h2, h3')) {
-          if (currentElement.is('ul, ol')) {
-            currentElement.find('li').each((_, element) => {
-              const text = cleanText($(element).text());
-              if (text && text.length > 0) {
-                courses.push(text);
-              }
-            });
-          }
-          currentElement = currentElement.next();
-        }
-        if (courses.length > 0) break;
-      }
-    }
-
-    // Get career information
-    let careers: string[] = [];
-    const careerSections = [
-      $('h2:contains("Career Options"), h1:contains("Career Options")'),
-      $('h2:contains("Careers"), h1:contains("Careers")'),
-      $('h2:contains("Career Paths"), h1:contains("Career Paths")')
-    ];
-
-    for (const section of careerSections) {
-      if (section.length) {
-        let currentElement = section.next();
-        while (currentElement.length && !currentElement.is('h1, h2, h3')) {
-          if (currentElement.is('ul, ol')) {
-            currentElement.find('li').each((_, element) => {
-              const text = cleanText($(element).text());
-              if (text && text.length > 0) {
-                careers.push(text);
-              }
-            });
-          }
-          currentElement = currentElement.next();
-        }
-        if (careers.length > 0) break;
-      }
-    }
-
-    // If no description found yet, try to find any relevant content
-    if (!description) {
+    // Fallback description if none found
+    let finalDescription = description;
+    if (!finalDescription) {
       $('p').each((_, element) => {
         const text = cleanText($(element).text());
         if (text.includes(program.name) && text.length > 50) {
-          description = text;
+          finalDescription = text;
           return false;
         }
       });
     }
 
-    // Log what we found for debugging
-    console.log(`Found content for ${program.name}:`, {
-      descriptionLength: description.length,
+    console.log(`Scraped content for ${program.name}:`, {
+      descriptionLength: finalDescription.length,
       coursesCount: courses.length,
       careersCount: careers.length,
       degreeType,
       programLength,
       url
     });
-    
+
     return {
       title: program.name,
-      description: description || "Visit Hocking College's website for the latest program information.",
-      courses: courses,
-      careers: careers,
+      description: finalDescription || "Visit Hocking College's website for the latest program information.",
+      courses,
+      careers,
       degreeType,
       programLength,
       lastUpdated: new Date().toISOString()
@@ -207,6 +172,7 @@ async function fetchProgramDetails(programId: string): Promise<any> {
   }
 }
 
+// Cache management
 async function updateProgramCache() {
   const now = Date.now();
   if (now - lastFetchTime < CACHE_DURATION && Object.keys(programCache).length > 0) {
@@ -218,7 +184,6 @@ async function updateProgramCache() {
     const html = await response.text();
     const $ = cheerio.load(html);
 
-    // Process each program category
     $('h4').each((_, categoryHeader) => {
       const categoryName = $(categoryHeader).text().trim();
       const categorySection = $(categoryHeader).next('ul');
@@ -227,7 +192,6 @@ async function updateProgramCache() {
         categorySection.find('li').each((_, program) => {
           const programName = $(program).text().trim();
           if (programName) {
-            // Create a URL-friendly ID from the program name
             const programId = programName.toLowerCase()
               .replace(/[^a-z0-9]+/g, '-')
               .replace(/^-|-$/g, '');
@@ -237,10 +201,8 @@ async function updateProgramCache() {
                 id: programId,
                 name: programName,
                 category: categoryName,
-                details: null // Will be populated when program details are fetched
+                details: null
               };
-
-              // Log each program as it's added to the cache
               console.log(`Added program to cache: ${programName} (${programId})`);
             }
           }
@@ -258,7 +220,7 @@ async function updateProgramCache() {
 // Initialize cache on server start
 updateProgramCache();
 
-// GET /api/programs
+// API Routes
 router.get('/', async (req, res) => {
   try {
     await updateProgramCache();
@@ -270,7 +232,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/programs/:id
 router.get('/:id', async (req, res) => {
   try {
     const programId = req.params.id;
@@ -281,7 +242,6 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Program not found' });
     }
 
-    // If we don't have details yet, fetch them
     if (!program.details) {
       program.details = await fetchProgramDetails(programId);
       programCache[programId] = program;
