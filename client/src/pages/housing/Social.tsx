@@ -4,7 +4,7 @@ import {
   Send, Image, Video, AlertTriangle, Calendar, 
   Users, TrendingUp, Filter, Plus, Clock,
   User, Building, Smile, Camera,
-  Bell, Settings, Sparkles, CheckCircle, XCircle
+  Bell, Settings, Sparkles, CheckCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,7 +71,6 @@ const CampusSocialHub: React.FC = () => {
   const [postType, setPostType] = useState<'text' | 'image' | 'video' | 'poll' | 'event'>('text');
   const [hashtags, setHashtags] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('');
-  const [pendingUser, setPendingUser] = useState<User | null>(null);
 
   // Check for existing login on component mount
   useEffect(() => {
@@ -82,7 +81,6 @@ const CampusSocialHub: React.FC = () => {
         setUser(userData);
         setShowAuth(false);
       } else {
-        setPendingUser(userData);
         setShowVerification(true);
       }
     }
@@ -218,7 +216,6 @@ const CampusSocialHub: React.FC = () => {
       isVerified: false
     };
 
-    setPendingUser(userData);
     setShowAuth(false);
     setShowVerification(true);
 
@@ -247,23 +244,6 @@ const CampusSocialHub: React.FC = () => {
       title: "Registration Submitted! 📧",
       description: "Your registration has been sent to the housing office for verification. You'll receive an email notification once approved.",
     });
-  };
-
-  const handleVerificationApproval = () => {
-    if (pendingUser) {
-      const verifiedUser = { ...pendingUser, isAuthenticated: true, isVerified: true };
-      setUser(verifiedUser);
-      setPendingUser(null);
-      setShowVerification(false);
-      
-      // Save to localStorage for persistent login
-      localStorage.setItem('campusSocialHubUser', JSON.stringify(verifiedUser));
-      
-      toast({
-        title: "Welcome to Campus Social Hub! 🎉",
-        description: "Your account has been verified and you're now logged in!",
-      });
-    }
   };
 
   const handleLogout = () => {
@@ -394,11 +374,6 @@ const CampusSocialHub: React.FC = () => {
   const getVotePercentage = (votes: number, totalVotes: number) => {
     if (totalVotes === 0) return 0;
     return Math.round((votes / totalVotes) * 100);
-  };
-
-  const hasUserVoted = (post: Post) => {
-    if (!user || !post.pollVoters) return false;
-    return post.pollVoters.includes(user.email);
   };
 
   const getUserVote = (post: Post) => {
