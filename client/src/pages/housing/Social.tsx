@@ -1,225 +1,848 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { MessageSquare, Image, Heart, Share2, MoreHorizontal, Smile } from 'lucide-react';
-import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect } from 'react';
+import { 
+  ArrowLeft, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, 
+  Send, Image, Video, Link, BarChart3, AlertTriangle, Calendar, 
+  Users, TrendingUp, Filter, Plus, CheckCircle, XCircle, Clock,
+  User, Mail, Building, Hash, Smile, Camera, FileText, Star,
+  Bell, Settings, Search, Home, Sparkles, Award, Gift, Lightbulb
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "@/hooks/use-toast";
+
+interface User {
+  firstName: string;
+  lastName: string;
+  studentId: string;
+  email: string;
+  dormBuilding: string;
+  roomNumber: string;
+  program: string;
+  username: string;
+  isAuthenticated: boolean;
+}
 
 interface Post {
   id: string;
-  author: {
-    name: string;
-    avatar: string;
-    role: string;
-  };
+  type: 'text' | 'image' | 'video' | 'poll' | 'event' | 'alert';
   content: string;
-  media?: {
-    type: "image" | "video";
-    url: string;
-  };
+  author: string;
+  timestamp: Date;
   likes: number;
   comments: number;
   shares: number;
-  timestamp: string;
-  location?: string;
-  tags: string[];
+  isLiked: boolean;
+  isSaved: boolean;
+  isPinned: boolean;
+  category: string;
+  image?: string;
+  video?: string;
+  pollOptions?: string[];
+  pollVotes?: number[];
+  eventDetails?: {
+    date: string;
+    time: string;
+    location: string;
+    description: string;
+  };
+  hashtags: string[];
+  emoji?: string;
 }
 
-const posts: Post[] = [
-  {
-    id: "1",
-    author: {
-      name: "Sarah Johnson",
-      avatar: "/avatars/sarah.jpg",
-      role: "Resident"
-    },
-    content: "Just moved into North Hall! The view from my window is amazing! 🌅 #NewHome #CampusLife",
-    media: {
-      type: "image",
-      url: "/posts/sunset-view.jpg"
-    },
-    likes: 124,
-    comments: 23,
-    shares: 5,
-    timestamp: "2 hours ago",
-    location: "North Hall",
-    tags: ["NewHome", "CampusLife"]
-  },
-  {
-    id: "2",
-    author: {
-      name: "Mike Chen",
-      avatar: "/avatars/mike.jpg",
-      role: "RA"
-    },
-    content: "Join us for tonight's movie night in the common room! We'll be showing 'The Social Network' 🎬 #MovieNight #Community",
-    likes: 89,
-    comments: 15,
-    shares: 8,
-    timestamp: "4 hours ago",
-    location: "Summit Hall",
-    tags: ["MovieNight", "Community"]
-  },
-  {
-    id: "3",
-    author: {
-      name: "Emma Davis",
-      avatar: "/avatars/emma.jpg",
-      role: "Resident"
-    },
-    content: "Check out my room transformation! Before and after pics 📸 #RoomDecor #DormLife",
-    media: {
-      type: "image",
-      url: "/posts/room-makeover.jpg"
-    },
-    likes: 256,
-    comments: 42,
-    shares: 12,
-    timestamp: "1 day ago",
-    location: "Sycamore Hall",
-    tags: ["RoomDecor", "DormLife"]
-  }
-];
+const CampusSocialHub: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [showAuth, setShowAuth] = useState(true);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [newPost, setNewPost] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showCreatePost, setShowCreatePost] = useState(false);
+  const [postType, setPostType] = useState<'text' | 'image' | 'video' | 'poll' | 'event'>('text');
+  const [hashtags, setHashtags] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState('');
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
+  // Sample posts data
+  const samplePosts: Post[] = [
+    {
+      id: '1',
+      type: 'alert',
+      content: 'Heads up, Hawks! Water will be shut off in North Hall for repairs this Friday from 10AM–2PM.',
+      author: 'Housing Office',
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      likes: 34,
+      comments: 12,
+      shares: 5,
+      isLiked: false,
+      isSaved: false,
+      isPinned: true,
+      category: 'alerts',
+      hashtags: ['#maintenance', '#northhall', '#water']
+    },
+    {
+      id: '2',
+      type: 'event',
+      content: 'Karaoke Night @ The Student Center! Come sing your favorite hits & win prizes! Free Pizza | Raffle Drawings',
+      author: 'Student Center',
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+      likes: 98,
+      comments: 24,
+      shares: 15,
+      isLiked: false,
+      isSaved: false,
+      isPinned: false,
+      category: 'events',
+      eventDetails: {
+        date: 'Thursday',
+        time: '7PM',
+        location: 'Student Center',
+        description: 'Karaoke Night with prizes and free pizza!'
+      },
+      hashtags: ['#karaoke', '#studentcenter', '#fun']
+    },
+    {
+      id: '3',
+      type: 'text',
+      content: 'Use the ChatGPT to set up a study guide. Study 25 mins, break for 5. Comment your go-to study hack below!',
+      author: 'CA Jodian',
+      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+      likes: 60,
+      comments: 18,
+      shares: 8,
+      isLiked: false,
+      isSaved: false,
+      isPinned: false,
+      category: 'wellness',
+      hashtags: ['#studytips', '#finals', '#chatgpt'],
+      emoji: '📚'
+    },
+    {
+      id: '4',
+      type: 'image',
+      content: 'Weekend Recap: Bonfire Highlights - What a night! Catch the best moments from Saturday\'s Bonfire',
+      author: 'Campus Life',
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      likes: 115,
+      comments: 20,
+      shares: 12,
+      isLiked: false,
+      isSaved: false,
+      isPinned: false,
+      category: 'student-life',
+      image: '/api/placeholder/400/300',
+      hashtags: ['#bonfire', '#weekend', '#highlights']
+    },
+    {
+      id: '5',
+      type: 'poll',
+      content: 'Vote for the Next Movie Night Feature! Vote ends Friday @ 4PM',
+      author: 'Campus Life Team',
+      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+      likes: 42,
+      comments: 8,
+      shares: 3,
+      isLiked: false,
+      isSaved: false,
+      isPinned: false,
+      category: 'events',
+      pollOptions: ['Barbie', 'Oppenheimer', 'Spider-Verse'],
+      pollVotes: [15, 12, 15],
+      hashtags: ['#movienight', '#vote', '#campuslife']
     }
-  }
-};
+  ];
 
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
+  useEffect(() => {
+    setPosts(samplePosts);
+  }, []);
 
-export default function Social() {
-  return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full relative">
-          <MessageSquare className="h-8 w-8 text-primary" />
-          <Image className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Campus Social Hub</h1>
-          <p className="text-muted-foreground">Share your campus life experiences</p>
-        </div>
-      </motion.div>
+  const handleAuthSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    
+    const userData: User = {
+      firstName: formData.get('firstName') as string,
+      lastName: formData.get('lastName') as string,
+      studentId: formData.get('studentId') as string,
+      email: formData.get('email') as string,
+      dormBuilding: formData.get('dormBuilding') as string,
+      roomNumber: formData.get('roomNumber') as string,
+      program: formData.get('program') as string,
+      username: formData.get('username') as string,
+      isAuthenticated: true
+    };
 
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Create Post Card */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex gap-4">
-              <Avatar>
-                <AvatarImage src="/avatars/default.jpg" />
-                <AvatarFallback>You</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 space-y-4">
-                <Textarea 
-                  placeholder="Share your campus life moments..."
-                  className="min-h-[100px]"
-                />
-                <div className="flex justify-between items-center">
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon">
-                      <Image className="h-5 w-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Smile className="h-5 w-5" />
-                    </Button>
-                  </div>
-                  <Button>Post</Button>
+    setUser(userData);
+    setShowAuth(false);
+
+    // Send notification to housing office
+    const notificationEmail = {
+      to: 'housing@hocking.edu',
+      subject: 'New Campus Social Hub User Registration',
+      body: `
+        New user registration:
+        Name: ${userData.firstName} ${userData.lastName}
+        Student ID: ${userData.studentId}
+        Email: ${userData.email}
+        Dorm: ${userData.dormBuilding} Room ${userData.roomNumber}
+        Program: ${userData.program}
+        Username: ${userData.username}
+      `
+    };
+
+    console.log('Sending notification:', notificationEmail);
+    toast({
+      title: "Welcome to Campus Social Hub! 🎉",
+      description: "Your account has been created and the housing office has been notified.",
+    });
+  };
+
+  const handleLike = (postId: string) => {
+    setPosts(posts.map(post => 
+      post.id === postId 
+        ? { ...post, likes: post.isLiked ? post.likes - 1 : post.likes + 1, isLiked: !post.isLiked }
+        : post
+    ));
+  };
+
+  const handleSave = (postId: string) => {
+    setPosts(posts.map(post => 
+      post.id === postId 
+        ? { ...post, isSaved: !post.isSaved }
+        : post
+    ));
+  };
+
+  const handleCreatePost = () => {
+    if (!newPost.trim()) return;
+
+    const post: Post = {
+      id: Date.now().toString(),
+      type: postType,
+      content: newPost,
+      author: user?.firstName || 'Anonymous',
+      timestamp: new Date(),
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false,
+      isSaved: false,
+      isPinned: false,
+      category: selectedCategory,
+      hashtags: hashtags.split(' ').filter(tag => tag.startsWith('#')),
+      emoji: selectedEmoji
+    };
+
+    // Send to housing office for approval
+    const approvalEmail = {
+      to: 'housing@hocking.edu',
+      subject: 'Campus Social Hub Post Approval Request',
+      body: `
+        New post awaiting approval:
+        Author: ${post.author}
+        Content: ${post.content}
+        Category: ${post.category}
+        Type: ${post.type}
+        Hashtags: ${post.hashtags.join(', ')}
+        
+        Click YES to approve or NO to reject
+      `
+    };
+
+    console.log('Sending approval request:', approvalEmail);
+    
+    setNewPost('');
+    setHashtags('');
+    setSelectedEmoji('');
+    setShowCreatePost(false);
+    
+    toast({
+      title: "Post Submitted for Approval 📝",
+      description: "Your post has been sent to the housing office for review. You'll be notified when it's approved!",
+    });
+  };
+
+  const formatTimeAgo = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    return 'Just now';
+  };
+
+  const filteredPosts = selectedCategory === 'all' 
+    ? posts 
+    : posts.filter(post => post.category === selectedCategory);
+
+  if (showAuth) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md"
+        >
+          <Card className="border-2 border-blue-600 shadow-xl">
+            <CardHeader className="text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-white/20 rounded-full">
+                  <Users className="h-8 w-8" />
                 </div>
               </div>
+              <CardTitle className="text-2xl">Campus Social Hub</CardTitle>
+              <p className="text-blue-100">Join the community!</p>
+            </CardHeader>
+            <CardContent className="p-6">
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium">First Name *</label>
+                    <Input name="firstName" required />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Last Name *</label>
+                    <Input name="lastName" required />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium">Student ID Number *</label>
+                  <Input name="studentId" required />
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium">School Email *</label>
+                  <Input name="email" type="email" required />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium">Dorm Building *</label>
+                    <Select name="dormBuilding" required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select building" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="north-hall">North Hall</SelectItem>
+                        <SelectItem value="south-hall">South Hall</SelectItem>
+                        <SelectItem value="east-hall">East Hall</SelectItem>
+                        <SelectItem value="west-hall">West Hall</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Room Number *</label>
+                    <Input name="roomNumber" required />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium">Program of Study *</label>
+                  <Input name="program" required />
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium">Username *</label>
+                  <Input name="username" required />
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium">Password *</label>
+                  <Input name="password" type="password" required />
+                </div>
+                
+                <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  Join Campus Social Hub
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Header */}
+      <div className="bg-white dark:bg-gray-800 border-b sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/housing">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Campus Social Hub</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Where Campus Life Comes to Life!</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm">
+                <Bell className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Settings className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6 max-w-4xl">
+        {/* Welcome Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Card className="border-2 border-gradient-to-r from-blue-600 to-purple-600 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+            <CardContent className="p-6 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white">
+                  <Sparkles className="h-6 w-6" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                Welcome to the Campus Social Hub! 🎉
+              </h2>
+              <p className="text-gray-700 dark:text-gray-300 mb-4">
+                This is your scrollable space to catch events, updates, alerts, giveaways, photos, and all the fun stuff happening on campus.
+              </p>
+              <div className="flex justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+                <span className="flex items-center gap-1">
+                  <Users className="h-4 w-4" />
+                  Get connected
+                </span>
+                <span className="flex items-center gap-1">
+                  <Bell className="h-4 w-4" />
+                  Stay updated
+                </span>
+                <span className="flex items-center gap-1">
+                  <Heart className="h-4 w-4" />
+                  Never miss a moment
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Trending Banner */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="mb-6"
+        >
+          <Card className="border-2 border-orange-600 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <TrendingUp className="h-5 w-5 text-orange-600" />
+                <span className="font-semibold text-orange-800 dark:text-orange-200">Trending on Campus</span>
+                <Badge variant="secondary" className="ml-auto">Live</Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Create Post */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Card className="border-2 border-green-600">
+            <CardContent className="p-4">
+              <div className="flex gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  {user?.firstName?.charAt(0) || 'U'}
+                </div>
+                <div className="flex-1">
+                  <Textarea
+                    placeholder="What's happening on campus? Share your thoughts, events, or updates..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[80px] resize-none"
+                  />
+                  <div className="flex items-center justify-between mt-3">
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowCreatePost(true)}
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Create Post
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Smile className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Image className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Video className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <Button 
+                      onClick={handleCreatePost}
+                      disabled={!newPost.trim()}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    >
+                      <Send className="h-4 w-4 mr-1" />
+                      Post
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {['all', 'events', 'alerts', 'wellness', 'student-life', 'reminders'].map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category)}
+                className="whitespace-nowrap"
+              >
+                <Filter className="h-3 w-3 mr-1" />
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </Button>
+            ))}
+          </div>
+        </motion.div>
 
         {/* Posts Feed */}
         <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           className="space-y-6"
         >
-          {posts.map((post) => (
-            <motion.div key={post.id} variants={item}>
-              <Card>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="flex gap-3">
-                      <Avatar>
-                        <AvatarImage src={post.author.avatar} />
-                        <AvatarFallback>{post.author.name[0]}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-semibold">{post.author.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {post.author.role} • {post.timestamp}
+          <AnimatePresence>
+            {filteredPosts.map((post, index) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                exit={{ opacity: 0, y: -20 }}
+              >
+                <Card className={`border-2 transition-all duration-300 hover:shadow-lg ${
+                  post.isPinned 
+                    ? 'border-red-600 bg-red-50 dark:bg-red-900/20' 
+                    : 'border-gray-200 dark:border-gray-700'
+                }`}>
+                  <CardContent className="p-6">
+                    {/* Post Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                          {post.author.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900 dark:text-white">
+                            {post.author}
+                            {post.isPinned && (
+                              <Badge variant="destructive" className="ml-2">
+                                <AlertTriangle className="h-3 w-3 mr-1" />
+                                Pinned
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                            <Clock className="h-3 w-3" />
+                            {formatTimeAgo(post.timestamp)}
+                            <Badge variant="outline" className="text-xs">
+                              {post.category}
+                            </Badge>
+                          </div>
                         </div>
                       </div>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <p className="text-sm">{post.content}</p>
-                    {post.media && (
-                      <div className="rounded-lg overflow-hidden">
-                        <img 
-                          src={post.media.url} 
-                          alt="Post media" 
-                          className="w-full h-auto"
-                        />
+
+                    {/* Post Content */}
+                    <div className="mb-4">
+                      {post.emoji && (
+                        <span className="text-2xl mr-2">{post.emoji}</span>
+                      )}
+                      <p className="text-gray-900 dark:text-white mb-3">{post.content}</p>
+                      
+                      {/* Event Details */}
+                      {post.type === 'event' && post.eventDetails && (
+                        <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                          <CardContent className="p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Calendar className="h-4 w-4 text-blue-600" />
+                              <span className="font-semibold text-blue-800 dark:text-blue-200">
+                                {post.eventDetails.date} at {post.eventDetails.time}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Building className="h-4 w-4 text-blue-600" />
+                              <span className="text-blue-700 dark:text-blue-300">
+                                {post.eventDetails.location}
+                              </span>
+                            </div>
+                            <p className="text-blue-700 dark:text-blue-300 text-sm">
+                              {post.eventDetails.description}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Poll */}
+                      {post.type === 'poll' && post.pollOptions && (
+                        <div className="space-y-2">
+                          {post.pollOptions.map((option, idx) => (
+                            <div key={idx} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                              <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                              <span className="flex-1">{option}</span>
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                {post.pollVotes?.[idx] || 0} votes
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Image */}
+                      {post.image && (
+                        <div className="mt-3">
+                          <img 
+                            src={post.image} 
+                            alt="Post content" 
+                            className="w-full rounded-lg"
+                          />
+                        </div>
+                      )}
+
+                      {/* Hashtags */}
+                      {post.hashtags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-3">
+                          {post.hashtags.map((tag, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Post Actions */}
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-6">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleLike(post.id)}
+                          className={`flex items-center gap-1 ${
+                            post.isLiked ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'
+                          }`}
+                        >
+                          <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-current' : ''}`} />
+                          {post.likes}
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                          <MessageCircle className="h-4 w-4" />
+                          {post.comments}
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                          <Share2 className="h-4 w-4" />
+                          {post.shares}
+                        </Button>
                       </div>
-                    )}
-                    {post.location && (
-                      <div className="text-sm text-muted-foreground">
-                        📍 {post.location}
-                      </div>
-                    )}
-                    <div className="flex flex-wrap gap-2">
-                      {post.tags.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          #{tag}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-4 pt-2">
-                      <Button variant="ghost" size="icon" className="gap-2">
-                        <Heart className="h-4 w-4" />
-                        {post.likes}
-                      </Button>
-                      <Button variant="ghost" size="icon" className="gap-2">
-                        <MessageSquare className="h-4 w-4" />
-                        {post.comments}
-                      </Button>
-                      <Button variant="ghost" size="icon" className="gap-2">
-                        <Share2 className="h-4 w-4" />
-                        {post.shares}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSave(post.id)}
+                        className={`flex items-center gap-1 ${
+                          post.isSaved ? 'text-yellow-600' : 'text-gray-600 dark:text-gray-400'
+                        }`}
+                      >
+                        <Bookmark className={`h-4 w-4 ${post.isSaved ? 'fill-current' : ''}`} />
                       </Button>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </motion.div>
+
+        {/* Create Post Dialog */}
+        <Dialog open={showCreatePost} onOpenChange={setShowCreatePost}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Plus className="h-5 w-5" />
+                Create New Post
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Tabs value={postType} onValueChange={(value) => setPostType(value as any)}>
+                <TabsList className="grid w-full grid-cols-5">
+                  <TabsTrigger value="text">Text</TabsTrigger>
+                  <TabsTrigger value="image">Image</TabsTrigger>
+                  <TabsTrigger value="video">Video</TabsTrigger>
+                  <TabsTrigger value="poll">Poll</TabsTrigger>
+                  <TabsTrigger value="event">Event</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="text" className="space-y-4">
+                  <Textarea
+                    placeholder="Write your post content..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[120px]"
+                  />
+                </TabsContent>
+                
+                <TabsContent value="image" className="space-y-4">
+                  <Textarea
+                    placeholder="Write your post content..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[120px]"
+                  />
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <Camera className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-600">Click to upload image</p>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="video" className="space-y-4">
+                  <Textarea
+                    placeholder="Write your post content..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[120px]"
+                  />
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    <Video className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                    <p className="text-gray-600">Click to upload video (max 60 seconds)</p>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="poll" className="space-y-4">
+                  <Textarea
+                    placeholder="Ask your question..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[80px]"
+                  />
+                  <div className="space-y-2">
+                    <Input placeholder="Option 1" />
+                    <Input placeholder="Option 2" />
+                    <Input placeholder="Option 3" />
+                    <Input placeholder="Option 4" />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="event" className="space-y-4">
+                  <Textarea
+                    placeholder="Event description..."
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    className="min-h-[80px]"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input placeholder="Date" type="date" />
+                    <Input placeholder="Time" type="time" />
+                  </div>
+                  <Input placeholder="Location" />
+                </TabsContent>
+              </Tabs>
+              
+              <div className="space-y-3">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="events">Events</SelectItem>
+                    <SelectItem value="alerts">Alerts</SelectItem>
+                    <SelectItem value="wellness">Wellness & Tips</SelectItem>
+                    <SelectItem value="student-life">Student Life</SelectItem>
+                    <SelectItem value="reminders">Reminders</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Input
+                  placeholder="Hashtags (e.g., #campus #fun #events)"
+                  value={hashtags}
+                  onChange={(e) => setHashtags(e.target.value)}
+                />
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">Add emoji:</span>
+                  {['🎉', '📚', '🎵', '🍕', '🔥', '💡', '🎮', '🏠'].map((emoji) => (
+                    <button
+                      key={emoji}
+                      onClick={() => setSelectedEmoji(emoji)}
+                      className={`text-xl p-1 rounded ${
+                        selectedEmoji === emoji ? 'bg-blue-100 dark:bg-blue-900' : ''
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowCreatePost(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  onClick={handleCreatePost}
+                  disabled={!newPost.trim()}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  Submit for Approval
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Footer Note */}
+      <div className="bg-white dark:bg-gray-800 border-t mt-12">
+        <div className="container mx-auto px-4 py-6 text-center">
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            The Campus Social Hub is more than a feed, it's a real-time digital community space that will improve communication, 
+            student engagement, and help Hocking College feel more connected and fun. Let's make the app a place students want to check every day.
+          </p>
+          <div className="mt-4 text-xs text-gray-500 dark:text-gray-500">
+            <p>Maintenance Contact: Housing Office / App Admin</p>
+            <p>Email: Housing@hocking.edu | Secondary: kennedyj1@hocking.edu</p>
+          </div>
+        </div>
       </div>
     </div>
   );
-} 
+};
+
+export default CampusSocialHub; 
