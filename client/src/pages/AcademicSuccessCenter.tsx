@@ -1,15 +1,14 @@
 import React from 'react';
 import { 
   ArrowLeft, BookOpen, GraduationCap, Users, Clock, Phone, Mail, MapPin, LibraryBig, MessageSquare, Accessibility, FileText, AlertCircle, Pencil,
-  Award, Building, Calendar, CheckCircle, AlertTriangle, BookOpen as BookOpenIcon, ExternalLink,
-  UserCheck, Target, Globe, Star, Shield, RotateCcw, CheckSquare
+  Award, Building, CheckCircle, BookOpen as BookOpenIcon, ExternalLink,
+  UserCheck, Target
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 // Custom icon for Tutoring (chat bubble with pencil)
 const ChatWithPencil: React.FC<{ className?: string }> = ({ className }) => (
@@ -28,10 +27,6 @@ interface Section {
 }
 
 function AcademicSuccessCenter() {
-  const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   const sections: Section[] = [
     {
       title: "Tutoring",

@@ -1,19 +1,14 @@
 import { 
   ArrowLeft, GraduationCap, Phone, Mail, Clock, FileText, Users, AlertCircle,
-  Award, Building, Calendar, CheckCircle, AlertTriangle, BookOpen, ExternalLink,
-  UserCheck, Target, Globe, Star, Shield, RotateCcw
+  Award, Building, Calendar, CheckCircle, BookOpen,
+  UserCheck, Target, Star
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 export default function Graduation() {
-  const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       <div className="flex items-center mb-6">
@@ -248,6 +243,193 @@ export default function Graduation() {
               <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
                 <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Replacements</h5>
                 <p className="text-sm text-teal-700 dark:text-teal-300">Replacement diplomas are available upon request with a processing fee</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Life After Graduation */}
+      <Card className="mb-8 border-2 border-emerald-600">
+        <CardHeader className="bg-emerald-50 dark:bg-emerald-900/20">
+          <CardTitle className="flex items-center text-xl text-emerald-800 dark:text-emerald-200">
+            <Users className="mr-3 h-6 w-6" />
+            Life After Graduation
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <p className="mb-6 text-gray-700 dark:text-gray-300">
+            Graduation isn't the end of your Hocking College journey, it's the start of your next chapter. Whether you're headed into the workforce, transferring to a university, or just need official documents, here's what you need to know:
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* Career Support */}
+            <div className="space-y-4">
+              <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center">
+                <Target className="mr-2 h-5 w-5" />
+                Career Support Continues
+              </h4>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                You still have full access to the Hocking College Career & University Center, even after you graduate. Get help with:
+              </p>
+              <div className="space-y-2 pl-4">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Job applications and interview prep</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Resume and cover letter reviews</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Graduate or transfer school advising</span>
+                </div>
+              </div>
+              <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                Career Services
+              </button>
+            </div>
+
+            {/* Transfer Resources */}
+            <div className="space-y-4">
+              <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center">
+                <BookOpen className="mr-2 h-5 w-5" />
+                Transferring to Another College?
+              </h4>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                Work with our Transfer Resource Center to ensure your credits are transferred correctly.
+              </p>
+              <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                Transfer Resources
+              </button>
+            </div>
+          </div>
+
+          {/* Stay Connected */}
+          <div className="mb-6">
+            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3 flex items-center">
+              <Star className="mr-2 h-5 w-5" />
+              Stay Connected
+            </h4>
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+              Hocking encourages graduates to stay engaged through alumni events, mentoring opportunities, and campus resources.
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Alumni Resources:</h5>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Stay connected after graduation through the Hocking College Foundation – Alumni & Friends.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <Mail className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      Newsletter: Email <a href="mailto:alumni@foundation.hocking.edu" className="text-blue-600 hover:underline">alumni@foundation.hocking.edu</a> to sign up
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Events: Join us for alumni gatherings and Homecoming</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs">
+                    Alumni Page
+                  </button>
+                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs ml-2">
+                    Homecoming Info
+                  </button>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Social Media:</h5>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Join the Hocking College Alumni Association on Facebook:
+                </p>
+                <a 
+                  href="https://facebook.com/HockingCollegeAlumniAssociation" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  facebook.com/HockingCollegeAlumniAssociation
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Student Loan Repayment */}
+          <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+            <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center">
+              <AlertCircle className="mr-2 h-5 w-5" />
+              Student Loan Repayment Begins Soon
+            </h4>
+            <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
+              Stay on top of repayment timelines and options using federal resources.
+            </p>
+            <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+              Loan Repayment Help
+            </button>
+          </div>
+
+          {/* Transcript Requests */}
+          <div>
+            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3 flex items-center">
+              <FileText className="mr-2 h-5 w-5" />
+              Transcript Requests
+            </h4>
+            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+              You may need your official transcript for employment, licensure, or college transfers. Here's how to access both official and unofficial records:
+            </p>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Official Transcript (National Student Clearinghouse):</h5>
+                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>Fee: $5 + $2.90 per recipient</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>Delivery: Mailed (standard or UPS), or held for pickup</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>No email or fax delivery available</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>Typically processed in 3 business days</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>Available 24/7</span>
+                  </div>
+                </div>
+                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                  Order Official Transcript
+                </button>
+              </div>
+              
+              <div className="space-y-3">
+                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Unofficial Transcript:</h5>
+                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>Access anytime through Self-Service</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                    <span>Good for personal records or unofficial reviews</span>
+                  </div>
+                </div>
+                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                  Transcript Info & Portal
+                </button>
               </div>
             </div>
           </div>

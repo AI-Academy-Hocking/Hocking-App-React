@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
 import { Link, useLocation } from "wouter";
 import HawkLogo from "../../assets/HawkLogo.png";
+import { SearchBar } from "@/components/SearchBar";
 
 const navItems = [
   { path: "/home", label: "Home", icon: Home },
@@ -90,13 +91,19 @@ export default function Header() {
             Hocking College
           </h1>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="ml-4 p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
-          aria-label="Toggle light/dark mode"
-        >
-          {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-        </button>
+        {/* Compact SearchBar */}
+        <div className="flex items-center gap-2">
+          <div className="hidden md:block">
+            <SearchBar className="w-48" placeholder="Search..." />
+          </div>
+          <button
+            onClick={toggleTheme}
+            className="ml-2 p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+            aria-label="Toggle light/dark mode"
+          >
+            {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
     </header>
   );

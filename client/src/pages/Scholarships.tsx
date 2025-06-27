@@ -1,14 +1,12 @@
 import { 
-  DollarSign, FileText, ExternalLink, Phone, Mail, 
-  Calendar, CheckCircle, AlertTriangle, Users, 
-  GraduationCap, Building, Clock, ArrowLeft,
-  Download, BookOpen, Shield, CreditCard, Briefcase,
-  Car, Home, Utensils, Calculator, Receipt, MapPin,
-  Award, Music, Star, Globe, UserCheck, Target, RotateCcw
+  FileText, ExternalLink, Phone, Mail, 
+  Calendar, CheckCircle, AlertTriangle, 
+  Building, ArrowLeft,
+  BookOpen, MapPin,
+  Award, Star, Globe, UserCheck, Target, RotateCcw
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 
 export default function Scholarships() {
@@ -168,7 +166,7 @@ export default function Scholarships() {
                 <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <h5 className="font-semibold text-orange-800 dark:text-orange-200">Band & Choir Scholarship</h5>
-                    <Badge variant="secondary">Up to $1,000/semester</Badge>
+                    <span>Up to $1,000/semester</span>
                   </div>
                   <p className="text-sm text-orange-700 dark:text-orange-300 mb-2">Requires MUS-1134 enrollment and audition</p>
                   <a href="mailto:parkj1@hocking.edu" className="text-blue-600 hover:underline text-sm">Email: parkj1@hocking.edu</a>
@@ -176,7 +174,7 @@ export default function Scholarships() {
                 <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <h5 className="font-semibold text-orange-800 dark:text-orange-200">Presidential Scholar Award</h5>
-                    <Badge variant="secondary">GPA ≥ 3.5</Badge>
+                    <span>GPA ≥ 3.5</span>
                   </div>
                   <p className="text-sm text-orange-700 dark:text-orange-300">Community service and full-time enrollment required</p>
                 </div>
@@ -196,7 +194,7 @@ export default function Scholarships() {
               <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200">$1,755/semester</h5>
-                  <Badge variant="secondary">IN, KY, MI, PA, WV</Badge>
+                  <span>IN, KY, MI, PA, WV</span>
                 </div>
                 <p className="text-sm text-orange-700 dark:text-orange-300 mb-2">Must live in dorm and have a meal plan</p>
                 <button
@@ -218,7 +216,7 @@ export default function Scholarships() {
               <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200">$1,000/year</h5>
-                  <Badge variant="secondary">Ohio Counties</Badge>
+                  <span>Ohio Counties</span>
                 </div>
                 <p className="text-sm text-orange-700 dark:text-orange-300">For graduates of high schools in surrounding Ohio counties</p>
                 <p className="text-sm text-orange-700 dark:text-orange-300 mt-2">Renewable with full-time status and Satisfactory Academic Progress (SAP)</p>

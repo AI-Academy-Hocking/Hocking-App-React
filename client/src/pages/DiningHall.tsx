@@ -1,7 +1,7 @@
 import { 
   UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2, ArrowLeft,
-  ExternalLink, Star, Shield, RotateCcw, CheckCircle, BookOpen, Activity, 
-  Building, Phone, Mail, Users, Timer, Waves
+  CheckCircle, BookOpen, Activity, Star,
+  Building, Phone, Mail, Users
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,10 +45,6 @@ export default function DiningHall() {
       ...prev,
       [imageName]: false
     }));
-  };
-
-  const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (

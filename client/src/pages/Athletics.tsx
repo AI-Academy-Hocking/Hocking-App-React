@@ -1,11 +1,9 @@
 import { 
   ArrowLeft, Trophy, Users, Calendar, MapPin, Phone, Mail, Clock, ExternalLink,
-  Award, Building, FileText, BookOpen, Star, Target, Globe, UserCheck, CheckCircle,
-  AlertTriangle, RotateCcw, Facebook, Video, Ticket, Newspaper, User, Shield
+  Award, Building, Newspaper, Ticket, Facebook, User, BookOpen
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 

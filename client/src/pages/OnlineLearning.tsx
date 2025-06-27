@@ -1,12 +1,11 @@
 import { 
   Laptop, HelpCircle, BookOpen, Video, MessageSquare, ArrowLeft,
-  Award, Building, Calendar, CheckCircle, AlertTriangle, BookOpen as BookOpenIcon, ExternalLink,
-  UserCheck, Target, Globe, Star, Shield, RotateCcw, MonitorSmartphone, Phone, Clock
+  CheckCircle, BookOpen as BookOpenIcon, ExternalLink,
+  Target, MonitorSmartphone, Phone, Clock
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 function OnlineLearningPage() {
   const handleExternalLink = (url: string) => {

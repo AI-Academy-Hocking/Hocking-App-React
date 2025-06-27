@@ -126,14 +126,14 @@ export default function InternationalStudents() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card>
           <CardHeader className="bg-primary-light/10">
-            <CardTitle className="text-xl">ESL & Academic Support</CardTitle>
+            <CardTitle className="text-xl">Academic Support</CardTitle>
           </CardHeader>
           <CardContent className="pt-4">
             <div className="space-y-3 text-gray-700 dark:text-gray-300">
               <p>• All international students complete placement testing upon arrival</p>
-              <p>• ESL (English as a Second Language) classes available if needed</p>
+              <p>• Students will complete an English course as part of their program</p>
               <p>• Courses include grammar, reading, writing, and speaking</p>
-              <p>• Transferring in with English 1510? You may be exempt from ESL</p>
+              <p>• Transferring in with English 1510? You may be exempt from additional English courses</p>
               <p>• We also offer tutoring, study labs, and writing help, so you're never on your own!</p>
             </div>
           </CardContent>
@@ -360,20 +360,20 @@ export default function InternationalStudents() {
               </div>
             </div>
 
-            {/* ACADEMICS & ESL */}
+            {/* ACADEMICS */}
             <div>
-              <h3 className="text-lg font-semibold mb-4 text-purple-600">ACADEMICS & ESL:</h3>
+              <h3 className="text-lg font-semibold mb-4 text-purple-600">ACADEMICS:</h3>
               <div className="space-y-4">
                 <div>
                   <p className="font-medium">Q9: Will I take English placement tests?</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Only if needed, all international students are required to be proficient in English.
+                    Yes, all international students are required to take English placement tests upon arrival to determine appropriate course placement.
                   </p>
                 </div>
                 <div>
                   <p className="font-medium">Q10: What academic support is available?</p>
                   <p className="text-gray-700 dark:text-gray-300">
-                    Tutoring, writing centers, library resources, and instructor office hours are available to all students.
+                    Tutoring, writing centers, library resources, and instructor office hours are available to all students. You will also complete English courses as part of your academic program.
                   </p>
                 </div>
               </div>

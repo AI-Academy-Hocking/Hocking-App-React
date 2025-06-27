@@ -1,7 +1,7 @@
 import { 
-  DollarSign, FileText, ExternalLink, Phone, Mail, 
+  DollarSign, FileText, ExternalLink, Phone, 
   Calendar, CheckCircle, AlertTriangle, Users, 
-  GraduationCap, Building, Clock, ArrowLeft,
+  Building, Clock, ArrowLeft,
   Download, BookOpen, Shield, CreditCard, Briefcase
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,6 +44,18 @@ export default function FinancialAid() {
           <p className="mb-4 text-gray-700 dark:text-gray-300">
             To begin the financial aid process, students must complete the Free Application for Federal Student Aid (FAFSA):
           </p>
+          
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
+            <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center">
+              <Users className="mr-2 h-5 w-5" />
+              Important: Create FSA IDs First
+            </h4>
+            <p className="text-blue-700 dark:text-blue-300 text-sm">
+              Before completing the FAFSA, both you and your parent(s) should create your FSA IDs. 
+              After creating the FSA IDs, wait 3-4 business days for them to be fully activated before 
+              completing the FAFSA application.
+            </p>
+          </div>
           
           <div className="grid md:grid-cols-2 gap-4 mb-6">
             <button
@@ -132,6 +144,17 @@ export default function FinancialAid() {
             If selected for verification or needing to file appeals, students can access and upload forms here:
           </p>
           
+          <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800 mb-4">
+            <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2 flex items-center">
+              <CheckCircle className="mr-2 h-5 w-5" />
+              Important: Check Self-Service First
+            </h4>
+            <p className="text-purple-700 dark:text-purple-300 text-sm">
+              Complete the forms that are identified/required in Self-Service. Log in to the Financial Aid 
+              Self-Service Portal to see which specific forms you need to submit.
+            </p>
+          </div>
+          
           <button
             onClick={() => handleExternalLink('https://www.hocking.edu/forms')}
             className="flex items-center justify-between p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors mb-6"
@@ -181,7 +204,7 @@ export default function FinancialAid() {
               <div className="space-y-2 pl-6">
                 <div className="flex items-center">
                   <Badge variant="secondary" className="mr-2">Federal</Badge>
-                  <span className="text-sm">Federal Pell Grant (up to ~$7,395 per year)</span>
+                  <span className="text-sm">Federal Pell Grant</span>
                 </div>
                 <div className="flex items-center">
                   <Badge variant="secondary" className="mr-2">State</Badge>
@@ -229,7 +252,7 @@ export default function FinancialAid() {
                 </div>
                 <div className="flex items-center">
                   <Badge variant="secondary" className="mr-2">College</Badge>
-                  <span className="text-sm">Hocking College Work Scholarship (up to $1,200)</span>
+                  <span className="text-sm">Hocking College Work Scholarship</span>
                 </div>
                 <button
                   onClick={() => handleExternalLink('https://www.hocking.edu/studentjobs')}
@@ -258,15 +281,15 @@ export default function FinancialAid() {
           </p>
           
           <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
-            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Typical Disbursement Dates (Spring Example):</h4>
+            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Disbursement Schedule:</h4>
             <div className="grid md:grid-cols-2 gap-4">
               <div className="flex items-center">
                 <Clock className="mr-2 h-4 w-4 text-blue-600" />
-                <span className="text-sm">First: February 17–22</span>
+                <span className="text-sm">First disbursement: 30 days after classes start</span>
               </div>
               <div className="flex items-center">
                 <Clock className="mr-2 h-4 w-4 text-blue-600" />
-                <span className="text-sm">Second: April 21</span>
+                <span className="text-sm">Second disbursement: Mid-semester</span>
               </div>
             </div>
           </div>
@@ -384,16 +407,6 @@ export default function FinancialAid() {
                   </td>
                   <td className="border border-gray-300 dark:border-gray-600 p-3">
                     <a href="tel:740-753-7182" className="text-blue-600 hover:underline">740-753-7182</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">Stephen Powell</td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">R–Z</td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">
-                    <a href="mailto:powells@hocking.edu" className="text-blue-600 hover:underline">powells@hocking.edu</a>
-                  </td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">
-                    <a href="tel:740-753-7061" className="text-blue-600 hover:underline">740-753-7061</a>
                   </td>
                 </tr>
               </tbody>

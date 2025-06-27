@@ -1,13 +1,10 @@
 import { 
-  DollarSign, FileText, ExternalLink, Phone, Mail, 
-  Calendar, CheckCircle, AlertTriangle, Users, 
-  GraduationCap, Building, Clock, ArrowLeft,
-  Download, BookOpen, Shield, CreditCard, Briefcase,
-  Car, Home, Utensils, Calculator, Receipt, MapPin
+  DollarSign, FileText, ExternalLink, Phone, 
+  Building, Clock, ArrowLeft,
+  BookOpen, Car, Home, Utensils, Calculator, MapPin, CreditCard, AlertTriangle, Receipt
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 
 export default function Billing() {

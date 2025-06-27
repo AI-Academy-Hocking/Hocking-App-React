@@ -1,14 +1,13 @@
 import { 
   Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText, ArrowLeft,
-  ExternalLink, Star, Shield, RotateCcw, CheckCircle, BookOpen, Activity, 
-  Building, Phone, Clock, Timer, Home, Calendar
+  ExternalLink, Star, CheckCircle, BookOpen, Activity, 
+  Building, Phone, Clock, Home, Calendar
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 interface HousingOption {
   title: string;
@@ -175,10 +174,6 @@ const getCategoryColor = (category: string) => {
 
 export default function Housing() {
   const [, setLocation] = useLocation();
-
-  const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">

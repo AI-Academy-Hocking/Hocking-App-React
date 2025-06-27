@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+// import { useQuery } from "@tanstack/react-query";
+// import { Globe, DollarSign, Award, Phone } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Card, CardContent } from "../components/ui/card";
-import { Calendar, MapPin, Wrench, School, Info, ChevronDown, ChevronRight, Building, Target, GraduationCap, Briefcase, Users, Heart, Shield, BookOpen, Star, Phone, Mail, Clock, Award, Globe, Home as HomeIcon, DollarSign, MapPin as MapPinIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import HockingBackground from "../components/assets/Campus.jpeg";  
+import HockingBackground from "../components/assets/Campus.jpeg";
 import ProgramDropdown from "@/components/ProgramDropdown";
+import { Calendar, MapPin, Users, BookOpen, GraduationCap, Heart, Shield, Home as HomeIcon, Utensils, Briefcase, Trophy, Users2, Accessibility, TestTube, Building2, Mail, Clock, Star, ChevronRight, ChevronDown, Globe, DollarSign, Award, Phone } from "lucide-react";
 
 // Define a local Event type for type safety
 export type Event = {
@@ -21,9 +22,9 @@ export default function Home() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   
   // Remove unused destructured elements from useQuery
-  useQuery<Event[]>({
-    queryKey: ['/api/events'],
-  });
+  // useQuery<Event[]>({
+  //   queryKey: ['/api/events'],
+  // });
 
   const handleProgramChange = (program: string) => {
     console.log('Selected program:', program);
@@ -46,7 +47,7 @@ export default function Home() {
     },
     { 
       href: "/tools", 
-      icon: Wrench, 
+      icon: Utensils, 
       label: "Student Tools" 
     },
     { 
@@ -56,7 +57,7 @@ export default function Home() {
     },
     { 
       href: "#", 
-      icon: School, 
+      icon: GraduationCap, 
       label: "Resources" 
     },
   ];
@@ -65,7 +66,7 @@ export default function Home() {
     {
       id: 'identity',
       title: 'Our Identity',
-      icon: Building,
+      icon: Building2,
       content: (
         <div className="space-y-4">
           <p className="text-gray-700 dark:text-gray-300">
@@ -77,7 +78,7 @@ export default function Home() {
     {
       id: 'mission',
       title: 'Mission & Core Values',
-      icon: Target,
+      icon: Trophy,
       content: (
         <div className="space-y-4">
           <div>
@@ -98,7 +99,7 @@ export default function Home() {
                 <span><strong>Community Engagement</strong> – Integrating service and development with regional partners</span>
               </li>
               <li className="flex items-start gap-2">
-                <Users className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Users2 className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                 <span><strong>Diversity & Inclusion</strong> – Embracing differences of all kinds</span>
               </li>
           
@@ -111,7 +112,7 @@ export default function Home() {
     {
       id: 'academics',
       title: 'Academics & Accreditation',
-      icon: GraduationCap,
+      icon: TestTube,
       content: (
         <div className="space-y-4">
           <ul className="space-y-2 text-gray-700 dark:text-gray-300">
@@ -197,7 +198,7 @@ export default function Home() {
         <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <p>• Save an average of $28,000 versus attending a four-year college</p>
           <p>• Offers scholarships, financial aid, flexible payment plans with all-inclusive pricing in select technical programs</p>
-          <p>• Support systems: TRIO, Academic Success Center, Accessibility, ESL, and Counseling services included</p>
+          <p>• Support systems: TRIO, Academic Success Center, Accessibility, and Counseling services included</p>
         </div>
       )
     },
@@ -282,7 +283,7 @@ export default function Home() {
     {
       id: 'campus-tours',
       title: 'Campus Tours & Contact',
-      icon: MapPinIcon,
+      icon: MapPin,
       content: (
         <div className="space-y-3 text-gray-700 dark:text-gray-300">
           <p>• Virtual 360° campus tour option</p>
@@ -300,7 +301,7 @@ export default function Home() {
         <div className="space-y-4">
           <div className="space-y-2 text-gray-700 dark:text-gray-300">
             <div className="flex items-start gap-2">
-              <MapPinIcon className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+              <MapPin className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
                 <p><strong>Nelsonville Campus:</strong> 3301 Hocking Parkway</p>
                 <p><strong>Logan Campus:</strong> 30140 Iles Rd</p>
@@ -389,7 +390,7 @@ export default function Home() {
               className="w-full p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-between"
             >
               <div className="flex items-center gap-3">
-                <Info className="text-blue-600 dark:text-white text-2xl h-6 w-6" />
+                <Accessibility className="text-blue-600 dark:text-white text-2xl h-6 w-6" />
                 <h3 className="font-bold text-gray-900 dark:text-white">Learn More About Hocking College</h3>
               </div>
               {expandedSections.includes('learn-more') ? (

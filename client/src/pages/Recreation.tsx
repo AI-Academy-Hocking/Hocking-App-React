@@ -1,19 +1,14 @@
 import { 
   Phone, Mail, Clock, ArrowLeft, Dumbbell, Users, MapPin, ExternalLink,
-  Calendar, Star, Shield, RotateCcw, CheckCircle, BookOpen, Activity, 
-  Building, Wifi, Coffee, Gamepad2, Waves, Mountain, Timer
+  Calendar, CheckCircle, BookOpen, Activity, 
+  Building, Coffee, Waves, Mountain, Timer
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import studentCenterImage from "@/components/assets/studentCenter.jpg"; // Import the image
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 function RecreationPage() {
-  const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       <div className="flex items-center mb-6">
@@ -235,7 +230,7 @@ function RecreationPage() {
       <Card className="mb-8 border-2 border-indigo-600">
         <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
           <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <Star className="mr-3 h-6 w-6" />
+            <CheckCircle className="mr-3 h-6 w-6" />
             Amenities & Services
           </CardTitle>
         </CardHeader>

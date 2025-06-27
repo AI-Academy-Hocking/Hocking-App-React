@@ -1,6 +1,6 @@
 import { 
-  Briefcase, Phone, Clock, ArrowLeft, ExternalLink, CheckCircle, BookOpen, Activity,
-  MapPin, Users, AlertTriangle, GraduationCap, Mail, Calendar, Download, 
+  Briefcase, Phone, Clock, ArrowLeft, ExternalLink, CheckCircle, Activity,
+  MapPin, Mail, 
   FileText, Building, UserCheck, Target, Award, Users2, HelpCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -277,7 +277,7 @@ export default function CareerUniversityCenter() {
       <Card className="mb-8 border-2 border-teal-600">
         <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
           <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-            <Calendar className="mr-3 h-6 w-6" />
+            <Activity className="mr-3 h-6 w-6" />
             Workshops & Career Events
           </CardTitle>
         </CardHeader>
@@ -347,7 +347,7 @@ export default function CareerUniversityCenter() {
               className="flex items-center justify-between p-4 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors"
             >
               <div className="flex items-center">
-                <Calendar className="mr-3 h-5 w-5" />
+                <Activity className="mr-3 h-5 w-5" />
                 <span className="font-semibold">Career Services Events</span>
               </div>
               <ExternalLink className="h-5 w-5" />
@@ -360,7 +360,7 @@ export default function CareerUniversityCenter() {
       <Card className="mb-8 border-2 border-indigo-600">
         <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
           <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <GraduationCap className="mr-3 h-6 w-6" />
+            <Activity className="mr-3 h-6 w-6" />
             Transfer & Graduate School Support
           </CardTitle>
         </CardHeader>
@@ -421,64 +421,244 @@ export default function CareerUniversityCenter() {
         </CardContent>
       </Card>
 
-      {/* Enhanced App Features Section */}
+      {/* On-Campus Student Jobs Section */}
       <Card className="mb-8 border-2 border-pink-600">
         <CardHeader className="bg-pink-50 dark:bg-pink-900/20">
           <CardTitle className="flex items-center text-xl text-pink-800 dark:text-pink-200">
-            <Download className="mr-3 h-6 w-6" />
-            Enhanced App Features & Student Tools
+            <Briefcase className="mr-3 h-6 w-6" />
+            On-Campus Student Jobs
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">Career Assessment Tools</h4>
-                <p className="text-pink-700 dark:text-pink-300 mb-3">Help students discover their strengths and interests:</p>
+            <div>
+              <h3 className="text-lg font-semibold text-pink-700 dark:text-pink-300 mb-3">Student Worker Program</h3>
+              <p className="text-pink-700 dark:text-pink-300 mb-4">
+                Hocking College offers on-campus employment opportunities for students through the Student Worker Program. These roles provide real-world experience, supplemental income, and valuable workplace skills right on campus.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">Types of Jobs Available:</h4>
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <button
-                    onClick={() => handleExternalLink('https://www.onetcenter.org/IP.html')}
-                    className="flex items-center text-blue-600 hover:text-blue-800 transition-colors text-sm"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    O*NET Interest Profiler
-                  </button>
-                  <button
-                    onClick={() => handleExternalLink('https://www.careeronestop.org')}
-                    className="flex items-center text-blue-600 hover:text-blue-800 transition-colors text-sm"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    CareerOneStop
-                  </button>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Administrative assistants (departments, offices)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Lab assistants or tutors</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Library and tech support staff</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Residence hall/front desk staff</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Facilities/maintenance helpers</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Dining services and event assistants</span>
+                  </div>
                 </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">Career Fair Prep Kit</h4>
-                <p className="text-pink-700 dark:text-pink-300 mb-3">A downloadable guide that covers:</p>
-                <div className="space-y-1 text-sm text-pink-700 dark:text-pink-300">
-                  <div>• What to wear</div>
-                  <div>• What to bring</div>
-                  <div>• How to introduce yourself</div>
-                  <div>• How to follow up</div>
+              <p className="text-sm text-pink-600 dark:text-pink-400 mt-3 italic">
+                Note: Job assignments are based on available openings and matched with a student's program or skillset when possible.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">How to Apply:</h4>
+              <p className="text-pink-700 dark:text-pink-300 mb-3">All student employment is coordinated through Human Resources. Students must:</p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                  <span className="text-sm text-pink-700 dark:text-pink-300">Search available jobs using the job board.</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                  <span className="text-sm text-pink-700 dark:text-pink-300">Complete the required student employment paperwork.</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-pink-600" />
+                  <span className="text-sm text-pink-700 dark:text-pink-300">Await assignment approval from HR.</span>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => handleExternalLink('https://www.hocking.edu/studentjobs')}
+                className="flex items-center justify-between p-4 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors mb-6"
+              >
+                <div className="flex items-center">
+                  <Briefcase className="mr-3 h-5 w-5" />
+                  <span className="font-semibold">Apply for Student Jobs – Job Board</span>
+                </div>
+                <ExternalLink className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">Required Documents:</h4>
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Valid photo ID (driver's license or state ID)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Social Security card</span>
+                  </div>
+                  <div className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Class schedule</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Completed tax forms (W-4)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <FileText className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Direct deposit form</span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-sm text-pink-600 dark:text-pink-400 italic">
+                Note: Full employment requirements and paperwork instructions are available after you log in to the portal linked above.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">Human Resources – Contact Info:</h4>
+              <p className="text-pink-700 dark:text-pink-300 mb-3">For all student job applications and inquiries, contact:</p>
+              <div className="bg-pink-50 dark:bg-pink-900/30 p-4 rounded-lg">
+                <div className="space-y-2">
+                  <div className="font-semibold text-pink-800 dark:text-pink-200">Human Resources Department</div>
+                  <div className="flex items-center">
+                    <MapPin className="mr-2 h-4 w-4 text-pink-600" />
+                    <span className="text-sm text-pink-700 dark:text-pink-300">Oakley Hall, 2nd Floor</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Phone className="mr-2 h-4 w-4 text-pink-600" />
+                    <a href="tel:740-753-7050" className="text-blue-600 hover:underline text-sm">740‑753‑7050</a>
+                  </div>
+                  <div className="flex items-center">
+                    <Mail className="mr-2 h-4 w-4 text-pink-600" />
+                    <a href="mailto:hr@hocking.edu" className="text-blue-600 hover:underline text-sm">hr@hocking.edu</a>
+                  </div>
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/hr')}
+                    className="flex items-center text-blue-600 hover:text-blue-800 transition-colors text-sm"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    HR Department Homepage
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">RSVP and Calendar Integration</h4>
-                <p className="text-pink-700 dark:text-pink-300">Let students RSVP for events via app with auto-reminders synced to their Google or Outlook calendar.</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-pink-700 dark:text-pink-300 mb-3">Video Library (Future Addition)</h4>
-                <p className="text-pink-700 dark:text-pink-300 mb-2">Short tutorials:</p>
-                <div className="space-y-1 text-sm text-pink-700 dark:text-pink-300">
-                  <div>• How to build a resume</div>
-                  <div>• Virtual interview tips</div>
-                  <div>• Using Handshake and LinkedIn</div>
-                  <div>• Dressing professionally</div>
+      {/* Join the Hocking College Team – Faculty & Staff Employment Section */}
+      <Card className="mb-8 border-2 border-indigo-600">
+        <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
+          <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
+            <Users2 className="mr-3 h-6 w-6" />
+            Join the Hocking College Team – Faculty & Staff Employment
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-3">Professional Opportunities</h3>
+              <p className="text-indigo-700 dark:text-indigo-300 mb-4">
+                Hocking College is always looking for dedicated professionals who are passionate about student success, career readiness, and community engagement. Whether you're an experienced educator or an industry expert ready to teach, we welcome you to explore our current openings.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-indigo-700 dark:text-indigo-300 mb-3">Faculty & Staff Opportunities:</h4>
+              <p className="text-indigo-700 dark:text-indigo-300 mb-3">Open positions include:</p>
+              <div className="grid md:grid-cols-2 gap-4 mb-4">
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Full-time and adjunct faculty roles</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Administrative and staff positions</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Student support, technical, and operational roles</span>
+                  </div>
                 </div>
               </div>
+              <p className="text-indigo-700 dark:text-indigo-300 mb-4">
+                View all current job openings and apply online through our secure portal.
+              </p>
+              
+              <button
+                onClick={() => handleExternalLink('https://www.hocking.edu/employment')}
+                className="flex items-center justify-between p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors mb-6"
+              >
+                <div className="flex items-center">
+                  <Briefcase className="mr-3 h-5 w-5" />
+                  <span className="font-semibold">View Available Jobs</span>
+                </div>
+                <ExternalLink className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div>
+              <h4 className="font-semibold text-indigo-700 dark:text-indigo-300 mb-3">How to Apply:</h4>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Visit the Employment Opportunities page.</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Browse current faculty/staff openings.</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Click the job title for a full description.</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Submit your application and required documents through the online portal.</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Contact the Human Resources Department with any questions.</span>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => handleExternalLink('https://www.hocking.edu/employment/apply')}
+                className="flex items-center justify-between p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+              >
+                <div className="flex items-center">
+                  <FileText className="mr-3 h-5 w-5" />
+                  <span className="font-semibold">Start Application Process</span>
+                </div>
+                <ExternalLink className="h-5 w-5" />
+              </button>
             </div>
           </div>
         </CardContent>
@@ -522,6 +702,16 @@ export default function CareerUniversityCenter() {
                   </td>
                   <td className="border border-gray-300 dark:border-gray-600 p-3">
                     <a href="mailto:koonst@hocking.edu" className="text-blue-600 hover:underline">koonst@hocking.edu</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-300 dark:border-gray-600 p-3">Human Resources Department</td>
+                  <td className="border border-gray-300 dark:border-gray-600 p-3">Oakley Hall, 2nd Floor</td>
+                  <td className="border border-gray-300 dark:border-gray-600 p-3">
+                    <a href="tel:740-753-7050" className="text-blue-600 hover:underline">740‑753‑7050</a>
+                  </td>
+                  <td className="border border-gray-300 dark:border-gray-600 p-3">
+                    <a href="mailto:hr@hocking.edu" className="text-blue-600 hover:underline">hr@hocking.edu</a>
                   </td>
                 </tr>
               </tbody>
@@ -605,6 +795,123 @@ export default function CareerUniversityCenter() {
               </AccordionTrigger>
               <AccordionContent>
                 Yes—everything from choosing a program to reviewing your essays.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="dependency-override">
+              <AccordionTrigger className="text-left">
+                Can I still get aid if my parents don't support me?
+              </AccordionTrigger>
+              <AccordionContent>
+                Yes. You may be eligible for a Dependency Override. This requires documentation and an appeal form available online.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="summer-aid">
+              <AccordionTrigger className="text-left">
+                Is there financial aid available for summer classes?
+              </AccordionTrigger>
+              <AccordionContent>
+                Yes. Submit the Summer Enrollment Aid Request Form, and check if you're eligible for federal or state grants.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="parent-help">
+              <AccordionTrigger className="text-left">
+                Can parents help with FAFSA or aid questions?
+              </AccordionTrigger>
+              <AccordionContent>
+                Yes. Parents can assist with FAFSA by creating their own FSA ID. They can also contact the Financial Aid Office directly for assistance.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="campus-job-how">
+              <AccordionTrigger className="text-left">
+                How do I get a job on campus?
+              </AccordionTrigger>
+              <AccordionContent>
+                Search jobs on the job board and follow HR's employment procedures.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="campus-job-approval">
+              <AccordionTrigger className="text-left">
+                Who approves my student job?
+              </AccordionTrigger>
+              <AccordionContent>
+                The Human Resources Department handles all approvals and paperwork.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="work-study">
+              <AccordionTrigger className="text-left">
+                Are there work-study positions?
+              </AccordionTrigger>
+              <AccordionContent>
+                Yes, ask HR about work-study eligibility based on your FAFSA.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="international-students-work">
+              <AccordionTrigger className="text-left">
+                Can international students work on campus?
+              </AccordionTrigger>
+              <AccordionContent>
+                Only if they meet federal visa guidelines. Please check with HR for eligibility.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="work-hours">
+              <AccordionTrigger className="text-left">
+                How many hours can I work?
+              </AccordionTrigger>
+              <AccordionContent>
+                Typically up to 20 hours per week during semesters; check with HR for seasonal limits.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="summer-housing-work">
+              <AccordionTrigger className="text-left">
+                Is summer housing available and can I work more hours in the summer?
+              </AccordionTrigger>
+              <AccordionContent>
+                Yes, summer housing is available and you can work up to 40 hours per week during the summer.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="faculty-apply-where">
+              <AccordionTrigger className="text-left">
+                Where do I apply for faculty or staff jobs?
+              </AccordionTrigger>
+              <AccordionContent>
+                Visit the Employment Opportunities Page.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="faculty-documents">
+              <AccordionTrigger className="text-left">
+                What documents are required to apply?
+              </AccordionTrigger>
+              <AccordionContent>
+                Typically a resume, cover letter, transcripts (for faculty), and references. Each listing details what is required.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="multiple-applications">
+              <AccordionTrigger className="text-left">
+                Can I apply for more than one position?
+              </AccordionTrigger>
+              <AccordionContent>
+                Yes, you may submit separate applications for multiple open positions.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="application-problems">
+              <AccordionTrigger className="text-left">
+                Who do I contact if I have a problem with my application?
+              </AccordionTrigger>
+              <AccordionContent>
+                Reach out to the HR Office at Email: hr@hocking.edu or Contact Number: 740‑753‑7050.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

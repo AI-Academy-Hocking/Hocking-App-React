@@ -1,17 +1,12 @@
 import { 
-  Calendar, Mail, Award, ArrowLeft, Users, Building, Phone, Clock, ExternalLink,
-  UserCheck, Target, Globe, Star, Shield, RotateCcw, CheckCircle, BookOpen
+  Calendar, Mail, Award, ArrowLeft, Users, Building, Phone, ExternalLink,
+  UserCheck, Target, Globe, Star, CheckCircle, BookOpen, Shield
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 function StudentOrganizationsPage() {
-  const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       <div className="flex items-center mb-6">
