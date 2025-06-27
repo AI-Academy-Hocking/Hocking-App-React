@@ -1,227 +1,236 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, AlertTriangle } from 'lucide-react';
+import { ClipboardList, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { ArrowLeft } from "lucide-react";
 
 interface ChecklistItem {
   category: string;
   items: {
     name: string;
-    importance: "required" | "recommended" | "optional";
+    importance: "recommended" | "optional";
     description?: string;
   }[];
 }
 
+interface ProhibitedItem {
+  name: string;
+  description?: string;
+}
+
 const checklistItems: ChecklistItem[] = [
   {
-    category: "Necessities",
+    category: "Bedding & Linens",
     items: [
       {
-        name: "Safety Pins",
-        importance: "required"
+        name: "Twin XL Sheets & Pillowcases",
+        importance: "recommended",
+        description: "Standard dorm bed size"
       },
       {
-        name: "Sewing Kit",
-        importance: "required"
+        name: "Twin XL Bedspread/Comforter",
+        importance: "recommended"
       },
       {
-        name: "Plastic Baggies",
-        importance: "required"
+        name: "Blankets",
+        importance: "recommended"
       },
       {
-        name: "First Aid Kit",
-        importance: "required"
+        name: "Pillows",
+        importance: "recommended"
       },
       {
-        name: "Medical Card",
-        importance: "required",
-        description: "If you have health insurance"
+        name: "Mattress Pad/Topper",
+        importance: "optional",
+        description: "For extra comfort"
       },
       {
-        name: "Medicine",
-        importance: "required",
-        description: "Any prescription and over-the-counter medications you need"
+        name: "Towels & Washcloths",
+        importance: "recommended"
+      }
+    ]
+  },
+  {
+    category: "Bathroom Essentials",
+    items: [
+      {
+        name: "Shower Curtain & Bathroom Mats",
+        importance: "recommended",
+        description: "For North, Downhour, Summit and Sycamore Halls (1 per suite)"
+      },
+      {
+        name: "Toilet Paper",
+        importance: "recommended",
+        description: "For North, Downhour, Summit and Sycamore"
+      },
+      {
+        name: "Shower Caddy",
+        importance: "recommended"
+      },
+      {
+        name: "Shower Shoes/Flip Flops",
+        importance: "recommended"
+      },
+      {
+        name: "Personal Hygiene Products",
+        importance: "recommended",
+        description: "Shampoo, soap, toothbrush, toothpaste, etc."
+      },
+      {
+        name: "Hair Dryer",
+        importance: "recommended"
+      }
+    ]
+  },
+  {
+    category: "School & Study Supplies",
+    items: [
+      {
+        name: "Laptop & Charger",
+        importance: "recommended"
+      },
+      {
+        name: "Backpack",
+        importance: "recommended"
+      },
+      {
+        name: "Notebooks, Paper, Folders",
+        importance: "recommended"
+      },
+      {
+        name: "Pens, Pencils, Highlighters",
+        importance: "recommended"
+      },
+      {
+        name: "Calculator",
+        importance: "recommended"
+      },
+      {
+        name: "USB Flash Drive",
+        importance: "recommended"
+      },
+      {
+        name: "Desk Lamp",
+        importance: "recommended"
+      },
+      {
+        name: "Bulletin Board/White Board",
+        importance: "optional"
+      },
+      {
+        name: "Calendar/Planner",
+        importance: "recommended"
+      }
+    ]
+  },
+  {
+    category: "Room Organization",
+    items: [
+      {
+        name: "Storage Tubs/Bins",
+        importance: "recommended"
+      },
+      {
+        name: "Hangers",
+        importance: "recommended"
+      },
+      {
+        name: "Command Hooks/Strips",
+        importance: "recommended",
+        description: "For hanging items without damaging walls"
+      },
+      {
+        name: "Wastebasket",
+        importance: "recommended"
+      },
+      {
+        name: "Small Bookshelf",
+        importance: "optional"
+      },
+      {
+        name: "Area Rug",
+        importance: "optional"
+      }
+    ]
+  },
+  {
+    category: "Cleaning & Maintenance",
+    items: [
+      {
+        name: "Cleaning Supplies",
+        importance: "recommended",
+        description: "All-purpose cleaner, paper towels, etc."
+      },
+      {
+        name: "Broom & Mop with Bucket",
+        importance: "recommended"
       },
       {
         name: "Laundry Supplies",
-        importance: "required",
+        importance: "recommended",
         description: "Detergent, fabric softener, etc."
       },
       {
         name: "Laundry Basket/Bag",
-        importance: "required"
+        importance: "recommended"
+      }
+    ]
+  },
+  {
+    category: "Health & Safety",
+    items: [
+      {
+        name: "First Aid Kit",
+        importance: "recommended"
       },
       {
-        name: "Umbrella",
-        importance: "required"
+        name: "Prescription Medications",
+        importance: "recommended"
       },
       {
-        name: "Rain/Snow Gear",
-        importance: "required",
-        description: "Boots, coat, gloves, hat"
+        name: "Over-the-Counter Medications",
+        importance: "recommended",
+        description: "Pain relievers, cold medicine, etc."
+      },
+      {
+        name: "Medical Insurance Card",
+        importance: "recommended"
       },
       {
         name: "Flashlight",
-        importance: "required"
+        importance: "recommended"
       },
       {
         name: "Batteries",
-        importance: "required"
-      },
-      {
-        name: "Paper Towels",
-        importance: "required"
-      },
-      {
-        name: "Dishes",
-        importance: "required"
-      },
-      {
-        name: "Cups/Glasses",
-        importance: "required"
-      },
-      {
-        name: "Storage Tubs",
-        importance: "required"
-      },
-      {
-        name: "Broom & Mop with Bucket",
-        importance: "required"
-      },
-      {
-        name: "Bike/Bike Lock",
-        importance: "required"
-      },
-      {
-        name: "Personal Hygiene Products",
-        importance: "required"
-      },
-      {
-        name: "Cleaning Supplies",
-        importance: "required"
-      },
-      {
-        name: "Command Hooks/Strips",
-        importance: "required"
-      },
-      {
-        name: "Hangers",
-        importance: "required"
-      },
-      {
-        name: "Toiletries",
-        importance: "required",
-        description: "Shampoo, soap, etc."
+        importance: "recommended"
       }
     ]
   },
   {
-    category: "School Supplies",
+    category: "Weather & Transportation",
     items: [
       {
-        name: "Notepads",
-        importance: "required"
+        name: "Umbrella",
+        importance: "recommended"
       },
       {
-        name: "Calendar",
-        importance: "required"
+        name: "Rain/Snow Gear",
+        importance: "recommended",
+        description: "Boots, coat, gloves, hat"
       },
       {
-        name: "Paper Clips",
-        importance: "required"
-      },
-      {
-        name: "Folders/Binders",
-        importance: "required"
-      },
-      {
-        name: "Stapler/Staples",
-        importance: "required"
-      },
-      {
-        name: "Rubber Bands",
-        importance: "required"
-      },
-      {
-        name: "Pens/Pencils",
-        importance: "required"
-      },
-      {
-        name: "Laptop & Supplies",
-        importance: "required",
-        description: "Required"
-      },
-      {
-        name: "Bulletin Board/White Board",
-        importance: "required"
-      },
-      {
-        name: "Sharpies",
-        importance: "required"
-      },
-      {
-        name: "Highlighters",
-        importance: "required"
-      },
-      {
-        name: "USB/Flash Drive",
-        importance: "required"
-      },
-      {
-        name: "Tape",
-        importance: "required"
-      },
-      {
-        name: "Scissors",
-        importance: "required"
-      },
-      {
-        name: "Ruler",
-        importance: "required"
-      },
-      {
-        name: "Backpack",
-        importance: "required"
-      },
-      {
-        name: "Envelope/Stamps",
-        importance: "required"
-      },
-      {
-        name: "Calculator",
-        importance: "required"
+        name: "Bike & Bike Lock",
+        importance: "optional"
       }
     ]
   },
   {
-    category: "Room Essentials",
+    category: "Kitchen & Dining",
     items: [
       {
-        name: "Sheets, Pillowcases",
-        importance: "required",
-        description: "Twin XL"
-      },
-      {
-        name: "Bedspread",
-        importance: "required",
-        description: "Twin XL"
-      },
-      {
-        name: "Blankets",
-        importance: "required"
-      },
-      {
-        name: "Pillows",
-        importance: "required"
-      },
-      {
-        name: "Mattress Pad",
-        importance: "optional",
-        description: "If preferred"
-      },
-      {
-        name: "Towels/Washcloths",
-        importance: "required"
+        name: "Dishes, Cups, Glasses",
+        importance: "recommended"
       },
       {
         name: "Coffee Maker/Keurig",
@@ -229,187 +238,94 @@ const checklistItems: ChecklistItem[] = [
       },
       {
         name: "Alarm Clock",
-        importance: "required",
+        importance: "recommended",
         description: "With backup battery"
-      },
-      {
-        name: "Wastebasket",
-        importance: "required"
-      },
-      {
-        name: "Desk Lamp",
-        importance: "required"
       }
     ]
   },
   {
-    category: "Bathroom Items",
+    category: "Entertainment & Personal",
     items: [
-      {
-        name: "Shower Curtain and Bathroom Mats",
-        importance: "required",
-        description: "For North and Downhour, Summit and Sycamore Halls (1 per suite)"
-      },
-      {
-        name: "Toilet Paper",
-        importance: "required",
-        description: "For North, Downhour, Summit and Sycamore"
-      },
-      {
-        name: "Shower Caddy",
-        importance: "required"
-      },
-      {
-        name: "Shower Shoes",
-        importance: "required"
-      },
-      {
-        name: "Hair Dryer",
-        importance: "required"
-      },
-      {
-        name: "Toothbrush/Toothpaste",
-        importance: "required"
-      },
-      {
-        name: "Personal Hygiene Products",
-        importance: "required"
-      }
-    ]
-  },
-  {
-    category: "Optional Items",
-    items: [
-      {
-        name: "Area Rugs",
-        importance: "optional"
-      },
       {
         name: "TV",
         importance: "optional"
       },
       {
         name: "Gaming Consoles",
-        importance: "optional",
-        description: "If applicable"
+        importance: "optional"
       },
       {
         name: "Surge Protectors",
+        importance: "recommended"
+      },
+      {
+        name: "Posters/Pictures",
         importance: "optional"
       },
       {
         name: "Over-the-door Mirror",
         importance: "optional"
-      },
-      {
-        name: "Small Bookshelves",
-        importance: "optional"
-      },
-      {
-        name: "Posters/Pictures",
-        importance: "optional"
       }
     ]
+  }
+];
+
+const prohibitedItems: ProhibitedItem[] = [
+  {
+    name: "Cooking Appliances",
+    description: "Hot plates, single burner units, sandwich makers, crock pots, instant pots, toasters, toaster ovens, waffle makers"
   },
   {
-    category: "Prohibited Items",
-    items: [
-      {
-        name: "TV Cable Cords (Coaxial Cables)",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Duct Tape",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Drugs/Alcohol",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Weapons",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Cooking Appliances",
-        importance: "required",
-        description: "Hot plates, single burner units, sandwich makers, crock pots, instant pots, toasters, toaster ovens, waffle makers"
-      },
-      {
-        name: "Knives",
-        importance: "required",
-        description: "Longer than 3\" (including kitchen knives)"
-      },
-      {
-        name: "Pets",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Large Furniture",
-        importance: "required",
-        description: "Including mini-fridges"
-      },
-      {
-        name: "Refrigerator",
-        importance: "required",
-        description: "Including mini-fridge"
-      },
-      {
-        name: "Microwave",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Thumbtacks",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Halogen Bulbs",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Candles",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Wax Warmers",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Incense",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Weights",
-        importance: "required",
-        description: "Please use the Student Center for exercise equipment"
-      },
-      {
-        name: "Wireless Routers",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Vapes, Tobacco Products, Cannabis",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Weapons",
-        importance: "required",
-        description: "Sling shots, blow guns, paintball guns, BB guns, airsoft guns, crossbows, ammunition, firearms, explosives and other weapons"
-      }
-    ]
+    name: "Microwave",
+    description: "Not allowed - provided by housing"
+  },
+  {
+    name: "Refrigerator/Mini-Fridge",
+    description: "Not allowed - provided by housing"
+  },
+  {
+    name: "Large Furniture",
+    description: "Including additional furniture that doesn't fit in provided space"
+  },
+  {
+    name: "Candles, Wax Warmers, Incense",
+    description: "Fire hazards are not permitted"
+  },
+  {
+    name: "Halogen Bulbs",
+    description: "Fire hazard - use LED bulbs instead"
+  },
+  {
+    name: "Thumbtacks, Duct Tape",
+    description: "Can damage walls - use Command strips instead"
+  },
+  {
+    name: "TV Cable Cords (Coaxial Cables)",
+    description: "Not needed - use streaming services"
+  },
+  {
+    name: "Wireless Routers",
+    description: "Can interfere with campus network - use provided WiFi"
+  },
+  {
+    name: "Weights/Exercise Equipment",
+    description: "Use the Student Center gym instead"
+  },
+  {
+    name: "Knives (longer than 3\")",
+    description: "Including kitchen knives - small utility knives are okay"
+  },
+  {
+    name: "Weapons",
+    description: "Firearms, ammunition, explosives, slingshots, paintball guns, BB guns, airsoft guns, crossbows, and other weapons"
+  },
+  {
+    name: "Drugs, Alcohol, Tobacco Products",
+    description: "Including vapes and cannabis products"
+  },
+  {
+    name: "Pets",
+    description: "Service animals must be pre-approved"
   }
 ];
 
@@ -431,6 +347,17 @@ const item = {
 export default function WhatToBring() {
   return (
     <div className="container mx-auto p-6">
+      {/* Back Arrow */}
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -442,72 +369,113 @@ export default function WhatToBring() {
         </div>
         <div>
           <h1 className="text-3xl font-bold">What to Bring</h1>
-          <p className="text-muted-foreground">Essential items checklist for your stay</p>
+          <p className="text-muted-foreground">Recommended items checklist for your stay</p>
         </div>
       </motion.div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {checklistItems.map((category) => (
-          <motion.div key={category.category} variants={item}>
-            <Card className={`hover-card h-full ${category.category === "Prohibited Items" ? "border-red-200" : ""}`}>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  {category.category === "Prohibited Items" ? (
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                  ) : (
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                  )}
-                  <CardTitle>{category.category}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  {category.items.map((item) => (
-                    <li key={item.name} className="space-y-1">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                          <span className="font-medium">{item.name}</span>
+      {/* What to Bring Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <CheckCircle className="h-6 w-6 text-green-600" />
+          Recommended Items to Bring
+        </h2>
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          {checklistItems.map((category) => (
+            <motion.div key={category.category} variants={item}>
+              <Card className="hover-card h-full border-2 border-green-200 hover:border-green-300">
+                <CardHeader>
+                  <div className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                    <CardTitle className="text-lg">{category.category}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-4">
+                    {category.items.map((item) => (
+                      <li key={item.name} className="space-y-1">
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+                            <span className="font-medium">{item.name}</span>
+                          </div>
+                          <Badge 
+                            variant={item.importance === "recommended" ? "default" : "secondary"}
+                            className={item.importance === "recommended" ? "bg-green-100 text-green-800" : ""}
+                          >
+                            {item.importance}
+                          </Badge>
                         </div>
-                        <Badge 
-                          variant={item.importance === "required" ? "destructive" : 
-                                 item.importance === "recommended" ? "default" : "secondary"}
-                        >
-                          {item.importance}
-                        </Badge>
-                      </div>
-                      {item.description && (
-                        <p className="text-sm text-muted-foreground ml-3.5">
-                          {item.description}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+                        {item.description && (
+                          <p className="text-sm text-muted-foreground ml-3.5">
+                            {item.description}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
 
+      {/* Prohibited Items Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <XCircle className="h-6 w-6 text-red-600" />
+          Items NOT Allowed
+        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card className="border-2 border-red-200 bg-red-50/50">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-red-500" />
+                <CardTitle className="text-red-800">Prohibited Items</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {prohibitedItems.map((item, index) => (
+                  <div key={index} className="flex items-start gap-2 p-3 bg-white rounded-lg border border-red-200">
+                    <XCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-red-800">{item.name}</p>
+                      {item.description && (
+                        <p className="text-sm text-red-600 mt-1">{item.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Additional Notes Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200"
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="p-6 bg-blue-50 rounded-lg border border-blue-200"
       >
-        <h2 className="text-xl font-semibold mb-4">Additional Notes from Hocking College Housing</h2>
+        <h2 className="text-xl font-semibold mb-4 text-blue-900">Important Notes from Hocking College Housing</h2>
         <ul className="space-y-2 text-sm text-blue-900">
-          <li>• Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</li>
-          <li>• Regarding prohibited items: These restrictions are in place for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls, which is why cooking appliances, candles, and halogen bulbs are not permitted.</li>
-          <li>• For exercise, Hocking College has a Student Center with a gym and workout equipment for student use. Do not bring your own.</li>
-          <li>• We encourage students to connect to the internet via the wall jacks as personal routers can interfere with the network.</li>
-          <li>• If you have any questions about what to bring or not to bring, please don't hesitate to contact the Housing Office.</li>
+          <li>• <strong>Furniture Provided:</strong> Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</li>
+          <li>• <strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</li>
+          <li>• <strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</li>
+          <li>• <strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</li>
+          <li>• <strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or housing@hocking.edu.</li>
         </ul>
       </motion.div>
     </div>
