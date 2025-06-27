@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, 
-  Send, Image, Video, Link, BarChart3, AlertTriangle, Calendar, 
-  Users, TrendingUp, Filter, Plus, CheckCircle, XCircle, Clock,
-  User, Mail, Building, Hash, Smile, Camera, FileText, Star,
-  Bell, Settings, Search, Home, Sparkles, Award, Gift, Lightbulb
+  Send, Image, Video, AlertTriangle, Calendar, 
+  Users, TrendingUp, Filter, Plus, Clock,
+  User, Building, Smile, Camera,
+  Bell, Settings, Sparkles, CheckCircle, XCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "wouter";
@@ -28,6 +28,8 @@ interface User {
   program: string;
   username: string;
   isAuthenticated: boolean;
+  isVerified: boolean;
+  userType: 'student' | 'faculty';
 }
 
 interface Post {
@@ -47,6 +49,7 @@ interface Post {
   video?: string;
   pollOptions?: string[];
   pollVotes?: number[];
+  pollVoters?: string[]; // Track who voted for what
   eventDetails?: {
     date: string;
     time: string;
@@ -60,6 +63,7 @@ interface Post {
 const CampusSocialHub: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(true);
+  const [showVerification, setShowVerification] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -67,15 +71,31 @@ const CampusSocialHub: React.FC = () => {
   const [postType, setPostType] = useState<'text' | 'image' | 'video' | 'poll' | 'event'>('text');
   const [hashtags, setHashtags] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('');
+  const [pendingUser, setPendingUser] = useState<User | null>(null);
 
-  // Sample posts data
+  // Check for existing login on component mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('campusSocialHubUser');
+    if (savedUser) {
+      const userData = JSON.parse(savedUser);
+      if (userData.isVerified) {
+        setUser(userData);
+        setShowAuth(false);
+      } else {
+        setPendingUser(userData);
+        setShowVerification(true);
+      }
+    }
+  }, []);
+
+  // Sample posts data with enhanced poll functionality
   const samplePosts: Post[] = [
     {
       id: '1',
       type: 'alert',
       content: 'Heads up, Hawks! Water will be shut off in North Hall for repairs this Friday from 10AM–2PM.',
       author: 'Housing Office',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       likes: 34,
       comments: 12,
       shares: 5,
@@ -90,7 +110,7 @@ const CampusSocialHub: React.FC = () => {
       type: 'event',
       content: 'Karaoke Night @ The Student Center! Come sing your favorite hits & win prizes! Free Pizza | Raffle Drawings',
       author: 'Student Center',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
       likes: 98,
       comments: 24,
       shares: 15,
@@ -111,7 +131,7 @@ const CampusSocialHub: React.FC = () => {
       type: 'text',
       content: 'Use the ChatGPT to set up a study guide. Study 25 mins, break for 5. Comment your go-to study hack below!',
       author: 'CA Jodian',
-      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
       likes: 60,
       comments: 18,
       shares: 8,
@@ -127,7 +147,7 @@ const CampusSocialHub: React.FC = () => {
       type: 'image',
       content: 'Weekend Recap: Bonfire Highlights - What a night! Catch the best moments from Saturday\'s Bonfire',
       author: 'Campus Life',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
       likes: 115,
       comments: 20,
       shares: 12,
@@ -143,7 +163,7 @@ const CampusSocialHub: React.FC = () => {
       type: 'poll',
       content: 'Vote for the Next Movie Night Feature! Vote ends Friday @ 4PM',
       author: 'Campus Life Team',
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
       likes: 42,
       comments: 8,
       shares: 3,
@@ -153,7 +173,26 @@ const CampusSocialHub: React.FC = () => {
       category: 'events',
       pollOptions: ['Barbie', 'Oppenheimer', 'Spider-Verse'],
       pollVotes: [15, 12, 15],
+      pollVoters: [],
       hashtags: ['#movienight', '#vote', '#campuslife']
+    },
+    {
+      id: '6',
+      type: 'poll',
+      content: 'What\'s your favorite campus dining option?',
+      author: 'Campus Life Team',
+      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
+      likes: 28,
+      comments: 5,
+      shares: 2,
+      isLiked: false,
+      isSaved: false,
+      isPinned: false,
+      category: 'student-life',
+      pollOptions: ['Student Center Cafe', 'Dining Hall', 'Food Trucks', 'Off-campus'],
+      pollVotes: [8, 12, 6, 2],
+      pollVoters: [],
+      hashtags: ['#dining', '#campuslife', '#food']
     }
   ];
 
@@ -174,31 +213,68 @@ const CampusSocialHub: React.FC = () => {
       roomNumber: formData.get('roomNumber') as string,
       program: formData.get('program') as string,
       username: formData.get('username') as string,
-      isAuthenticated: true
+      userType: formData.get('userType') as 'student' | 'faculty',
+      isAuthenticated: false,
+      isVerified: false
     };
 
-    setUser(userData);
+    setPendingUser(userData);
     setShowAuth(false);
+    setShowVerification(true);
 
-    // Send notification to housing office
-    const notificationEmail = {
+    // Send verification request to housing office
+    const verificationEmail = {
       to: 'housing@hocking.edu',
-      subject: 'New Campus Social Hub User Registration',
+      subject: 'Campus Social Hub - New User Verification Request',
       body: `
-        New user registration:
+        New user registration requiring verification:
+        
         Name: ${userData.firstName} ${userData.lastName}
         Student ID: ${userData.studentId}
         Email: ${userData.email}
+        User Type: ${userData.userType}
         Dorm: ${userData.dormBuilding} Room ${userData.roomNumber}
         Program: ${userData.program}
         Username: ${userData.username}
+        
+        Please verify this email address and click APPROVE or REJECT.
+        Only verified students and faculty should be granted access.
       `
     };
 
-    console.log('Sending notification:', notificationEmail);
+    console.log('Sending verification request:', verificationEmail);
     toast({
-      title: "Welcome to Campus Social Hub! 🎉",
-      description: "Your account has been created and the housing office has been notified.",
+      title: "Registration Submitted! 📧",
+      description: "Your registration has been sent to the housing office for verification. You'll receive an email notification once approved.",
+    });
+  };
+
+  const handleVerificationApproval = () => {
+    if (pendingUser) {
+      const verifiedUser = { ...pendingUser, isAuthenticated: true, isVerified: true };
+      setUser(verifiedUser);
+      setPendingUser(null);
+      setShowVerification(false);
+      
+      // Save to localStorage for persistent login
+      localStorage.setItem('campusSocialHubUser', JSON.stringify(verifiedUser));
+      
+      toast({
+        title: "Welcome to Campus Social Hub! 🎉",
+        description: "Your account has been verified and you're now logged in!",
+      });
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setShowAuth(true);
+    setShowVerification(false);
+    localStorage.removeItem('campusSocialHubUser');
+    
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
     });
   };
 
@@ -216,6 +292,43 @@ const CampusSocialHub: React.FC = () => {
         ? { ...post, isSaved: !post.isSaved }
         : post
     ));
+  };
+
+  const handleVote = (postId: string, optionIndex: number) => {
+    if (!user) return;
+
+    setPosts(posts.map(post => {
+      if (post.id === postId && post.type === 'poll') {
+        const currentVotes = [...(post.pollVotes || [])];
+        const currentVoters = [...(post.pollVoters || [])];
+        
+        // Check if user already voted
+        const userVoteIndex = currentVoters.indexOf(user.email);
+        
+        if (userVoteIndex !== -1) {
+          // User already voted, remove their previous vote
+          const previousVote = parseInt(currentVoters[userVoteIndex + 1] || '0');
+          currentVotes[previousVote] = Math.max(0, currentVotes[previousVote] - 1);
+          currentVoters.splice(userVoteIndex, 2); // Remove user and their vote
+        }
+        
+        // Add new vote
+        currentVotes[optionIndex] = (currentVotes[optionIndex] || 0) + 1;
+        currentVoters.push(user.email, optionIndex.toString());
+        
+        return {
+          ...post,
+          pollVotes: currentVotes,
+          pollVoters: currentVoters
+        };
+      }
+      return post;
+    }));
+
+    toast({
+      title: "Vote Cast! 🗳️",
+      description: "Your vote has been recorded and the results updated.",
+    });
   };
 
   const handleCreatePost = () => {
@@ -278,6 +391,23 @@ const CampusSocialHub: React.FC = () => {
     return 'Just now';
   };
 
+  const getVotePercentage = (votes: number, totalVotes: number) => {
+    if (totalVotes === 0) return 0;
+    return Math.round((votes / totalVotes) * 100);
+  };
+
+  const hasUserVoted = (post: Post) => {
+    if (!user || !post.pollVoters) return false;
+    return post.pollVoters.includes(user.email);
+  };
+
+  const getUserVote = (post: Post) => {
+    if (!user || !post.pollVoters) return -1;
+    const userIndex = post.pollVoters.indexOf(user.email);
+    if (userIndex === -1) return -1;
+    return parseInt(post.pollVoters[userIndex + 1] || '-1');
+  };
+
   const filteredPosts = selectedCategory === 'all' 
     ? posts 
     : posts.filter(post => post.category === selectedCategory);
@@ -322,6 +452,19 @@ const CampusSocialHub: React.FC = () => {
                   <label className="text-sm font-medium">School Email *</label>
                   <Input name="email" type="email" required />
                 </div>
+
+                <div>
+                  <label className="text-sm font-medium">User Type *</label>
+                  <Select name="userType" required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select user type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="faculty">Faculty</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
                 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -331,10 +474,13 @@ const CampusSocialHub: React.FC = () => {
                         <SelectValue placeholder="Select building" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="north-hall">North Hall</SelectItem>
-                        <SelectItem value="south-hall">South Hall</SelectItem>
-                        <SelectItem value="east-hall">East Hall</SelectItem>
-                        <SelectItem value="west-hall">West Hall</SelectItem>
+                        <SelectItem value="North">North</SelectItem>
+                        <SelectItem value="Downhour">Downhour</SelectItem>
+                        <SelectItem value="Hocking Heights">Hocking Heights</SelectItem>
+                        <SelectItem value="Summit">Summit</SelectItem>
+                        <SelectItem value="Sycamore">Sycamore</SelectItem>
+                        <SelectItem value="International Housing">International Housing</SelectItem>
+                        <SelectItem value="Opportunity House">Opportunity House</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -360,9 +506,58 @@ const CampusSocialHub: React.FC = () => {
                 </div>
                 
                 <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                  Join Campus Social Hub
+                  Submit for Verification
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (showVerification) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md"
+        >
+          <Card className="border-2 border-yellow-600 shadow-xl">
+            <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-orange-600 text-white">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-white/20 rounded-full">
+                  <CheckCircle className="h-8 w-8" />
+                </div>
+              </div>
+              <CardTitle className="text-2xl">Verification Pending</CardTitle>
+              <p className="text-yellow-100">Your account is being reviewed</p>
+            </CardHeader>
+            <CardContent className="p-6 text-center">
+              <div className="space-y-4">
+                <div className="animate-pulse">
+                  <div className="w-16 h-16 bg-yellow-200 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <Clock className="h-8 w-8 text-yellow-600" />
+                  </div>
+                </div>
+                <p className="text-gray-700 dark:text-gray-300">
+                  Your registration has been submitted to the housing office for verification. 
+                  You'll receive an email notification once your account is approved.
+                </p>
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                  <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                    <strong>Note:</strong> Only verified students and faculty members can access the Campus Social Hub.
+                  </p>
+                </div>
+                <Button 
+                  onClick={() => setShowAuth(true)}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Back to Registration
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -389,11 +584,20 @@ const CampusSocialHub: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <span>Welcome, {user?.firstName}!</span>
+                <Badge variant="outline" className="text-xs">
+                  {user?.userType}
+                </Badge>
+              </div>
               <Button variant="ghost" size="sm">
                 <Bell className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="sm">
                 <Settings className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={handleLogout}>
+                Logout
               </Button>
             </div>
           </div>
@@ -612,18 +816,53 @@ const CampusSocialHub: React.FC = () => {
                         </Card>
                       )}
 
-                      {/* Poll */}
+                      {/* Enhanced Poll with Live Voting */}
                       {post.type === 'poll' && post.pollOptions && (
-                        <div className="space-y-2">
-                          {post.pollOptions.map((option, idx) => (
-                            <div key={idx} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                              <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
-                              <span className="flex-1">{option}</span>
-                              <span className="text-sm text-gray-600 dark:text-gray-400">
-                                {post.pollVotes?.[idx] || 0} votes
-                              </span>
-                            </div>
-                          ))}
+                        <div className="space-y-3">
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                            Total votes: {post.pollVotes?.reduce((a, b) => a + b, 0) || 0}
+                          </div>
+                          {post.pollOptions.map((option, idx) => {
+                            const votes = post.pollVotes?.[idx] || 0;
+                            const totalVotes = post.pollVotes?.reduce((a, b) => a + b, 0) || 0;
+                            const percentage = getVotePercentage(votes, totalVotes);
+                            const userVote = getUserVote(post);
+                            const isUserVote = userVote === idx;
+                            
+                            return (
+                              <div 
+                                key={idx} 
+                                className={`relative p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
+                                  isUserVote 
+                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
+                                }`}
+                                onClick={() => handleVote(post.id, idx)}
+                              >
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                                      isUserVote 
+                                        ? 'border-blue-500 bg-blue-500' 
+                                        : 'border-gray-400'
+                                    }`}>
+                                      {isUserVote && <CheckCircle className="h-3 w-3 text-white" />}
+                                    </div>
+                                    <span className="font-medium">{option}</span>
+                                  </div>
+                                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                                    {votes} votes ({percentage}%)
+                                  </div>
+                                </div>
+                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                  <div 
+                                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                                    style={{ width: `${percentage}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
 
