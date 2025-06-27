@@ -55,7 +55,7 @@ export default function StudentTools() {
 
   // Quick links for bottom section
   const quickLinks = [
-    { id: 'library', label: 'Library', icon: LibraryBig, path: '/academic-success-center' },
+    { id: 'library', label: 'Academic Success Center', icon: LibraryBig, path: '/academic-success-center' },
     { id: 'online-learning', label: 'Online Learning', icon: MonitorSmartphone, path: '/online-learning' },
     { id: 'student-organizations', label: 'Student Organizations', icon: Users, path: '/student-organizations' },
     { id: 'recreation', label: 'Recreation', icon: Dumbbell, path: '/recreation' },
@@ -72,10 +72,10 @@ export default function StudentTools() {
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-lg p-1">
-              <TabsTrigger value="academic" className="py-1 flex items-center justify-center data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="py-1 flex items-center justify-center data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
-              <TabsTrigger value="resources" className="py-1 flex items-center justify-center data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
+            <TabsList className="grid grid-cols-3 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl p-1">
+              <TabsTrigger value="academic" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
+              <TabsTrigger value="financial" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
+              <TabsTrigger value="resources" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
             </TabsList>
             
             <TabsContent value="academic" className="p-4">
@@ -154,7 +154,7 @@ export default function StudentTools() {
               className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center hover:shadow-md transition"
             >
               <link.icon className="text-blue-600 dark:text-blue-400 text-3xl mb-2 h-8 w-8" />
-              <span className="font-semibold text-gray-900 dark:text-blue-300">{link.label}</span>
+              <span className="font-semibold text-gray-900 dark:text-white">{link.label}</span>
             </Link>
           ))}
         </div>

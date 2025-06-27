@@ -202,7 +202,7 @@ export default function CalendarPage() {
                 variant="default"
                 size="default"
                 onClick={() => setActiveCalendar("academic")}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 border-primary`}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-xl border-2 border-primary`}
                 style={{ background: 'var(--calendar-surface)', color: 'var(--calendar-button-text)' }}
               >
                 Academic Calendar
@@ -211,7 +211,7 @@ export default function CalendarPage() {
                 variant="default"
                 size="default"
                 onClick={() => setActiveCalendar("activities")}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 border-primary`}
+                className={`px-4 py-2 text-sm font-medium transition-colors rounded-xl border-2 border-primary`}
                 style={{ background: 'var(--calendar-surface)', color: 'var(--calendar-button-text)' }}
               >
                 Student Activities
@@ -260,6 +260,7 @@ export default function CalendarPage() {
                   size="default" 
                   onClick={() => setView("month")}
                   aria-pressed={view === "month"}
+                  className="rounded-xl"
                 >
                   Month View
                 </Button>
@@ -268,6 +269,7 @@ export default function CalendarPage() {
                   size="default" 
                   onClick={() => setView("list")}
                   aria-pressed={view === "list"}
+                  className="rounded-xl"
                 >
                   List View
                 </Button>
@@ -381,7 +383,7 @@ export default function CalendarPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
-            <h3 className="text-xl font-semibold mb-4">Academic Calendar</h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Academic Calendar</h3>
             <p className="text-gray-600 dark:text-white mb-4">
               View important dates, deadlines, and events for the academic year.
             </p>
@@ -391,7 +393,7 @@ export default function CalendarPage() {
           </Card>
 
           <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
-            <h3 className="text-xl font-semibold mb-4">Student Activities</h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Activities</h3>
             <p className="text-gray-600 dark:text-white mb-4">
               Discover campus events, clubs, and activities to get involved.
             </p>
@@ -407,21 +409,35 @@ export default function CalendarPage() {
           border-radius: 8px;
           overflow: hidden;
           border: 1px solid #e2e8f0;
+          background-color: white;
+        }
+        
+        .dark .rbc-month-view {
+          background-color: #374151;
         }
         
         .rbc-header {
           padding: 8px 0;
-          background-color: #1e3a8a;
+          background-color: white;
           font-weight: 600;
+          color: #2563eb;
+          text-shadow: none;
+        }
+        
+        .dark .rbc-header {
+          background-color: #374151;
           color: white;
-          text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
         }
         
         .rbc-date-cell {
           padding: 8px;
           text-align: center;
-          background-color: #e5e7eb;
+          background-color: white;
           border-right: 1px solid #4a5568 !important;
+        }
+        
+        .dark .rbc-date-cell {
+          background-color: #374151;
         }
 
         .rbc-row > .rbc-date-cell:last-child {
@@ -431,9 +447,53 @@ export default function CalendarPage() {
         .dark .rbc-date-cell {
           border-right: 1px solid #2a3240 !important;
         }
+        
+        .rbc-row-content {
+          background-color: white;
+        }
+        
+        .dark .rbc-row-content {
+          background-color: #374151;
+        }
+        
+        .rbc-month-header {
+          background-color: white;
+        }
+        
+        .dark .rbc-month-header {
+          background-color: #374151;
+        }
 
         .rbc-month-row {
-          background-color: #d1d5db;
+          background-color: white;
+        }
+        
+        .dark .rbc-month-row {
+          background-color: #374151;
+        }
+        
+        .rbc-header-gutter {
+          background-color: white !important;
+        }
+        
+        .dark .rbc-header-gutter {
+          background-color: #374151 !important;
+        }
+        
+        .rbc-time-header {
+          background-color: white !important;
+        }
+        
+        .dark .rbc-time-header {
+          background-color: #374151 !important;
+        }
+        
+        .rbc-time-header-gutter {
+          background-color: white !important;
+        }
+        
+        .dark .rbc-time-header-gutter {
+          background-color: #374151 !important;
         }
         
         .rbc-day-bg.selected-day {

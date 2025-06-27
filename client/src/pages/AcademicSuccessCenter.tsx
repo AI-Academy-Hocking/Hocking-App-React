@@ -78,12 +78,12 @@ function AcademicSuccessCenter() {
         </Link>
       </div>
 
-      <div className="flex items-center gap-4 mb-8">
-        <GraduationCap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-blue-300">Academic Success Center</h1>
+      <div className="flex items-center gap-3 mb-8">
+        <GraduationCap className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+        <h1 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-blue-300">Academic Success Center</h1>
       </div>
 
-      <Alert className="mb-6 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <Alert className="mb-6 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl">
         <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
         <AlertDescription className="text-gray-900 dark:text-white">
           We're here to help you succeed! Contact us for academic support and resources.
@@ -91,7 +91,7 @@ function AcademicSuccessCenter() {
       </Alert>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card className="border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl">
           <CardHeader>
             <CardTitle className="text-xl text-gray-900 dark:text-blue-300">Contact Information</CardTitle>
           </CardHeader>
@@ -121,7 +121,7 @@ function AcademicSuccessCenter() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <Card className="border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl">
           <CardHeader>
             <CardTitle className="text-xl text-gray-900 dark:text-blue-300">Get Started</CardTitle>
           </CardHeader>
@@ -136,7 +136,7 @@ function AcademicSuccessCenter() {
                 <li>Check our hours of operation</li>
                 <li>Bring any necessary documentation</li>
               </ol>
-              <Button className="w-full bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white">
+              <Button className="w-full bg-white dark:bg-gray-800 border-2 border-blue-600 dark:border-cyan-300 hover:bg-blue-50 dark:hover:bg-gray-700 text-blue-600 dark:text-white rounded">
                 Schedule an Appointment
               </Button>
             </div>
@@ -146,7 +146,7 @@ function AcademicSuccessCenter() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections.map((section, index) => (
-          <Card key={index} className="hover:shadow-lg transition-shadow duration-200 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <Card key={index} className="hover:shadow-lg transition-shadow duration-200 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <section.icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />

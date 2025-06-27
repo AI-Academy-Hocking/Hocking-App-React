@@ -89,7 +89,7 @@ export default function Home() {
                 className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-4 flex flex-col items-center text-center transition w-full aspect-square min-h-[120px] justify-center hover:shadow-md"
               >
                 <link.icon className="text-blue-600 dark:text-blue-400 text-3xl mb-2 h-8 w-8" />
-                <span className="font-bold text-base text-white">{link.label}</span>
+                <span className="font-bold text-base text-blue-600 dark:text-white">{link.label}</span>
               </a>
             </Link>
           ))}
