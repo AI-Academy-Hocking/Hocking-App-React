@@ -1,7 +1,7 @@
 import { 
-  DollarSign, FileText, ExternalLink, Phone, Mail, 
+  DollarSign, FileText, ExternalLink, Phone, 
   Calendar, CheckCircle, AlertTriangle, Users, 
-  GraduationCap, Building, Clock, ArrowLeft,
+  Building, Clock, ArrowLeft,
   Download, BookOpen, Shield, CreditCard, Briefcase
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
