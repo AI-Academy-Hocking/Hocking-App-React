@@ -24,7 +24,14 @@ interface Coach {
 
 function Athletics() {
   const handleExternalLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+    try {
+      console.log('Opening external link:', url);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error('Error opening external link:', error);
+      // Fallback: try to open in same window
+      window.location.href = url;
+    }
   };
 
   const coaches: Coach[] = [
@@ -55,32 +62,32 @@ function Athletics() {
   ];
 
   const mensSports: Sport[] = [
-    { name: "Baseball", season: "Spring", description: "Competing in NJCAA and OCCAC", color: "bg-blue-500", url: "https://athletics.hocking.edu/sports/baseball" },
-    { name: "Men's Basketball", season: "Winter", description: "Competing in NJCAA and OCCAC", color: "bg-orange-500", url: "https://athletics.hocking.edu/sports/mens-basketball" },
-    { name: "Cross Country", season: "Fall", description: "Men's cross country team", color: "bg-green-500", url: "https://athletics.hocking.edu/sports/cross-country" },
-    { name: "Football", season: "Fall", description: "Competing in NJCAA", color: "bg-red-500", url: "https://athletics.hocking.edu/sports/football" },
-    { name: "Golf", season: "Fall/Spring", description: "Men's golf team", color: "bg-teal-500", url: "https://athletics.hocking.edu/sports/golf" },
-    { name: "Tennis", season: "Spring", description: "Men's tennis team", color: "bg-purple-500", url: "https://athletics.hocking.edu/sports/tennis" },
-    { name: "Track & Field", season: "Spring", description: "Men's track and field", color: "bg-indigo-500", url: "https://athletics.hocking.edu/sports/track-and-field" },
-    { name: "Bowling", season: "Winter", description: "Men's bowling team", color: "bg-pink-500", url: "https://athletics.hocking.edu/sports/bowling" }
+    { name: "Baseball", season: "Spring", description: "Competing in NJCAA and OCCAC", color: "bg-blue-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Men's Basketball", season: "Winter", description: "Competing in NJCAA and OCCAC", color: "bg-orange-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Cross Country", season: "Fall", description: "Men's cross country team", color: "bg-green-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Football", season: "Fall", description: "Competing in NJCAA", color: "bg-red-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Golf", season: "Fall/Spring", description: "Men's golf team", color: "bg-teal-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Tennis", season: "Spring", description: "Men's tennis team", color: "bg-purple-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Track & Field", season: "Spring", description: "Men's track and field", color: "bg-indigo-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Bowling", season: "Winter", description: "Men's bowling team", color: "bg-pink-500", url: "https://www.hocking.edu/athletics" }
   ];
 
   const womensSports: Sport[] = [
-    { name: "Women's Basketball", season: "Winter", description: "Competing in NJCAA and OCCAC", color: "bg-pink-500", url: "https://athletics.hocking.edu/sports/womens-basketball" },
-    { name: "Cross Country", season: "Fall", description: "Women's cross country team", color: "bg-green-500", url: "https://athletics.hocking.edu/sports/cross-country" },
-    { name: "Flag Football", season: "Fall", description: "Women's flag football team", color: "bg-red-500", url: "https://athletics.hocking.edu/sports/flag-football" },
-    { name: "Softball", season: "Spring", description: "Competing in NJCAA and OCCAC", color: "bg-orange-500", url: "https://athletics.hocking.edu/sports/softball" },
-    { name: "Volleyball", season: "Fall", description: "Competing in NJCAA and OCCAC", color: "bg-blue-500", url: "https://athletics.hocking.edu/sports/volleyball" },
-    { name: "Bowling", season: "Winter", description: "Women's bowling team", color: "bg-purple-500", url: "https://athletics.hocking.edu/sports/bowling" },
-    { name: "Tennis", season: "Spring", description: "Women's tennis team", color: "bg-teal-500", url: "https://athletics.hocking.edu/sports/tennis" },
-    { name: "Track & Field", season: "Spring", description: "Women's track and field", color: "bg-indigo-500", url: "https://athletics.hocking.edu/sports/track-and-field" }
+    { name: "Women's Basketball", season: "Winter", description: "Competing in NJCAA and OCCAC", color: "bg-pink-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Cross Country", season: "Fall", description: "Women's cross country team", color: "bg-green-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Flag Football", season: "Fall", description: "Women's flag football team", color: "bg-red-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Softball", season: "Spring", description: "Competing in NJCAA and OCCAC", color: "bg-orange-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Volleyball", season: "Fall", description: "Competing in NJCAA and OCCAC", color: "bg-blue-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Bowling", season: "Winter", description: "Women's bowling team", color: "bg-purple-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Tennis", season: "Spring", description: "Women's tennis team", color: "bg-teal-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Track & Field", season: "Spring", description: "Women's track and field", color: "bg-indigo-500", url: "https://www.hocking.edu/athletics" }
   ];
 
   const coedSports: Sport[] = [
-    { name: "Archery", season: "Year-round", description: "Co-ed archery team", color: "bg-yellow-500", url: "https://athletics.hocking.edu/sports/archery" },
-    { name: "Cheerleading", season: "Year-round", description: "Co-ed cheerleading squad", color: "bg-purple-500", url: "https://athletics.hocking.edu/sports/cheerleading" },
-    { name: "eSports", season: "Year-round", description: "Co-ed eSports team", color: "bg-gray-500", url: "https://athletics.hocking.edu/sports/esports" },
-    { name: "Equestrian", season: "Year-round", description: "Co-ed equestrian team", color: "bg-brown-500", url: "https://athletics.hocking.edu/sports/equestrian" }
+    { name: "Archery", season: "Year-round", description: "Co-ed archery team", color: "bg-yellow-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Cheerleading", season: "Year-round", description: "Co-ed cheerleading squad", color: "bg-purple-500", url: "https://www.hocking.edu/athletics" },
+    { name: "eSports", season: "Year-round", description: "Co-ed eSports team", color: "bg-gray-500", url: "https://www.hocking.edu/athletics" },
+    { name: "Equestrian", season: "Year-round", description: "Co-ed equestrian team", color: "bg-brown-500", url: "https://www.hocking.edu/athletics" }
   ];
 
   return (
@@ -133,13 +140,55 @@ function Athletics() {
                 Our commitment to developing student-athletes who excel both on the field and in the classroom.
               </p>
               <button
-                onClick={() => handleExternalLink('https://athletics.hocking.edu/information/mission')}
+                onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                 className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
               >
                 <ExternalLink className="mr-1 h-3 w-3" />
                 Athletics Mission & Values
               </button>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Athletic Staff & Coaches */}
+      <Card className="mb-8 border-2 border-teal-600">
+        <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
+          <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
+            <User className="mr-3 h-6 w-6" />
+            Athletic Staff & Coaches
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          <div className="grid md:grid-cols-2 gap-6">
+            {coaches.map((coach, index) => (
+              <div key={index} className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">{coach.name}</h5>
+                <p className="text-sm text-teal-700 dark:text-teal-300 mb-3">{coach.title}</p>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <Phone className="mr-2 h-4 w-4 text-teal-600" />
+                    <a href={`tel:${coach.phone}`} className="text-blue-600 hover:underline text-sm">{coach.phone}</a>
+                  </div>
+                  <div className="flex items-center">
+                    <Mail className="mr-2 h-4 w-4 text-teal-600" />
+                    <a href={`mailto:${coach.email}`} className="text-blue-600 hover:underline text-sm">{coach.email}</a>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
+            <p className="text-teal-800 dark:text-teal-200 mb-2">
+              For a full list of coaches and bios:
+            </p>
+            <button
+              onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+              className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+            >
+              <ExternalLink className="mr-1 h-3 w-3" />
+              Athletics Staff Directory
+            </button>
           </div>
         </CardContent>
       </Card>
@@ -213,7 +262,7 @@ function Athletics() {
                     className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-sm"
                   >
                     <ExternalLink className="mr-1 h-3 w-3" />
-                    Team Page
+                    Athletics Page
                   </button>
                 )}
               </div>
@@ -245,7 +294,7 @@ function Athletics() {
                     className="flex items-center text-pink-600 hover:text-pink-800 dark:text-pink-400 dark:hover:text-pink-300 transition-colors text-sm"
                   >
                     <ExternalLink className="mr-1 h-3 w-3" />
-                    Team Page
+                    Athletics Page
                   </button>
                 )}
               </div>
@@ -277,7 +326,7 @@ function Athletics() {
                     className="flex items-center text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition-colors text-sm"
                   >
                     <ExternalLink className="mr-1 h-3 w-3" />
-                    Team Page
+                    Athletics Page
                   </button>
                 )}
               </div>
@@ -300,7 +349,7 @@ function Athletics() {
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             <button
-              onClick={() => handleExternalLink('https://athletics.hocking.edu/news')}
+              onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
               className="flex items-center justify-between p-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
             >
               <div className="flex items-center">
@@ -310,7 +359,7 @@ function Athletics() {
               <ExternalLink className="h-5 w-5" />
             </button>
             <button
-              onClick={() => handleExternalLink('https://athletics.hocking.edu/tickets')}
+              onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
               className="flex items-center justify-between p-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
             >
               <div className="flex items-center">
@@ -345,48 +394,6 @@ function Athletics() {
             </div>
             <ExternalLink className="h-5 w-5" />
           </button>
-        </CardContent>
-      </Card>
-
-      {/* Athletic Staff & Coaches */}
-      <Card className="mb-8 border-2 border-teal-600">
-        <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
-          <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-            <User className="mr-3 h-6 w-6" />
-            Athletic Staff & Coaches
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            {coaches.map((coach, index) => (
-              <div key={index} className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">{coach.name}</h5>
-                <p className="text-sm text-teal-700 dark:text-teal-300 mb-3">{coach.title}</p>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <Phone className="mr-2 h-4 w-4 text-teal-600" />
-                    <a href={`tel:${coach.phone}`} className="text-blue-600 hover:underline text-sm">{coach.phone}</a>
-                  </div>
-                  <div className="flex items-center">
-                    <Mail className="mr-2 h-4 w-4 text-teal-600" />
-                    <a href={`mailto:${coach.email}`} className="text-blue-600 hover:underline text-sm">{coach.email}</a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
-            <p className="text-teal-800 dark:text-teal-200 mb-2">
-              For a full list of coaches and bios:
-            </p>
-            <button
-              onClick={() => handleExternalLink('https://athletics.hocking.edu/staff-directory')}
-              className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-            >
-              <ExternalLink className="mr-1 h-3 w-3" />
-              Athletics Staff Directory
-            </button>
-          </div>
         </CardContent>
       </Card>
 
@@ -429,7 +436,7 @@ function Athletics() {
               <AccordionContent>
                 Visit any sport's page for full schedules, results, and live coverage links.
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/tickets')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
                 >
                   <ExternalLink className="mr-1 h-3 w-3" />
@@ -445,7 +452,7 @@ function Athletics() {
               <AccordionContent>
                 Use the "Tickets" section on the Athletics homepage or team page.
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/tickets')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
                 >
                   <ExternalLink className="mr-1 h-3 w-3" />
@@ -461,7 +468,7 @@ function Athletics() {
               <AccordionContent>
                 Contact directory is listed above, or see the full directory via staff link.
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/staff-directory')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
                 >
                   <ExternalLink className="mr-1 h-3 w-3" />
@@ -524,43 +531,43 @@ function Athletics() {
                   hocking.edu/athletics
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/navbar-sports')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   athletics.hocking.edu/navbar-sports
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/sports/baseball')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Baseball
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/sports/football')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Football
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/sports/mens-basketball')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Men's Basketball
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/sports/womens-basketball')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Women's Basketball
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/sports/softball')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Softball
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/tickets')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Watch Live & Tickets
@@ -572,7 +579,7 @@ function Athletics() {
                   Facebook
                 </button>
                 <button
-                  onClick={() => handleExternalLink('https://athletics.hocking.edu/staff-directory')}
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
                   className="text-blue-600 hover:underline block text-left"
                 >
                   Athletics Staff
