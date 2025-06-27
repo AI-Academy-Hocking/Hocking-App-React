@@ -497,10 +497,11 @@ export class MemStorage implements IStorage {
     
     await this.createStudentTool({
       id: "career-services",
-      name: "Career Services",
+      name: "Career & University Center",
       description: "Job search and career planning",
       category: "resources",
-      url: "#",
+      url: "/career-university-center",
+      isActive: true,
     });
     
     // Sample discussions
