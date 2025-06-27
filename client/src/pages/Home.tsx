@@ -69,7 +69,7 @@ export default function Home() {
       content: (
         <div className="space-y-4">
           <p className="text-gray-700 dark:text-gray-300">
-            Founded in 1968, Hocking College is a public community college in scenic Nelsonville, Ohio, with campuses in Perry and Logan. It features a 2,300-acre main campus, offers over 60 career-focused programs, and is Ohio's only two-year college with on‑campus housing.
+            Founded in 1968, Hocking College is a public community college in scenic Nelsonville, Ohio, with campuses in Perry County and City of Logan. It features a 2,300-acre main campus, offers over 60 career-focused programs, and is Ohio's only two-year college with on‑campus housing.
           </p>
         </div>
       )
@@ -89,11 +89,7 @@ export default function Home() {
           <div>
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Core Values:</h4>
             <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-              <li className="flex items-start gap-2">
-                <Users className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                <span><strong>Diversity & Inclusion</strong> – Embracing differences of all kinds</span>
-              </li>
-              <li className="flex items-start gap-2">
+            <li className="flex items-start gap-2">
                 <Heart className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                 <span><strong>Accessibility</strong> – Ensuring open access and support for all learners</span>
               </li>
@@ -101,6 +97,12 @@ export default function Home() {
                 <Globe className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                 <span><strong>Community Engagement</strong> – Integrating service and development with regional partners</span>
               </li>
+              <li className="flex items-start gap-2">
+                <Users className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <span><strong>Diversity & Inclusion</strong> – Embracing differences of all kinds</span>
+              </li>
+          
+
             </ul>
           </div>
         </div>
@@ -172,7 +174,7 @@ export default function Home() {
       content: (
         <div className="space-y-4">
           <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Elizabeth Howard (Student):</h4>
+            <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Elizabeth (Student):</h4>
             <p className="text-gray-700 dark:text-gray-300 italic">
               "Without help from TRIO, instructors, and family… instructors will help guide you to your goals and dreams."
             </p>
