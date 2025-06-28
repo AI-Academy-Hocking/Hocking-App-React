@@ -53,6 +53,11 @@ export default function Maps() {
     queryKey: ['/api/buildings'],
   });
 
+  // Add static academic buildings (including Davidson Hall)
+  const staticAcademicBuildings: Building[] = [
+    { id: 'davidson-hall', name: 'Davidson Hall', description: 'Academic building', category: 'academic', lat: 39.44078, lng: -82.22025 },
+  ];
+
   // Add static housing buildings if not present
   const staticHousingBuildings: Building[] = [
     { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
@@ -76,6 +81,11 @@ export default function Maps() {
   ];
 
   let allBuildings = buildings ? [...buildings] : [];
+  staticAcademicBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
   staticHousingBuildings.forEach(staticBldg => {
     if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
       allBuildings.push(staticBldg);
