@@ -56,19 +56,20 @@ export default function Maps() {
   // Add static academic buildings (including Davidson Hall)
   const staticAcademicBuildings: Building[] = [
     { id: 'davidson-hall', name: 'Davidson Hall', description: 'Academic building', category: 'academic', lat: 39.44078, lng: -82.22025 },
+    { id: 'student-center', name: 'Student Center', description: 'Student Center', category: 'academic', lat: 39.44200, lng: -82.22071 },
   ];
 
   // Add static housing buildings if not present
   const staticHousingBuildings: Building[] = [
-    { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
-    { id: 'downhour', name: 'Downhour', description: 'Female Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 39.44334, lng: -82.22274 },
+    { id: 'downhour', name: 'DownHour Hall', description: 'Female Only Residence Hall', category: 'housing', lat: 39.44287, lng: -82.22264 },
     { id: 'summit', name: 'Summit', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
     { id: 'sycamore', name: 'Sycamore', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
   ];
 
   // Add static dining buildings
   const staticDiningBuildings: Building[] = [
-    { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.4442, lng: -82.2207 },
+    { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.44341, lng: -82.22194 },
     { id: 'diamond-dawgz', name: 'Diamond Dawgz', description: 'Quick hotdogs, burgers, fries, and ice cream.', category: 'dining', lat: 39.4450, lng: -82.2212 },
     { id: 'rhapsody', name: 'Rhapsody', description: 'Student-run restaurant with casual fine dining and live music.', category: 'dining', lat: 39.4580, lng: -82.2310 },
   ];
