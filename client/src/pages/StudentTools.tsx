@@ -92,6 +92,13 @@ export default function StudentTools() {
       description: 'Access online courses and learning resources',
       category: 'resources',
       url: '/online-learning'
+    },
+    {
+      id: 'transportation',
+      name: 'Transportation',
+      description: 'Campus shuttles, parking, and transportation options',
+      category: 'resources',
+      url: '/transportation'
     }
   ];
 
