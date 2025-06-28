@@ -273,13 +273,14 @@ export default function Maps() {
     });
     
     // Add markers for filtered buildings
-    if (filteredBuildings) {
-      filteredBuildings.forEach((building: Building) => {
+    if (filteredBuildings && selectedBuildingId) {
+      const building = filteredBuildings.find(b => b.id === selectedBuildingId);
+      if (building) {
         // Use colored icon based on building type
-        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
+        L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
-      });
+      }
     }
     
     // Add markers for other users if viewing shared locations
