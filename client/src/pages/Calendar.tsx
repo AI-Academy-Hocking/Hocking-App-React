@@ -77,6 +77,10 @@ export default function CalendarPage() {
   // Get current month's start and end dates
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
+  
+  // Expand date range to show more events (past month to next 3 months)
+  const expandedStart = subMonths(monthStart, 1);
+  const expandedEnd = addMonths(monthEnd, 3);
 
   console.log(`\n=== FRONTEND STATE ===`);
   console.log(`Active calendar: ${activeCalendar}`);
@@ -84,6 +88,8 @@ export default function CalendarPage() {
   console.log(`Current date: ${date.toISOString()}`);
   console.log(`Month start: ${monthStart.toISOString()}`);
   console.log(`Month end: ${monthEnd.toISOString()}`);
+  console.log(`Expanded start: ${expandedStart.toISOString()}`);
+  console.log(`Expanded end: ${expandedEnd.toISOString()}`);
   console.log(`Selected date: ${selectedDate?.toISOString() || 'none'}`);
 
   // Filter events based on calendar type and date range
@@ -92,6 +98,8 @@ export default function CalendarPage() {
       totalEvents: events.length,
       monthStart: monthStart.toISOString(),
       monthEnd: monthEnd.toISOString(),
+      expandedStart: expandedStart.toISOString(),
+      expandedEnd: expandedEnd.toISOString(),
       selectedDate: selectedDate?.toISOString()
     });
     
@@ -104,8 +112,8 @@ export default function CalendarPage() {
           // List view: show only events for the selected day
           return isSameDay(eventDate, selectedDate);
         }
-        // Month view: show events in the current month
-        return eventDate >= monthStart && eventDate <= monthEnd;
+        // Month view: show events in the expanded date range (past month to next 3 months)
+        return eventDate >= expandedStart && eventDate <= expandedEnd;
       })
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
     
