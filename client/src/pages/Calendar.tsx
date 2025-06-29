@@ -55,8 +55,11 @@ export default function CalendarPage() {
   
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ['/api/events', activeCalendar],
-    // In a real app, you would fetch different events based on activeCalendar
-    // by adding a parameter to the API endpoint
+    queryFn: async () => {
+      const res = await fetch(`/api/calendar/events?type=${activeCalendar}`);
+      if (!res.ok) throw new Error('Failed to fetch events');
+      return res.json();
+    },
   });
 
   // Get current month's start and end dates
