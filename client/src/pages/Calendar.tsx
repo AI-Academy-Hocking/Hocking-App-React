@@ -56,15 +56,35 @@ export default function CalendarPage() {
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ['/api/events', activeCalendar],
     queryFn: async () => {
+      console.log(`\n=== FRONTEND API CALL ===`);
+      console.log(`Fetching events for calendar type: ${activeCalendar}`);
+      
       const res = await fetch(`/api/calendar/events?type=${activeCalendar}`);
-      if (!res.ok) throw new Error('Failed to fetch events');
-      return res.json();
+      console.log(`API response status: ${res.status}`);
+      
+      if (!res.ok) {
+        console.error(`API call failed: ${res.status} ${res.statusText}`);
+        throw new Error('Failed to fetch events');
+      }
+      
+      const data = await res.json();
+      console.log(`Received ${data.length} events from API:`, data);
+      
+      return data;
     },
   });
 
   // Get current month's start and end dates
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
+
+  console.log(`\n=== FRONTEND STATE ===`);
+  console.log(`Active calendar: ${activeCalendar}`);
+  console.log(`Total events received: ${events.length}`);
+  console.log(`Current date: ${date.toISOString()}`);
+  console.log(`Month start: ${monthStart.toISOString()}`);
+  console.log(`Month end: ${monthEnd.toISOString()}`);
+  console.log(`Selected date: ${selectedDate?.toISOString() || 'none'}`);
 
   // Filter events based on calendar type and date range
   const getFilteredEvents = (calendarType: "academic" | "activities") => {
