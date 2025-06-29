@@ -1,7 +1,16 @@
 import express from 'express';
 import * as ical from 'ical';
 import fetch from 'node-fetch';
-import { googleCalendarService } from '../../services/googleCalendar';
+
+// Try to import Google Calendar service, but don't fail if it's not available
+let googleCalendarService: any = null;
+try {
+  const { googleCalendarService: service } = require('../../services/googleCalendar');
+  googleCalendarService = service;
+  console.log('Google Calendar service loaded successfully');
+} catch (error) {
+  console.log('Google Calendar service not available, will use iCal fallback:', error instanceof Error ? error.message : 'Unknown error');
+}
 
 type CalendarEvent = {
   type: 'VEVENT';
@@ -121,21 +130,32 @@ router.get('/events', async (req, res) => {
     
     let events;
     
-    // Use Google Calendar API for both calendars since you already have OAuth 2.0 set up
-    console.log(`Using Google Calendar API for ${calendarType} calendar`);
-    try {
-      events = await googleCalendarService.getEvents(calendarType as 'academic' | 'activities');
-      console.log(`Successfully fetched ${events.length} events via Google Calendar API`);
-    } catch (apiError) {
-      console.error('Google Calendar API failed, falling back to iCal:', apiError);
-      
-      // Fallback to iCal for public calendars only
+    // Try Google Calendar API first if available
+    if (googleCalendarService) {
+      console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
+      try {
+        events = await googleCalendarService.getEvents(calendarType as 'academic' | 'activities');
+        console.log(`Successfully fetched ${events.length} events via Google Calendar API`);
+      } catch (apiError) {
+        console.error('Google Calendar API failed, falling back to iCal:', apiError);
+        // Continue to iCal fallback
+      }
+    }
+    
+    // If Google Calendar API failed or is not available, use iCal
+    if (!events) {
+      console.log(`Using iCal fallback for ${calendarType} calendar`);
       if (calendarType === 'academic') {
-        console.log(`Falling back to iCal for public academic calendar`);
         events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL);
-      } else {
-        console.error('Cannot fallback to iCal for private calendar');
-        throw new Error('Failed to fetch events from private calendar');
+      } else if (calendarType === 'activities') {
+        // Try the private calendar URL - it might work if the calendar is shared
+        try {
+          events = await fetchCalendarEvents(STUDENT_CALENDAR_URL);
+        } catch (icalError) {
+          console.error('Private calendar iCal failed:', icalError);
+          // Return empty array for private calendar if both API and iCal fail
+          events = [];
+        }
       }
     }
     
