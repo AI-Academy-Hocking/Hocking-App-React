@@ -4,7 +4,7 @@ import { Toaster } from "./components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
-import Calendar from "@/pages/Calendar";
+import Calendar from "./pages/Calendar";
 import StudentTools from "@/pages/StudentTools";
 import Maps from "@/pages/Maps";
 import DiningHall from "@/pages/DiningHall";

@@ -63,40 +63,19 @@ export default function CalendarPage() {
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
 
-  // Format events for the BigCalendar
-  const formattedEvents = events.map(event => {
-    const startDate = new Date(event.startTime);
-    const endDate = new Date(event.endTime);
-    
-    return {
-      title: event.title || "Untitled Event",
-      start: startDate,
-      end: endDate,
-      resource: { 
-        location: event.location || "No Location", 
-        description: event.description || "No Description",
-        id: event.id,
-        originalEvent: event
-      },
-    };
-  });
-
   // Filter events based on calendar type and date range
   const getFilteredEvents = (calendarType: "academic" | "activities") => {
     return events
       .filter(event => {
-        // In a real implementation, each event would have a 'calendarType' property
-        // For now, we're using an empty array so no events will show
-        return false;
-        
-        // When you add real events, uncomment this code:
-        /*
+        // Only filter by calendarType if it exists on the event
+        if ('calendarType' in event && (event as any).calendarType !== calendarType) return false;
         const eventDate = new Date(event.startTime);
         if (selectedDate) {
+          // List view: show only events for the selected day
           return isSameDay(eventDate, selectedDate);
         }
+        // Month view: show events in the current month
         return eventDate >= monthStart && eventDate <= monthEnd;
-        */
       })
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
   };
@@ -107,6 +86,23 @@ export default function CalendarPage() {
   
   // Use the active calendar to determine which events to show in the main view
   const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
+
+  // Format events for the BigCalendar (use filteredEvents, not all events)
+  const formattedEvents = filteredEvents.map(event => {
+    const startDate = new Date(event.startTime);
+    const endDate = new Date(event.endTime);
+    return {
+      title: event.title || "Untitled Event",
+      start: startDate,
+      end: endDate,
+      resource: {
+        location: event.location || "No Location",
+        description: event.description || "No Description",
+        id: event.id,
+        originalEvent: event
+      },
+    };
+  });
 
   // Format date for display
   const formatEventDate = (date: string | Date) => {
