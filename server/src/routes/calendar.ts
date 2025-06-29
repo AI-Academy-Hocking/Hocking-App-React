@@ -1,6 +1,7 @@
 import express from 'express';
 import * as ical from 'ical';
 import fetch from 'node-fetch';
+import { googleCalendarService } from '../../services/googleCalendar';
 
 type CalendarEvent = {
   type: 'VEVENT';
@@ -14,10 +15,10 @@ type CalendarEvent = {
 
 const router = express.Router();
 
-// Academic calendar URL
+// Academic calendar URL (public - can use iCal)
 const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
 
-// Student activities calendar URL
+// Student activities calendar URL (private - needs API)
 const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
 
 async function fetchCalendarEvents(url: string) {
@@ -118,12 +119,25 @@ router.get('/events', async (req, res) => {
     const calendarType = req.query.type as string;
     console.log(`Calendar type requested: ${calendarType}`);
     
-    const calendarUrl = calendarType === 'activities' ? STUDENT_CALENDAR_URL : ACADEMIC_CALENDAR_URL;
-    console.log(`Using URL: ${calendarUrl}`);
+    let events;
     
-    const events = await fetchCalendarEvents(calendarUrl);
+    if (calendarType === 'activities') {
+      // Use Google Calendar API for private calendar
+      console.log(`Using Google Calendar API for private activities calendar`);
+      try {
+        events = await googleCalendarService.getEvents('activities');
+      } catch (apiError) {
+        console.error('Google Calendar API failed, falling back to iCal:', apiError);
+        // Fallback to iCal (will likely fail for private calendar)
+        events = await fetchCalendarEvents(STUDENT_CALENDAR_URL);
+      }
+    } else {
+      // Use iCal for public academic calendar
+      console.log(`Using iCal for public academic calendar`);
+      events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL);
+    }
+    
     console.log(`Sending ${events.length} events to frontend`);
-    
     res.json(events);
   } catch (error) {
     console.error(`API Error:`, error);
