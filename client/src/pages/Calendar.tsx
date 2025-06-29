@@ -362,7 +362,7 @@ export default function CalendarPage() {
                     <div className="flex flex-col items-center justify-center h-full text-neutral-dark">
                       <CalendarIcon className="h-12 w-12 mb-2 text-primary-light" />
                       <p>No events found for this month</p>
-                      <p className="text-sm">Select another month or add new events</p>
+                      <p className="text-sm">Select another month or change the calendar type</p>
                     </div>
                   )}
                 </div>

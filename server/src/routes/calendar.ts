@@ -38,9 +38,8 @@ async function fetchCalendarEvents(url: string) {
       return {
         id: (event as any).uid || String(Math.random()),
         title: (event as any).summary || "No Title",
-        date: startDate ? startDate.toISOString() : new Date().toISOString(),
-        time: `${startDate ? startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) : "00:00"} - ${endDate ? endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) : "23:59"}`,
-        end: endDate ? endDate.toISOString() : (startDate ? startDate.toISOString() : new Date().toISOString()),
+        startTime: startDate ? startDate.toISOString() : new Date().toISOString(),
+        endTime: endDate ? endDate.toISOString() : (startDate ? startDate.toISOString() : new Date().toISOString()),
         location: (event as any).location || "No Location",
         description: (event as any).description || "No Description",
       };
