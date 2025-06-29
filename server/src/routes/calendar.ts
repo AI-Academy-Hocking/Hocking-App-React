@@ -21,10 +21,19 @@ const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba
 const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
 
 async function fetchCalendarEvents(url: string) {
+  console.log(`Fetching calendar events from: ${url}`);
+  
   const response = await fetch(url);
-  if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+  if (!response.ok) {
+    console.error(`HTTP error! status: ${response.status} for URL: ${url}`);
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
   const icalData = await response.text();
+  console.log(`Received ${icalData.length} characters of iCal data`);
+  
   const parsedEvents = ical.parseICS(icalData);
+  console.log(`Parsed ${Object.keys(parsedEvents).length} total events from iCal`);
 
   const events = Object.values(parsedEvents)
     .filter(event => event.type === 'VEVENT')
@@ -35,7 +44,7 @@ async function fetchCalendarEvents(url: string) {
       if (typeof startDate === 'string') startDate = new Date(startDate);
       if (typeof endDate === 'string') endDate = new Date(endDate);
 
-      return {
+      const eventData = {
         id: (event as any).uid || String(Math.random()),
         title: (event as any).summary || "No Title",
         startTime: startDate ? startDate.toISOString() : new Date().toISOString(),
@@ -43,12 +52,17 @@ async function fetchCalendarEvents(url: string) {
         location: (event as any).location || "No Location",
         description: (event as any).description || "No Description",
       };
+      
+      console.log(`Processed event: ${eventData.title} at ${eventData.startTime}`);
+      return eventData;
     });
 
   // Debug log
   console.log(`Fetched ${events.length} events from ${url}`);
   if (events.length > 0) {
     console.log('First event:', events[0]);
+  } else {
+    console.warn('No events found in calendar!');
   }
 
   return events;

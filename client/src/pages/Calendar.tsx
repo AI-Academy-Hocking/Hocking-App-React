@@ -68,7 +68,14 @@ export default function CalendarPage() {
 
   // Filter events based on calendar type and date range
   const getFilteredEvents = (calendarType: "academic" | "activities") => {
-    return events
+    console.log(`Filtering events for ${calendarType}:`, {
+      totalEvents: events.length,
+      monthStart: monthStart.toISOString(),
+      monthEnd: monthEnd.toISOString(),
+      selectedDate: selectedDate?.toISOString()
+    });
+    
+    const filtered = events
       .filter(event => {
         // Only filter by calendarType if it exists on the event
         if ('calendarType' in event && (event as any).calendarType !== calendarType) return false;
@@ -81,6 +88,9 @@ export default function CalendarPage() {
         return eventDate >= monthStart && eventDate <= monthEnd;
       })
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+    
+    console.log(`Filtered to ${filtered.length} events for ${calendarType}`);
+    return filtered;
   };
 
   // Get events for both calendar types
