@@ -121,20 +121,22 @@ router.get('/events', async (req, res) => {
     
     let events;
     
-    if (calendarType === 'activities') {
-      // Use Google Calendar API for private calendar
-      console.log(`Using Google Calendar API for private activities calendar`);
-      try {
-        events = await googleCalendarService.getEvents('activities');
-      } catch (apiError) {
-        console.error('Google Calendar API failed, falling back to iCal:', apiError);
-        // Fallback to iCal (will likely fail for private calendar)
-        events = await fetchCalendarEvents(STUDENT_CALENDAR_URL);
+    // Use Google Calendar API for both calendars since you already have OAuth 2.0 set up
+    console.log(`Using Google Calendar API for ${calendarType} calendar`);
+    try {
+      events = await googleCalendarService.getEvents(calendarType as 'academic' | 'activities');
+      console.log(`Successfully fetched ${events.length} events via Google Calendar API`);
+    } catch (apiError) {
+      console.error('Google Calendar API failed, falling back to iCal:', apiError);
+      
+      // Fallback to iCal for public calendars only
+      if (calendarType === 'academic') {
+        console.log(`Falling back to iCal for public academic calendar`);
+        events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL);
+      } else {
+        console.error('Cannot fallback to iCal for private calendar');
+        throw new Error('Failed to fetch events from private calendar');
       }
-    } else {
-      // Use iCal for public academic calendar
-      console.log(`Using iCal for public academic calendar`);
-      events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL);
     }
     
     console.log(`Sending ${events.length} events to frontend`);
