@@ -260,7 +260,7 @@ export default function CalendarPage() {
                   size="default" 
                   onClick={() => setView("month")}
                   aria-pressed={view === "month"}
-                  className="rounded-xl"
+                  className={`rounded-xl ${view === "month" ? 'dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 text-white' : ''}`}
                 >
                   Month View
                 </Button>
@@ -269,7 +269,7 @@ export default function CalendarPage() {
                   size="default" 
                   onClick={() => setView("list")}
                   aria-pressed={view === "list"}
-                  className="rounded-xl"
+                  className={`rounded-xl ${view === "list" ? 'dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 text-white' : ''}`}
                 >
                   List View
                 </Button>
@@ -388,7 +388,7 @@ export default function CalendarPage() {
               View important dates, deadlines, and events for the academic year.
             </p>
             <Link href="/calendar">
-              <Button className="w-full">View Calendar</Button>
+              <Button className="w-full text-white">View Calendar</Button>
             </Link>
           </Card>
 
@@ -398,7 +398,7 @@ export default function CalendarPage() {
               Discover campus events, clubs, and activities to get involved.
             </p>
             <Link href="/activities">
-              <Button className="w-full">Explore Activities</Button>
+              <Button className="w-full text-white">Explore Activities</Button>
             </Link>
           </Card>
         </div>

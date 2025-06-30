@@ -180,7 +180,7 @@ export default function Contact() {
                   />
                 </div>
 
-                <Button className="w-full">Send Message</Button>
+                <Button className="w-full text-white">Send Message</Button>
               </form>
             </CardContent>
           </Card>

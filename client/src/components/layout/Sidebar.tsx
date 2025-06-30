@@ -8,6 +8,7 @@ import {
 import HockingLogo from "../../assets/HawkLogo.png";
 import { LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
+import "../../styles/sidebar.css";
 
 interface NavItem {
   path: string;
@@ -28,64 +29,24 @@ export default function Sidebar() {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isDiningOpen, setIsDiningOpen] = useState(false);
 
-  const isActive = (path: string) => {
-    // For paths with query parameters, just check if we start with the base path
-    if (path.includes('?')) {
-      const basePath = path.split('?')[0];
-      return location.startsWith(basePath);
-    }
-    // For exact paths, check for exact match
-    return location === path;
-  };
 
-  const isStudentToolsActive = () => {
-    const studentToolsPaths = [
-      '/tools', '/academic-success-center', '/online-learning', '/student-organizations', 
-      '/recreation', '/athletics', '/housing'
-    ];
-    return studentToolsPaths.includes(location);
-  };
 
-  const isCalendarActive = () => {
-    const calendarPaths = ['/calendar', '/events', '/academic-calendar', '/activities'];
-    return calendarPaths.includes(location);
-  };
-
-  const isDiningActive = () => {
-    return location === '/dining' || location.startsWith('/dining');
-  };
-
-  // Only update dropdown states on initial load, not on every navigation
+  // Update dropdown states when location changes
   useEffect(() => {
-    // Only auto-open on first load if we're on a relevant page
-    if (isDiningActive() && !isDiningOpen) {
+    if (location === '/dining' || location.startsWith('/dining')) {
       setIsDiningOpen(true);
     }
-    if (isStudentToolsActive() && !isStudentToolsOpen) {
+    const studentToolsPaths = ['/tools', '/academic-success-center', '/online-learning', '/student-organizations', '/recreation', '/athletics', '/housing'];
+    if (studentToolsPaths.includes(location)) {
       setIsStudentToolsOpen(true);
     }
-    if (isCalendarActive() && !isCalendarOpen) {
+    const calendarPaths = ['/calendar', '/events', '/academic-calendar', '/activities'];
+    if (calendarPaths.includes(location)) {
       setIsCalendarOpen(true);
     }
-  }, []);
+  }, [location]); // Add location as dependency
 
-  const handleNavigation = (path: string) => {
-    console.log('Navigating to:', path);
-    console.log('Current location before:', location);
-    
-    // Try wouter navigation first
-    setLocation(path);
-    
-    // If the location doesn't change after a brief delay, force navigation
-    setTimeout(() => {
-      if (window.location.pathname + window.location.search !== path) {
-        console.log('Wouter navigation failed, using window.location');
-        window.location.href = path;
-      }
-    }, 100);
-  };
 
-  const handleDiningNavigation = handleNavigation;
 
   const navItems: NavItem[] = [
     { path: "/home", label: "Home", icon: Home },
@@ -120,7 +81,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="hidden md:flex flex-col w-64 bg-slate-900/90 backdrop-blur-sm text-white h-full relative sidebar-fade">
+    <div className="hidden md:flex flex-col w-64 bg-slate-950/95 backdrop-blur-sm text-white h-full relative sidebar-fade">
       {/* Soft fade overlay */}
       <div 
         className="absolute top-0 right-0 w-24 h-full pointer-events-none z-50"
@@ -146,15 +107,11 @@ export default function Sidebar() {
         <ul>
           {navItems.map((item) => (
             <li key={item.path} className="mb-2">
-              <button 
-                onClick={() => handleNavigation(item.path)}
-                className={`flex items-center p-2 rounded-lg hover:bg-slate-800 transition w-full text-left ${
-                  isActive(item.path) ? 'bg-slate-700 text-white' : 'text-white'
-                }`}
+                            <button
+                onClick={() => setLocation(item.path)}
+                className="flex items-center p-2 rounded-full transition w-full text-left text-white no-highlight-button"
               >
-                <item.icon className={`mr-3 h-5 w-5 ${
-                  isActive(item.path) ? 'text-white' : 'text-blue-300'
-                }`} />
+                                  <item.icon className="mr-3 h-5 w-5 text-blue-300" />
                 <span>{item.label}</span>
               </button>
             </li>
@@ -162,9 +119,9 @@ export default function Sidebar() {
           
           {/* Calendar Dropdown */}
           <li className="mb-2">
-            <button
+            <div
               onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-800 transition text-white"
+              className="w-full flex items-center justify-between p-2 rounded-full transition text-white cursor-pointer"
             >
               <div className="flex items-center">
                 <CalendarDays className="mr-3 h-5 w-5 text-blue-300" />
@@ -175,21 +132,17 @@ export default function Sidebar() {
               ) : (
                 <ChevronRight className="h-4 w-4 text-blue-300" />
               )}
-            </button>
+            </div>
             
             {isCalendarOpen && (
               <ul className="mt-2 ml-4 space-y-1">
                 {calendarDropdown.map((item) => (
                   <li key={item.path}>
                     <button
-                      onClick={() => handleNavigation(item.path)}
-                      className={`flex items-center p-2 rounded-lg hover:bg-slate-800 transition text-sm w-full text-left ${
-                        isActive(item.path) ? 'bg-slate-700 text-white' : 'text-gray-300'
-                      }`}
+                      onClick={() => setLocation(item.path)}
+                      className="flex items-center p-2 rounded-full transition text-sm w-full text-left text-gray-300 focus:outline-none focus:ring-0 hover:bg-transparent"
                     >
-                      <item.icon className={`mr-3 h-4 w-4 ${
-                        isActive(item.path) ? 'text-white' : 'text-blue-300'
-                      }`} />
+                      <item.icon className="mr-3 h-4 w-4 text-blue-300" />
                       <span>{item.label}</span>
                     </button>
                   </li>
@@ -202,7 +155,7 @@ export default function Sidebar() {
           <li className="mb-2">
             <button
               onClick={() => setIsDiningOpen(!isDiningOpen)}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-800 transition text-white"
+              className="w-full flex items-center justify-between p-2 rounded-full transition text-white focus:outline-none focus:ring-0 hover:bg-transparent"
             >
               <div className="flex items-center">
                 <UtensilsCrossed className="mr-3 h-5 w-5 text-blue-300" />
@@ -220,14 +173,10 @@ export default function Sidebar() {
                 {diningDropdown.map((item) => (
                   <li key={item.path}>
                     <button
-                      onClick={() => handleDiningNavigation(item.path)}
-                      className={`flex items-center p-2 rounded-lg hover:bg-slate-800 transition text-sm w-full text-left ${
-                        isActive(item.path) ? 'bg-slate-700 text-white' : 'text-gray-300'
-                      }`}
+                      onClick={() => setLocation(item.path)}
+                      className="flex items-center p-2 rounded-full transition text-sm w-full text-left text-gray-300 focus:outline-none focus:ring-0 hover:bg-transparent"
                     >
-                      <item.icon className={`mr-3 h-4 w-4 ${
-                        isActive(item.path) ? 'text-white' : 'text-blue-300'
-                      }`} />
+                      <item.icon className="mr-3 h-4 w-4 text-blue-300" />
                       <span>{item.label}</span>
                     </button>
                   </li>
@@ -240,7 +189,7 @@ export default function Sidebar() {
           <li className="mb-2">
             <button
               onClick={() => setIsStudentToolsOpen(!isStudentToolsOpen)}
-              className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-800 transition text-white"
+              className="w-full flex items-center justify-between p-2 rounded-full transition text-white focus:outline-none focus:ring-0 hover:bg-transparent"
             >
               <div className="flex items-center">
                 <Wrench className="mr-3 h-5 w-5 text-blue-300" />
@@ -258,14 +207,10 @@ export default function Sidebar() {
                 {studentToolsDropdown.map((item) => (
                   <li key={item.path}>
                     <button
-                      onClick={() => handleNavigation(item.path)}
-                      className={`flex items-center p-2 rounded-lg hover:bg-slate-800 transition text-sm w-full text-left ${
-                        isActive(item.path) ? 'bg-slate-700 text-white' : 'text-gray-300'
-                      }`}
+                      onClick={() => setLocation(item.path)}
+                      className="flex items-center p-2 rounded-full transition text-sm w-full text-left text-gray-300 focus:outline-none focus:ring-0 hover:bg-transparent"
                     >
-                      <item.icon className={`mr-3 h-4 w-4 ${
-                        isActive(item.path) ? 'text-white' : 'text-blue-300'
-                      }`} />
+                      <item.icon className="mr-3 h-4 w-4 text-blue-300" />
                       <span>{item.label}</span>
                     </button>
                   </li>

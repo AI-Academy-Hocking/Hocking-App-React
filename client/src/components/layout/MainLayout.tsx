@@ -14,6 +14,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [, setLocation] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Force reset mobile menu state on mount
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
@@ -36,7 +41,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Sidebar />
       
       {/* Main Content */}
-      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isMobileMenuOpen ? 'blur-md' : ''}`}>
+      <div className="flex-1 flex flex-col overflow-hidden transition-all duration-300">
         {/* Header */}
         <Header onMobileMenuChange={setIsMobileMenuOpen} />
         

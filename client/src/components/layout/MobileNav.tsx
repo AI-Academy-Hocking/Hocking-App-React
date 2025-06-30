@@ -1,10 +1,9 @@
-import { useLocation, Link } from "wouter";
+import { Link } from "wouter";
 import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield } from "lucide-react";
 
 export default function MobileNav() {
-  const [location] = useLocation();
   
-  const isActive = (path: string) => location === path;
+
 
   const navItems = [
     { path: "/home", label: "Home", icon: Home },
@@ -20,11 +19,7 @@ export default function MobileNav() {
       <div className="flex justify-around">
         {navItems.map((item) => (
           <Link key={item.path} href={item.path}>
-            <a className={`flex flex-col items-center py-2 px-1 ${
-              isActive(item.path) 
-                ? 'text-primary dark:text-white' 
-                : 'text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-white'
-            }`}>
+            <a className="flex flex-col items-center py-2 px-1 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-white">
               <item.icon className="h-5 w-5" />
               <span className="text-xs mt-1">{item.label}</span>
             </a>

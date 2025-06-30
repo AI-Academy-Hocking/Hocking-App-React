@@ -58,16 +58,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isDiningOpen, setIsDiningOpen] = useState(false);
 
-  // Simplified active state checking
-  const isActive = (path: string) => {
-    // For paths with query parameters, just check if we start with the base path
-    if (path.includes('?')) {
-      const basePath = path.split('?')[0];
-      return location.startsWith(basePath);
-    }
-    // For exact paths, check for exact match
-    return location === path;
-  };
+
 
   const toggleTheme = () => {
     const isDark = document.documentElement.classList.toggle('dark');
@@ -135,10 +126,10 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
             </SheetTrigger>
             <SheetPortal>
               <div 
-                className="fixed inset-0 z-[1999] bg-transparent"
+                className="fixed inset-0 z-[1999] bg-black/20 backdrop-blur-md"
                 onClick={() => handleMenuOpenChange(false)}
               />
-              <div className="fixed inset-y-0 left-0 z-[2000] h-full w-64 bg-gray-800/60 backdrop-blur-sm border-none p-0 flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:duration-300 data-[state=open]:duration-500">
+              <div className="fixed inset-y-0 left-0 z-[2000] h-full w-64 bg-slate-950/60 backdrop-blur-sm border-none p-0 flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left data-[state=closed]:duration-300 data-[state=open]:duration-500">
                 <div className="p-4 border-b-2 border-white !bg-blue-600/70 dark:!bg-blue-900/70 backdrop-blur-sm" style={{ backgroundColor: 'rgba(37, 99, 235, 0.7)' }}>
                   <div className="flex items-center">
                     <img 
@@ -157,13 +148,9 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
                       <li key={item.path}>
                         <button 
                           onClick={() => handleNavigation(item.path)}
-                          className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition w-full text-left ${
-                            isActive(item.path) ? 'bg-gray-700 text-white' : 'text-white'
-                          }`}
+                          className="flex items-center p-2 rounded-lg hover:bg-gray-700 transition w-full text-left text-white"
                         >
-                          <item.icon className={`mr-3 h-5 w-5 ${
-                            isActive(item.path) ? 'text-white' : 'text-blue-300'
-                          }`} />
+                                                      <item.icon className="mr-3 h-5 w-5 text-blue-300" />
                           <span>{item.label}</span>
                         </button>
                       </li>
@@ -192,13 +179,9 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
                             <li key={item.path}>
                               <button
                                 onClick={() => handleNavigation(item.path)}
-                                className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-sm w-full text-left ${
-                                  isActive(item.path) ? 'bg-gray-700 text-white' : 'text-gray-300'
-                                }`}
+                                className="flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-sm w-full text-left text-gray-300"
                               >
-                                <item.icon className={`mr-3 h-4 w-4 ${
-                                  isActive(item.path) ? 'text-white' : 'text-blue-300'
-                                }`} />
+                                <item.icon className="mr-3 h-4 w-4 text-blue-300" />
                                 <span>{item.label}</span>
                               </button>
                             </li>
@@ -230,13 +213,9 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
                             <li key={item.path}>
                               <button
                                 onClick={() => handleDiningNavigation(item.path)}
-                                className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-sm w-full text-left ${
-                                  isActive(item.path) ? 'bg-gray-700 text-white' : 'text-gray-300'
-                                }`}
+                                className="flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-sm w-full text-left text-gray-300"
                               >
-                                <item.icon className={`mr-3 h-4 w-4 ${
-                                  isActive(item.path) ? 'text-white' : 'text-blue-300'
-                                }`} />
+                                <item.icon className="mr-3 h-4 w-4 text-blue-300" />
                                 <span>{item.label}</span>
                               </button>
                             </li>
@@ -268,13 +247,9 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
                             <li key={item.path}>
                               <button
                                 onClick={() => handleNavigation(item.path)}
-                                className={`flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-sm w-full text-left ${
-                                  isActive(item.path) ? 'bg-gray-700 text-white' : 'text-gray-300'
-                                }`}
+                                className="flex items-center p-2 rounded-lg hover:bg-gray-700 transition text-sm w-full text-left text-gray-300"
                               >
-                                <item.icon className={`mr-3 h-4 w-4 ${
-                                  isActive(item.path) ? 'text-white' : 'text-blue-300'
-                                }`} />
+                                <item.icon className="mr-3 h-4 w-4 text-blue-300" />
                                 <span>{item.label}</span>
                               </button>
                             </li>

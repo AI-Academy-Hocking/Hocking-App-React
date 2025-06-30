@@ -46,7 +46,7 @@
 .rbc-date-cell {
   padding: 0;
   text-align: center;
-  height: 100px;
+  height: 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -93,9 +93,9 @@
   width: 100%;
 }
 
-.rbc-month-row + .rbc-month-row {
-  border-top: 1px solid #4a5568;
-}
+
+
+
 
 .rbc-date-cell > a {
   display: inline-flex;

@@ -28,8 +28,10 @@ export default function DiningHall() {
 
   // Watch for URL changes including query parameters
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
+    console.log('DiningHall: Location changed to:', location);
+    const urlParams = new URLSearchParams(location.split('?')[1] || '');
     const tabFromUrl = urlParams.get('tab') || 'hours';
+    console.log('DiningHall: Setting tab to:', tabFromUrl);
     setSelectedTab(tabFromUrl);
   }, [location]);
 

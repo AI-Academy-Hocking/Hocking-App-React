@@ -11,7 +11,7 @@ function OnlineLearningPage() {
     <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
       <div className="flex items-center mb-6">
         <Link href="/tools">
-          <button className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
+          <button className="flex items-center text-blue-600 dark:text-white hover:text-blue-800 dark:hover:text-gray-300 transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
           </button>

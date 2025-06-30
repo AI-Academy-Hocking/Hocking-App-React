@@ -150,7 +150,7 @@ export default function Maintenance() {
                   />
                 </div>
 
-                <Button className="w-full">Submit Request</Button>
+                <Button className="w-full text-white">Submit Request</Button>
               </form>
             </CardContent>
           </Card>
