@@ -1,47 +1,88 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Mail, Phone, MapPin, Clock, Bus, Car, Bike, HelpCircle, Calendar, Map } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Bus, Car, Bike, HelpCircle, Calendar, Map, ExternalLink, DollarSign, Wifi, Wheelchair } from "lucide-react";
 
 const quickLinks = [
-  { label: "Shuttle Schedule", icon: Bus, href: "#" },
-  { label: "Parking Map", icon: Map, href: "#" },
-  { label: "Request a Ride", icon: Car, href: "#" },
-  { label: "Bike Rack Locations", icon: Bike, href: "#" },
+  { label: "Line N7 Schedule", icon: Calendar, href: "#", description: "View N7 Schedule PDF" },
+  { label: "Live Bus Tracker", icon: Map, href: "https://athenstransit.org", description: "Track N7 bus in real-time" },
+  { label: "GoBus Tickets", icon: Bus, href: "https://ridegobus.com", description: "Book intercity travel" },
+  { label: "GoBus Contact", icon: Phone, href: "tel:1-888-954-6287", description: "Call 1-888-954-6287" },
 ];
 
 const serviceHours = [
-  { days: "Monday - Friday", time: "7:00 AM - 7:00 PM" },
-  { days: "Saturday - Sunday", time: "8:00 AM - 4:00 PM" },
+  { days: "Monday - Friday", time: "7:00 AM - 7:00 PM", service: "Athens Transit Line N7 (hourly)" },
+  { days: "Daily", time: "6 trips daily", service: "GoBus Intercity Service" },
+  { days: "Year-round", time: "365 days/year", service: "GoBus Route A" },
 ];
 
 const transportationOptions = [
   {
     icon: Bus,
-    title: "Campus Shuttle",
-    description: "Free shuttle service around campus and to key off-campus locations. Runs every 30 minutes during service hours."
+    title: "Athens Transit – Line N7",
+    description: "Local route connecting Hocking College to Athens downtown",
+    details: [
+      "Route: Hocking College ↔ Athens downtown",
+      "Fare: $1 cash fare (exact change)",
+      "Schedule: Mon–Fri, hourly from 7 AM–7 PM",
+      "Hail anywhere along route",
+      "Stop at marked hail zones and landmarks"
+    ],
+    features: ["Local Service", "Hourly Schedule", "Cash Fare"]
+  },
+  {
+    icon: Bus,
+    title: "GoBus – Intercity Service",
+    description: "Statewide travel from Hocking College to Columbus, Parkersburg, and beyond",
+    details: [
+      "Route: Hocking College → Athens → Columbus → Parkersburg",
+      "Service: 6 times daily, 365 days/year on Route A",
+      "Boarding: Hocking College Bus Stop (in front of mailroom)",
+      "Fare: $6–$12 to Athens, varies for longer trips",
+      "Buy tickets at Cashier's Office or Student Center kiosk"
+    ],
+    features: ["Wi-Fi", "Outlets", "Restrooms", "Wheelchair-accessible"]
   },
   {
     icon: Car,
-    title: "Parking Lots",
-    description: "Multiple parking lots available for students, staff, and visitors. Parking permits required."
+    title: "Campus Parking",
+    description: "Multiple parking lots available for students, staff, and visitors",
+    details: [
+      "Parking permits required",
+      "Various lot locations across campus",
+      "Accessible parking available"
+    ],
+    features: ["Permit Required", "Multiple Locations", "Accessible"]
   },
   {
     icon: Bike,
     title: "Bike Racks",
-    description: "Secure bike racks are located at major campus buildings."
-  },
-  {
-    icon: Map,
-    title: "Accessible Transportation",
-    description: "Accessible shuttle and parking options are available for students with disabilities."
+    description: "Secure bike racks located at major campus buildings",
+    details: [
+      "Available at most major campus buildings",
+      "Secure locking recommended",
+      "Free to use"
+    ],
+    features: ["Free", "Secure", "Multiple Locations"]
   },
 ];
 
 const faqs = [
   {
-    question: "How do I find the shuttle schedule?",
-    answer: "You can view the shuttle schedule by clicking the 'Shuttle Schedule' button above or visiting the campus transportation office."
+    question: "Which buses serve campus?",
+    answer: "Athens Transit Line N7 ($1, hourly, Mon–Fri) and GoBus (intercity, six daily trips, runs year-round)."
+  },
+  {
+    question: "How much is a bus ride?",
+    answer: "N7: $1 exact cash. GoBus: $6–$12 (Athens); fares vary for longer routes."
+  },
+  {
+    question: "How can I track the buses?",
+    answer: "N7: Live tracking via Athens Transit. GoBus: Booked via website; check departures via app or kiosk."
+  },
+  {
+    question: "Where do I buy GoBus tickets?",
+    answer: "Buy tickets at the Cashier's Office or kiosk in Student Center. Buses depart three times daily in both directions."
   },
   {
     question: "Do I need a permit to park on campus?",
@@ -49,11 +90,7 @@ const faqs = [
   },
   {
     question: "Is there transportation for students with disabilities?",
-    answer: "Yes, accessible shuttles and parking are available. Please contact the transportation office for arrangements."
-  },
-  {
-    question: "Where can I store my bike?",
-    answer: "Bike racks are available at most major campus buildings. Please lock your bike securely."
+    answer: "Yes, GoBus offers wheelchair-accessible coaches. Please contact the transportation office for additional arrangements."
   },
 ];
 
@@ -61,28 +98,31 @@ const contactInfo = {
   location: "Student Center, Room 105",
   phone: "740-753-7000",
   email: "transport@hocking.edu",
-  hours: "Monday - Friday: 8:00 AM - 5:00 PM"
+  hours: "Monday - Friday: 8:00 AM - 5:00 PM",
+  gobusPhone: "1-888-954-6287",
+  gobusWebsite: "https://ridegobus.com"
 };
 
 export default function Transportation() {
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4 space-y-10">
+    <div className="max-w-4xl mx-auto py-8 px-4 space-y-10">
       <header className="mb-8">
         <h1 className="text-3xl font-bold mb-2 flex items-center gap-2">
-          <Bus className="h-8 w-8 text-blue-600" /> Transportation
+          <Bus className="h-8 w-8 text-blue-600" /> Campus Transportation
         </h1>
-        <p className="text-gray-600">Get around campus with ease. Find shuttle schedules, parking info, and more.</p>
+        <p className="text-gray-600 text-lg">Get around easily, from local Athens trips to statewide travel, plus on-campus fleet access for projects.</p>
       </header>
 
       {/* Quick Access Buttons */}
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Quick Access</h2>
+        <h2 className="text-2xl font-semibold mb-4">Quick Links</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {quickLinks.map(link => (
-            <Button asChild key={link.label} className="flex flex-col items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6">
-              <a href={link.href}>
+            <Button asChild key={link.label} className="flex flex-col items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 h-auto">
+              <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
                 <link.icon className="h-6 w-6 mb-1" />
-                {link.label}
+                <span className="text-sm">{link.label}</span>
+                <span className="text-xs opacity-90">{link.description}</span>
               </a>
             </Button>
           ))}
@@ -94,11 +134,14 @@ export default function Transportation() {
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2"><Clock className="h-6 w-6 text-blue-600" /> Service Hours</h2>
         <Card>
           <CardContent className="py-4">
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {serviceHours.map((h, i) => (
-                <li key={i} className="flex items-center gap-4 text-gray-700">
-                  <span className="font-medium w-40">{h.days}:</span>
-                  <span className="font-mono">{h.time}</span>
+                <li key={i} className="flex items-start gap-4 text-gray-700">
+                  <span className="font-medium w-40 flex-shrink-0">{h.days}:</span>
+                  <div>
+                    <span className="font-mono">{h.time}</span>
+                    <div className="text-sm text-gray-500 mt-1">{h.service}</div>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -116,8 +159,26 @@ export default function Transportation() {
                 <opt.icon className="h-7 w-7 text-blue-600" />
                 <CardTitle className="text-lg font-semibold">{opt.title}</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <p className="text-gray-700">{opt.description}</p>
+                <div className="space-y-2">
+                  {opt.details.map((detail, index) => (
+                    <div key={index} className="text-sm text-gray-600 flex items-start gap-2">
+                      <span className="text-blue-600 mt-1">•</span>
+                      <span>{detail}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {opt.features.map((feature, index) => (
+                    <span key={index} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                      {feature === "Wi-Fi" && <Wifi className="h-3 w-3" />}
+                      {feature === "Wheelchair-accessible" && <Wheelchair className="h-3 w-3" />}
+                      {feature === "Cash Fare" && <DollarSign className="h-3 w-3" />}
+                      {feature}
+                    </span>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -126,7 +187,7 @@ export default function Transportation() {
 
       {/* FAQ */}
       <section>
-        <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2"><HelpCircle className="h-6 w-6 text-blue-600" /> Frequently Asked Questions</h2>
+        <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2"><HelpCircle className="h-6 w-6 text-blue-600" /> Transportation FAQ</h2>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, i) => (
             <AccordionItem key={i} value={String(i)}>
@@ -140,30 +201,58 @@ export default function Transportation() {
       {/* Contact Information */}
       <section>
         <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2"><Mail className="h-6 w-6 text-blue-600" /> Contact Information</h2>
-        <Card>
-          <CardContent className="py-4 space-y-3">
-            <div className="flex items-center gap-2 text-gray-700">
-              <MapPin className="h-5 w-5 text-blue-600" />
-              <span className="font-medium">Location:</span>
-              <span>{contactInfo.location}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Phone className="h-5 w-5 text-blue-600" />
-              <span className="font-medium">Phone:</span>
-              <a href={`tel:${contactInfo.phone}`} className="text-blue-600 hover:underline">{contactInfo.phone}</a>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Mail className="h-5 w-5 text-blue-600" />
-              <span className="font-medium">Email:</span>
-              <a href={`mailto:${contactInfo.email}`} className="text-blue-600 hover:underline">{contactInfo.email}</a>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Clock className="h-5 w-5 text-blue-600" />
-              <span className="font-medium">Office Hours:</span>
-              <span>{contactInfo.hours}</span>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Campus Transportation Office</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-2 text-gray-700">
+                <MapPin className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Location:</span>
+                <span>{contactInfo.location}</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Phone className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Phone:</span>
+                <a href={`tel:${contactInfo.phone}`} className="text-blue-600 hover:underline">{contactInfo.phone}</a>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Mail className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Email:</span>
+                <a href={`mailto:${contactInfo.email}`} className="text-blue-600 hover:underline">{contactInfo.email}</a>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Clock className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Office Hours:</span>
+                <span>{contactInfo.hours}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">GoBus Customer Service</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-2 text-gray-700">
+                <Phone className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Phone:</span>
+                <a href={`tel:${contactInfo.gobusPhone}`} className="text-blue-600 hover:underline">{contactInfo.gobusPhone}</a>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <ExternalLink className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Website:</span>
+                <a href={contactInfo.gobusWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">ridegobus.com</a>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <MapPin className="h-5 w-5 text-blue-600" />
+                <span className="font-medium">Boarding:</span>
+                <span>Hocking College Bus Stop (in front of mailroom)</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </section>
     </div>
   );
