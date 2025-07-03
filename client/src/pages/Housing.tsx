@@ -159,7 +159,7 @@ export default function Housing() {
         {housingOptions.map((option) => (
           <motion.div key={option.title} variants={item}>
             <Card
-              className="hover-card cursor-pointer h-full border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow"
+              className="hover-card cursor-pointer h-full border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow rounded-xl"
               onClick={() => setLocation(option.path)}
             >
               <CardHeader>

@@ -4,7 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
-  Users, Dumbbell, Utensils, Calendar, Home, Trophy
+  Users, Dumbbell, Utensils, Calendar, Home, Trophy,
+  ChevronDown, ChevronUp
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -20,6 +21,7 @@ interface StudentTool {
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
+  const [isToolsExpanded, setIsToolsExpanded] = useState(false);
   
   const { data: tools } = useQuery<StudentTool[]>({
     queryKey: ['/api/student-tools'],
@@ -30,6 +32,24 @@ export default function StudentTools() {
       }
       return response.json();
     },
+    // Add fallback data in case API fails
+    placeholderData: [
+      // Academic tools
+      { id: "course-schedule", name: "Course Schedule", description: "View your current classes", category: "academic", url: "#" },
+      { id: "grades", name: "Grades", description: "Check your academic performance", category: "academic", url: "#" },
+      { id: "course-catalog", name: "Course Catalog", description: "Browse available courses", category: "academic", url: "#" },
+      { id: "advising", name: "Advising", description: "Connect with your advisor", category: "academic", url: "#" },
+      { id: "academic-history", name: "Academic History", description: "View your transcript", category: "academic", url: "#" },
+      { id: "graduation", name: "Graduation", description: "Track degree requirements", category: "academic", url: "#" },
+      // Financial tools
+      { id: "financial-aid", name: "Financial Aid", description: "View and manage your financial aid", category: "financial", url: "#" },
+      { id: "billing", name: "Billing", description: "Pay tuition and view statements", category: "financial", url: "#" },
+      { id: "scholarships", name: "Scholarships", description: "Apply for available scholarships", category: "financial", url: "#" },
+      // Resources tools
+      { id: "campus-resources", name: "Campus Resources", description: "Access campus services", category: "resources", url: "#" },
+      { id: "health-services", name: "Health Services", description: "Schedule health appointments", category: "resources", url: "#" },
+      { id: "career-services", name: "Career Services", description: "Job search and career planning", category: "resources", url: "#" },
+    ],
   });
 
   // Filter tools by category
@@ -68,79 +88,95 @@ export default function StudentTools() {
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Tools</h2>
-        
-        <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
-          <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl p-1">
-              <TabsTrigger value="academic" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
-              <TabsTrigger value="resources" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="academic" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {academicTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
-                    >
-                      <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="financial" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {financialTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
-                    >
-                      <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="resources" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {resourceTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
-                    >
-                      <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </TabsContent>
-          </Tabs>
+        <Card className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-white dark:bg-gray-800">
+          {/* Collapsible Header */}
+          <div 
+            className="p-6 cursor-pointer flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-t-xl"
+            onClick={() => setIsToolsExpanded(!isToolsExpanded)}
+          >
+            <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-blue-300">Student Tools</h2>
+            {isToolsExpanded ? (
+              <ChevronUp className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            ) : (
+              <ChevronDown className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            )}
+          </div>
+          
+          {/* Collapsible Content */}
+          {isToolsExpanded && (
+            <div className="px-6 pb-6">
+              <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="grid grid-cols-3 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl p-1">
+                  <TabsTrigger value="academic" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
+                  <TabsTrigger value="financial" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
+                  <TabsTrigger value="resources" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="academic" className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {academicTools.map((tool) => {
+                      const Icon = toolIcons[tool.id] || FileText;
+                      return (
+                        <a 
+                          key={tool.id} 
+                          href={tool.url} 
+                          className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                        >
+                          <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
+                          <div>
+                            <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="financial" className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {financialTools.map((tool) => {
+                      const Icon = toolIcons[tool.id] || FileText;
+                      return (
+                        <a 
+                          key={tool.id} 
+                          href={tool.url} 
+                          className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                        >
+                          <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
+                          <div>
+                            <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="resources" className="p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {resourceTools.map((tool) => {
+                      const Icon = toolIcons[tool.id] || FileText;
+                      return (
+                        <a 
+                          key={tool.id} 
+                          href={tool.url} 
+                          className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                        >
+                          <Icon className="text-blue-600 dark:text-blue-400 mr-3 h-5 w-5" />
+                          <div>
+                            <h3 className="font-semibold text-gray-900 dark:text-blue-300">{tool.name}</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
+                          </div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          )}
         </Card>
       </section>
       

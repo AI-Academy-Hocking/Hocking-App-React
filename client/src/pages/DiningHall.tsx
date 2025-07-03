@@ -3,6 +3,7 @@ import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2, Ch
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import "../styles/animations.css";
+import dining1Image from "../components/assets/dining1.JPG";
 
 export default function DiningHall() {
   const [location, setLocation] = useLocation();
@@ -44,9 +45,9 @@ export default function DiningHall() {
   useEffect(() => {
     // Load images safely
     try {
-      import("../components/assets/HawksNest.webp").then(module => {
-        setImages(prev => ({ ...prev, hawksNest: module.default }));
-      });
+      // Use static import for dining1 image
+      setImages(prev => ({ ...prev, hawksNest: dining1Image }));
+      
       import("../components/assets/DiamondDawgs.jpeg").then(module => {
         setImages(prev => ({ ...prev, diamondDawgs: module.default }));
       });
