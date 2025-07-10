@@ -147,103 +147,106 @@ function AcademicSuccessCenter() {
         </CardContent>
       </Card>
 
-      {/* Get Started */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <UserCheck className="mr-3 h-6 w-6" />
-            Get Started
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            To access our services:
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Visit our office in DVD 114</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Call or email to schedule an appointment</span>
-              </div>
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Get Started Section */}
+        <AccordionItem value="get-started" className="border-2 border-green-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <UserCheck className="mr-3 h-6 w-6" />
+              Get Started
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Check our hours of operation</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Bring any necessary documentation</span>
-              </div>
-            </div>
-          </div>
-          <div className="mt-6">
-            <Button className="w-full bg-green-600 hover:bg-green-700">
-              Schedule an Appointment
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Academic Support Services */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <Award className="mr-3 h-6 w-6" />
-            Academic Support Services
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sections.map((section, index) => (
-              <div key={index} className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg hover:shadow-md transition-shadow">
-                <div className="flex items-center gap-3 mb-3">
-                  <section.icon className={`h-8 w-8 ${section.color}`} />
-                  <h3 className="font-semibold text-purple-800 dark:text-purple-200">{section.title}</h3>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              To access our services:
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Visit our office in DVD 114</span>
                 </div>
-                <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">{section.description}</p>
-                {section.path && (
-                  <Link href={section.path}>
-                    <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
-                      Learn More →
-                    </button>
-                  </Link>
-                )}
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Call or email to schedule an appointment</span>
+                </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Check our hours of operation</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Bring any necessary documentation</span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <Button className="w-full bg-green-600 hover:bg-green-700">
+                Schedule an Appointment
+              </Button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Services Overview */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <Target className="mr-3 h-6 w-6" />
-            Services Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Academic Support</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">One-on-one tutoring, study skills, and academic coaching</p>
+        {/* Academic Support Services Section */}
+        <AccordionItem value="academic-support" className="border-2 border-purple-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
+              <Award className="mr-3 h-6 w-6" />
+              Academic Support Services
             </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Resource Access</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Library resources, databases, and study materials</p>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sections.map((section, index) => (
+                <div key={index} className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-3 mb-3">
+                    <section.icon className={`h-8 w-8 ${section.color}`} />
+                    <h3 className="font-semibold text-purple-800 dark:text-purple-200">{section.title}</h3>
+                  </div>
+                  <p className="text-sm text-purple-700 dark:text-purple-300 mb-3">{section.description}</p>
+                  {section.path && (
+                    <Link href={section.path}>
+                      <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                        Learn More →
+                      </button>
+                    </Link>
+                  )}
+                </div>
+              ))}
             </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Specialized Services</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Accessibility support, testing services, and TRIO programs</p>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Services Overview Section */}
+        <AccordionItem value="services-overview" className="border-2 border-orange-600 rounded-lg">
+          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
+              <Target className="mr-3 h-6 w-6" />
+              Services Overview
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Academic Support</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">One-on-one tutoring, study skills, and academic coaching</p>
+              </div>
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Resource Access</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Library resources, databases, and study materials</p>
+              </div>
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Specialized Services</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Accessibility support, testing services, and TRIO programs</p>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {/* FAQ Section */}
       <Card className="mb-8 border-2 border-gray-600">
