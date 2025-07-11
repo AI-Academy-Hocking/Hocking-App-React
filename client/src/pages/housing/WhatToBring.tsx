@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { ClipboardList, AlertTriangle, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { ArrowLeft } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface ChecklistItem {
   category: string;
@@ -346,8 +346,7 @@ const item = {
 
 export default function WhatToBring() {
   return (
-    <div className="container mx-auto p-6">
-      {/* Back Arrow */}
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
       <div className="flex items-center mb-6">
         <Link 
           href="/housing"
@@ -358,126 +357,118 @@ export default function WhatToBring() {
         </Link>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <ClipboardList className="h-8 w-8 text-primary" />
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <ClipboardList className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">What to Bring</h1>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold">What to Bring</h1>
-          <p className="text-muted-foreground">Recommended items checklist for your stay</p>
-        </div>
-      </motion.div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Essential items checklist for your stay. Make sure you have everything you need for a comfortable and successful college experience.
+        </p>
+      </div>
 
-      {/* What to Bring Section */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <CheckCircle className="h-6 w-6 text-green-600" />
-          Recommended Items to Bring
-        </h2>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {checklistItems.map((category) => (
-            <motion.div key={category.category} variants={item}>
-              <Card className="hover-card h-full border-2 border-green-200 hover:border-green-300">
-                <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-                    <CardTitle className="text-lg">{category.category}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-4">
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Recommended Items */}
+        <AccordionItem value="recommended" className="border-2 border-green-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <CheckCircle className="mr-3 h-6 w-6" />
+              Recommended Items to Bring
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {checklistItems.map((category) => (
+                <div key={category.category} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <h3 className="font-semibold text-green-800 dark:text-green-200 mb-3">{category.category}</h3>
+                  <ul className="space-y-3">
                     {category.items.map((item) => (
                       <li key={item.name} className="space-y-1">
                         <div className="flex justify-between items-start">
                           <div className="flex items-center gap-2">
-                            <span className="h-1.5 w-1.5 rounded-full bg-green-500"></span>
-                            <span className="font-medium">{item.name}</span>
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
+                            <span className="font-medium text-green-800 dark:text-green-200">{item.name}</span>
                           </div>
                           <Badge 
-                            variant={item.importance === "recommended" ? "default" : "secondary"}
-                            className={item.importance === "recommended" ? "bg-green-100 text-green-800" : ""}
+                            className={item.importance === "recommended" ? "bg-green-600 text-white" : "bg-green-200 text-green-800"}
                           >
                             {item.importance}
                           </Badge>
                         </div>
                         {item.description && (
-                          <p className="text-sm text-muted-foreground ml-3.5">
+                          <p className="text-sm text-green-700 dark:text-green-300 ml-3.5">
                             {item.description}
                           </p>
                         )}
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Prohibited Items Section */}
-      <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <XCircle className="h-6 w-6 text-red-600" />
-          Items NOT Allowed
-        </h2>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card className="border-2 border-red-200 bg-red-50/50">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-red-500" />
-                <CardTitle className="text-red-800">Prohibited Items</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {prohibitedItems.map((item, index) => (
-                  <div key={index} className="flex items-start gap-2 p-3 bg-white rounded-lg border border-red-200">
-                    <XCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-red-800">{item.name}</p>
-                      {item.description && (
-                        <p className="text-sm text-red-600 mt-1">{item.description}</p>
-                      )}
-                    </div>
+        {/* Prohibited Items */}
+        <AccordionItem value="prohibited" className="border-2 border-red-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-red-800 dark:text-red-200">
+              <XCircle className="mr-3 h-6 w-6" />
+              Items NOT Allowed
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-4">
+              {prohibitedItems.map((item, index) => (
+                <div key={index} className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
+                  <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-red-800 dark:text-red-200">{item.name}</p>
+                    {item.description && (
+                      <p className="text-sm text-red-700 dark:text-red-300 mt-1">{item.description}</p>
+                    )}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Additional Notes Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="p-6 bg-blue-50 rounded-lg border border-blue-200"
-      >
-        <h2 className="text-xl font-semibold mb-4 text-blue-900">Important Notes from Hocking College Housing</h2>
-        <ul className="space-y-2 text-sm text-blue-900">
-          <li>• <strong>Furniture Provided:</strong> Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</li>
-          <li>• <strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</li>
-          <li>• <strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</li>
-          <li>• <strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</li>
-          <li>• <strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</li>
-        </ul>
-      </motion.div>
+        {/* Important Notes */}
+        <AccordionItem value="notes" className="border-2 border-blue-600 rounded-lg">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <AlertTriangle className="mr-3 h-6 w-6" />
+              Important Notes from Hocking College Housing
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <ul className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
+              <li className="flex items-start gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                <div><strong>Furniture Provided:</strong> Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</div>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                <div><strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</div>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                <div><strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</div>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                <div><strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</div>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                <div><strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</div>
+              </li>
+            </ul>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

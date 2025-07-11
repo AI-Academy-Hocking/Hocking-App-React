@@ -22,7 +22,7 @@ import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
 import ApplicationProcess from "./pages/housing/ApplicationProcess";
 import MealPlan from "./pages/housing/MealPlan";
-import Roomies from "./pages/housing/Roomies";
+
 import WhatToBring from "./pages/housing/WhatToBring";
 import Maintenance from "./pages/housing/Maintenance";
 import Contact from "./pages/housing/Contact";
@@ -119,7 +119,7 @@ function Router() {
         <Route path="/housing/amenities" component={Amenities} />
         <Route path="/housing/application" component={ApplicationProcess} />
         <Route path="/housing/meal-plan" component={MealPlan} />
-        <Route path="/housing/roomies" component={Roomies} />
+
         <Route path="/housing/what-to-bring" component={WhatToBring} />
         <Route path="/housing/maintenance" component={Maintenance} />
         <Route path="/housing/contact" component={Contact} />

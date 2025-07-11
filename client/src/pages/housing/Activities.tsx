@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PartyPopper, MapPin, Calendar, Users } from 'lucide-react';
+import { PartyPopper, MapPin, Calendar, Users, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface Activity {
   title: string;
@@ -129,90 +131,158 @@ const item = {
 
 export default function Activities() {
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full relative">
-          <PartyPopper className="h-8 w-8 text-primary" />
-          <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Campus Life & Activities</h1>
-          <p className="text-muted-foreground">Discover exciting events and experiences</p>
-        </div>
-      </motion.div>
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {activities.map((activity) => (
-          <motion.div key={activity.title} variants={item}>
-            <Card className="hover-card h-full">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle>{activity.title}</CardTitle>
-                  <Badge 
-                    variant={activity.type === "on-campus" ? "default" : 
-                           activity.type === "off-campus" ? "secondary" : "outline"}
-                  >
-                    {activity.type}
-                  </Badge>
-                </div>
-                <Badge variant="secondary" className="mt-2">{activity.category}</Badge>
-                <p className="text-sm text-muted-foreground mt-2">{activity.description}</p>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    <span>{activity.schedule}</span>
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="relative">
+            <PartyPopper className="h-8 w-8 text-blue-600" />
+            <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-primary">Campus Life & Activities</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Discover exciting events and experiences. Get involved in campus life and make the most of your college experience.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* On-Campus Activities */}
+        <AccordionItem value="on-campus" className="border-2 border-blue-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <PartyPopper className="mr-3 h-6 w-6" />
+              On-Campus Activities
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {activities.filter(activity => activity.type === 'on-campus').map((activity) => (
+                <div key={activity.title} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-blue-800 dark:text-blue-200">{activity.title}</h3>
+                    <Badge className="bg-blue-600 text-white">{activity.type}</Badge>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{activity.location}</span>
-                  </div>
-                  {activity.participants && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Users className="h-4 w-4" />
-                      <span>{activity.participants}</span>
+                  <Badge className="bg-blue-200 text-blue-800 mb-3">{activity.category}</Badge>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">{activity.description}</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300">
+                      <Calendar className="h-4 w-4" />
+                      <span>{activity.schedule}</span>
                     </div>
-                  )}
-                  <div>
-                    <h3 className="text-sm font-semibold mb-3">Features</h3>
-                    <ul className="space-y-2">
-                      {activity.features.map((feature) => (
-                        <li key={feature} className="text-sm flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {activity.season && (
-                    <div>
-                      <h3 className="text-sm font-semibold mb-3">Available Seasons</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {activity.season.map((season) => (
-                          <Badge key={season} variant="outline">
-                            {season}
-                          </Badge>
-                        ))}
+                    <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300">
+                      <MapPin className="h-4 w-4" />
+                      <span>{activity.location}</span>
+                    </div>
+                    {activity.participants && (
+                      <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300">
+                        <Users className="h-4 w-4" />
+                        <span>{activity.participants}</span>
                       </div>
+                    )}
+                    <div>
+                      <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Features</h4>
+                      <ul className="space-y-1">
+                        {activity.features.map((feature) => (
+                          <li key={feature} className="text-sm flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                            <span className="text-blue-700 dark:text-blue-300">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  )}
+                    {activity.season && (
+                      <div>
+                        <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Available Seasons</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {activity.season.map((season) => (
+                            <Badge key={season} className="bg-blue-200 text-blue-800 text-xs">
+                              {season}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Off-Campus Activities */}
+        <AccordionItem value="off-campus" className="border-2 border-green-600 rounded-lg">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <MapPin className="mr-3 h-6 w-6" />
+              Off-Campus Activities
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {activities.filter(activity => activity.type === 'off-campus').map((activity) => (
+                <div key={activity.title} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-green-800 dark:text-green-200">{activity.title}</h3>
+                    <Badge className="bg-green-600 text-white">{activity.type}</Badge>
+                  </div>
+                  <Badge className="bg-green-200 text-green-800 mb-3">{activity.category}</Badge>
+                  <p className="text-sm text-green-700 dark:text-green-300 mb-3">{activity.description}</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
+                      <Calendar className="h-4 w-4" />
+                      <span>{activity.schedule}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
+                      <MapPin className="h-4 w-4" />
+                      <span>{activity.location}</span>
+                    </div>
+                    {activity.participants && (
+                      <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300">
+                        <Users className="h-4 w-4" />
+                        <span>{activity.participants}</span>
+                      </div>
+                    )}
+                    <div>
+                      <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">Features</h4>
+                      <ul className="space-y-1">
+                        {activity.features.map((feature) => (
+                          <li key={feature} className="text-sm flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
+                            <span className="text-green-700 dark:text-green-300">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    {activity.season && (
+                      <div>
+                        <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">Available Seasons</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {activity.season.map((season) => (
+                            <Badge key={season} className="bg-green-200 text-green-800 text-xs">
+                              {season}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

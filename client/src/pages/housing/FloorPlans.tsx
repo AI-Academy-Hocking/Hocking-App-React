@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2 } from 'lucide-react';
+import { Building2, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface Building {
   name: string;
@@ -102,45 +104,50 @@ const container = {
 export default function FloorPlans() {
   const [selectedBuilding, setSelectedBuilding] = useState<Building>(buildings[0]);
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <Building2 className="h-8 w-8 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Floor Plans</h1>
-          <p className="text-muted-foreground">View detailed floor plans for each residence hall</p>
-        </div>
-      </motion.div>
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="space-y-6"
-      >
-        <Card>
-          <CardHeader>
-            <CardTitle>Residence Hall Floor Plans</CardTitle>
-          </CardHeader>
-          <CardContent>
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <Building2 className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Floor Plans</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          View detailed floor plans for each residence hall. Explore the layout and room configurations to help you choose your perfect housing option.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Floor Plans */}
+        <AccordionItem value="floor-plans" className="border-2 border-blue-600 rounded-lg">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <Building2 className="mr-3 h-6 w-6" />
+              Residence Hall Floor Plans
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
               {buildings.map((building) => (
                 <button
                   key={building.code}
-                  className={`flex items-center gap-2 p-3 rounded-lg border border-neutral-light transition w-full text-left ${selectedBuilding.code === building.code ? 'bg-primary/10 border-primary' : 'hover:bg-neutral-lightest'}`}
+                  className={`flex items-center gap-2 p-3 rounded-lg border transition w-full text-left ${selectedBuilding.code === building.code ? 'bg-blue-100 dark:bg-blue-900/50 border-blue-600' : 'hover:bg-blue-50 dark:hover:bg-blue-900/30 border-gray-200 dark:border-gray-700'}`}
                   onClick={() => setSelectedBuilding(building)}
                 >
-                  <Building2 className="h-5 w-5 text-primary" />
+                  <Building2 className="h-5 w-5 text-blue-600" />
                   <div>
-                    <div className="font-semibold">{building.name}</div>
-                    <div className="text-sm text-muted-foreground">
-                      <Badge variant="outline" className="mr-2">{building.code}</Badge>
+                    <div className="font-semibold text-blue-800 dark:text-blue-200">{building.name}</div>
+                    <div className="text-sm text-blue-700 dark:text-blue-300">
+                      <Badge className="bg-blue-600 text-white mr-2">{building.code}</Badge>
                       {building.description}
                     </div>
                   </div>
@@ -173,9 +180,9 @@ export default function FloorPlans() {
                 </TabsContent>
               ))}
             </Tabs>
-          </CardContent>
-        </Card>
-      </motion.div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

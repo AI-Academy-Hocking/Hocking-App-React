@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText } from 'lucide-react';
+import { FileText, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface ContractSection {
   title: string;
@@ -90,52 +92,86 @@ const item = {
 
 export default function Contract() {
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <FileText className="h-8 w-8 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Residence Hall Contract</h1>
-          <p className="text-muted-foreground">Complete your housing agreement</p>
-        </div>
-      </motion.div>
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="space-y-6"
-      >
-        {contractSections.map((section) => (
-          <motion.div key={section.title} variants={item}>
-            <Card className={`hover-card ${section.important ? "border-blue-200" : ""}`}>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  <CardTitle>{section.title}</CardTitle>
-                  {section.important && (
-                    <Badge variant="default">Important</Badge>
-                  )}
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <FileText className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Residence Hall Contract</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Complete your housing agreement. Review the terms and conditions carefully before signing your residence hall contract.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Important Sections */}
+        <AccordionItem value="important" className="border-2 border-red-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-red-800 dark:text-red-200">
+              <FileText className="mr-3 h-6 w-6" />
+              Important Contract Information
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="space-y-4">
+              {contractSections.filter(section => section.important).map((section) => (
+                <div key={section.title} className="p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
+                  <div className="flex items-center gap-2 mb-3">
+                    <h3 className="font-semibold text-red-800 dark:text-red-200">{section.title}</h3>
+                    <Badge className="bg-red-600 text-white">Important</Badge>
+                  </div>
+                  <ul className="space-y-2">
+                    {section.content.map((item, index) => (
+                      <li key={index} className="text-sm text-red-700 dark:text-red-300 flex items-start gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-red-600 mt-2 flex-shrink-0"></span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  {section.content.map((item, index) => (
-                    <li key={index} className="text-sm text-muted-foreground">
-                      • {item}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* General Sections */}
+        <AccordionItem value="general" className="border-2 border-blue-600 rounded-lg">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <FileText className="mr-3 h-6 w-6" />
+              General Contract Information
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="space-y-4">
+              {contractSections.filter(section => !section.important).map((section) => (
+                <div key={section.title} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">{section.title}</h3>
+                  <ul className="space-y-2">
+                    {section.content.map((item, index) => (
+                      <li key={index} className="text-sm text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard } from 'lucide-react';
+import { CreditCard, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface MealPlan {
   name: string;
@@ -86,74 +88,127 @@ const item = {
 
 export default function MealPlan() {
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <CreditCard className="h-8 w-8 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Meal Plans</h1>
-          <p className="text-muted-foreground">Choose the perfect dining plan for your needs</p>
-        </div>
-      </motion.div>
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {mealPlans.map((plan) => (
-          <motion.div key={plan.name} variants={item}>
-            <Card className="hover-card h-full">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle>{plan.name}</CardTitle>
-                  <Badge 
-                    variant={plan.type === "premium" ? "default" : 
-                           plan.type === "standard" ? "secondary" : "outline"}
-                  >
-                    {plan.type}
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
-                <p className="text-lg font-semibold mt-2 text-primary">{plan.price}</p>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="text-sm font-semibold mb-3">Features</h3>
-                    <ul className="space-y-2">
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="text-sm flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <CreditCard className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Meal Plans</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Choose the perfect dining plan for your needs. We offer flexible options to suit your eating habits and lifestyle.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Basic Plans */}
+        <AccordionItem value="basic" className="border-2 border-blue-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <CreditCard className="mr-3 h-6 w-6" />
+              Basic & Standard Plans
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {mealPlans.filter(plan => ['basic', 'standard'].includes(plan.type)).map((plan) => (
+                <div key={plan.name} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-blue-800 dark:text-blue-200">{plan.name}</h3>
+                    <Badge className={plan.type === "standard" ? "bg-blue-600 text-white" : "bg-blue-200 text-blue-800"}>
+                      {plan.type}
+                    </Badge>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-semibold mb-3">Best For</h3>
-                    <ul className="space-y-2">
-                      {plan.bestFor.map((item) => (
-                        <li key={item} className="text-sm flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">{plan.description}</p>
+                  <p className="text-lg font-semibold text-blue-600 mb-3">{plan.price}</p>
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Features</h4>
+                      <ul className="space-y-1">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="text-sm flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                            <span className="text-blue-700 dark:text-blue-300">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Best For</h4>
+                      <ul className="space-y-1">
+                        {plan.bestFor.map((item) => (
+                          <li key={item} className="text-sm flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                            <span className="text-blue-700 dark:text-blue-300">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Premium Plans */}
+        <AccordionItem value="premium" className="border-2 border-green-600 rounded-lg">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <CreditCard className="mr-3 h-6 w-6" />
+              Premium Plans
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {mealPlans.filter(plan => plan.type === 'premium').map((plan) => (
+                <div key={plan.name} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-green-800 dark:text-green-200">{plan.name}</h3>
+                    <Badge className="bg-green-600 text-white">{plan.type}</Badge>
+                  </div>
+                  <p className="text-sm text-green-700 dark:text-green-300 mb-3">{plan.description}</p>
+                  <p className="text-lg font-semibold text-green-600 mb-3">{plan.price}</p>
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">Features</h4>
+                      <ul className="space-y-1">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="text-sm flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
+                            <span className="text-green-700 dark:text-green-300">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">Best For</h4>
+                      <ul className="space-y-1">
+                        {plan.bestFor.map((item) => (
+                          <li key={item} className="text-sm flex items-center gap-2">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
+                            <span className="text-green-700 dark:text-green-300">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

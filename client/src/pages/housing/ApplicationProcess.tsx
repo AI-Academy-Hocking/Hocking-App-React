@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileCheck } from 'lucide-react';
+import { FileCheck, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface Step {
   title: string;
@@ -103,61 +105,99 @@ const item = {
 
 export default function ApplicationProcess() {
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <FileCheck className="h-8 w-8 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Application Process</h1>
-          <p className="text-muted-foreground">Follow these steps to secure your housing</p>
-        </div>
-      </motion.div>
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {steps.map((step) => (
-          <motion.div key={step.title} variants={item}>
-            <Card className="hover-card h-full">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle>{step.title}</CardTitle>
-                  <Badge 
-                    variant={step.status === "required" ? "destructive" : 
-                           step.status === "recommended" ? "default" : "secondary"}
-                  >
-                    {step.status}
-                  </Badge>
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <FileCheck className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Application Process</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Follow these steps to secure your housing. Our streamlined process makes it easy to find your perfect home on campus.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Required Steps */}
+        <AccordionItem value="required" className="border-2 border-red-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-red-800 dark:text-red-200">
+              <FileCheck className="mr-3 h-6 w-6" />
+              Required Steps
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {steps.filter(step => step.status === 'required').map((step) => (
+                <div key={step.title} className="p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-red-800 dark:text-red-200">{step.title}</h3>
+                    <Badge className="bg-red-600 text-white">{step.status}</Badge>
+                  </div>
+                  <p className="text-sm text-red-700 dark:text-red-300 mb-3">{step.description}</p>
+                  {step.deadline && (
+                    <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-3">Deadline: {step.deadline}</p>
+                  )}
+                  <h4 className="text-sm font-semibold text-red-800 dark:text-red-200 mb-2">Requirements</h4>
+                  <ul className="space-y-1">
+                    {step.requirements.map((requirement) => (
+                      <li key={requirement} className="text-sm flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-red-600"></span>
+                        {requirement}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">{step.description}</p>
-                {step.deadline && (
-                  <p className="text-sm font-medium mt-2 text-primary">Deadline: {step.deadline}</p>
-                )}
-              </CardHeader>
-              <CardContent>
-                <h3 className="text-sm font-semibold mb-3">Requirements</h3>
-                <ul className="space-y-2">
-                  {step.requirements.map((requirement) => (
-                    <li key={requirement} className="text-sm flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      {requirement}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Optional Steps */}
+        <AccordionItem value="optional" className="border-2 border-blue-600 rounded-lg">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <FileCheck className="mr-3 h-6 w-6" />
+              Optional Steps
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {steps.filter(step => step.status === 'optional').map((step) => (
+                <div key={step.title} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-blue-800 dark:text-blue-200">{step.title}</h3>
+                    <Badge className="bg-blue-600 text-white">{step.status}</Badge>
+                  </div>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">{step.description}</p>
+                  {step.deadline && (
+                    <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-3">Deadline: {step.deadline}</p>
+                  )}
+                  <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Requirements</h4>
+                  <ul className="space-y-1">
+                    {step.requirements.map((requirement) => (
+                      <li key={requirement} className="text-sm flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                        {requirement}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

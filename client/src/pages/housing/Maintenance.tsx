@@ -1,11 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wrench } from 'lucide-react';
+import { Wrench, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface MaintenanceRequest {
   id: string;
@@ -77,37 +79,42 @@ export default function Maintenance() {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <Wrench className="h-8 w-8 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Maintenance Requests</h1>
-          <p className="text-muted-foreground">Report and track maintenance issues</p>
-        </div>
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="lg:col-span-1"
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
         >
-          <Card className="hover-card">
-            <CardHeader>
-              <CardTitle>Submit Request</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form className="space-y-4" onSubmit={handleSubmit}>
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
+
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <Wrench className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Maintenance Requests</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Report and track maintenance issues. Our maintenance team is here to keep your living space comfortable and safe.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Submit Request */}
+        <AccordionItem value="submit-request" className="border-2 border-green-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <Wrench className="mr-3 h-6 w-6" />
+              Submit Maintenance Request
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Category</label>
+                  <label className="text-sm font-medium text-green-700 dark:text-green-300">Category</label>
                   <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Select category" />
@@ -123,7 +130,7 @@ export default function Maintenance() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Priority</label>
+                  <label className="text-sm font-medium text-green-700 dark:text-green-300">Priority</label>
                   <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Select priority" />
@@ -138,81 +145,82 @@ export default function Maintenance() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Location</label>
+                  <label className="text-sm font-medium text-green-700 dark:text-green-300">Location</label>
                   <Input placeholder="Building and Room Number" />
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Description</label>
-                  <Textarea 
-                    placeholder="Describe the issue in detail"
-                    className="min-h-[100px]"
-                  />
+                  <label className="text-sm font-medium text-green-700 dark:text-green-300">Contact Phone</label>
+                  <Input placeholder="Your phone number" />
                 </div>
+              </div>
 
-                <Button className="w-full">Submit Request</Button>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-green-700 dark:text-green-300">Description</label>
+                <Textarea 
+                  placeholder="Describe the issue in detail"
+                  className="min-h-[100px]"
+                />
+              </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className="lg:col-span-2 space-y-6"
-        >
-          {maintenanceRequests.map((request) => (
-            <motion.div key={request.id} variants={item}>
-              <Card className="hover-card">
-                <CardHeader>
-                  <div className="flex justify-between items-start">
+              <Button className="w-full bg-green-600 hover:bg-green-700">Submit Request</Button>
+            </form>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Request History */}
+        <AccordionItem value="request-history" className="border-2 border-blue-600 rounded-lg">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <Wrench className="mr-3 h-6 w-6" />
+              Request History
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="space-y-4">
+              {maintenanceRequests.map((request) => (
+                <div key={request.id} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
                     <div>
-                      <CardTitle>{request.title}</CardTitle>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <h3 className="font-semibold text-blue-800 dark:text-blue-200">{request.title}</h3>
+                      <p className="text-sm text-blue-700 dark:text-blue-300">
                         {request.location} • Submitted: {request.submittedDate}
                       </p>
                     </div>
                     <div className="flex gap-2">
                       <Badge 
-                        variant={request.priority === "emergency" ? "destructive" : 
-                               request.priority === "high" ? "default" : 
-                               request.priority === "medium" ? "secondary" : "outline"}
+                        className={request.priority === "emergency" ? "bg-red-600 text-white" : 
+                               request.priority === "high" ? "bg-blue-600 text-white" : 
+                               request.priority === "medium" ? "bg-yellow-600 text-white" : "bg-gray-600 text-white"}
                       >
                         {request.priority}
                       </Badge>
                       <Badge 
-                        variant={request.status === "completed" ? "default" : 
-                               request.status === "in-progress" ? "secondary" : "outline"}
+                        className={request.status === "completed" ? "bg-green-600 text-white" : 
+                               request.status === "in-progress" ? "bg-blue-600 text-white" : "bg-gray-600 text-white"}
                       >
                         {request.status}
                       </Badge>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div>
-                      <h3 className="text-sm font-semibold mb-2">Description</h3>
-                      <p className="text-sm text-muted-foreground">{request.description}</p>
+                      <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Description</h4>
+                      <p className="text-sm text-blue-700 dark:text-blue-300">{request.description}</p>
                     </div>
                     {request.estimatedCompletion && (
                       <div>
-                        <h3 className="text-sm font-semibold mb-2">Estimated Completion</h3>
-                        <p className="text-sm text-muted-foreground">{request.estimatedCompletion}</p>
+                        <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Estimated Completion</h4>
+                        <p className="text-sm text-blue-700 dark:text-blue-300">{request.estimatedCompletion}</p>
                       </div>
                     )}
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="sm">Update</Button>
-                      <Button variant="ghost" size="sm">Cancel</Button>
-                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 

@@ -1,7 +1,7 @@
 import { 
-  Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText, ArrowLeft,
+  Building2, ClipboardCheck, FileCheck, CreditCard, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText, ArrowLeft,
   ExternalLink, Star, CheckCircle, BookOpen, Activity, 
-  Building, Phone, Clock, Home, Calendar
+  Phone, Clock, Home, Calendar
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -119,14 +119,7 @@ const housingOptions: HousingOption[] = [
     category: "social",
     priority: "optional"
   },
-  {
-    title: "Roomies",
-    icon: <Users className="h-8 w-8" />,
-    path: "/housing/roomies",
-    description: "Find and connect with potential roommates",
-    category: "social",
-    priority: "optional"
-  },
+
   {
     title: "Campus Life & Activities",
     icon: <div className="relative">
@@ -171,22 +164,7 @@ const item = {
   show: { opacity: 1, y: 0 }
 };
 
-const getCategoryColor = (category: string) => {
-  const colors = {
-    accommodation: "blue",
-    resources: "green",
-    financial: "purple",
-    activities: "orange",
-    social: "teal",
-    facilities: "indigo",
-    application: "pink",
-    dining: "yellow",
-    services: "red",
-    contact: "gray",
-    legal: "brown"
-  };
-  return colors[category as keyof typeof colors] || "gray";
-};
+
 
 export default function Housing() {
   const [, setLocation] = useLocation();

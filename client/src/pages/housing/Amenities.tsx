@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface Amenity {
   name: string;
@@ -123,66 +125,107 @@ const item = {
 
 export default function Amenities() {
   return (
-    <div className="container mx-auto p-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <Sparkles className="h-8 w-8 text-primary" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold">Campus Amenities</h1>
-          <p className="text-muted-foreground">Discover the facilities and services available to you</p>
-        </div>
-      </motion.div>
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {amenities.map((amenity) => (
-          <motion.div key={amenity.name} variants={item}>
-            <Card className="hover-card h-full">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle>{amenity.name}</CardTitle>
-                  <Badge variant="secondary">{amenity.category}</Badge>
-                </div>
-                <p className="text-sm text-muted-foreground mt-2">{amenity.description}</p>
-                <p className="text-sm font-medium mt-2">Location: {amenity.location}</p>
-              </CardHeader>
-              <CardContent>
-                <h3 className="text-sm font-semibold mb-3">Features</h3>
-                <ul className="space-y-2">
-                  {amenity.features.map((feature) => (
-                    <li key={feature} className="text-sm flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                {amenity.hours && (
-                  <div className="mt-4">
-                    <h3 className="text-sm font-semibold mb-3">Hours</h3>
-                    <ul className="space-y-1">
-                      {amenity.hours.map((hour, index) => (
-                        <li key={index} className="text-sm text-muted-foreground">
-                          {hour}
-                        </li>
-                      ))}
-                    </ul>
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <Sparkles className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Campus Amenities</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Discover the facilities and services available to you. From fitness centers to study spaces, we provide everything you need for a complete college experience.
+        </p>
+      </div>
+
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Wellness & Fitness */}
+        <AccordionItem value="wellness" className="border-2 border-blue-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <Sparkles className="mr-3 h-6 w-6" />
+              Wellness & Fitness
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {amenities.filter(amenity => ['Fitness Center', 'Student\'s Center'].includes(amenity.name)).map((amenity) => (
+                <div key={amenity.name} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-blue-800 dark:text-blue-200">{amenity.name}</h3>
+                    <Badge className="bg-blue-600 text-white">{amenity.category}</Badge>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+                  <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">{amenity.description}</p>
+                  <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-3">Location: {amenity.location}</p>
+                  <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Features</h4>
+                  <ul className="space-y-1 mb-3">
+                    {amenity.features.map((feature) => (
+                      <li key={feature} className="text-sm flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  {amenity.hours && (
+                    <div>
+                      <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-2">Hours</h4>
+                      <ul className="space-y-1">
+                        {amenity.hours.map((hour, index) => (
+                          <li key={index} className="text-sm text-blue-700 dark:text-blue-300">
+                            {hour}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Academic & Convenience */}
+        <AccordionItem value="academic" className="border-2 border-green-600 rounded-lg">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <Sparkles className="mr-3 h-6 w-6" />
+              Academic & Convenience
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {amenities.filter(amenity => ['Study Spaces', 'Laundry Facilities', 'Dining Hall'].includes(amenity.name)).map((amenity) => (
+                <div key={amenity.name} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-green-800 dark:text-green-200">{amenity.name}</h3>
+                    <Badge className="bg-green-600 text-white">{amenity.category}</Badge>
+                  </div>
+                  <p className="text-sm text-green-700 dark:text-green-300 mb-3">{amenity.description}</p>
+                  <p className="text-sm font-medium text-green-800 dark:text-green-200 mb-3">Location: {amenity.location}</p>
+                  <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">Features</h4>
+                  <ul className="space-y-1">
+                    {amenity.features.map((feature) => (
+                      <li key={feature} className="text-sm flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 
