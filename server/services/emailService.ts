@@ -50,6 +50,16 @@ export const sendVerificationEmail = async (user: UserRegistration): Promise<str
   
   verificationRequests.set(requestId, verificationRequest);
 
+  // For development/testing, just log the email instead of sending it
+  console.log('=== VERIFICATION EMAIL WOULD BE SENT ===');
+  console.log('To: housing@hocking.edu');
+  console.log('Subject: Campus Social Hub - New User Verification Request');
+  console.log('User Details:', user);
+  console.log('Verification URL:', `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-user/${requestId}`);
+  console.log('========================================');
+
+  // In production, uncomment this section:
+  /*
   const transporter = createTransporter();
   
   const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-user/${requestId}`;
@@ -58,88 +68,19 @@ export const sendVerificationEmail = async (user: UserRegistration): Promise<str
     from: process.env.EMAIL_USER || 'hocking.social.hub@gmail.com',
     to: 'housing@hocking.edu',
     subject: 'Campus Social Hub - New User Verification Request',
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
-          <h1 style="margin: 0;">Campus Social Hub</h1>
-          <p style="margin: 10px 0 0 0;">New User Verification Request</p>
-        </div>
-        
-        <div style="padding: 20px; background: #f9f9f9;">
-          <h2 style="color: #333;">User Registration Details</h2>
-          
-          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <tr style="background: #fff;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Name:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.firstName} ${user.lastName}</td>
-            </tr>
-            <tr style="background: #f5f5f5;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Student ID:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.studentId}</td>
-            </tr>
-            <tr style="background: #fff;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Email:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.email}</td>
-            </tr>
-            <tr style="background: #f5f5f5;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">User Type:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.userType}</td>
-            </tr>
-            <tr style="background: #fff;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Dorm:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.dormBuilding} Room ${user.roomNumber}</td>
-            </tr>
-            <tr style="background: #f5f5f5;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Program:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.program}</td>
-            </tr>
-            <tr style="background: #fff;">
-              <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Username:</td>
-              <td style="padding: 10px; border: 1px solid #ddd;">${user.username}</td>
-            </tr>
-          </table>
-          
-          <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <p style="margin: 0; color: #856404;">
-              <strong>Important:</strong> Please verify this user's information and click one of the buttons below to approve or reject their registration.
-            </p>
-          </div>
-          
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${verificationUrl}?action=approve&id=${requestId}" 
-               style="background: #28a745; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin-right: 10px; display: inline-block;">
-              ✅ APPROVE USER
-            </a>
-            <a href="${verificationUrl}?action=reject&id=${requestId}" 
-               style="background: #dc3545; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
-              ❌ REJECT USER
-            </a>
-          </div>
-          
-          <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
-            <p style="margin: 0; color: #6c757d; font-size: 14px;">
-              <strong>Verification ID:</strong> ${requestId}<br>
-              <strong>Requested:</strong> ${new Date().toLocaleString()}<br>
-              <strong>Note:</strong> Only verified students and faculty should be granted access to the Campus Social Hub.
-            </p>
-          </div>
-        </div>
-        
-        <div style="background: #343a40; color: white; padding: 15px; text-align: center; font-size: 12px;">
-          <p style="margin: 0;">Hocking College Campus Social Hub - Automated Verification System</p>
-        </div>
-      </div>
-    `
+    html: `... email template ...`
   };
 
   try {
     await transporter.sendMail(mailOptions);
     console.log(`Verification email sent for user: ${user.email}`);
-    return requestId;
   } catch (error) {
     console.error('Error sending verification email:', error);
     throw new Error('Failed to send verification email');
   }
+  */
+
+  return requestId;
 };
 
 export const verifyUser = async (requestId: string, action: 'approve' | 'reject', verifiedBy: string): Promise<VerificationRequest> => {

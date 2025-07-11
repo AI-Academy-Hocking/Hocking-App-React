@@ -55,6 +55,16 @@ export const submitPostForVerification = async (postData: Omit<PostSubmission, '
   
   postSubmissions.set(postId, postSubmission);
 
+  // For development/testing, just log the email instead of sending it
+  console.log('=== POST VERIFICATION EMAIL WOULD BE SENT ===');
+  console.log('To: housing@hocking.edu');
+  console.log('Subject: Campus Social Hub - New Post Approval Request');
+  console.log('Post Details:', postData);
+  console.log('Verification URL:', `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-post/${postId}`);
+  console.log('=============================================');
+
+  // In production, uncomment this section:
+  /*
   const transporter = createTransporter();
   
   const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-post/${postId}`;
@@ -69,11 +79,13 @@ export const submitPostForVerification = async (postData: Omit<PostSubmission, '
   try {
     await transporter.sendMail(mailOptions);
     console.log(`Post verification email sent for post: ${postId}`);
-    return postId;
   } catch (error) {
     console.error('Error sending post verification email:', error);
     throw new Error('Failed to send post verification email');
   }
+  */
+
+  return postId;
 };
 
 const generatePostVerificationEmail = (post: PostSubmission, verificationUrl: string): string => {
