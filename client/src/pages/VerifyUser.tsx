@@ -3,9 +3,10 @@ import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, XCircle, Clock, User, Building, Mail, Calendar, AlertTriangle } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, User, Building, Mail, Calendar, AlertTriangle, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 interface VerificationRequest {
   id: string;
@@ -32,6 +33,7 @@ const VerifyUser: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { goBack } = useBackNavigation();
 
   // Get URL parameters
   const urlParams = new URLSearchParams(window.location.search);
@@ -158,6 +160,17 @@ const VerifyUser: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+      {/* Back Navigation */}
+      <div className="max-w-2xl mx-auto mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <div className="max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

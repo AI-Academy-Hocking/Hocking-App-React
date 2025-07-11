@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle, XCircle, Clock, FileText, Image, Video, BarChart3, Calendar, AlertTriangle, User, Mail, Calendar as CalendarIcon } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, FileText, Image, Video, BarChart3, Calendar, AlertTriangle, User, Mail, Calendar as CalendarIcon, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 interface PostSubmission {
   id: string;
@@ -45,6 +46,7 @@ const VerifyPost: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectionForm, setShowRejectionForm] = useState(false);
+  const { goBack } = useBackNavigation();
 
   // Get URL parameters
   const urlParams = new URLSearchParams(window.location.search);
@@ -203,6 +205,17 @@ const VerifyPost: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+      {/* Back Navigation */}
+      <div className="max-w-4xl mx-auto mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

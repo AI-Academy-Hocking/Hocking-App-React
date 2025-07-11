@@ -5,10 +5,11 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  Globe, PawPrint, DollarSign, CreditCard, Award, Heart
+  Globe, PawPrint, DollarSign, CreditCard, Award, Heart, ArrowLeft
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 // Define the StudentTool interface locally since we can't import it
 interface StudentTool {
@@ -21,6 +22,7 @@ interface StudentTool {
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
+  const { goBack } = useBackNavigation();
   
   const { data: tools } = useQuery<StudentTool[]>({
     queryKey: ['/api/student-tools'],
@@ -72,6 +74,17 @@ export default function StudentTools() {
 
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6 px-6 pt-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
         

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Search, Plus, Minus, Navigation, MapPin, Users } from "lucide-react";
+import { Search, Plus, Minus, Navigation, MapPin, Users, ArrowLeft } from "lucide-react";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { toast } from "../hooks/use-toast";
@@ -11,6 +11,7 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useAuth } from "../lib/auth";
 import { useSharedLocations } from "../hooks/use-shared-locations";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 // Fix for Leaflet marker icons
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -48,6 +49,7 @@ export default function Maps() {
   
   const { user } = useAuth();
   const { sharedLocations, updateLocation } = useSharedLocations();
+  const { goBack } = useBackNavigation();
   
   const { data: buildings } = useQuery<Building[]>({
     queryKey: ['/api/buildings'],
@@ -318,6 +320,17 @@ export default function Maps() {
 
   return (
     <div className="space-y-6 p-6 bg-white dark:bg-[#151c26] min-h-screen">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-white">Campus Maps</h2>
         

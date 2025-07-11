@@ -8,9 +8,10 @@ import { enUS } from "date-fns/locale";
 
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "../lib/utils";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 const locales = {
   "en-US": enUS,
@@ -40,6 +41,7 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
   const [error] = useState<string | null>(null);
+  const { goBack } = useBackNavigation();
   
   const { data: events = [], isLoading } = useQuery<CalendarEvent[]>({
     queryKey: ['/api/events'],
@@ -125,6 +127,17 @@ export default function CalendarPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-background)' }}>
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6 px-6 pt-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <section>
         <div className="flex flex-col items-center mb-6">
           <h2 className="text-3xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Calendar</h2>

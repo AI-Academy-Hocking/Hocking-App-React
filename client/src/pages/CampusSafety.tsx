@@ -1,10 +1,24 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { PhoneCall, Shield, HeartPulse, AlertTriangle } from "lucide-react";
+import { PhoneCall, Shield, HeartPulse, AlertTriangle, ArrowLeft } from "lucide-react";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 export default function CampusSafety() {
+  const { goBack } = useBackNavigation();
+
   return (
     <div className="container py-6 max-w-2xl bg-white dark:bg-[#151c26] min-h-screen rounded-xl">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <h1 className="text-3xl font-bold mb-2 text-primary dark:text-white">Campus Safety</h1>
       <div className="space-y-6">
         {/* Emergency Contacts Section */}
