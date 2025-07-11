@@ -315,7 +315,7 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-2">
             <Mail className="h-4 w-4 text-blue-600" />
-            <span><strong>Admissions Contact:</strong> admissions@hocking.edu | (740) 753‑7050</span>
+            <span><strong>Admissions Contact:</strong> <a href="mailto:admissions@hocking.edu" className="text-blue-600 hover:underline">admissions@hocking.edu</a> | (740) 753‑7050</span>
           </div>
         </div>
       )

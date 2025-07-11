@@ -94,11 +94,34 @@ export default function HowToApply() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {section.content.map((item, index) => (
-                    <li key={index} className="text-sm text-muted-foreground">
-                      • {item}
-                    </li>
-                  ))}
+                  {section.content.map((item, index) => {
+                    // Function to render email links
+                    const renderWithEmailLinks = (text: string) => {
+                      const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+                      const parts = text.split(emailRegex);
+                      
+                      return parts.map((part, partIndex) => {
+                        if (emailRegex.test(part)) {
+                          return (
+                            <a 
+                              key={partIndex} 
+                              href={`mailto:${part}`} 
+                              className="text-blue-600 hover:underline"
+                            >
+                              {part}
+                            </a>
+                          );
+                        }
+                        return part;
+                      });
+                    };
+
+                    return (
+                      <li key={index} className="text-sm text-muted-foreground">
+                        • {renderWithEmailLinks(item)}
+                      </li>
+                    );
+                  })}
                 </ul>
               </CardContent>
             </Card>

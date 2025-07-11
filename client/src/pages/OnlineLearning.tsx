@@ -33,161 +33,164 @@ function OnlineLearningPage() {
         </p>
       </div>
 
-      {/* Canvas Learning Management System */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-            <Laptop className="mr-3 h-6 w-6" />
-            Canvas Learning Management System
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            Canvas is Hocking College's online learning platform. Access your course materials, submit assignments, and view grades.
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Laptop className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-medium text-blue-800 dark:text-blue-200">Access Canvas</p>
-                  <button
-                    onClick={() => handleExternalLink('https://hocking.instructure.com')}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Log in to Canvas
-                  </button>
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Canvas Learning Management System */}
+        <AccordionItem value="canvas" className="border-2 border-blue-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <Laptop className="mr-3 h-6 w-6" />
+              Canvas Learning Management System
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              Canvas is Hocking College's online learning platform. Access your course materials, submit assignments, and view grades.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Laptop className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-blue-800 dark:text-blue-200">Access Canvas</p>
+                    <button
+                      onClick={() => handleExternalLink('https://hocking.instructure.com')}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Log in to Canvas
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <HelpCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-blue-800 dark:text-blue-200">Canvas Support</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Available 24/7</p>
+                    <a href="tel:8554850526" className="text-blue-600 hover:underline">(855) 485-0526</a>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <HelpCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-medium text-blue-800 dark:text-blue-200">Canvas Support</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Available 24/7</p>
-                  <a href="tel:8554850526" className="text-blue-600 hover:underline">(855) 485-0526</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Online Learning Resources */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Online Learning Resources
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-              <div className="flex items-start gap-3 mb-3">
-                <BookOpen className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-medium text-green-800 dark:text-green-200">Digital Textbooks</p>
-                  <p className="text-sm text-green-700 dark:text-green-300">Access your course textbooks online</p>
+        {/* Online Learning Resources */}
+        <AccordionItem value="resources" className="border-2 border-green-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <BookOpen className="mr-3 h-6 w-6" />
+              Online Learning Resources
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                <div className="flex items-start gap-3 mb-3">
+                  <BookOpen className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-green-800 dark:text-green-200">Digital Textbooks</p>
+                    <p className="text-sm text-green-700 dark:text-green-300">Access your course textbooks online</p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                <div className="flex items-start gap-3 mb-3">
+                  <Video className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-green-800 dark:text-green-200">Recorded Lectures</p>
+                    <p className="text-sm text-green-700 dark:text-green-300">Review lectures and course content at your own pace</p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                <div className="flex items-start gap-3 mb-3">
+                  <MessageSquare className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium text-green-800 dark:text-green-200">Virtual Office Hours</p>
+                    <p className="text-sm text-green-700 dark:text-green-300">Connect with instructors remotely during scheduled times</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-              <div className="flex items-start gap-3 mb-3">
-                <Video className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-medium text-green-800 dark:text-green-200">Recorded Lectures</p>
-                  <p className="text-sm text-green-700 dark:text-green-300">Review lectures and course content at your own pace</p>
-                </div>
-              </div>
-            </div>
-            <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-              <div className="flex items-start gap-3 mb-3">
-                <MessageSquare className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-medium text-green-800 dark:text-green-200">Virtual Office Hours</p>
-                  <p className="text-sm text-green-700 dark:text-green-300">Connect with instructors remotely during scheduled times</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Technical Support */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <HelpCircle className="mr-3 h-6 w-6" />
-            Technical Support
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Canvas Support</h4>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <Phone className="mr-2 h-4 w-4 text-purple-600" />
-                  <a href="tel:8554850526" className="text-blue-600 hover:underline text-sm">(855) 485-0526</a>
+        {/* Technical Support */}
+        <AccordionItem value="support" className="border-2 border-purple-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
+              <HelpCircle className="mr-3 h-6 w-6" />
+              Technical Support
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h4 className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Canvas Support</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <Phone className="mr-2 h-4 w-4 text-purple-600" />
+                    <a href="tel:8554850526" className="text-blue-600 hover:underline text-sm">(855) 485-0526</a>
+                  </div>
+                  <div className="flex items-center">
+                    <Clock className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Available 24/7</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Free technical assistance</span>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Clock className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Available 24/7</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Free technical assistance</span>
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Common Issues</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Login problems</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Assignment submission</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Video playback issues</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="space-y-4">
-              <h4 className="font-semibold text-purple-700 dark:text-purple-300 mb-3">Common Issues</h4>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Login problems</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Assignment submission</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Video playback issues</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Best Practices */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <Target className="mr-3 h-6 w-6" />
-            Online Learning Best Practices
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Stay Organized</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Keep track of assignments, due dates, and course materials</p>
+        {/* Best Practices */}
+        <AccordionItem value="best-practices" className="border-2 border-orange-600 rounded-lg">
+          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
+              <Target className="mr-3 h-6 w-6" />
+              Online Learning Best Practices
             </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Regular Check-ins</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Log into Canvas daily to check for updates and announcements</p>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Stay Organized</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Keep track of assignments, due dates, and course materials</p>
+              </div>
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Regular Check-ins</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Log into Canvas daily to check for updates and announcements</p>
+              </div>
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Communication</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Reach out to instructors and classmates when you need help</p>
+              </div>
             </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Communication</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Reach out to instructors and classmates when you need help</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {/* FAQ Section */}
       <Card className="mb-8 border-2 border-gray-600">

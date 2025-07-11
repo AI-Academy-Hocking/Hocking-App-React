@@ -596,7 +596,7 @@ export default function DiningHall() {
                 How do I request special dietary accommodations?
               </AccordionTrigger>
               <AccordionContent>
-                Contact Janet M. Smith at smithj28721@hocking.edu or call (740) 753-6000. We can accommodate most dietary restrictions and allergies with advance notice.
+                Contact Janet M. Smith at <a href="mailto:smithj28721@hocking.edu" className="text-blue-600 hover:underline">smithj28721@hocking.edu</a> or call (740) 753-6000. We can accommodate most dietary restrictions and allergies with advance notice.
               </AccordionContent>
             </AccordionItem>
 

@@ -475,7 +475,7 @@ export default function WhatToBring() {
           <li>• <strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</li>
           <li>• <strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</li>
           <li>• <strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</li>
-          <li>• <strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or housing@hocking.edu.</li>
+          <li>• <strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</li>
         </ul>
       </motion.div>
     </div>

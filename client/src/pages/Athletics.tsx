@@ -265,17 +265,15 @@ function Athletics() {
         </Link>
       </div>
 
-      {/* Hero Section - More Inviting */}
-      <div className="mb-8 text-center">
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <Trophy className="h-12 w-12 text-blue-600" />
-          <h1 className="text-4xl font-bold text-primary">Hocking College Athletics</h1>
-          <Trophy className="h-12 w-12 text-blue-600" />
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <Trophy className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Hocking College Athletics</h1>
         </div>
-        <p className="text-xl text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
           Join the Hawks and become part of our championship tradition! Compete in the NJCAA and OCCAC while pursuing your academic dreams.
         </p>
-        <div className="flex flex-wrap justify-center gap-4 mb-6">
+        <div className="flex flex-wrap gap-4 mb-6">
           <Badge className="bg-blue-600 text-white px-4 py-2">NJCAA Division</Badge>
           <Badge className="bg-green-600 text-white px-4 py-2">OCCAC Conference</Badge>
           <Badge className="bg-purple-600 text-white px-4 py-2">Academic Excellence</Badge>
@@ -477,15 +475,6 @@ function Athletics() {
                       </Badge>
                     ))}
                   </div>
-                  {sport.url && (
-                    <button
-                      onClick={() => handleExternalLink(sport.url!)}
-                      className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-sm"
-                    >
-                      <ExternalLink className="mr-1 h-3 w-3" />
-                      Learn More & Join Team
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
@@ -524,15 +513,6 @@ function Athletics() {
                       </Badge>
                     ))}
                   </div>
-                  {sport.url && (
-                    <button
-                      onClick={() => handleExternalLink(sport.url!)}
-                      className="flex items-center text-pink-600 hover:text-pink-800 dark:text-pink-400 dark:hover:text-pink-300 transition-colors text-sm"
-                    >
-                      <ExternalLink className="mr-1 h-3 w-3" />
-                      Learn More & Join Team
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
@@ -571,15 +551,6 @@ function Athletics() {
                       </Badge>
                     ))}
                   </div>
-                  {sport.url && (
-                    <button
-                      onClick={() => handleExternalLink(sport.url!)}
-                      className="flex items-center text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 transition-colors text-sm"
-                    >
-                      <ExternalLink className="mr-1 h-3 w-3" />
-                      Learn More & Join Team
-                    </button>
-                  )}
                 </div>
               ))}
             </div>

@@ -1,11 +1,11 @@
 import { 
   Heart, Phone, Clock, ArrowLeft, ExternalLink, CheckCircle, BookOpen, Activity,
-  MapPin, Users, AlertTriangle, Stethoscope, Brain
+  MapPin, Users, AlertTriangle, Stethoscope, Brain, ChevronDown, ChevronRight
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function CampusHealth() {
   const handleExternalLink = (url: string) => {
@@ -14,29 +14,27 @@ export default function CampusHealth() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="flex items-center mb-6">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-8">
         <Link href="/tools">
-          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
-            <ArrowLeft className="h-5 w-5 mr-2" />
+          <button className="flex items-center text-primary hover:text-primary-dark transition-colors group">
+            <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Student Tools</span>
           </button>
         </Link>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-8"
-      >
+      <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Heart className="h-8 w-8 text-red-600" />
           <h1 className="text-3xl font-bold text-primary">Campus Health & Wellness</h1>
         </div>
         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          The Hawks Center for Well‑Being is a vital resource that supports the physical and mental health of all Hocking College students. Located in John Light Hall, Room 241, the center provides walk-in and scheduled services, including access to doctors, licensed counselors, and wellness professionals throughout the academic year.
+          The Hawks Center for Well‑Being is a vital resource that supports the physical and mental health of all Hocking College students. 
+          Located in John Light Hall, Room 241, the center provides walk-in and scheduled services, including access to doctors, 
+          licensed counselors, and wellness professionals throughout the academic year.
         </p>
-      </motion.div>
+      </div>
 
       {/* Quick Stats */}
       <Card className="mb-8 border-2 border-red-600">
@@ -68,373 +66,302 @@ export default function CampusHealth() {
         </CardContent>
       </Card>
 
-      {/* Medical Care Section */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-            <Stethoscope className="mr-3 h-6 w-6" />
-            Medical Care – Hawks Center for Well‑Being
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-300 mb-3">On-Campus Doctor Availability</h3>
-              <p className="text-blue-700 dark:text-blue-300 mb-4">
-                A licensed doctor is on campus twice per week, offering physicals, wellness exams, sick visits, and screenings.
-              </p>
+      {/* Main Content with Accordion */}
+      <Accordion type="single" collapsible className="space-y-6">
+        
+        {/* Medical Care Section */}
+        <AccordionItem value="medical" className="border-2 border-blue-600 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <Stethoscope className="mr-3 h-6 w-6 text-blue-600" />
+              <span className="text-xl font-semibold text-blue-800 dark:text-blue-200">Medical Care – Hawks Center for Well‑Being</span>
             </div>
-
-            <div>
-              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2">Available Services:</h4>
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Physicals & acute visits</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">COVID-19, strep, flu testing</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Pregnancy & STD testing</span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Contraceptives & birth control</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Drug screenings</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Health education & resources</span>
-                  </div>
-                </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                <h3 className="text-lg font-semibold text-blue-700 dark:text-blue-300 mb-3">On-Campus Doctor Availability</h3>
+                <p className="text-blue-700 dark:text-blue-300">
+                  A licensed doctor is on campus twice per week, offering physicals, wellness exams, sick visits, and screenings.
+                </p>
               </div>
-            </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2">Clinic Location & Hours</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <MapPin className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">John Light Hall, Room 241</span>
+              <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-4">Available Services:</h4>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Physicals & acute visits</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">COVID-19, strep, flu testing</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Pregnancy & STD testing</span>
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Tuesdays: 8:30 AM – 12:00 PM</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4 text-blue-600" />
-                    <span className="text-sm text-blue-700 dark:text-blue-300">Thursdays: 1:30 PM – 4:00 PM</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Contraceptives & birth control</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Drug screenings</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Health education & resources</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-2">Quick Access</h4>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                  <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-4">Clinic Location & Hours</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <MapPin className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">John Light Hall, Room 241</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Tuesdays: 8:30 AM – 12:00 PM</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-3 h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 dark:text-blue-300">Thursdays: 1:30 PM – 4:00 PM</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                  <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-4">Quick Access</h4>
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness')}
+                    className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    <ExternalLink className="mr-3 h-5 w-5" />
+                    <span>Campus Health & Wellness Homepage</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Mental Health & Counseling Section */}
+        <AccordionItem value="mental" className="border-2 border-green-600 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <Brain className="mr-3 h-6 w-6 text-green-600" />
+              <span className="text-xl font-semibold text-green-800 dark:text-green-200">Mental Health & Counseling Services</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3">Licensed Counselors Available On Campus Twice Per Week</h3>
+                <div className="space-y-3">
+                  <p className="text-green-700 dark:text-green-300">Sessions include brief therapy, stress management, academic support, and crisis care.</p>
+                  <p className="text-green-700 dark:text-green-300">Open to students, faculty, and staff.</p>
+                </div>
+              </div>
+
+              <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                <h4 className="font-semibold text-green-700 dark:text-green-300 mb-3">Dorm-Based Support</h4>
+                <p className="text-green-700 dark:text-green-300">
+                  The counseling team also visits residence halls every two weeks, alternating locations, to provide in-dorm counseling sessions and promote wellness access across campus.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                  <h4 className="font-semibold text-green-700 dark:text-green-300 mb-4">How to Schedule</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <Phone className="mr-3 h-5 w-5 text-green-600" />
+                      <a href="tel:740-753-7079" className="text-blue-600 hover:underline">740‑753‑7079</a>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-3 h-5 w-5 text-green-600" />
+                      <span className="text-green-700 dark:text-green-300">Wednesdays: 8:30 AM – 12:00 PM</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="mr-3 h-5 w-5 text-green-600" />
+                      <span className="text-green-700 dark:text-green-300">Fridays: 8:00 AM – 5:30 PM</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                  <h4 className="font-semibold text-green-700 dark:text-green-300 mb-4">Quick Access</h4>
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness/counseling')}
+                    className="flex items-center text-green-600 hover:text-green-800 transition-colors"
+                  >
+                    <ExternalLink className="mr-3 h-5 w-5" />
+                    <span>Mental Health & Counseling Services</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Emergency & Crisis Services */}
+        <AccordionItem value="emergency" className="border-2 border-orange-600 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <AlertTriangle className="mr-3 h-6 w-6 text-orange-600" />
+              <span className="text-xl font-semibold text-orange-800 dark:text-orange-200">Emergency & Crisis Services</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <div className="p-6 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
+                <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-300 mb-3">Mental Health Crisis Support</h3>
+                <p className="text-orange-700 dark:text-orange-300 mb-3">
+                  Immediate assistance through the Hopewell Health 24/7 Crisis Hotline
+                </p>
+                <div className="flex items-center">
+                  <Phone className="mr-3 h-5 w-5 text-orange-600" />
+                  <a href="tel:1-888-475-8484" className="text-blue-600 hover:underline">1‑888‑475‑8484</a>
+                </div>
+              </div>
+
+              <div className="p-6 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
+                <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-3">Campus Emergency Response</h4>
+                <p className="text-orange-700 dark:text-orange-300 mb-3">
+                  Contact Campus Safety for immediate campus response:
+                </p>
+                <div className="flex items-center">
+                  <Phone className="mr-3 h-5 w-5 text-orange-600" />
+                  <a href="tel:740-753-6598" className="text-blue-600 hover:underline">740‑753‑6598</a>
+                </div>
+              </div>
+
+              <div className="p-6 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
+                <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-3">Behavioral Intervention Team (BIT)</h4>
+                <p className="text-orange-700 dark:text-orange-300 mb-3">
+                  Coordinates assessments, support strategies, and referrals for students experiencing emotional or behavioral distress.
+                </p>
                 <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness')}
-                  className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                  onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness/behavioral-intervention-team')}
+                  className="flex items-center text-orange-600 hover:text-orange-800 transition-colors"
                 >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  <span className="text-sm">Campus Health & Wellness Homepage</span>
+                  <ExternalLink className="mr-3 h-5 w-5" />
+                  <span>Learn More About BIT</span>
                 </button>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Mental Health & Counseling Section */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <Brain className="mr-3 h-6 w-6" />
-            Mental Health & Counseling Services
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3">Licensed Counselors Available On Campus Twice Per Week</h3>
-              <div className="space-y-2">
-                <p className="text-green-700 dark:text-green-300">Sessions include brief therapy, stress management, academic support, and crisis care.</p>
-                <p className="text-green-700 dark:text-green-300">Open to students, faculty, and staff.</p>
-              </div>
+        {/* Wellness Resources */}
+        <AccordionItem value="wellness" className="border-2 border-purple-600 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <BookOpen className="mr-3 h-6 w-6 text-purple-600" />
+              <span className="text-xl font-semibold text-purple-800 dark:text-purple-200">Wellness Resources & Education</span>
             </div>
-
-            <div>
-              <h4 className="font-semibold text-green-700 dark:text-green-300 mb-2">Dorm-Based Support</h4>
-              <p className="text-green-700 dark:text-green-300">
-                The counseling team also visits residence halls every two weeks, alternating locations, to provide in-dorm counseling sessions and promote wellness access across campus.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-green-700 dark:text-green-300 mb-2">How to Schedule</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <Phone className="mr-2 h-4 w-4 text-green-600" />
-                    <a href="tel:740-753-7079" className="text-blue-600 hover:underline text-sm">740‑753‑7079</a>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                  <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-4">Health Education</h4>
+                  <div className="space-y-3 text-purple-700 dark:text-purple-300">
+                    <p>• Nutrition and healthy eating</p>
+                    <p>• Exercise and physical activity</p>
+                    <p>• Sleep hygiene and stress management</p>
+                    <p>• Substance abuse prevention</p>
                   </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4 text-green-600" />
-                    <span className="text-sm text-green-700 dark:text-green-300">Wednesdays: 8:30 AM – 12:00 PM</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4 text-green-600" />
-                    <span className="text-sm text-green-700 dark:text-green-300">Fridays: 8:00 AM – 5:30 PM</span>
+                </div>
+                <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                  <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-4">Wellness Programs</h4>
+                  <div className="space-y-3 text-purple-700 dark:text-purple-300">
+                    <p>• Mindfulness and meditation sessions</p>
+                    <p>• Yoga and fitness classes</p>
+                    <p>• Wellness workshops and seminars</p>
+                    <p>• Peer support groups</p>
                   </div>
                 </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-green-700 dark:text-green-300 mb-2">Quick Access</h4>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness/counseling')}
-                  className="flex items-center text-green-600 hover:text-green-800 transition-colors"
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  <span className="text-sm">Mental Health & Counseling Services</span>
-                </button>
+              
+              <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-4">Online Resources</h4>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness/resources')}
+                    className="flex items-center text-purple-600 hover:text-purple-800 transition-colors"
+                  >
+                    <ExternalLink className="mr-3 h-5 w-5" />
+                    <span>Health & Wellness Resources</span>
+                  </button>
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness/events')}
+                    className="flex items-center text-purple-600 hover:text-purple-800 transition-colors"
+                  >
+                    <ExternalLink className="mr-3 h-5 w-5" />
+                    <span>Wellness Events Calendar</span>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Emergency & Crisis Services */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <AlertTriangle className="mr-3 h-6 w-6" />
-            Emergency & Crisis Services
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-300 mb-3">Mental Health Crisis Support</h3>
-              <p className="text-orange-700 dark:text-orange-300 mb-3">
-                Immediate assistance through the Hopewell Health 24/7 Crisis Hotline
-              </p>
-              <div className="flex items-center">
-                <Phone className="mr-2 h-4 w-4 text-orange-600" />
-                <a href="tel:1-888-475-8484" className="text-blue-600 hover:underline text-sm">1‑888‑475‑8484</a>
+        {/* Contact Information */}
+        <AccordionItem value="contact" className="border-2 border-gray-600 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-gray-50 dark:bg-gray-900/20 hover:bg-gray-100 dark:hover:bg-gray-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <Users className="mr-3 h-6 w-6 text-gray-600" />
+              <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Contact Information</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">General Inquiries</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <Phone className="mr-3 h-5 w-5 text-gray-600" />
+                      <a href="tel:740-753-7079" className="text-blue-600 hover:underline">740‑753‑7079</a>
+                    </div>
+                    <div className="flex items-center">
+                      <MapPin className="mr-3 h-5 w-5 text-gray-600" />
+                      <span className="text-gray-700 dark:text-gray-300">John Light Hall, Room 241</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                  <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">Hours of Operation</h4>
+                  <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                    <p>• Medical Services: Tues & Thurs (see times above)</p>
+                    <p>• Counseling: Wed & Fri (see times above)</p>
+                    <p>• Crisis Support: 24/7 via hotline</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-4">Important Notes</h4>
+                <div className="space-y-3 text-gray-700 dark:text-gray-300">
+                  <p>• All services are confidential and free to enrolled students</p>
+                  <p>• Walk-in appointments available during operating hours</p>
+                  <p>• Emergency services available 24/7 through crisis hotline</p>
+                  <p>• Services available to students, faculty, and staff</p>
+                </div>
               </div>
             </div>
+          </AccordionContent>
+        </AccordionItem>
 
-            <div>
-              <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">Campus Emergency Response</h4>
-              <p className="text-orange-700 dark:text-orange-300 mb-3">
-                Contact Campus Safety for immediate campus response:
-              </p>
-              <div className="flex items-center">
-                <Phone className="mr-2 h-4 w-4 text-orange-600" />
-                <a href="tel:740-753-6598" className="text-blue-600 hover:underline text-sm">740‑753‑6598</a>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-orange-700 dark:text-orange-300 mb-2">Behavioral Intervention Team (BIT)</h4>
-              <p className="text-orange-700 dark:text-orange-300 mb-3">
-                Coordinates assessments, support strategies, and referrals for students experiencing emotional or behavioral distress.
-              </p>
-              <button
-                onClick={() => handleExternalLink('https://www.hocking.edu/student-life/bit')}
-                className="flex items-center text-orange-600 hover:text-orange-800 transition-colors"
-              >
-                <ExternalLink className="mr-2 h-4 w-4" />
-                <span className="text-sm">Student Life & BIT Info</span>
-              </button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* FAQ Section */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Health & Wellness FAQ
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="services-available">
-              <AccordionTrigger className="text-left">
-                What services are available through the Hawks Center?
-              </AccordionTrigger>
-              <AccordionContent>
-                Medical visits, physicals, pregnancy/STD testing, drug screens, illness care, and health education.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="doctors-on-campus">
-              <AccordionTrigger className="text-left">
-                Are there doctors on campus?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. A licensed doctor is on campus twice weekly, during set clinic hours.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="counseling-offered">
-              <AccordionTrigger className="text-left">
-                Is counseling offered?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. Licensed counselors are available two days per week and also conduct in-dorm sessions every two weeks.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="schedule-counseling">
-              <AccordionTrigger className="text-left">
-                How do I schedule a counseling session?
-              </AccordionTrigger>
-              <AccordionContent>
-                Call 740‑753‑7079 during service hours (Wed & Fri).
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="urgent-help">
-              <AccordionTrigger className="text-left">
-                What if I need urgent help after hours?
-              </AccordionTrigger>
-              <AccordionContent>
-                Call the Hopewell Crisis Hotline at 1‑888‑475‑8484 or Campus Safety at 740‑753‑6598.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="in-dorm-sessions">
-              <AccordionTrigger className="text-left">
-                What are in-dorm counseling sessions?
-              </AccordionTrigger>
-              <AccordionContent>
-                Counselors visit dormitories on a rotating biweekly basis to bring support closer to students in residence.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="bit-service">
-              <AccordionTrigger className="text-left">
-                Is BIT a counseling service?
-              </AccordionTrigger>
-              <AccordionContent>
-                BIT is a safety and support intervention team—not therapy—but they connect students to the right resources.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Contact Directory */}
-      <Card className="mb-8 border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <Users className="mr-3 h-6 w-6" />
-            Contact Directory
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-300 dark:border-gray-600">
-                  <th className="text-left py-2 font-semibold text-gray-900 dark:text-white">Name/Role</th>
-                  <th className="text-left py-2 font-semibold text-gray-900 dark:text-white">Phone</th>
-                  <th className="text-left py-2 font-semibold text-gray-900 dark:text-white">Email</th>
-                  <th className="text-left py-2 font-semibold text-gray-900 dark:text-white">Location</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <td className="py-2 text-gray-700 dark:text-gray-300">Hawks Center for Well‑Being</td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">—</td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">—</td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">John Light Hall, Room 241</td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <td className="py-2 text-gray-700 dark:text-gray-300">Counseling Center</td>
-                  <td className="py-2">
-                    <a href="tel:740-753-7079" className="text-blue-600 hover:underline">740‑753‑7079</a>
-                  </td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">—</td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">John Light Hall</td>
-                </tr>
-                <tr className="border-b border-gray-200 dark:border-gray-700">
-                  <td className="py-2 text-gray-700 dark:text-gray-300">Campus Safety</td>
-                  <td className="py-2">
-                    <a href="tel:740-753-6598" className="text-blue-600 hover:underline">740‑753‑6598</a>
-                  </td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">—</td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">On campus</td>
-                </tr>
-                <tr>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">Crisis Hotline (Hopewell)</td>
-                  <td className="py-2">
-                    <a href="tel:1-888-475-8484" className="text-blue-600 hover:underline">1‑888‑475‑8484</a>
-                  </td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">—</td>
-                  <td className="py-2 text-gray-700 dark:text-gray-300">24/7 Off-campus</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Links */}
-      <Card className="border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <ExternalLink className="mr-3 h-6 w-6" />
-            Quick Links
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 dark:text-white">Medical Services</h4>
-              <div className="space-y-1 text-sm">
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness')}
-                  className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                >
-                  <ExternalLink className="mr-2 h-3 w-3" />
-                  <span>Campus Health & Wellness</span>
-                </button>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 dark:text-white">Mental Health</h4>
-              <div className="space-y-1 text-sm">
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/student-life/health-wellness/counseling')}
-                  className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                >
-                  <ExternalLink className="mr-2 h-3 w-3" />
-                  <span>Counseling & Mental Health</span>
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/student-life/bit')}
-                  className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
-                >
-                  <ExternalLink className="mr-2 h-3 w-3" />
-                  <span>Behavioral Intervention Team (BIT)</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      </Accordion>
     </div>
   );
 } 

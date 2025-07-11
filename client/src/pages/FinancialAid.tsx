@@ -2,12 +2,14 @@ import {
   DollarSign, FileText, ExternalLink, Phone, 
   Calendar, CheckCircle, AlertTriangle, Users, 
   Building, Clock, ArrowLeft,
-  Download, BookOpen, Shield, CreditCard, Briefcase
+  Download, BookOpen, Shield, CreditCard, Briefcase,
+  ChevronDown, ChevronRight, Mail, MapPin
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { useState } from "react";
 
 export default function FinancialAid() {
   const handleExternalLink = (url: string) => {
@@ -16,140 +18,168 @@ export default function FinancialAid() {
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="flex items-center mb-6">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-8">
         <Link href="/tools">
-          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
-            <ArrowLeft className="h-5 w-5 mr-2" />
+          <button className="flex items-center text-primary hover:text-primary-dark transition-colors group">
+            <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Student Tools</span>
           </button>
         </Link>
       </div>
 
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-primary mb-4">Financial Aid</h1>
+        <div className="flex items-center gap-4 mb-4">
+          <DollarSign className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Financial Aid</h1>
+        </div>
         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
           Financial Aid at Hocking College helps students reduce the cost of their education by offering a range of support options including grants, scholarships, loans, and work-study programs. Most students qualify for some form of aid, and Hocking's Financial Aid Office is committed to helping students and their families understand the process, apply for assistance, and stay informed throughout their academic journey.
         </p>
       </div>
 
+      {/* Main Content with Accordion */}
+      <Accordion type="single" collapsible className="space-y-6">
+
       {/* Apply for Financial Aid Section */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-            <FileText className="mr-3 h-6 w-6" />
-            Apply for Financial Aid (FAFSA)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
+        <AccordionItem value="apply" className="border-2 border-blue-200 dark:border-blue-800 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <FileText className="mr-3 h-6 w-6 text-blue-600" />
+              <span className="text-xl font-semibold text-blue-800 dark:text-blue-200">Apply for Financial Aid (FAFSA)</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <p className="text-gray-700 dark:text-gray-300 text-lg">
             To begin the financial aid process, students must complete the Free Application for Federal Student Aid (FAFSA):
           </p>
           
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800 mb-4">
-            <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 flex items-center">
-              <Users className="mr-2 h-5 w-5" />
+              {/* Important Notice */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
+                <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center text-lg">
+                  <Users className="mr-3 h-5 w-5" />
               Important: Create FSA IDs First
             </h4>
-            <p className="text-blue-700 dark:text-blue-300 text-sm">
+                <p className="text-blue-700 dark:text-blue-300">
               Before completing the FAFSA, both you and your parent(s) should create your FSA IDs. 
               After creating the FSA IDs, wait 3-4 business days for them to be fully activated before 
               completing the FAFSA application.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
+              {/* Action Buttons */}
+              <div className="grid md:grid-cols-2 gap-6">
             <button
               onClick={() => handleExternalLink('https://studentaid.gov/h/apply-for-aid/fafsa')}
-              className="flex items-center justify-between p-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  className="flex items-center justify-between p-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
             >
               <div className="flex items-center">
-                <CheckCircle className="mr-3 h-5 w-5" />
-                <span className="font-semibold">Complete the FAFSA Now</span>
+                    <CheckCircle className="mr-4 h-6 w-6" />
+                    <div className="text-left">
+                      <span className="font-bold text-lg block">Complete the FAFSA Now</span>
+                      <span className="text-green-100 text-sm">Start your application</span>
+                    </div>
               </div>
-              <ExternalLink className="h-5 w-5" />
+                  <ExternalLink className="h-6 w-6" />
             </button>
             
-            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="flex items-center mb-2">
-                <Building className="mr-2 h-5 w-5 text-blue-600" />
-                <span className="font-semibold">Hocking College School Code:</span>
+                <div className="p-6 bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center mb-3">
+                    <Building className="mr-3 h-6 w-6 text-blue-600" />
+                    <span className="font-semibold text-blue-800 dark:text-blue-200">Hocking College School Code:</span>
               </div>
-              <span className="text-2xl font-bold text-blue-600">007598</span>
+                  <span className="text-4xl font-bold text-blue-600">007598</span>
             </div>
           </div>
 
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">
-            <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center">
-              <Users className="mr-2 h-5 w-5" />
+              {/* Parent FSA ID */}
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-3 flex items-center">
+                  <Users className="mr-3 h-5 w-5" />
               Parents can assist by creating an FSA ID:
             </h4>
             <button
               onClick={() => handleExternalLink('https://studentaid.gov/fsa-id/create-account/launch')}
-              className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                  className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors font-medium"
             >
               <ExternalLink className="mr-2 h-4 w-4" />
               Create a Parent FSA ID
             </button>
           </div>
-        </CardContent>
-      </Card>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
       {/* Track Your Financial Aid Status */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <CheckCircle className="mr-3 h-6 w-6" />
-            Track Your Financial Aid Status
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
+        <AccordionItem value="track" className="border-2 border-green-200 dark:border-green-800 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <CheckCircle className="mr-3 h-6 w-6 text-green-600" />
+              <span className="text-xl font-semibold text-green-800 dark:text-green-200">Track Your Financial Aid Status</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <p className="text-gray-700 dark:text-gray-300 text-lg">
             After submitting the FAFSA, students can log in to Hocking's portal to check on required documents and status:
           </p>
           
           <button
             onClick={() => handleExternalLink('https://selfserve.hocking.edu/SelfService/Home.aspx')}
-            className="flex items-center justify-between p-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors mb-4"
+                className="flex items-center justify-between p-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
           >
             <div className="flex items-center">
-              <Shield className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Log in to Financial Aid Self-Service Portal</span>
+                  <Shield className="mr-4 h-6 w-6" />
+                  <div className="text-left">
+                    <span className="font-bold text-lg block">Log in to Financial Aid Self-Service Portal</span>
+                    <span className="text-green-100 text-sm">Check your status and requirements</span>
+                  </div>
             </div>
-            <ExternalLink className="h-5 w-5" />
+                <ExternalLink className="h-6 w-6" />
           </button>
 
+              {/* Status Indicators */}
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="flex items-center p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
-              <CheckCircle className="mr-3 h-5 w-5 text-green-600" />
-              <span className="font-medium text-green-800 dark:text-green-200">Green = Complete</span>
+                <div className="flex items-center p-4 bg-green-100 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
+                  <CheckCircle className="mr-4 h-6 w-6 text-green-600" />
+                  <div>
+                    <span className="font-semibold text-green-800 dark:text-green-200 block">Green = Complete</span>
+                    <span className="text-green-700 dark:text-green-300 text-sm">All requirements met</span>
+                  </div>
+                </div>
+                <div className="flex items-center p-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl border border-yellow-200 dark:border-yellow-800">
+                  <AlertTriangle className="mr-4 h-6 w-6 text-yellow-600" />
+                  <div>
+                    <span className="font-semibold text-yellow-800 dark:text-yellow-200 block">Yellow = Action required</span>
+                    <span className="text-yellow-700 dark:text-yellow-300 text-sm">Additional documents needed</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-              <AlertTriangle className="mr-3 h-5 w-5 text-yellow-600" />
-              <span className="font-medium text-yellow-800 dark:text-yellow-200">Yellow = Action required</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Download & Submit Forms */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <Download className="mr-3 h-6 w-6" />
-            Download & Submit Financial Aid Forms
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
+        {/* Download & Submit Forms */}
+        <AccordionItem value="forms" className="border-2 border-purple-200 dark:border-purple-800 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <Download className="mr-3 h-6 w-6 text-purple-600" />
+              <span className="text-xl font-semibold text-purple-800 dark:text-purple-200">Download & Submit Financial Aid Forms</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
+              <p className="text-gray-700 dark:text-gray-300 text-lg">
             If selected for verification or needing to file appeals, students can access and upload forms here:
           </p>
           
-          <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800 mb-4">
-            <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-2 flex items-center">
-              <CheckCircle className="mr-2 h-5 w-5" />
+              <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
+                <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3 flex items-center">
+                  <CheckCircle className="mr-3 h-5 w-5" />
               Important: Check Self-Service First
             </h4>
-            <p className="text-purple-700 dark:text-purple-300 text-sm">
+                <p className="text-purple-700 dark:text-purple-300">
               Complete the forms that are identified/required in Self-Service. Log in to the Financial Aid 
               Self-Service Portal to see which specific forms you need to submit.
             </p>
@@ -157,17 +187,21 @@ export default function FinancialAid() {
           
           <button
             onClick={() => handleExternalLink('https://www.hocking.edu/forms')}
-            className="flex items-center justify-between p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors mb-6"
+                className="flex items-center justify-between p-6 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
           >
             <div className="flex items-center">
-              <FileText className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Hocking College Financial Aid Forms</span>
+                  <FileText className="mr-4 h-6 w-6" />
+                  <div className="text-left">
+                    <span className="font-bold text-lg block">Hocking College Financial Aid Forms</span>
+                    <span className="text-purple-100 text-sm">Access all required forms</span>
+                  </div>
             </div>
-            <ExternalLink className="h-5 w-5" />
+                <ExternalLink className="h-6 w-6" />
           </button>
 
-          <h4 className="font-semibold mb-3 text-gray-900 dark:text-white">Commonly used forms include:</h4>
-          <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <h4 className="font-semibold mb-4 text-gray-900 dark:text-white text-lg">Commonly used forms include:</h4>
+                <div className="grid md:grid-cols-2 gap-4">
             {[
               'Dependency Override Request',
               'Special Circumstance Appeal',
@@ -176,467 +210,161 @@ export default function FinancialAid() {
               'SAP Appeal',
               'Verification Worksheets (Independent/Dependent)'
             ].map((form, index) => (
-              <div key={index} className="flex items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                <FileText className="mr-3 h-4 w-4 text-gray-600" />
-                <span className="text-gray-700 dark:text-gray-300">{form}</span>
+                    <div key={index} className="flex items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      <FileText className="mr-3 h-5 w-5 text-gray-600" />
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">{form}</span>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
       {/* Types of Financial Aid */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <DollarSign className="mr-3 h-6 w-6" />
-            Types of Financial Aid Available
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-3 gap-6">
+        <AccordionItem value="types" className="border-2 border-orange-200 dark:border-orange-800 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 px-6 py-4">
+            <div className="flex items-center">
+              <DollarSign className="mr-3 h-6 w-6 text-orange-600" />
+              <span className="text-xl font-semibold text-orange-800 dark:text-orange-200">Types of Financial Aid Available</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="grid md:grid-cols-3 gap-8">
             {/* Grants */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-green-700 dark:text-green-300 flex items-center">
-                <CheckCircle className="mr-2 h-5 w-5" />
-                Grants:
-              </h4>
-              <div className="space-y-2 pl-6">
-                <div className="flex items-center">
-                  <Badge variant="secondary" className="mr-2">Federal</Badge>
-                  <span className="text-sm">Federal Pell Grant</span>
+              <div className="space-y-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4">
+                    <CheckCircle className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h4 className="font-bold text-green-700 dark:text-green-300 text-lg">Grants</h4>
                 </div>
-                <div className="flex items-center">
+                <div className="space-y-3 pl-16">
+                  <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                    <div className="flex items-center mb-2">
+                      <Badge variant="secondary" className="mr-2">Federal</Badge>
+                    </div>
+                    <span className="text-sm font-medium text-green-800 dark:text-green-200">Federal Pell Grant</span>
+                  </div>
+                  <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
+                    <div className="flex items-center mb-2">
                   <Badge variant="secondary" className="mr-2">State</Badge>
-                  <span className="text-sm">FSEOG, Ohio College Opportunity Grant, Choose Ohio First, and more</span>
+                    </div>
+                    <span className="text-sm font-medium text-green-800 dark:text-green-200">FSEOG, Ohio College Opportunity Grant, Choose Ohio First, and more</span>
                 </div>
               </div>
             </div>
 
             {/* Loans */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-blue-700 dark:text-blue-300 flex items-center">
-                <CreditCard className="mr-2 h-5 w-5" />
-                Loans:
-              </h4>
-              <div className="space-y-2 pl-6">
-                <div className="flex items-center">
-                  <Badge variant="outline" className="mr-2">Subsidized</Badge>
-                  <span className="text-sm">Interest-free while enrolled</span>
+              <div className="space-y-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4">
+                    <CreditCard className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h4 className="font-bold text-blue-700 dark:text-blue-300 text-lg">Loans</h4>
                 </div>
-                <div className="flex items-center">
+                <div className="space-y-3 pl-16">
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center mb-2">
+                      <Badge variant="outline" className="mr-2">Subsidized</Badge>
+                    </div>
+                    <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Interest-free while enrolled</span>
+                  </div>
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center mb-2">
                   <Badge variant="outline" className="mr-2">Unsubsidized</Badge>
-                  <span className="text-sm">Interest accrues immediately</span>
+                    </div>
+                    <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Interest accrues immediately</span>
                 </div>
-                <div className="flex items-center">
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center mb-2">
                   <Badge variant="outline" className="mr-2">PLUS</Badge>
-                  <span className="text-sm">Parent PLUS Loans (credit-based)</span>
+                    </div>
+                    <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Parent PLUS Loans (credit-based)</span>
                 </div>
-                <div className="flex items-center">
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center mb-2">
                   <Badge variant="outline" className="mr-2">Private</Badge>
-                  <span className="text-sm">Private Loans (e.g., Sallie Mae)</span>
+                    </div>
+                    <span className="text-sm font-medium text-blue-800 dark:text-blue-200">Private Loans (e.g., Sallie Mae)</span>
                 </div>
               </div>
             </div>
 
             {/* Work-Study */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-purple-700 dark:text-purple-300 flex items-center">
-                <Briefcase className="mr-2 h-5 w-5" />
-                Work-Study & Employment:
-              </h4>
-              <div className="space-y-2 pl-6">
-                <div className="flex items-center">
-                  <Badge variant="secondary" className="mr-2">Federal</Badge>
-                  <span className="text-sm">Federal Work-Study Program</span>
+              <div className="space-y-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mr-4">
+                    <Briefcase className="h-6 w-6 text-purple-600" />
                 </div>
-                <div className="flex items-center">
-                  <Badge variant="secondary" className="mr-2">College</Badge>
-                  <span className="text-sm">Hocking College Work Scholarship</span>
+                  <h4 className="font-bold text-purple-700 dark:text-purple-300 text-lg">Work-Study & Employment</h4>
                 </div>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/studentjobs')}
-                  className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-sm"
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Student Job Listings
-                </button>
+                <div className="space-y-3 pl-16">
+                  <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                    <div className="flex items-center mb-2">
+                      <Badge variant="secondary" className="mr-2">Federal</Badge>
               </div>
+                    <span className="text-sm font-medium text-purple-800 dark:text-purple-200">Federal Work-Study Program</span>
+            </div>
+                  <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                    <div className="flex items-center mb-2">
+                      <Badge variant="secondary" className="mr-2">Campus</Badge>
+          </div>
+                    <span className="text-sm font-medium text-purple-800 dark:text-purple-200">Campus employment opportunities</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Disbursement & Refund Information */}
-      <Card className="mb-8 border-2 border-teal-600">
-        <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
-          <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-            <Calendar className="mr-3 h-6 w-6" />
-            Disbursement & Refund Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            After aid is applied to tuition, fees, and housing, any remaining funds are refunded to the student:
-          </p>
-          
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg mb-4">
-            <h4 className="font-semibold mb-2 text-gray-900 dark:text-white">Disbursement Schedule:</h4>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="flex items-center">
-                <Clock className="mr-2 h-4 w-4 text-blue-600" />
-                <span className="text-sm">First disbursement: 30 days after classes start</span>
-              </div>
-              <div className="flex items-center">
-                <Clock className="mr-2 h-4 w-4 text-blue-600" />
-                <span className="text-sm">Second disbursement: Mid-semester</span>
               </div>
             </div>
-          </div>
+          </AccordionContent>
+        </AccordionItem>
 
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            Refunds are issued through BankMobile Disbursements.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <button
-              onClick={() => handleExternalLink('https://bankmobiledisbursements.com/refundchoices/')}
-              className="flex items-center justify-between p-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <CreditCard className="mr-3 h-5 w-5" />
-                <span className="font-semibold">BankMobile Refund Info</span>
-              </div>
-              <ExternalLink className="h-5 w-5" />
-            </button>
-            
-            <button
-              onClick={() => handleExternalLink('https://www.hocking.edu/financial-aid-refund-policy')}
-              className="flex items-center justify-between p-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <FileText className="mr-3 h-5 w-5" />
-                <span className="font-semibold">Hocking College Refund Policy</span>
-              </div>
-              <ExternalLink className="h-5 w-5" />
-            </button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Special Conditions & Appeals */}
-      <Card className="mb-8 border-2 border-red-600">
-        <CardHeader className="bg-red-50 dark:bg-red-900/20">
-          <CardTitle className="flex items-center text-xl text-red-800 dark:text-red-200">
-            <AlertTriangle className="mr-3 h-6 w-6" />
-            Special Conditions & Appeals
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            Students facing challenges or special financial situations may be eligible for additional help:
-          </p>
-          
-          <div className="grid md:grid-cols-3 gap-4 mb-4">
-            <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded-lg">
-              <h5 className="font-semibold text-red-800 dark:text-red-200 mb-1">Special Circumstance Appeals</h5>
-              <p className="text-sm text-red-700 dark:text-red-300">(e.g., change in family income)</p>
-            </div>
-            <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded-lg">
-              <h5 className="font-semibold text-red-800 dark:text-red-200 mb-1">Dependency Override</h5>
-              <p className="text-sm text-red-700 dark:text-red-300">(for students unable to provide parent info)</p>
-            </div>
-            <div className="p-3 bg-red-50 dark:bg-red-900/30 rounded-lg">
-              <h5 className="font-semibold text-red-800 dark:text-red-200 mb-1">Satisfactory Academic Progress (SAP) Appeal</h5>
-              <p className="text-sm text-red-700 dark:text-red-300">(for academic standing issues)</p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => handleExternalLink('https://www.hocking.edu/forms')}
-            className="flex items-center justify-between p-4 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-          >
+        {/* Contact Information */}
+        <AccordionItem value="contact" className="border-2 border-teal-200 dark:border-teal-800 rounded-lg overflow-hidden">
+          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30 px-6 py-4">
             <div className="flex items-center">
-              <Download className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Download All Appeal & Verification Forms</span>
+              <Building className="mr-3 h-6 w-6 text-teal-600" />
+              <span className="text-xl font-semibold text-teal-800 dark:text-teal-200">Contact Financial Aid Office</span>
             </div>
-            <ExternalLink className="h-5 w-5" />
-          </button>
-        </CardContent>
-      </Card>
-
-      {/* Contact Information */}
-      <Card className="mb-8 border-2 border-indigo-600">
-        <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
-          <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <Phone className="mr-3 h-6 w-6" />
-            Contact Financial Aid for Help
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            If students or parents need personalized assistance, they can contact the appropriate advisor based on last name:
-          </p>
-          
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300 dark:border-gray-600">
-              <thead>
-                <tr className="bg-indigo-100 dark:bg-indigo-900/30">
-                  <th className="border border-gray-300 dark:border-gray-600 p-3 text-left font-semibold">Advisor</th>
-                  <th className="border border-gray-300 dark:border-gray-600 p-3 text-left font-semibold">Last Names</th>
-                  <th className="border border-gray-300 dark:border-gray-600 p-3 text-left font-semibold">Email</th>
-                  <th className="border border-gray-300 dark:border-gray-600 p-3 text-left font-semibold">Phone</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">Debra Canter</td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">A–L</td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">
-                    <a href="mailto:canterd@hocking.edu" className="text-blue-600 hover:underline">canterd@hocking.edu</a>
-                  </td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">
-                    <a href="tel:740-753-7060" className="text-blue-600 hover:underline">740-753-7060</a>
-                  </td>
-                </tr>
-                <tr className="bg-gray-50 dark:bg-gray-800">
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">Mary Russell</td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">M–Z</td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">
-                    <a href="mailto:russellm@hocking.edu" className="text-blue-600 hover:underline">russellm@hocking.edu</a>
-                  </td>
-                  <td className="border border-gray-300 dark:border-gray-600 p-3">
-                    <a href="tel:740-753-7182" className="text-blue-600 hover:underline">740-753-7182</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="flex items-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                  <Phone className="mr-4 h-6 w-6 text-teal-600" />
+                  <div>
+                    <p className="font-semibold text-teal-800 dark:text-teal-200">Phone</p>
+                    <a href="tel:740-753-7058" className="text-teal-600 hover:underline font-medium">740-753-7058</a>
+                  </div>
+                </div>
+                <div className="flex items-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                  <Mail className="mr-4 h-6 w-6 text-teal-600" />
+                  <div>
+                    <p className="font-semibold text-teal-800 dark:text-teal-200">Email</p>
+                    <a href="mailto:financialaid@hocking.edu" className="text-teal-600 hover:underline font-medium">financialaid@hocking.edu</a>
+                  </div>
           </div>
-
-          <div className="mt-6">
-            <button
-              onClick={() => handleExternalLink('https://www.hocking.edu/financial-aid')}
-              className="flex items-center justify-between p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <ExternalLink className="mr-3 h-5 w-5" />
-                <span className="font-semibold">Visit the Hocking College Financial Aid Page</span>
               </div>
-              <ExternalLink className="h-5 w-5" />
-            </button>
+              <div className="space-y-6">
+                <div className="flex items-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                  <MapPin className="mr-4 h-6 w-6 text-teal-600" />
+                  <div>
+                    <p className="font-semibold text-teal-800 dark:text-teal-200">Location</p>
+                    <p className="text-gray-700 dark:text-gray-300">Concourse, John Light Hall, Hocking College</p>
+                  </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* FAQ Section */}
-      <Card className="mb-8 border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Frequently Asked Questions (FAQ)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="school-code">
-              <AccordionTrigger className="text-left">
-                What is Hocking College's school code for the FAFSA?
-              </AccordionTrigger>
-              <AccordionContent>
-                Hocking College's school code is <strong>007598</strong>. You'll need this when completing the FAFSA application.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="how-to-apply">
-              <AccordionTrigger className="text-left">
-                How do I apply for financial aid?
-              </AccordionTrigger>
-              <AccordionContent>
-                Complete the Free Application for Federal Student Aid (FAFSA) at studentaid.gov. Make sure to include Hocking College's school code.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="yearly-fafsa">
-              <AccordionTrigger className="text-left">
-                Do I need to complete the FAFSA every year?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. You must submit a new FAFSA for each academic year to remain eligible for aid.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="documents">
-              <AccordionTrigger className="text-left">
-                How will I know if I need to submit more documents?
-              </AccordionTrigger>
-              <AccordionContent>
-                Log in to the Financial Aid Self-Service Portal. Yellow highlighted items require your attention or documents; green items are complete.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="forms">
-              <AccordionTrigger className="text-left">
-                Where can I find and submit required financial aid forms?
-              </AccordionTrigger>
-              <AccordionContent>
-                All required forms are available on Hocking's website. You can access them through the Financial Aid Forms link above.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="types-of-aid">
-              <AccordionTrigger className="text-left">
-                What types of financial aid are available?
-              </AccordionTrigger>
-              <AccordionContent>
-                Hocking offers: Federal & State Grants (Pell, SEOG, OCOG, etc.), Subsidized & Unsubsidized Loans, Parent PLUS Loans, Work-Study Programs, and Scholarships and Work Scholarships.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="disbursement">
-              <AccordionTrigger className="text-left">
-                When is financial aid disbursed?
-              </AccordionTrigger>
-              <AccordionContent>
-                Aid is disbursed in two parts per semester. Disbursement begins 30 days after classes start. You can view exact dates in the portal or refund policy.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="refunds">
-              <AccordionTrigger className="text-left">
-                How will I receive my financial aid refund?
-              </AccordionTrigger>
-              <AccordionContent>
-                Refunds are distributed through BankMobile. You can set up your refund preferences through their portal.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="special-circumstances">
-              <AccordionTrigger className="text-left">
-                What if my family's financial situation has changed?
-              </AccordionTrigger>
-              <AccordionContent>
-                You may qualify for a Special Circumstance Appeal. Submit the appropriate form found in the Financial Aid Forms section above.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="academic-requirements">
-              <AccordionTrigger className="text-left">
-                What happens if I don't meet the academic requirements?
-              </AccordionTrigger>
-              <AccordionContent>
-                If you fall below Satisfactory Academic Progress (SAP) standards, you may lose aid eligibility but can appeal. Visit the forms page to submit an SAP Appeal.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="dependency-override">
-              <AccordionTrigger className="text-left">
-                Can I still get aid if my parents don't support me?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. You may be eligible for a Dependency Override. This requires documentation and an appeal form available online.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="summer-aid">
-              <AccordionTrigger className="text-left">
-                Is there financial aid available for summer classes?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. Submit the Summer Enrollment Aid Request Form, and check if you're eligible for federal or state grants.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="parent-help">
-              <AccordionTrigger className="text-left">
-                Can parents help with FAFSA or aid questions?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes. Parents can assist with FAFSA by creating their own FSA ID. They can also contact the Financial Aid Office directly for assistance.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Link Summary */}
-      <Card className="border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <ExternalLink className="mr-3 h-6 w-6" />
-            Link Summary (Tap to Open)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 dark:text-white">Purpose</h4>
-              <div className="space-y-1 text-sm">
-                <p>FAFSA Application</p>
-                <p>Create Parent FSA ID</p>
-                <p>Financial Aid Portal (Self-Service)</p>
-                <p>Financial Aid Forms</p>
-                <p>BankMobile Refund Info</p>
-                <p>Hocking Refund Policy</p>
-                <p>Student Job Listings</p>
-                <p>Hocking Financial Aid Homepage</p>
+                <div className="flex items-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
+                  <Clock className="mr-4 h-6 w-6 text-teal-600" />
+                  <div>
+                    <p className="font-semibold text-teal-800 dark:text-teal-200">Hours</p>
+                    <p className="text-gray-700 dark:text-gray-300">Monday–Friday, 8:00 AM–5:00 PM</p>
               </div>
             </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 dark:text-white">Direct Link</h4>
-              <div className="space-y-1 text-sm">
-                <button
-                  onClick={() => handleExternalLink('https://studentaid.gov/h/apply-for-aid/fafsa')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://studentaid.gov/h/apply-for-aid/fafsa
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://studentaid.gov/fsa-id/create-account/launch')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://studentaid.gov/fsa-id/create-account/launch
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://selfserve.hocking.edu/SelfService/Home.aspx')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://selfserve.hocking.edu/SelfService/Home.aspx
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/forms')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://www.hocking.edu/forms
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://bankmobiledisbursements.com/refundchoices/')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://bankmobiledisbursements.com/refundchoices/
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/financial-aid-refund-policy')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://www.hocking.edu/financial-aid-refund-policy
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/studentjobs')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://www.hocking.edu/studentjobs
-                </button>
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/financial-aid')}
-                  className="text-blue-600 hover:underline block text-left"
-                >
-                  https://www.hocking.edu/financial-aid
-                </button>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+
+      </Accordion>
     </div>
   );
 } 

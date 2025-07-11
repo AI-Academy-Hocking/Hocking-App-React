@@ -263,7 +263,7 @@ function AcademicSuccessCenter() {
                 How do I schedule an appointment?
               </AccordionTrigger>
               <AccordionContent>
-                You can schedule an appointment by calling 740-753-4195, emailing academicsuccess@hocking.edu, or visiting our office in DVD 114 during business hours.
+                You can schedule an appointment by calling 740-753-4195, emailing <a href="mailto:academicsuccess@hocking.edu" className="text-blue-600 hover:underline">academicsuccess@hocking.edu</a>, or visiting our office in DVD 114 during business hours.
               </AccordionContent>
             </AccordionItem>
 

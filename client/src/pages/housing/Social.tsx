@@ -1051,7 +1051,7 @@ const CampusSocialHub: React.FC = () => {
           </p>
           <div className="mt-4 text-xs text-gray-500 dark:text-gray-500">
             <p>Maintenance Contact: Housing Office / App Admin</p>
-            <p>Email: Housing@hocking.edu | Secondary: kennedyj1@hocking.edu</p>
+            <p>Email: <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">Housing@hocking.edu</a> | Secondary: <a href="mailto:kennedyj1@hocking.edu" className="text-blue-600 hover:underline">kennedyj1@hocking.edu</a></p>
           </div>
         </div>
       </div>

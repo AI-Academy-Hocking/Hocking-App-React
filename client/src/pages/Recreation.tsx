@@ -42,237 +42,241 @@ function RecreationPage() {
       </Card>
 
       {/* Hours & Contact Information */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <Clock className="mr-3 h-6 w-6" />
-            Hours of Operation & Contact
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <h4 className="font-semibold text-green-700 dark:text-green-300">Hours of Operation</h4>
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Hours of Operation & Contact */}
+        <AccordionItem value="hours" className="border-2 border-green-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <Clock className="mr-3 h-6 w-6" />
+              Hours of Operation & Contact
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h4 className="font-semibold text-green-700 dark:text-green-300">Hours of Operation</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <Calendar className="mr-2 h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700 dark:text-green-300">Monday – Friday: 8:00 AM – 10:00 PM</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="mr-2 h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700 dark:text-green-300">Saturday & Sunday: 11:00 AM – 8:00 PM</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Timer className="mr-2 h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700 dark:text-green-300">Extended hours during finals week</span>
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <h4 className="font-semibold text-green-700 dark:text-green-300">Contact Information</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <Phone className="mr-2 h-4 w-4 text-green-600" />
+                    <a href="tel:7407536535" className="text-blue-600 hover:underline text-sm">(740) 753-6535</a>
+                  </div>
+                  <div className="flex items-center">
+                    <Mail className="mr-2 h-4 w-4 text-green-600" />
+                    <a href="mailto:studentcenter@hocking.edu" className="text-blue-600 hover:underline text-sm">studentcenter@hocking.edu</a>
+                  </div>
+                  <div className="flex items-center">
+                    <MapPin className="mr-2 h-4 w-4 text-green-600" />
+                    <span className="text-sm text-green-700 dark:text-green-300">Student Center Building</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Fitness Center */}
+        <AccordionItem value="fitness" className="border-2 border-purple-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
+              <Dumbbell className="mr-3 h-6 w-6" />
+              Fitness Center
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              State-of-the-art fitness equipment and facilities to help you stay in shape and achieve your fitness goals.
+            </p>
+            <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="flex items-center">
-                  <Calendar className="mr-2 h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-700 dark:text-green-300">Monday – Friday: 8:00 AM – 10:00 PM</span>
-                </div>
-                <div className="flex items-center">
-                  <Calendar className="mr-2 h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-700 dark:text-green-300">Saturday & Sunday: 11:00 AM – 8:00 PM</span>
-                </div>
-                <div className="flex items-center">
-                  <Timer className="mr-2 h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-700 dark:text-green-300">Extended hours during finals week</span>
+                <h4 className="font-semibold text-purple-700 dark:text-purple-300">Cardio Equipment</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Treadmills and ellipticals</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Stationary bikes</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Rowing machines</span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="space-y-4">
-              <h4 className="font-semibold text-green-700 dark:text-green-300">Contact Information</h4>
               <div className="space-y-3">
-                <div className="flex items-center">
-                  <Phone className="mr-2 h-4 w-4 text-green-600" />
-                  <a href="tel:7407536535" className="text-blue-600 hover:underline text-sm">(740) 753-6535</a>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="mr-2 h-4 w-4 text-green-600" />
-                  <a href="mailto:studentcenter@hocking.edu" className="text-blue-600 hover:underline text-sm">studentcenter@hocking.edu</a>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="mr-2 h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-700 dark:text-green-300">Student Center Building</span>
+                <h4 className="font-semibold text-purple-700 dark:text-purple-300">Strength Training</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Free weights and machines</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Functional training area</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
+                    <span className="text-sm text-purple-700 dark:text-purple-300">Personal training available</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Fitness Center */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <Dumbbell className="mr-3 h-6 w-6" />
-            Fitness Center
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            State-of-the-art fitness equipment and facilities to help you stay in shape and achieve your fitness goals.
-          </p>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <h4 className="font-semibold text-purple-700 dark:text-purple-300">Cardio Equipment</h4>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Treadmills and ellipticals</span>
+        {/* Indoor Facilities */}
+        <AccordionItem value="facilities" className="border-2 border-orange-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
+              <Building className="mr-3 h-6 w-6" />
+              Indoor Facilities
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
+                    <Waves className="mr-2 h-4 w-4" />
+                    Indoor Pool
+                  </h5>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">Full-size pool with diving board and lap lanes</p>
                 </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Stationary bikes</span>
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
+                    <Mountain className="mr-2 h-4 w-4" />
+                    Rock Climbing Wall
+                  </h5>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">Indoor climbing wall with safety equipment</p>
                 </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Rowing machines</span>
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
+                    <Activity className="mr-2 h-4 w-4" />
+                    Indoor Track
+                  </h5>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">200-meter indoor track for running and walking</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
+                    <Users className="mr-2 h-4 w-4" />
+                    Full-size Gymnasium
+                  </h5>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">Basketball, volleyball, and indoor sports</p>
+                </div>
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
+                    <Coffee className="mr-2 h-4 w-4" />
+                    Student Lounge
+                  </h5>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">TV, games, and comfortable seating areas</p>
+                </div>
+                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    Study Spaces
+                  </h5>
+                  <p className="text-sm text-orange-700 dark:text-orange-300">Quiet study areas and meeting rooms</p>
                 </div>
               </div>
             </div>
-            <div className="space-y-3">
-              <h4 className="font-semibold text-purple-700 dark:text-purple-300">Strength Training</h4>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Free weights and machines</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Functional training area</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-purple-600" />
-                  <span className="text-sm text-purple-700 dark:text-purple-300">Personal training available</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Indoor Facilities */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <Building className="mr-3 h-6 w-6" />
-            Indoor Facilities
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
-                  <Waves className="mr-2 h-4 w-4" />
-                  Indoor Pool
-                </h5>
-                <p className="text-sm text-orange-700 dark:text-orange-300">Full-size pool with diving board and lap lanes</p>
+        {/* Programs & Activities */}
+        <AccordionItem value="programs" className="border-2 border-teal-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-teal-800 dark:text-teal-200">
+              <Calendar className="mr-3 h-6 w-6" />
+              Programs & Activities
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Group Fitness Classes</h5>
+                <p className="text-sm text-teal-700 dark:text-teal-300">Yoga, Zumba, spinning, and strength training classes</p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
-                  <Mountain className="mr-2 h-4 w-4" />
-                  Rock Climbing Wall
-                </h5>
-                <p className="text-sm text-orange-700 dark:text-orange-300">Indoor climbing wall with safety equipment</p>
+              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Intramural Sports</h5>
+                <p className="text-sm text-teal-700 dark:text-teal-300">Basketball, volleyball, soccer, and flag football leagues</p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
-                  <Activity className="mr-2 h-4 w-4" />
-                  Indoor Track
-                </h5>
-                <p className="text-sm text-orange-700 dark:text-orange-300">200-meter indoor track for running and walking</p>
+              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Outdoor Equipment Rentals</h5>
+                <p className="text-sm text-teal-700 dark:text-teal-300">Camping gear, kayaks, and outdoor recreation equipment</p>
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
-                  <Users className="mr-2 h-4 w-4" />
-                  Full-size Gymnasium
-                </h5>
-                <p className="text-sm text-orange-700 dark:text-orange-300">Basketball, volleyball, and indoor sports</p>
-              </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
-                  <Coffee className="mr-2 h-4 w-4" />
-                  Student Lounge
-                </h5>
-                <p className="text-sm text-orange-700 dark:text-orange-300">TV, games, and comfortable seating areas</p>
-              </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Study Spaces
-                </h5>
-                <p className="text-sm text-orange-700 dark:text-orange-300">Quiet study areas and meeting rooms</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Programs & Activities */}
-      <Card className="mb-8 border-2 border-teal-600">
-        <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
-          <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-            <Calendar className="mr-3 h-6 w-6" />
-            Programs & Activities
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-              <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Group Fitness Classes</h5>
-              <p className="text-sm text-teal-700 dark:text-teal-300">Yoga, Zumba, spinning, and strength training classes</p>
+        {/* Amenities & Services */}
+        <AccordionItem value="amenities" className="border-2 border-indigo-600 rounded-lg">
+          <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
+              <CheckCircle className="mr-3 h-6 w-6" />
+              Amenities & Services
             </div>
-            <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-              <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Intramural Sports</h5>
-              <p className="text-sm text-teal-700 dark:text-teal-300">Basketball, volleyball, soccer, and flag football leagues</p>
-            </div>
-            <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-              <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Outdoor Equipment Rentals</h5>
-              <p className="text-sm text-teal-700 dark:text-teal-300">Camping gear, kayaks, and outdoor recreation equipment</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Amenities & Services */}
-      <Card className="mb-8 border-2 border-indigo-600">
-        <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
-          <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <CheckCircle className="mr-3 h-6 w-6" />
-            Amenities & Services
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <h4 className="font-semibold text-indigo-700 dark:text-indigo-300">Facility Services</h4>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
-                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Locker rooms with showers</span>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h4 className="font-semibold text-indigo-700 dark:text-indigo-300">Facility Services</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Locker rooms with showers</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Equipment checkout</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Personal training sessions</span>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
-                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Equipment checkout</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
-                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Personal training sessions</span>
+              </div>
+              <div className="space-y-3">
+                <h4 className="font-semibold text-indigo-700 dark:text-indigo-300">Additional Features</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Free Wi-Fi throughout facility</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Vending machines and snack bar</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
+                    <span className="text-sm text-indigo-700 dark:text-indigo-300">Accessible facilities</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="space-y-3">
-              <h4 className="font-semibold text-indigo-700 dark:text-indigo-300">Additional Features</h4>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
-                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Free Wi-Fi throughout facility</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
-                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Vending machines and snack bar</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-indigo-600" />
-                  <span className="text-sm text-indigo-700 dark:text-indigo-300">Accessible facilities</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {/* FAQ Section */}
       <Card className="mb-8 border-2 border-gray-600">
