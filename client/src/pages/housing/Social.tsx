@@ -17,6 +17,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
+import { biometricAuth } from "@/services/biometricAuth";
+import { notificationService } from "@/services/notificationService";
 
 interface User {
   firstName: string;
@@ -71,6 +73,9 @@ const CampusSocialHub: React.FC = () => {
   const [postType, setPostType] = useState<'text' | 'image' | 'video' | 'poll' | 'event'>('text');
   const [hashtags, setHashtags] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('');
+  const [showBiometricPrompt, setShowBiometricPrompt] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   // Check for existing login on component mount
   useEffect(() => {
@@ -82,6 +87,48 @@ const CampusSocialHub: React.FC = () => {
         setShowAuth(false);
       } else {
         setShowVerification(true);
+        // Check verification status periodically
+        const checkVerificationStatus = async () => {
+          try {
+            // For now, we'll simulate checking status
+            // In a real implementation, you'd store the requestId and check it
+            const response = await fetch('http://localhost:3000/api/verification/pending');
+            const data = await response.json();
+            
+            if (data.success) {
+                      // Check if our user is in the approved list
+        // This is a simplified check - in production you'd track the specific requestId
+        const approvedUser = data.verifications.find((v: any) => 
+          v.user.email === userData.email && v.status === 'approved'
+        );
+        
+        if (approvedUser) {
+          const updatedUser = { ...userData, isVerified: true, isAuthenticated: true };
+          setUser(updatedUser);
+          setShowVerification(false);
+          setShowAuth(false);
+          localStorage.setItem('campusSocialHubUser', JSON.stringify(updatedUser));
+          
+          // Request notification permission and enable biometric if available
+          notificationService.requestPermission();
+          if (await biometricAuth.isBiometricAvailable()) {
+            setShowBiometricPrompt(true);
+          }
+          
+          toast({
+            title: "Account Verified! 🎉",
+            description: "Your account has been approved. Welcome to the Campus Social Hub!",
+          });
+        }
+            }
+          } catch (error) {
+            console.error('Error checking verification status:', error);
+          }
+        };
+        
+        // Check every 30 seconds
+        const interval = setInterval(checkVerificationStatus, 30000);
+        return () => clearInterval(interval);
       }
     }
   }, []);
@@ -196,13 +243,61 @@ const CampusSocialHub: React.FC = () => {
 
   useEffect(() => {
     setPosts(samplePosts);
+    
+    // Load approved posts from server
+    const loadApprovedPosts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/posts/approved');
+        const data = await response.json();
+        
+        if (data.success) {
+          // Convert server posts to local format
+          const serverPosts = data.posts.map((post: any) => ({
+            id: post.id,
+            type: post.type,
+            content: post.content,
+            author: post.author.firstName + ' ' + post.author.lastName,
+            timestamp: new Date(post.submittedAt),
+            likes: 0,
+            comments: 0,
+            shares: 0,
+            isLiked: false,
+            isSaved: false,
+            isPinned: false,
+            category: post.category,
+            hashtags: post.hashtags,
+            emoji: post.emoji,
+            pollOptions: post.pollOptions,
+            pollVotes: post.pollOptions ? new Array(post.pollOptions.length).fill(0) : undefined,
+            pollVoters: [],
+            eventDetails: post.eventDetails
+          }));
+          
+          setPosts([...serverPosts, ...samplePosts]);
+        }
+      } catch (error) {
+        console.error('Error loading approved posts:', error);
+      }
+    };
+    
+    loadApprovedPosts();
+    
+    // Update notification count
+    const updateNotificationCount = () => {
+      setNotificationCount(notificationService.getUnreadCount());
+    };
+    
+    updateNotificationCount();
+    const interval = setInterval(updateNotificationCount, 5000);
+    
+    return () => clearInterval(interval);
   }, []);
 
-  const handleAuthSubmit = (e: React.FormEvent) => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     
-    const userData: User = {
+    const userData = {
       firstName: formData.get('firstName') as string,
       lastName: formData.get('lastName') as string,
       studentId: formData.get('studentId') as string,
@@ -211,39 +306,51 @@ const CampusSocialHub: React.FC = () => {
       roomNumber: formData.get('roomNumber') as string,
       program: formData.get('program') as string,
       username: formData.get('username') as string,
-      userType: formData.get('userType') as 'student' | 'faculty',
-      isAuthenticated: false,
-      isVerified: false
+      userType: formData.get('userType') as 'student' | 'faculty'
     };
 
-    setShowAuth(false);
-    setShowVerification(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/verification/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
 
-    // Send verification request to housing office
-    const verificationEmail = {
-      to: 'housing@hocking.edu',
-      subject: 'Campus Social Hub - New User Verification Request',
-      body: `
-        New user registration requiring verification:
-        
-        Name: ${userData.firstName} ${userData.lastName}
-        Student ID: ${userData.studentId}
-        Email: ${userData.email}
-        User Type: ${userData.userType}
-        Dorm: ${userData.dormBuilding} Room ${userData.roomNumber}
-        Program: ${userData.program}
-        Username: ${userData.username}
-        
-        Please verify this email address and click APPROVE or REJECT.
-        Only verified students and faculty should be granted access.
-      `
-    };
+      const data = await response.json();
 
-    console.log('Sending verification request:', verificationEmail);
-    toast({
-      title: "Registration Submitted! 📧",
-      description: "Your registration has been sent to the housing office for verification. You'll receive an email notification once approved.",
-    });
+      if (data.success) {
+        setShowAuth(false);
+        setShowVerification(true);
+        
+        // Store user data locally for later use
+        const fullUserData: User = {
+          ...userData,
+          isAuthenticated: false,
+          isVerified: false
+        };
+        localStorage.setItem('campusSocialHubUser', JSON.stringify(fullUserData));
+        
+        toast({
+          title: "Registration Submitted! 📧",
+          description: "Your registration has been sent to the housing office for verification. You'll receive an email notification once approved.",
+        });
+      } else {
+        toast({
+          title: "Registration Failed",
+          description: data.message || "Failed to submit registration. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting registration:', error);
+      toast({
+        title: "Registration Failed",
+        description: "Failed to connect to server. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleLogout = () => {
@@ -311,53 +418,66 @@ const CampusSocialHub: React.FC = () => {
     });
   };
 
-  const handleCreatePost = () => {
-    if (!newPost.trim()) return;
+  const handleCreatePost = async () => {
+    if (!newPost.trim() || !user) return;
 
-    const post: Post = {
-      id: Date.now().toString(),
-      type: postType,
-      content: newPost,
-      author: user?.firstName || 'Anonymous',
-      timestamp: new Date(),
-      likes: 0,
-      comments: 0,
-      shares: 0,
-      isLiked: false,
-      isSaved: false,
-      isPinned: false,
-      category: selectedCategory,
-      hashtags: hashtags.split(' ').filter(tag => tag.startsWith('#')),
-      emoji: selectedEmoji
-    };
+    try {
+      const postData = {
+        type: postType,
+        content: newPost,
+        author: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          userType: user.userType
+        },
+        category: selectedCategory,
+        hashtags: hashtags.split(' ').filter(tag => tag.startsWith('#')),
+        emoji: selectedEmoji,
+        pollOptions: postType === 'poll' ? ['Option 1', 'Option 2', 'Option 3'] : undefined,
+        eventDetails: postType === 'event' ? {
+          date: 'TBD',
+          time: 'TBD',
+          location: 'TBD',
+          description: 'Event details to be determined'
+        } : undefined
+      };
 
-    // Send to housing office for approval
-    const approvalEmail = {
-      to: 'housing@hocking.edu',
-      subject: 'Campus Social Hub Post Approval Request',
-      body: `
-        New post awaiting approval:
-        Author: ${post.author}
-        Content: ${post.content}
-        Category: ${post.category}
-        Type: ${post.type}
-        Hashtags: ${post.hashtags.join(', ')}
+      const response = await fetch('http://localhost:3000/api/posts/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setNewPost('');
+        setHashtags('');
+        setSelectedEmoji('');
+        setShowCreatePost(false);
         
-        Click YES to approve or NO to reject
-      `
-    };
-
-    console.log('Sending approval request:', approvalEmail);
-    
-    setNewPost('');
-    setHashtags('');
-    setSelectedEmoji('');
-    setShowCreatePost(false);
-    
-    toast({
-      title: "Post Submitted for Approval 📝",
-      description: "Your post has been sent to the housing office for review. You'll be notified when it's approved!",
-    });
+        toast({
+          title: "Post Submitted for Approval 📝",
+          description: "Your post has been sent to the housing office for review. You'll be notified when it's approved!",
+        });
+      } else {
+        toast({
+          title: "Post Submission Failed",
+          description: data.message || "Failed to submit post. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting post:', error);
+      toast({
+        title: "Post Submission Failed",
+        description: "Failed to connect to server. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const formatTimeAgo = (date: Date) => {
@@ -565,9 +685,76 @@ const CampusSocialHub: React.FC = () => {
                   {user?.userType}
                 </Badge>
               </div>
-              <Button variant="ghost" size="sm">
-                <Bell className="h-4 w-4" />
-              </Button>
+              
+              {/* Notification Bell with Counter */}
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                >
+                  <Bell className="h-4 w-4" />
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {notificationCount > 99 ? '99+' : notificationCount}
+                    </span>
+                  )}
+                </Button>
+                
+                {/* Notifications Dropdown */}
+                {showNotifications && (
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                      <h3 className="font-semibold text-gray-900 dark:text-white">Notifications</h3>
+                      <p className="text-sm text-gray-500">{notificationCount} unread</p>
+                    </div>
+                    <div className="p-2">
+                      {notificationService.getNotifications().slice(0, 10).map((notification) => (
+                        <div 
+                          key={notification.id} 
+                          className={`p-3 rounded-lg mb-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                            !notification.isRead ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                          }`}
+                          onClick={() => {
+                            notificationService.markAsRead(notification.id);
+                            setNotificationCount(notificationService.getUnreadCount());
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0">
+                              {notification.type === 'post_approved' && '🎉'}
+                              {notification.type === 'post_rejected' && '❌'}
+                              {notification.type === 'new_post' && '📝'}
+                              {notification.type === 'system' && '🔔'}
+                              {notification.type === 'event' && '📅'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                                {notification.title}
+                              </p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                                {new Date(notification.timestamp).toLocaleString()}
+                              </p>
+                            </div>
+                            {!notification.isRead && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                      {notificationService.getNotifications().length === 0 && (
+                        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                          No notifications yet
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               <Button variant="ghost" size="sm">
                 <Settings className="h-4 w-4" />
               </Button>
@@ -833,11 +1020,63 @@ const CampusSocialHub: React.FC = () => {
                                   <div 
                                     className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${percentage}%` }}
-                                  ></div>
-                                </div>
-                              </div>
-                            );
-                          })}
+                                  >        </div>
+      </div>
+
+      {/* Biometric Authentication Modal */}
+      {showBiometricPrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-sm w-full mx-4 text-center">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">👤</span>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Enable Biometric Authentication</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Would you like to enable Face ID or fingerprint authentication for quick access to the Campus Social Hub?
+              </p>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => setShowBiometricPrompt(false)}
+              >
+                Skip
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={async () => {
+                  try {
+                    const availableTypes = await biometricAuth.getAvailableBiometricTypes();
+                    if (availableTypes.includes('face')) {
+                      await biometricAuth.enableBiometric(user?.email || '', 'face');
+                    } else if (availableTypes.includes('fingerprint')) {
+                      await biometricAuth.enableBiometric(user?.email || '', 'fingerprint');
+                    }
+                    setShowBiometricPrompt(false);
+                    toast({
+                      title: "Biometric Authentication Enabled! 🔐",
+                      description: "You can now use Face ID or fingerprint to quickly access the app.",
+                    });
+                  } catch (error) {
+                    toast({
+                      title: "Biometric Setup Failed",
+                      description: "Please try again or contact support.",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                Enable
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+})}
                         </div>
                       )}
 

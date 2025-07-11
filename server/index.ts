@@ -3,6 +3,8 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
 import programsRouter from './api/programs';
+import verificationRouter from './api/verification';
+import postsRouter from './api/posts';
 
 const app = express();
 app.use(express.json());
@@ -51,6 +53,8 @@ app.use((req, res, next) => {
   });
 
   app.use('/api/programs', programsRouter);
+  app.use('/api/verification', verificationRouter);
+  app.use('/api/posts', postsRouter);
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
