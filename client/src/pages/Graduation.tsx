@@ -31,410 +31,413 @@ export default function Graduation() {
         </p>
       </div>
 
-      {/* How to Apply for Graduation */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-            <UserCheck className="mr-3 h-6 w-6" />
-            How to Apply for Graduation
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Application Process</h4>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Students must apply for graduation through Self-Service. Applications are free and required even if you don't plan to attend the ceremony.
-              </p>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Apply once you are close to completing your degree or certificate</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Applications are processed only for the submitted term</span>
-                </div>
-              </div>
+      {/* All Sections in Accordion */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* How to Apply for Graduation */}
+        <AccordionItem value="how-to-apply" className="border-2 border-blue-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+              <UserCheck className="mr-3 h-6 w-6" />
+              How to Apply for Graduation
             </div>
-            <div>
-              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Final Approval Requirements</h4>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Completion of all program requirements</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Submission of official transcripts (if applicable)</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Clearing of any holds or incomplete grades</span>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Application Process</h4>
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                  Students must apply for graduation through Self-Service. Applications are free and required even if you don't plan to attend the ceremony.
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Apply once you are close to completing your degree or certificate</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Applications are processed only for the submitted term</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Graduation Pre-Party */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <Calendar className="mr-3 h-6 w-6" />
-            Graduation Pre-Party
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            Before each graduation ceremony, Hocking College hosts a Graduation Pre-Party for graduates. At this event, students can:
-          </p>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Pick up their cap and gown (if eligible)</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Take professional or fun photos</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Enjoy free food, beverages, games, and music</span>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-700 dark:text-gray-300">Get final assistance from various offices</span>
-              </div>
-            </div>
-          </div>
-          <Alert className="mt-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Details such as time and location are provided each term on the graduation webpage.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
-
-      {/* Cap & Gown Information */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <Award className="mr-3 h-6 w-6" />
-            Cap & Gown Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-                <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Standard Attire</h5>
-                <p className="text-sm text-purple-700 dark:text-purple-300">All graduates receive a standard black gown and a blue and gold tassel</p>
-              </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-                <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Additional Items</h5>
-                <p className="text-sm text-purple-700 dark:text-purple-300">Some programs or organizations may offer additional stoles or cords (e.g., Phi Theta Kappa)</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-                <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Ordering Process</h5>
-                <p className="text-sm text-purple-700 dark:text-purple-300">Gowns must be ordered by a deadline each term via an external vendor, at no additional cost</p>
-              </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
-                <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Pick-up</h5>
-                <p className="text-sm text-purple-700 dark:text-purple-300">Pick-up typically happens at the Pre-Party or via the Career & University Center if missed</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Graduation Practice */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <Target className="mr-3 h-6 w-6" />
-            Graduation Practice
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Required Attendance</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">All students participating in the ceremony are required to attend</p>
-            </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Purpose</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">This is to ensure smooth logistics for the ceremony</p>
-            </div>
-            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
-              <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Information</h5>
-              <p className="text-sm text-orange-700 dark:text-orange-300">Time, place, and expectations posted on the graduation website each term</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* The Graduation Ceremony */}
-      <Card className="mb-8 border-2 border-indigo-600">
-        <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
-          <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <Star className="mr-3 h-6 w-6" />
-            The Graduation Ceremony
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
-                <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Details</h5>
-                <p className="text-sm text-indigo-700 dark:text-indigo-300">The formal Commencement Ceremony is held at the end of each academic term</p>
-              </div>
-              <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
-                <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Guests Welcome</h5>
-                <p className="text-sm text-indigo-700 dark:text-indigo-300">Family and friends are welcome to attend</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
-                <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Includes</h5>
-                <p className="text-sm text-indigo-700 dark:text-indigo-300">Speeches, graduate recognition, and live or recorded streaming</p>
-              </div>
-              <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
-                <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Schedule Updates</h5>
-                <p className="text-sm text-indigo-700 dark:text-indigo-300">Exact dates, times, and seating arrangements updated every term</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Diplomas */}
-      <Card className="mb-8 border-2 border-teal-600">
-        <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
-          <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-            <FileText className="mr-3 h-6 w-6" />
-            Diplomas
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Delivery Timeline</h5>
-                <p className="text-sm text-teal-700 dark:text-teal-300">Mailed 6–8 weeks after final grades are posted, assuming all accounts are clear</p>
-              </div>
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Ceremony Policy</h5>
-                <p className="text-sm text-teal-700 dark:text-teal-300">Diplomas are not handed out during the ceremony</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Multiple Credentials</h5>
-                <p className="text-sm text-teal-700 dark:text-teal-300">Students earning multiple credentials will receive a diploma for each one</p>
-              </div>
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Replacements</h5>
-                <p className="text-sm text-teal-700 dark:text-teal-300">Replacement diplomas are available upon request with a processing fee</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Life After Graduation */}
-      <Card className="mb-8 border-2 border-emerald-600">
-        <CardHeader className="bg-emerald-50 dark:bg-emerald-900/20">
-          <CardTitle className="flex items-center text-xl text-emerald-800 dark:text-emerald-200">
-            <Users className="mr-3 h-6 w-6" />
-            Life After Graduation
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-6 text-gray-700 dark:text-gray-300">
-            Graduation isn't the end of your Hocking College journey, it's the start of your next chapter. Whether you're headed into the workforce, transferring to a university, or just need official documents, here's what you need to know:
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Career Support */}
-            <div className="space-y-4">
-              <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center">
-                <Target className="mr-2 h-5 w-5" />
-                Career Support Continues
-              </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                You still have full access to the Hocking College Career & University Center, even after you graduate. Get help with:
-              </p>
-              <div className="space-y-2 pl-4">
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Job applications and interview prep</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Resume and cover letter reviews</span>
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                  <span className="text-sm text-gray-700 dark:text-gray-300">Graduate or transfer school advising</span>
+              <div>
+                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Final Approval Requirements</h4>
+                <div className="space-y-2">
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Completion of all program requirements</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Submission of official transcripts (if applicable)</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="mr-2 h-4 w-4 text-blue-600" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Clearing of any holds or incomplete grades</span>
+                  </div>
                 </div>
               </div>
-              <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                Career Services
-              </button>
             </div>
+          </AccordionContent>
+        </AccordionItem>
 
-            {/* Transfer Resources */}
-            <div className="space-y-4">
-              <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center">
-                <BookOpen className="mr-2 h-5 w-5" />
-                Transferring to Another College?
-              </h4>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                Work with our Transfer Resource Center to ensure your credits are transferred correctly.
-              </p>
-              <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                Transfer Resources
-              </button>
+        {/* Graduation Pre-Party */}
+        <AccordionItem value="graduation-pre-party" className="border-2 border-green-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+              <Calendar className="mr-3 h-6 w-6" />
+              Graduation Pre-Party
             </div>
-          </div>
-
-          {/* Stay Connected */}
-          <div className="mb-6">
-            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3 flex items-center">
-              <Star className="mr-2 h-5 w-5" />
-              Stay Connected
-            </h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-              Hocking encourages graduates to stay engaged through alumni events, mentoring opportunities, and campus resources.
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              Before each graduation ceremony, Hocking College hosts a Graduation Pre-Party for graduates. At this event, students can:
             </p>
-            
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Alumni Resources:</h5>
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  Stay connected after graduation through the Hocking College Foundation – Alumni & Friends.
-                </p>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <Mail className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Newsletter: Email <a href="mailto:alumni@foundation.hocking.edu" className="text-blue-600 hover:underline">alumni@foundation.hocking.edu</a> to sign up
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">Events: Join us for alumni gatherings and Homecoming</span>
-                  </div>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Pick up their cap and gown (if eligible)</span>
                 </div>
-                <div className="space-y-2">
-                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs">
-                    Alumni Page
-                  </button>
-                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs ml-2">
-                    Homecoming Info
-                  </button>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Take professional or fun photos</span>
                 </div>
               </div>
-              
-              <div className="space-y-3">
-                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Social Media:</h5>
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  Join the Hocking College Alumni Association on Facebook:
-                </p>
-                <a 
-                  href="https://facebook.com/HockingCollegeAlumniAssociation" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline text-sm"
-                >
-                  facebook.com/HockingCollegeAlumniAssociation
-                </a>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Enjoy free food, beverages, games, and music</span>
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle className="mr-2 h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Get final assistance from various offices</span>
+                </div>
               </div>
             </div>
-          </div>
+            <Alert className="mt-4">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Details such as time and location are provided each term on the graduation webpage.
+              </AlertDescription>
+            </Alert>
+          </AccordionContent>
+        </AccordionItem>
 
-          {/* Student Loan Repayment */}
-          <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-            <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center">
-              <AlertCircle className="mr-2 h-5 w-5" />
-              Student Loan Repayment Begins Soon
-            </h4>
-            <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
-              Stay on top of repayment timelines and options using federal resources.
-            </p>
-            <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-              Loan Repayment Help
-            </button>
-          </div>
-
-          {/* Transcript Requests */}
-          <div>
-            <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3 flex items-center">
-              <FileText className="mr-2 h-5 w-5" />
-              Transcript Requests
-            </h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-              You may need your official transcript for employment, licensure, or college transfers. Here's how to access both official and unofficial records:
-            </p>
-            
+        {/* Cap & Gown Information */}
+        <AccordionItem value="cap-gown" className="border-2 border-purple-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
+              <Award className="mr-3 h-6 w-6" />
+              Cap & Gown Information
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Official Transcript (National Student Clearinghouse):</h5>
-                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                  <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Standard Attire</h5>
+                  <p className="text-sm text-purple-700 dark:text-purple-300">All graduates receive a standard black gown and a blue and gold tassel</p>
+                </div>
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                  <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Additional Items</h5>
+                  <p className="text-sm text-purple-700 dark:text-purple-300">Some programs or organizations may offer additional stoles or cords (e.g., Phi Theta Kappa)</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                  <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Ordering Process</h5>
+                  <p className="text-sm text-purple-700 dark:text-purple-300">Gowns must be ordered by a deadline each term via an external vendor, at no additional cost</p>
+                </div>
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                  <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Pick-up</h5>
+                  <p className="text-sm text-purple-700 dark:text-purple-300">Pick-up typically happens at the Pre-Party or via the Career & University Center if missed</p>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Graduation Practice */}
+        <AccordionItem value="graduation-practice" className="border-2 border-orange-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
+              <Target className="mr-3 h-6 w-6" />
+              Graduation Practice
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Required Attendance</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">All students participating in the ceremony are required to attend</p>
+              </div>
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Purpose</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">This is to ensure smooth logistics for the ceremony</p>
+              </div>
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Information</h5>
+                <p className="text-sm text-orange-700 dark:text-orange-300">Time, place, and expectations posted on the graduation website each term</p>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* The Graduation Ceremony */}
+        <AccordionItem value="graduation-ceremony" className="border-2 border-indigo-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
+              <Star className="mr-3 h-6 w-6" />
+              The Graduation Ceremony
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                  <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Details</h5>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">The formal Commencement Ceremony is held at the end of each academic term</p>
+                </div>
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                  <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Guests Welcome</h5>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Family and friends are welcome to attend</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                  <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Includes</h5>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Speeches, graduate recognition, and live or recorded streaming</p>
+                </div>
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                  <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Schedule Updates</h5>
+                  <p className="text-sm text-indigo-700 dark:text-indigo-300">Exact dates, times, and seating arrangements updated every term</p>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Diplomas */}
+        <AccordionItem value="diplomas" className="border-2 border-teal-600 rounded-lg mb-4">
+          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-teal-800 dark:text-teal-200">
+              <FileText className="mr-3 h-6 w-6" />
+              Diplomas
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                  <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Delivery Timeline</h5>
+                  <p className="text-sm text-teal-700 dark:text-teal-300">Mailed 6–8 weeks after final grades are posted, assuming all accounts are clear</p>
+                </div>
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                  <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Ceremony Policy</h5>
+                  <p className="text-sm text-teal-700 dark:text-teal-300">Diplomas are not handed out during the ceremony</p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                  <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Multiple Credentials</h5>
+                  <p className="text-sm text-teal-700 dark:text-teal-300">Students earning multiple credentials will receive a diploma for each one</p>
+                </div>
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                  <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Replacements</h5>
+                  <p className="text-sm text-teal-700 dark:text-teal-300">Replacement diplomas are available upon request with a processing fee</p>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Life After Graduation */}
+        <AccordionItem value="life-after-graduation" className="border-2 border-emerald-600 rounded-lg">
+          <AccordionTrigger className="bg-emerald-50 dark:bg-emerald-900/20 px-6 py-4 hover:no-underline">
+            <div className="flex items-center text-xl text-emerald-800 dark:text-emerald-200">
+              <Users className="mr-3 h-6 w-6" />
+              Life After Graduation
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-6 text-gray-700 dark:text-gray-300">
+              Graduation isn't the end of your Hocking College journey, it's the start of your next chapter. Whether you're headed into the workforce, transferring to a university, or just need official documents, here's what you need to know:
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              {/* Career Support */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center">
+                  <Target className="mr-2 h-5 w-5" />
+                  Career Support Continues
+                </h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  You still have full access to the Hocking College Career & University Center, even after you graduate. Get help with:
+                </p>
+                <div className="space-y-2 pl-4">
                   <div className="flex items-center">
                     <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>Fee: $5 + $2.90 per recipient</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Job applications and interview prep</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>Delivery: Mailed (standard or UPS), or held for pickup</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Resume and cover letter reviews</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>No email or fax delivery available</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>Typically processed in 3 business days</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>Available 24/7</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Graduate or transfer school advising</span>
                   </div>
                 </div>
                 <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                  Order Official Transcript
+                  Career Services
                 </button>
               </div>
-              
-              <div className="space-y-3">
-                <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Unofficial Transcript:</h5>
-                <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>Access anytime through Self-Service</span>
-                  </div>
-                  <div className="flex items-center">
-                    <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
-                    <span>Good for personal records or unofficial reviews</span>
-                  </div>
-                </div>
+
+              {/* Transfer Resources */}
+              <div className="space-y-4">
+                <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 flex items-center">
+                  <BookOpen className="mr-2 h-5 w-5" />
+                  Transferring to Another College?
+                </h4>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Work with our Transfer Resource Center to ensure your credits are transferred correctly.
+                </p>
                 <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
-                  Transcript Info & Portal
+                  Transfer Resources
                 </button>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+
+            {/* Stay Connected */}
+            <div className="mb-6">
+              <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3 flex items-center">
+                <Star className="mr-2 h-5 w-5" />
+                Stay Connected
+              </h4>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                Hocking encourages graduates to stay engaged through alumni events, mentoring opportunities, and campus resources.
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Alumni Resources:</h5>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Stay connected after graduation through the Hocking College Foundation – Alumni & Friends.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <Mail className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">
+                        Newsletter: Email <a href="mailto:alumni@foundation.hocking.edu" className="text-blue-600 hover:underline">alumni@foundation.hocking.edu</a> to sign up
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <Calendar className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">Events: Join us for alumni gatherings and Homecoming</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs">
+                      Alumni Page
+                    </button>
+                    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs ml-2">
+                      Homecoming Info
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="space-y-3">
+                  <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Social Media:</h5>
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Join the Hocking College Alumni Association on Facebook:
+                  </p>
+                  <a 
+                    href="https://facebook.com/HockingCollegeAlumniAssociation" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline text-sm"
+                  >
+                    facebook.com/HockingCollegeAlumniAssociation
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Student Loan Repayment */}
+            <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+              <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center">
+                <AlertCircle className="mr-2 h-5 w-5" />
+                Student Loan Repayment Begins Soon
+              </h4>
+              <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
+                Stay on top of repayment timelines and options using federal resources.
+              </p>
+              <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                Loan Repayment Help
+              </button>
+            </div>
+
+            {/* Transcript Requests */}
+            <div>
+              <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-3 flex items-center">
+                <FileText className="mr-2 h-5 w-5" />
+                Transcript Requests
+              </h4>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                You may need your official transcript for employment, licensure, or college transfers. Here's how to access both official and unofficial records:
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Official Transcript (National Student Clearinghouse):</h5>
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>Fee: $5 + $2.90 per recipient</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>Delivery: Mailed (standard or UPS), or held for pickup</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>No email or fax delivery available</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>Typically processed in 3 business days</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>Available 24/7</span>
+                    </div>
+                  </div>
+                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                    Order Official Transcript
+                  </button>
+                </div>
+                
+                <div className="space-y-3">
+                  <h5 className="font-semibold text-emerald-600 dark:text-emerald-400">Unofficial Transcript:</h5>
+                  <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>Access anytime through Self-Service</span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="mr-2 h-4 w-4 text-emerald-600" />
+                      <span>Good for personal records or unofficial reviews</span>
+                    </div>
+                  </div>
+                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                    Transcript Info & Portal
+                  </button>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {/* FAQ Section */}
       <Card className="mb-8 border-2 border-gray-600">
