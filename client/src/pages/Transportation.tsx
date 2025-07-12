@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Mail, Phone, MapPin, Clock, Bus, Car, Bike, HelpCircle, Calendar, Map, ExternalLink, DollarSign, Wifi, Wheelchair } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Bus, Car, Bike, HelpCircle, Calendar, Map, ExternalLink, DollarSign, Wifi } from "lucide-react";
 
 const quickLinks = [
   { label: "Line N7 Schedule", icon: Calendar, href: "#", description: "View N7 Schedule PDF" },
@@ -173,7 +173,7 @@ export default function Transportation() {
                   {opt.features.map((feature, index) => (
                     <span key={index} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                       {feature === "Wi-Fi" && <Wifi className="h-3 w-3" />}
-                      {feature === "Wheelchair-accessible" && <Wheelchair className="h-3 w-3" />}
+                      {feature === "Wheelchair-accessible" && null}
                       {feature === "Cash Fare" && <DollarSign className="h-3 w-3" />}
                       {feature}
                     </span>

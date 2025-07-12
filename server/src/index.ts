@@ -1,7 +1,9 @@
 import express, { Express } from 'express';
 const cors = require('cors');
-const { registerRoutes } = require('./routes');
+import calendarRouter from './routes/calendar';
 import { MemStorage } from './storage';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -18,18 +20,4 @@ app.use('/api/calendar', calendarRouter);
 app.get('/api/student-tools', async (req, res) => {
   const tools = await storage.getStudentTools();
   res.json(tools);
-});
-
-app.get('/api/student-tools/:id', async (req, res) => {
-  const tool = await storage.getStudentTool(req.params.id);
-  if (!tool) {
-    res.status(404).json({ error: 'Tool not found' });
-    return;
-  }
-  res.json(tool);
-});
-
-// Start server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
 });
