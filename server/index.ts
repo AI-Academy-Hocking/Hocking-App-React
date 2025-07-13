@@ -3,11 +3,13 @@ import { registerRoutes } from "./routes/index";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
 import programsRouter from './api/programs';
+import calendarRouter from '../src/routes/calendar';
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+app.use('/api/calendar', calendarRouter);
 
 app.use((req, res, next) => {
   const start = Date.now();
