@@ -4,6 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+// Image paths (in public folder)
+const WeightsImage = "/sc-weights.JPG";
+const BaseballHomebaseImage = "/baseball-homebase.JPG";
+const BasketballCourtImage = "/basketball-court.JPG";
+const SportsWallImage = "/sports-wall.JPG";
 
 interface Sport {
   name: string;
@@ -58,84 +63,55 @@ function Athletics() {
       </div>
 
       <div className="flex items-center gap-4 mb-8">
-        <Trophy className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-blue-300">Hocking College Athletics</h1>
+        <Trophy className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+        <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-blue-300">Hocking College Athletics</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="mb-8">
         {/* Contact Information */}
         <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl ${
+          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl max-w-md mx-auto overflow-hidden relative ${
             contactExpanded 
-              ? 'border-2 border-blue-400 dark:border-cyan-300 bg-white dark:bg-gray-800' 
-              : 'border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800'
+              ? 'border-2 border-blue-400 dark:border-cyan-300' 
+              : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
           onClick={() => setContactExpanded(!contactExpanded)}
+          style={{ 
+            backgroundImage: `url(${SportsWallImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div className="p-6 flex flex-col items-center">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center mb-2">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="p-6 flex flex-col items-center relative z-10">
+            <h3 className="text-xl font-bold text-white text-center mb-2">
               Contact Information
             </h3>
           </div>
           
           {contactExpanded && (
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-4 px-6 pb-6">
+            <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Athletic Department - Nelsonville Campus</span>
+                  <MapPin className="h-5 w-5 text-white" />
+                  <span className="text-white">Athletic Department - Nelsonville Campus</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Phone className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <a href="tel:740-753-3591" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+                  <Phone className="h-5 w-5 text-white" />
+                  <a href="tel:740-753-3591" className="text-white hover:text-gray-300">
                     740-753-3591
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Mail className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <a href="mailto:athletics@hocking.edu" className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
+                  <Mail className="h-5 w-5 text-white" />
+                  <a href="mailto:athletics@hocking.edu" className="text-white hover:text-gray-300">
                     athletics@hocking.edu
                   </a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Monday – Friday: 8 a.m.-4 p.m.</span>
+                  <Clock className="h-5 w-5 text-white" />
+                  <span className="text-white">Monday – Friday: 8 a.m.-4 p.m.</span>
                 </div>
-              </div>
-            </div>
-          )}
-        </Card>
-
-        {/* Quick Links */}
-        <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl ${
-            quickLinksExpanded 
-              ? 'border-2 border-blue-400 dark:border-cyan-300 bg-white dark:bg-gray-800' 
-              : 'border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800'
-          }`}
-          onClick={() => setQuickLinksExpanded(!quickLinksExpanded)}
-        >
-          <div className="p-6 flex flex-col items-center">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center mb-2">
-              Quick Links
-            </h3>
-          </div>
-          
-          {quickLinksExpanded && (
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-4 px-6 pb-6">
-              <div className="space-y-4">
-                <Button className="w-full bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-[6px]" variant="ghost">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View Game Schedule
-                </Button>
-                <Button className="w-full bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-[6px]" variant="ghost">
-                  <Users className="h-4 w-4 mr-2" />
-                  Meet the Teams
-                </Button>
-                <Button className="w-full bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded-[6px]" variant="ghost">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Athletic Calendar
-                </Button>
               </div>
             </div>
           )}
@@ -145,29 +121,35 @@ function Athletics() {
       {/* Sports Programs */}
       <div className="mb-8">
         <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl max-w-md mx-auto ${
+          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl max-w-md mx-auto overflow-hidden relative ${
             sportsExpanded 
-              ? 'border-2 border-blue-400 dark:border-cyan-300 bg-white dark:bg-gray-800' 
-              : 'border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800'
+              ? 'border-2 border-blue-400 dark:border-cyan-300' 
+              : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
           onClick={() => setSportsExpanded(!sportsExpanded)}
+          style={{ 
+            backgroundImage: `url(${BaseballHomebaseImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div className="p-6 flex flex-col items-center">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-blue-300 text-center mb-2">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="p-6 flex flex-col items-center relative z-10">
+            <h3 className="text-2xl font-bold text-white text-center mb-2">
               Our Sports Programs
             </h3>
           </div>
           
           {sportsExpanded && (
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-4 px-6 pb-6">
+            <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {sports.map((sport, index) => (
-                  <div key={index} className="border border-gray-200 dark:border-gray-600 rounded-xl p-4 bg-gray-50 dark:bg-gray-700">
+                  <div key={index} className="border border-white border-opacity-30 rounded-xl p-4 bg-black bg-opacity-30">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-lg font-semibold text-gray-900 dark:text-blue-300">{sport.name}</h4>
+                      <h4 className="text-lg font-semibold text-white">{sport.name}</h4>
                       <Badge className={sport.color}>{sport.season}</Badge>
                     </div>
-                    <p className="text-gray-900 dark:text-white text-sm">{sport.description}</p>
+                    <p className="text-white text-sm">{sport.description}</p>
                   </div>
                 ))}
               </div>
@@ -176,40 +158,46 @@ function Athletics() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         {/* Athletic Facilities */}
         <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl ${
+          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
             facilitiesExpanded 
-              ? 'border-2 border-blue-400 dark:border-cyan-300 bg-white dark:bg-gray-800' 
-              : 'border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800'
+              ? 'border-2 border-blue-400 dark:border-cyan-300' 
+              : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
           onClick={() => setFacilitiesExpanded(!facilitiesExpanded)}
+          style={{ 
+            backgroundImage: `url(${WeightsImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div className="p-6 flex flex-col items-center">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center mb-2">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="p-6 flex flex-col items-center relative z-10">
+            <h3 className="text-xl font-bold text-white text-center mb-2">
               Athletic Facilities
             </h3>
           </div>
           
           {facilitiesExpanded && (
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-4 px-6 pb-6">
+            <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Hocking College Baseball Complex</span>
+                  <MapPin className="h-4 w-4 text-white" />
+                  <span className="text-white">Hocking College Baseball Complex</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">John Light Gymnasium</span>
+                  <MapPin className="h-4 w-4 text-white" />
+                  <span className="text-white">John Light Gymnasium</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Softball Field</span>
+                  <MapPin className="h-4 w-4 text-white" />
+                  <span className="text-white">Softball Field</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Fitness Center</span>
+                  <MapPin className="h-4 w-4 text-white" />
+                  <span className="text-white">Fitness Center</span>
                 </div>
               </div>
             </div>
@@ -218,42 +206,77 @@ function Athletics() {
 
         {/* Student-Athlete Resources */}
         <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl ${
+          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
             resourcesExpanded 
-              ? 'border-2 border-blue-400 dark:border-cyan-300 bg-white dark:bg-gray-800' 
-              : 'border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800'
+              ? 'border-2 border-blue-400 dark:border-cyan-300' 
+              : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
           onClick={() => setResourcesExpanded(!resourcesExpanded)}
+          style={{ 
+            backgroundImage: `url(${BasketballCourtImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
         >
-          <div className="p-6 flex flex-col items-center">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center mb-2">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="p-6 flex flex-col items-center relative z-10">
+            <h3 className="text-xl font-bold text-white text-center mb-2">
               Student-Athlete Resources
             </h3>
           </div>
           
           {resourcesExpanded && (
-            <div className="border-t border-gray-200 dark:border-gray-600 pt-4 px-6 pb-6">
+            <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Athletic Training Services</span>
+                  <Users className="h-4 w-4 text-white" />
+                  <span className="text-white">Athletic Training Services</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Trophy className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Academic Support for Athletes</span>
+                  <Trophy className="h-4 w-4 text-white" />
+                  <span className="text-white">Academic Support for Athletes</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">Strength & Conditioning Program</span>
+                  <Calendar className="h-4 w-4 text-white" />
+                  <span className="text-white">Strength & Conditioning Program</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ExternalLink className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="text-gray-900 dark:text-white">NCAA Compliance Information</span>
+                  <ExternalLink className="h-4 w-4 text-white" />
+                  <span className="text-white">NCAA Compliance Information</span>
                 </div>
               </div>
             </div>
           )}
         </Card>
+      </div>
+
+      {/* Quick Links */}
+      <div className="mb-8">
+        <div className="max-w-4xl mx-auto">
+                     <h3 className="text-2xl font-bold text-gray-900 dark:text-blue-300 text-left mb-6">
+             Quick Links
+           </h3>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             <Link href="#">
+               <a className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
+                 <ExternalLink className="text-blue-600 dark:text-blue-400 mb-3 h-8 w-8" />
+                 <span className="font-bold text-base text-blue-600 dark:text-white">View Game Schedule</span>
+               </a>
+             </Link>
+             <Link href="#">
+               <a className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
+                 <Users className="text-blue-600 dark:text-blue-400 mb-3 h-8 w-8" />
+                 <span className="font-bold text-base text-blue-600 dark:text-white">Meet the Teams</span>
+               </a>
+             </Link>
+             <Link href="#">
+               <a className="bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 flex flex-col items-center text-center transition hover:shadow-md">
+                 <Calendar className="text-blue-600 dark:text-blue-400 mb-3 h-8 w-8" />
+                 <span className="font-bold text-base text-blue-600 dark:text-white">Athletic Calendar</span>
+               </a>
+             </Link>
+           </div>
+        </div>
       </div>
     </div>
   );

@@ -39,6 +39,7 @@ import TestingCenter from "./pages/TestingCenter";
 import TrioServices from "./pages/TrioServices";
 import LearningLabs from "./pages/LearningLabs";
 import AccessibilityResources from "./pages/AccessibilityResources";
+import Resources from "./pages/Resources";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -100,6 +101,7 @@ function Router() {
         <Route path="/calendar" component={Calendar} />
         <Route path="/tools" component={StudentTools} />
         <Route path="/maps" component={Maps} />
+        <Route path="/resources" component={Resources} />
         <Route path="/dining" component={DiningHall} />
         <Route path="/safety" component={CampusSafety} />
         <Route path="/recreation" component={RecreationPage} />

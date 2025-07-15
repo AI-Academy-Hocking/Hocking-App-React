@@ -107,9 +107,9 @@ export default function StudentTools() {
             <div className="px-6 pb-6">
               <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="grid grid-cols-3 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-xl p-1">
-                  <TabsTrigger value="academic" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
-                  <TabsTrigger value="financial" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
-                  <TabsTrigger value="resources" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
+                  <TabsTrigger value="academic" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:data-[state=active]:bg-gray-700">Academic</TabsTrigger>
+                  <TabsTrigger value="financial" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:data-[state=active]:bg-gray-700">Financial</TabsTrigger>
+                  <TabsTrigger value="resources" className="py-1 flex items-center justify-center rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:data-[state=active]:bg-gray-700">Resources</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="academic" className="p-4">

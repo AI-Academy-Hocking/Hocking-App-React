@@ -435,7 +435,7 @@ export default function Maps() {
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-white dark:border-white mr-2"></span>
+                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-white dark:border-white flex-shrink-0"></span>
                       <div>
                         <h3 className="font-semibold text-black dark:text-blue-300">{building.name}</h3>
                         <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>

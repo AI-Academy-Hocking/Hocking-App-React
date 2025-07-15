@@ -29,12 +29,48 @@ export default function DiningHall() {
 
   // Watch for URL changes including query parameters
   useEffect(() => {
-    console.log('DiningHall: Location changed to:', location);
-    const urlParams = new URLSearchParams(location.split('?')[1] || '');
+    console.log('DiningHall: useEffect triggered');
+    console.log('DiningHall: Wouter location:', location);
+    console.log('DiningHall: Full URL:', window.location.href);
+    console.log('DiningHall: Pathname:', window.location.pathname);
+    console.log('DiningHall: Search params:', window.location.search);
+    
+    const urlParams = new URLSearchParams(window.location.search);
     const tabFromUrl = urlParams.get('tab') || 'hours';
-    console.log('DiningHall: Setting tab to:', tabFromUrl);
+    console.log('DiningHall: Tab from URL:', tabFromUrl);
+    console.log('DiningHall: Current selectedTab:', selectedTab);
+    
     setSelectedTab(tabFromUrl);
   }, [location]);
+
+  // Additional effect to watch for the full URL including query params
+  useEffect(() => {
+    const checkForUrlChange = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabFromUrl = urlParams.get('tab') || 'hours';
+      console.log('DiningHall: Interval check - Tab from URL:', tabFromUrl, 'Current:', selectedTab);
+      if (tabFromUrl !== selectedTab) {
+        console.log('DiningHall: Updating tab via interval check');
+        setSelectedTab(tabFromUrl);
+      }
+    };
+    
+    const interval = setInterval(checkForUrlChange, 100);
+    return () => clearInterval(interval);
+  }, [selectedTab]);
+
+  // Also watch for direct URL changes (e.g., from browser navigation)
+  useEffect(() => {
+    const handlePopState = () => {
+      console.log('DiningHall: PopState event detected');
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabFromUrl = urlParams.get('tab') || 'hours';
+      setSelectedTab(tabFromUrl);
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Handle tab change and update URL
   const handleTabChange = (newTab: string) => {

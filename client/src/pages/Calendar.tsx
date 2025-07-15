@@ -5,6 +5,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "../styles/calendar.css";
 import { format, parse, startOfWeek, getDay, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
 import { enUS } from "date-fns/locale";
+import { useLocation } from "wouter";
 
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -47,11 +48,33 @@ const CustomTimeGutterHeader = ({ date }: any) => (
 );
 
 export default function CalendarPage() {
+  const [location, setLocation] = useLocation();
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
   const [error, setError] = useState<string | null>(null);
+  
+  // Handle URL query parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const typeParam = urlParams.get('type');
+    const viewParam = urlParams.get('view');
+    
+    if (typeParam === 'academic' || typeParam === 'activities') {
+      setActiveCalendar(typeParam);
+    }
+    
+    if (viewParam === 'upcoming') {
+      setView('list');
+      // Set selected date to today for upcoming events
+      setSelectedDate(new Date());
+    } else if (viewParam === 'today') {
+      setView('list');
+      // Set selected date to today for today's events
+      setSelectedDate(new Date());
+    }
+  }, [location]);
   
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ['/api/events', activeCalendar],
