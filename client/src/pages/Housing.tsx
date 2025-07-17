@@ -409,15 +409,19 @@ export default function Housing() {
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <Phone className="mr-2 h-4 w-4 text-orange-600" />
-                    <a href="tel:7407536462" className="text-blue-600 hover:underline text-sm">(740) 753-6462</a>
+                    <a href="tel:7407537043" className="text-blue-600 hover:underline text-sm">Main: (740) 753-7043</a>
+                  </div>
+                  <div className="flex items-center">
+                    <Phone className="mr-2 h-4 w-4 text-orange-600" />
+                    <a href="tel:7407536598" className="text-blue-600 hover:underline text-sm">Emergency: (740) 753-6598</a>
                   </div>
                   <div className="flex items-center">
                     <Mail className="mr-2 h-4 w-4 text-orange-600" />
-                    <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline text-sm">housing@hocking.edu</a>
+                    <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline text-sm">General: housing@hocking.edu</a>
                   </div>
                   <div className="flex items-center">
                     <MapPin className="mr-2 h-4 w-4 text-orange-600" />
-                    <span className="text-sm text-orange-700 dark:text-orange-300">Student Center, Room 201</span>
+                    <span className="text-sm text-orange-700 dark:text-orange-300">Housing & Residence Life, Room 196 John Light Hall, 3301 Hocking Parkway, Nelsonville, OH 45764</span>
                   </div>
                 </div>
               </div>
@@ -430,7 +434,7 @@ export default function Housing() {
                   </div>
                   <div className="flex items-center">
                     <Clock className="mr-2 h-4 w-4 text-orange-600" />
-                    <span className="text-sm text-orange-700 dark:text-orange-300">Saturday: 9:00 AM - 1:00 PM</span>
+                    <span className="text-sm text-orange-700 dark:text-orange-300">Saturday: Closed</span>
                   </div>
                   <div className="flex items-center">
                     <Clock className="mr-2 h-4 w-4 text-orange-600" />
