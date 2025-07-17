@@ -145,12 +145,12 @@ export default function Dormitories() {
 
       {/* Collapsible Sections */}
       <Accordion type="single" collapsible className="mb-8">
-        {/* Traditional Residence Halls */}
+        {/* Hillside Dormitories */}
         <AccordionItem value="traditional" className="border-2 border-blue-600 rounded-lg mb-4">
           <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
               <Building2 className="mr-3 h-6 w-6" />
-              Traditional Residence Halls
+              Hillside Dormitories
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">
@@ -177,12 +177,12 @@ export default function Dormitories() {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Suite-Style Residence Halls */}
+        {/* Riverside Dormitories */}
         <AccordionItem value="suite-style" className="border-2 border-green-600 rounded-lg mb-4">
           <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-green-800 dark:text-green-200">
               <Building2 className="mr-3 h-6 w-6" />
-              Suite-Style Residence Halls
+              Riverside Dormitories
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">
@@ -209,12 +209,12 @@ export default function Dormitories() {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Specialized Housing */}
+        {/* International Housing and Opportunity House */}
         <AccordionItem value="specialized" className="border-2 border-purple-600 rounded-lg">
           <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
               <Building2 className="mr-3 h-6 w-6" />
-              Specialized Housing
+              International Housing and Opportunity House
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">

@@ -21,7 +21,7 @@ import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
 import ApplicationProcess from "./pages/housing/ApplicationProcess";
-import MealPlan from "./pages/housing/MealPlan";
+
 
 import WhatToBring from "./pages/housing/WhatToBring";
 import Maintenance from "./pages/housing/Maintenance";
@@ -31,7 +31,7 @@ import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
 import Contract from "./pages/housing/Contract";
-import HowToApply from "./pages/housing/HowToApply";
+
 import FloorPlans from "./pages/housing/FloorPlans";
 import Tutoring from "./pages/Tutoring";
 import TestingCenter from "./pages/TestingCenter";
@@ -120,7 +120,7 @@ function Router() {
         <Route path="/housing/dormitories" component={Dormitories} />
         <Route path="/housing/amenities" component={Amenities} />
         <Route path="/housing/application" component={ApplicationProcess} />
-        <Route path="/housing/meal-plan" component={MealPlan} />
+
 
         <Route path="/housing/what-to-bring" component={WhatToBring} />
         <Route path="/housing/maintenance" component={Maintenance} />
@@ -130,7 +130,7 @@ function Router() {
         <Route path="/housing/activities" component={Activities} />
         <Route path="/housing/social" component={Social} />
         <Route path="/housing/contract" component={Contract} />
-        <Route path="/housing/how-to-apply" component={HowToApply} />
+
         <Route path="/housing/floor-plans" component={FloorPlans} />
         <Route path="/tutoring" component={Tutoring} />
         <Route path="/testing-center" component={TestingCenter} />

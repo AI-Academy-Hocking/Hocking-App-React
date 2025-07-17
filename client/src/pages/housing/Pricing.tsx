@@ -191,12 +191,12 @@ export default function Pricing() {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Special Programs */}
+        {/* International and Sports Dormitory */}
         <AccordionItem value="special" className="border-2 border-green-600 rounded-lg">
           <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-green-800 dark:text-green-200">
               <Square className="mr-3 h-6 w-6" />
-              Special Programs
+              International and Sports Dormitory
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">

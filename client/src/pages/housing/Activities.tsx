@@ -10,7 +10,7 @@ interface Activity {
   type: "on-campus" | "off-campus" | "seasonal";
   category: string;
   description: string;
-  schedule: string;
+  schedule?: string;
   location: string;
   participants?: string;
   features: string[];
@@ -23,9 +23,9 @@ const activities: Activity[] = [
     type: "on-campus",
     category: "Orientation",
     description: "Kick off your college journey with exciting events and activities!",
-    schedule: "First week of Fall semester",
-    location: "Various campus locations",
-    participants: "All new students",
+    schedule: "Fall semester",
+    location: "Main Campus",
+    participants: "All students",
     features: [
       "Campus tours",
       "Social mixers",
@@ -39,7 +39,6 @@ const activities: Activity[] = [
     type: "off-campus",
     category: "Outdoor Recreation",
     description: "Explore the natural beauty of Hocking Hills State Park",
-    schedule: "Monthly trips",
     location: "Hocking Hills State Park",
     features: [
       "Hiking trails",
@@ -51,13 +50,13 @@ const activities: Activity[] = [
     season: ["Spring", "Summer", "Fall"]
   },
   {
-    title: "Residence Hall Olympics",
+    title: "Residence Halls & Commuters Olympics",
     type: "on-campus",
     category: "Sports & Competition",
-    description: "Compete with other residence halls in fun athletic events",
+    description: "Compete with other residence halls and commuters in fun athletic events",
     schedule: "Spring semester",
-    location: "Campus Recreation Center",
-    participants: "All residence hall students",
+    location: "Main Campus & Student Center",
+    participants: "All residence hall students and Commuters",
     features: [
       "Team sports",
       "Individual competitions",
@@ -71,7 +70,6 @@ const activities: Activity[] = [
     type: "off-campus",
     category: "Local Culture",
     description: "Discover the vibrant culture of Athens",
-    schedule: "Weekly guided tours",
     location: "Athens Downtown",
     features: [
       "Local restaurants",
@@ -101,7 +99,6 @@ const activities: Activity[] = [
     type: "off-campus",
     category: "Community Events",
     description: "Experience local festivals and celebrations",
-    schedule: "Throughout the year",
     location: "Athens and surrounding areas",
     features: [
       "Pumpkin Festival",

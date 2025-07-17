@@ -35,14 +35,7 @@ const housingOptions: HousingOption[] = [
     category: "application",
     priority: "required"
   },
-  {
-    title: "How to Apply",
-    description: "Step-by-step guide to complete your housing application",
-    icon: <FileText className="h-6 w-6" />,
-    path: "/housing/how-to-apply",
-    category: "application",
-    priority: "required"
-  },
+
   {
     title: "Residence Hall Contract",
     icon: <div className="relative">
@@ -89,14 +82,7 @@ const housingOptions: HousingOption[] = [
     category: "facilities",
     priority: "recommended"
   },
-  {
-    title: "Meal Plan",
-    icon: <CreditCard className="h-8 w-8" />,
-    path: "/housing/meal-plan",
-    description: "View and select your dining options",
-    category: "dining",
-    priority: "recommended"
-  },
+
   {
     title: "Residence Life Handbook",
     icon: <div className="relative">
@@ -106,7 +92,7 @@ const housingOptions: HousingOption[] = [
     path: "/housing/handbook",
     description: "Access the complete guide to living on campus",
     category: "resources",
-    priority: "recommended"
+    priority: "required"
   },
   {
     title: "Campus Social Hub",
@@ -207,11 +193,11 @@ export default function Housing() {
         <CardContent className="pt-6">
           <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">4</div>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">7</div>
               <div className="text-sm text-green-700 dark:text-green-300">Residence Halls</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">500+</div>
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">600+</div>
               <div className="text-sm text-green-700 dark:text-green-300">Students Housed</div>
             </div>
             <div className="text-center">
@@ -534,7 +520,6 @@ export default function Housing() {
                   <p>Housing Application</p>
                   <p>Room Selection</p>
                   <p>Maintenance Requests</p>
-                  <p>Meal Plan Selection</p>
                   <p>Residence Hall Contract</p>
                 </div>
               </div>

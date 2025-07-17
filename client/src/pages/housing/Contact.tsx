@@ -21,8 +21,9 @@ const contactInfo: ContactInfo[] = [
     icon: <Building2 className="h-6 w-6" />,
     details: [
       "Housing & Residence Life",
-      "123 Campus Drive",
-      "Athens, OH 45701"
+      "Room 196 John Light Hall",
+      "3301 Hocking Parkway",
+      "Nelsonville, OH 45764"
     ],
     description: "For general inquiries and administrative matters"
   },
@@ -30,9 +31,8 @@ const contactInfo: ContactInfo[] = [
     title: "Phone",
     icon: <Phone className="h-6 w-6" />,
     details: [
-      "Main: (740) 555-0123",
-      "Emergency: (740) 555-0124",
-      "Fax: (740) 555-0125"
+      "Main: (740) 753-7043",
+      "Emergency: (740) 753-6598"
     ],
     description: "Available 24/7 for emergencies"
   },
@@ -40,9 +40,7 @@ const contactInfo: ContactInfo[] = [
     title: "Email",
     icon: <Mail className="h-6 w-6" />,
     details: [
-      "General: housing@ohio.edu",
-      "Maintenance: maintenance@ohio.edu",
-      "Billing: housing-billing@ohio.edu"
+      "General: housing@hocking.edu"
     ],
     description: "Response within 24-48 business hours"
   },
@@ -51,7 +49,7 @@ const contactInfo: ContactInfo[] = [
     icon: <Clock className="h-6 w-6" />,
     details: [
       "Monday - Friday: 8:00 AM - 5:00 PM",
-      "Saturday: 10:00 AM - 2:00 PM",
+      "Saturday: Closed",
       "Sunday: Closed"
     ],
     description: "Summer hours may vary"
