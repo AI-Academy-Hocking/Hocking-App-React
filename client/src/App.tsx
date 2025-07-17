@@ -4,6 +4,7 @@ import { Toaster } from "./components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
+import Dashboard from "@/pages/Dashboard";
 import Calendar from "@/pages/Calendar";
 import StudentTools from "@/pages/StudentTools";
 import Maps from "@/pages/Maps";
@@ -48,6 +49,20 @@ import CampusHealth from "./pages/CampusHealth";
 import CareerUniversityCenter from "./pages/CareerUniversityCenter";
 import VerifyUser from "./pages/VerifyUser";
 import VerifyPost from "./pages/VerifyPost";
+
+// New feature pages
+import StudyGroups from "@/pages/StudyGroups";
+import Events from "@/pages/Events";
+import Wellness from "@/pages/Wellness";
+import CareerHub from "@/pages/CareerHub";
+import RoommateFinder from "@/pages/RoommateFinder";
+import StudyPlanner from "@/pages/StudyPlanner";
+import Achievements from "@/pages/Achievements";
+
+// Phase 2, 3, 4 - AI and Analytics pages
+import AIStudyAssistant from "@/pages/AIStudyAssistant";
+import PredictiveAnalytics from "@/pages/PredictiveAnalytics";
+
 import './index.css';
 import './styles/globals.css';
 import { useEffect, useState } from 'react';
@@ -105,6 +120,7 @@ function Router() {
     <MainLayout>
       <Switch>
         <Route path="/home" component={Home} />
+        <Route path="/dashboard" component={Dashboard} />
         <Route path="/calendar" component={Calendar} />
         <Route path="/tools" component={StudentTools} />
         <Route path="/maps" component={Maps} />
@@ -147,6 +163,20 @@ function Router() {
         <Route path="/career-university-center" component={CareerUniversityCenter} />
         <Route path="/verify-user/:id" component={VerifyUser} />
         <Route path="/verify-post/:id" component={VerifyPost} />
+        
+        {/* New feature routes - Phase 1 */}
+        <Route path="/study-groups" component={StudyGroups} />
+        <Route path="/events" component={Events} />
+        <Route path="/wellness" component={Wellness} />
+        <Route path="/career-hub" component={CareerHub} />
+        <Route path="/roommate-finder" component={RoommateFinder} />
+        <Route path="/study-planner" component={StudyPlanner} />
+        <Route path="/achievements" component={Achievements} />
+        
+        {/* Phase 2, 3, 4 - AI and Analytics routes */}
+        <Route path="/ai-study-assistant" component={AIStudyAssistant} />
+        <Route path="/predictive-analytics" component={PredictiveAnalytics} />
+        
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

@@ -5,6 +5,9 @@ import cors from 'cors';
 import programsRouter from './api/programs';
 import verificationRouter from './api/verification';
 import postsRouter from './api/posts';
+import analyticsRouter from './api/analytics';
+import achievementsRouter from './api/achievements';
+import socialRouter from './api/social';
 
 const app = express();
 app.use(express.json());
@@ -52,9 +55,15 @@ app.use((req, res, next) => {
     throw err;
   });
 
+  // API Routes
   app.use('/api/programs', programsRouter);
   app.use('/api/verification', verificationRouter);
   app.use('/api/posts', postsRouter);
+  
+  // New API Routes for Phase 2, 3, 4
+  app.use('/api/analytics', analyticsRouter);
+  app.use('/api/achievements', achievementsRouter);
+  app.use('/api/social', socialRouter);
 
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route

@@ -1,9 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, AlertTriangle, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
+import { ClipboardList, AlertTriangle, CheckCircle, XCircle, ArrowLeft, Download, Printer } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 interface ChecklistItem {
   category: string;
@@ -11,6 +14,8 @@ interface ChecklistItem {
     name: string;
     importance: "recommended" | "optional";
     description?: string;
+    season?: "fall" | "spring" | "both";
+    weather?: "cold" | "warm" | "rain" | "all";
   }[];
 }
 
@@ -26,28 +31,40 @@ const checklistItems: ChecklistItem[] = [
       {
         name: "Twin XL Sheets & Pillowcases",
         importance: "recommended",
-        description: "Standard dorm bed size"
+        description: "Standard dorm bed size",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Twin XL Bedspread/Comforter",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Blankets",
-        importance: "recommended"
+        importance: "recommended",
+        season: "fall",
+        weather: "cold"
       },
       {
         name: "Pillows",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Mattress Pad/Topper",
         importance: "optional",
-        description: "For extra comfort"
+        description: "For extra comfort",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Towels & Washcloths",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       }
     ]
   },
@@ -57,29 +74,41 @@ const checklistItems: ChecklistItem[] = [
       {
         name: "Shower Curtain & Bathroom Mats",
         importance: "recommended",
-        description: "For North, Downhour, Summit and Sycamore Halls (1 per suite)"
+        description: "For North, Downhour, Summit and Sycamore Halls (1 per suite)",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Toilet Paper",
         importance: "recommended",
-        description: "For North, Downhour, Summit and Sycamore"
+        description: "For North, Downhour, Summit and Sycamore",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Shower Caddy",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Shower Shoes/Flip Flops",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Personal Hygiene Products",
         importance: "recommended",
-        description: "Shampoo, soap, toothbrush, toothpaste, etc."
+        description: "Shampoo, soap, toothbrush, toothpaste, etc.",
+        season: "both",
+        weather: "all"
       },
       {
         name: "Hair Dryer",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       }
     ]
   },
@@ -212,16 +241,43 @@ const checklistItems: ChecklistItem[] = [
     items: [
       {
         name: "Umbrella",
-        importance: "recommended"
+        importance: "recommended",
+        season: "both",
+        weather: "rain"
       },
       {
-        name: "Rain/Snow Gear",
+        name: "Rain Boots & Rain Jacket",
         importance: "recommended",
-        description: "Boots, coat, gloves, hat"
+        description: "Essential for rainy days",
+        season: "both",
+        weather: "rain"
+      },
+      {
+        name: "Winter Coat & Gloves",
+        importance: "recommended",
+        description: "Heavy coat, gloves, hat, scarf",
+        season: "fall",
+        weather: "cold"
+      },
+      {
+        name: "Snow Boots",
+        importance: "recommended",
+        description: "Waterproof boots for snow",
+        season: "fall",
+        weather: "cold"
+      },
+      {
+        name: "Light Jacket/Sweater",
+        importance: "recommended",
+        description: "For cool spring/fall days",
+        season: "spring",
+        weather: "warm"
       },
       {
         name: "Bike & Bike Lock",
-        importance: "optional"
+        importance: "optional",
+        season: "both",
+        weather: "all"
       }
     ]
   },
@@ -345,6 +401,120 @@ const item = {
 };
 
 export default function WhatToBring() {
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [selectedSeason, setSelectedSeason] = useState<"fall" | "spring" | "both">("both");
+  const [selectedWeather, setSelectedWeather] = useState<"cold" | "warm" | "rain" | "all">("all");
+
+  // Load saved progress from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('whatToBringProgress');
+    if (saved) {
+      setCheckedItems(JSON.parse(saved));
+    }
+  }, []);
+
+  // Save progress to localStorage whenever checkedItems changes
+  useEffect(() => {
+    localStorage.setItem('whatToBringProgress', JSON.stringify(checkedItems));
+  }, [checkedItems]);
+
+  const handleItemToggle = (itemId: string) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  const resetProgress = () => {
+    setCheckedItems({});
+    localStorage.removeItem('whatToBringProgress');
+  };
+
+  const getProgressPercentage = () => {
+    const totalItems = checklistItems.reduce((acc, category) => acc + category.items.length, 0);
+    const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+    return Math.round((checkedCount / totalItems) * 100);
+  };
+
+  const printChecklist = () => {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Hocking College - What to Bring Checklist</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              .category { margin-bottom: 20px; }
+              .category h3 { color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 5px; }
+              .item { margin: 5px 0; padding: 5px; }
+              .recommended { background-color: #f0f9ff; }
+              .optional { background-color: #fef3c7; }
+              .checkbox { width: 20px; height: 20px; margin-right: 10px; }
+              .season-badge { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+              .weather-badge { background: #3b82f6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+            </style>
+          </head>
+          <body>
+            <h1>Hocking College - What to Bring Checklist</h1>
+            <p><strong>Progress:</strong> ${getProgressPercentage()}% complete</p>
+            ${checklistItems.map(category => `
+              <div class="category">
+                <h3>${category.category}</h3>
+                ${category.items
+                  .filter(item => 
+                    (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+                    (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+                  )
+                  .map(item => `
+                    <div class="item ${item.importance}">
+                      <input type="checkbox" class="checkbox" ${checkedItems[`${category.category}-${item.name}`] ? 'checked' : ''}>
+                      <strong>${item.name}</strong>
+                      ${item.season && item.season !== "both" ? `<span class="season-badge">${item.season}</span>` : ''}
+                      ${item.weather && item.weather !== "all" ? `<span class="weather-badge">${item.weather}</span>` : ''}
+                      ${item.description ? `<br><em>${item.description}</em>` : ''}
+                    </div>
+                  `).join('')}
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
+  const downloadChecklist = () => {
+    const content = `
+HOCKING COLLEGE - WHAT TO BRING CHECKLIST
+Progress: ${getProgressPercentage()}% complete
+
+${checklistItems.map(category => `
+${category.category.toUpperCase()}
+${category.items
+  .filter(item => 
+    (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+    (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+  )
+  .map(item => `[ ] ${item.name}${item.description ? ` - ${item.description}` : ''}${item.season && item.season !== "both" ? ` (${item.season})` : ''}${item.weather && item.weather !== "all" ? ` (${item.weather})` : ''}`)
+  .join('\n')}
+`).join('\n')}
+
+Generated on: ${new Date().toLocaleDateString()}
+    `;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'hocking-college-checklist.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       <div className="flex items-center mb-6">
@@ -367,6 +537,123 @@ export default function WhatToBring() {
         </p>
       </div>
 
+      {/* Progress Bar and Controls */}
+      <Card className="mb-8 border-2 border-blue-600">
+        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
+          <CardTitle className="flex items-center justify-between text-xl text-blue-800 dark:text-blue-200">
+            <span>Packing Progress: {getProgressPercentage()}%</span>
+            <div className="flex gap-2">
+              <Button onClick={printChecklist} variant="outline" size="sm" className="flex items-center gap-2">
+                <Printer className="h-4 w-4" />
+                Print
+              </Button>
+              <Button onClick={downloadChecklist} variant="outline" size="sm" className="flex items-center gap-2">
+                <Download className="h-4 w-4" />
+                Download
+              </Button>
+              <Button onClick={resetProgress} variant="outline" size="sm">
+                Reset
+              </Button>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div 
+              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+              style={{ width: `${getProgressPercentage()}%` }}
+            ></div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Season and Weather Filters */}
+      <Card className="mb-8 border-2 border-green-600">
+        <CardHeader className="bg-green-50 dark:bg-green-900/20">
+          <CardTitle className="text-xl text-green-800 dark:text-green-200">Filter by Season & Weather</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Semester</h4>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="season"
+                    value="both"
+                    checked={selectedSeason === "both"}
+                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Both Semesters</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="season"
+                    value="fall"
+                    checked={selectedSeason === "fall"}
+                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Fall Only</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="season"
+                    value="spring"
+                    checked={selectedSeason === "spring"}
+                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Spring Only</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Weather</h4>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="weather"
+                    value="all"
+                    checked={selectedWeather === "all"}
+                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">All Weather</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="weather"
+                    value="cold"
+                    checked={selectedWeather === "cold"}
+                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Cold Weather</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="weather"
+                    value="rain"
+                    checked={selectedWeather === "rain"}
+                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Rain Gear</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Collapsible Sections */}
       <Accordion type="single" collapsible className="mb-8">
         {/* Recommended Items */}
@@ -383,26 +670,52 @@ export default function WhatToBring() {
                 <div key={category.category} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
                   <h3 className="font-semibold text-green-800 dark:text-green-200 mb-3">{category.category}</h3>
                   <ul className="space-y-3">
-                    {category.items.map((item) => (
-                      <li key={item.name} className="space-y-1">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-2">
-                            <span className="h-1.5 w-1.5 rounded-full bg-green-600"></span>
-                            <span className="font-medium text-green-800 dark:text-green-200">{item.name}</span>
-                          </div>
-                          <Badge 
-                            className={item.importance === "recommended" ? "bg-green-600 text-white" : "bg-green-200 text-green-800"}
-                          >
-                            {item.importance}
-                          </Badge>
-                        </div>
-                        {item.description && (
-                          <p className="text-sm text-green-700 dark:text-green-300 ml-3.5">
-                            {item.description}
-                          </p>
-                        )}
-                      </li>
-                    ))}
+                    {category.items
+                      .filter(item => 
+                        (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+                        (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+                      )
+                      .map((item) => {
+                        const itemId = `${category.category}-${item.name}`;
+                        return (
+                          <li key={item.name} className="space-y-1">
+                            <div className="flex justify-between items-start">
+                              <div className="flex items-center gap-2 flex-1">
+                                <Checkbox
+                                  checked={checkedItems[itemId] || false}
+                                  onCheckedChange={() => handleItemToggle(itemId)}
+                                  className="text-green-600"
+                                />
+                                <span className={`font-medium ${checkedItems[itemId] ? 'line-through text-green-600' : 'text-green-800 dark:text-green-200'}`}>
+                                  {item.name}
+                                </span>
+                              </div>
+                              <div className="flex gap-2">
+                                {item.season && item.season !== "both" && (
+                                  <Badge className="bg-green-200 text-green-800 text-xs">
+                                    {item.season === "fall" ? "🍂 Fall" : "🌸 Spring"}
+                                  </Badge>
+                                )}
+                                {item.weather && item.weather !== "all" && (
+                                  <Badge className="bg-blue-200 text-blue-800 text-xs">
+                                    {item.weather === "cold" ? "❄️ Cold" : item.weather === "rain" ? "🌧️ Rain" : "☀️ Warm"}
+                                  </Badge>
+                                )}
+                                <Badge 
+                                  className={item.importance === "recommended" ? "bg-green-600 text-white" : "bg-green-200 text-green-800"}
+                                >
+                                  {item.importance}
+                                </Badge>
+                              </div>
+                            </div>
+                            {item.description && (
+                              <p className="text-sm text-green-700 dark:text-green-300 ml-6">
+                                {item.description}
+                              </p>
+                            )}
+                          </li>
+                        );
+                      })}
                   </ul>
                 </div>
               ))}

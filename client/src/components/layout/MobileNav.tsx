@@ -1,5 +1,16 @@
 import { useLocation, Link } from "wouter";
-import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield } from "lucide-react";
+import { 
+  Home, 
+  LayoutDashboard, 
+  CalendarDays, 
+  BookOpen, 
+  Users, 
+  Heart, 
+  Briefcase, 
+  UserPlus,
+  Brain,
+  TrendingUp
+} from "lucide-react";
 
 export default function MobileNav() {
   const [location] = useLocation();
@@ -8,11 +19,13 @@ export default function MobileNav() {
 
   const navItems = [
     { path: "/home", label: "Home", icon: Home },
-    { path: "/calendar", label: "Calendar", icon: CalendarDays },
-    { path: "/tools", label: "Student Tools", icon: Wrench },
-    { path: "/maps", label: "Maps", icon: Map },
-    { path: "/dining", label: "Dining", icon: UtensilsCrossed },
-    { path: "/safety", label: "Safety", icon: Shield },
+    { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { path: "/ai-study-assistant", label: "AI", icon: Brain },
+    { path: "/study-planner", label: "Study", icon: BookOpen },
+    { path: "/wellness", label: "Wellness", icon: Heart },
+    { path: "/career-hub", label: "Career", icon: Briefcase },
+    { path: "/roommate-finder", label: "Roommates", icon: UserPlus },
+    { path: "/predictive-analytics", label: "Analytics", icon: TrendingUp },
   ];
 
   return (
