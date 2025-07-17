@@ -15,23 +15,6 @@ interface RecentActivityWidgetProps {
 }
 
 export function RecentActivityWidget({ activities }: RecentActivityWidgetProps) {
-  const getActivityIcon = (type: Activity['type']) => {
-    switch (type) {
-      case 'social':
-        return MessageSquare;
-      case 'event':
-        return Calendar;
-      case 'achievement':
-        return Award;
-      case 'study':
-        return BookOpen;
-      case 'group':
-        return Users;
-      default:
-        return MessageSquare;
-    }
-  };
-
   const getActivityColor = (type: Activity['type']) => {
     switch (type) {
       case 'social':
