@@ -261,33 +261,33 @@ router.get('/stats/:userId', async (req, res) => {
       totalPoints: userData.totalPoints || 0,
       completionRate: Math.round(((userData.unlocked?.length || 0) / ACHIEVEMENTS.length) * 100),
       rarityBreakdown: {
-        common: userData.unlocked?.filter(id => 
+                common: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.rarity === 'common'
         ).length || 0,
-        rare: userData.unlocked?.filter(id => 
+        rare: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.rarity === 'rare'
         ).length || 0,
-        epic: userData.unlocked?.filter(id => 
+        epic: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.rarity === 'epic'
         ).length || 0,
-        legendary: userData.unlocked?.filter(id => 
+        legendary: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.rarity === 'legendary'
         ).length || 0,
       },
       categoryBreakdown: {
-        academic: userData.unlocked?.filter(id => 
+        academic: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.category === 'academic'
         ).length || 0,
-        social: userData.unlocked?.filter(id => 
+        social: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.category === 'social'
         ).length || 0,
-        wellness: userData.unlocked?.filter(id => 
+        wellness: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.category === 'wellness'
         ).length || 0,
-        career: userData.unlocked?.filter(id => 
+        career: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.category === 'career'
         ).length || 0,
-        housing: userData.unlocked?.filter(id => 
+        housing: userData.unlocked?.filter((id: string) =>
           ACHIEVEMENTS.find(a => a.id === id)?.category === 'housing'
         ).length || 0,
       },

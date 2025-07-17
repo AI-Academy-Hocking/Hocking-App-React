@@ -28,7 +28,7 @@ const verificationRequests = new Map<string, VerificationRequest>();
 const createTransporter = () => {
   // For development, we'll use a test account
   // In production, configure with real SMTP settings
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER || 'hocking.social.hub@gmail.com',

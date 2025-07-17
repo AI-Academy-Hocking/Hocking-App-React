@@ -30,26 +30,16 @@ export async function getEvents(calendarType?: string): Promise<Event[]> {
       const start = event.start?.dateTime || event.start?.date || '';
       const end = event.end?.dateTime || event.end?.date || '';
       
-      // Format the date and time
-      const date = new Date(start).toISOString().split('T')[0];
-      const startTime = new Date(start).toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
-      });
-      const endTime = new Date(end).toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
-      });
-      
       return {
         id: index + 1,
+        createdAt: new Date(),
         title: event.summary || 'Unnamed Event',
-        date,
-        time: `${startTime} - ${endTime}`,
+        description: event.description || '',
+        startTime: new Date(start),
+        endTime: new Date(end),
         location: event.location || 'TBD',
-        description: event.description || null,
+        isRecurring: false,
+        recurrencePattern: null,
       };
     });
   } catch (error) {

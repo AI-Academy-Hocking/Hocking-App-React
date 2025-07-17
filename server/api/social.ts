@@ -239,7 +239,7 @@ router.post('/events/:eventId/attend', async (req, res) => {
     
     if (isAttending) {
       // Remove from attendees
-      event.attendees = event.attendees.filter(id => id !== userId);
+      event.attendees = event.attendees.filter((id: string) => id !== userId);
     } else {
       // Add to attendees
       if (event.maxAttendees && event.attendees.length >= event.maxAttendees) {
@@ -272,7 +272,7 @@ router.post('/events/:eventId/like', async (req, res) => {
     const isLiked = event.likes.includes(userId);
     
     if (isLiked) {
-      event.likes = event.likes.filter(id => id !== userId);
+      event.likes = event.likes.filter((id: string) => id !== userId);
     } else {
       event.likes.push(userId);
     }
@@ -364,7 +364,7 @@ router.get('/messages/:userId', async (req, res) => {
     
     const conversationList = Array.from(conversations.entries()).map(([key, messages]) => ({
       conversationId: key,
-      messages: messages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()),
+      messages: messages.sort((a: any, b: any) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()),
     }));
     
     res.json(conversationList);

@@ -175,47 +175,47 @@ router.get('/user/:userId', async (req, res) => {
                        90 * 24 * 60 * 60 * 1000;
     
     const filteredStudySessions = userData.studySessions.filter(
-      session => now.getTime() - new Date(session.timestamp).getTime() <= timeRangeMs
+      (session: any) => now.getTime() - new Date(session.timestamp).getTime() <= timeRangeMs
     );
     
     const filteredWellness = userData.wellnessActivities.filter(
-      activity => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
+      (activity: any) => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
     );
     
     const filteredSocial = userData.socialActivities.filter(
-      activity => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
+      (activity: any) => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
     );
     
     const filteredCareer = userData.careerActivities.filter(
-      activity => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
+      (activity: any) => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
     );
     
     // Calculate study hours
     const studyHours = {
       daily: Array(7).fill(0),
-      weekly: [filteredStudySessions.reduce((sum, session) => sum + session.duration, 0) / 60],
-      monthly: [filteredStudySessions.reduce((sum, session) => sum + session.duration, 0) / 60],
+      weekly: [filteredStudySessions.reduce((sum: number, session: any) => sum + session.duration, 0) / 60],
+      monthly: [filteredStudySessions.reduce((sum: number, session: any) => sum + session.duration, 0) / 60],
     };
     
     // Calculate wellness scores
     const wellnessScores = {
-      sleep: filteredWellness.filter(a => a.type === 'sleep').map(a => a.value),
-      exercise: filteredWellness.filter(a => a.type === 'exercise').map(a => a.value),
-      social: filteredWellness.filter(a => a.type === 'social').map(a => a.value),
-      nutrition: filteredWellness.filter(a => a.type === 'nutrition').map(a => a.value),
+      sleep: filteredWellness.filter((a: any) => a.type === 'sleep').map((a: any) => a.value),
+      exercise: filteredWellness.filter((a: any) => a.type === 'exercise').map((a: any) => a.value),
+      social: filteredWellness.filter((a: any) => a.type === 'social').map((a: any) => a.value),
+      nutrition: filteredWellness.filter((a: any) => a.type === 'nutrition').map((a: any) => a.value),
     };
     
     // Calculate social engagement
     const socialEngagement = {
-      eventsAttended: filteredSocial.filter(a => a.type === 'event').length,
-      studyGroupsJoined: filteredSocial.filter(a => a.type === 'study_group').length,
-      connectionsMade: filteredSocial.filter(a => a.type === 'connection').length,
-      messagesSent: filteredSocial.filter(a => a.type === 'message').length,
+      eventsAttended: filteredSocial.filter((a: any) => a.type === 'event').length,
+      studyGroupsJoined: filteredSocial.filter((a: any) => a.type === 'study_group').length,
+      connectionsMade: filteredSocial.filter((a: any) => a.type === 'connection').length,
+      messagesSent: filteredSocial.filter((a: any) => a.type === 'message').length,
     };
     
     // Calculate academic progress
     const academicProgress = {
-      assignmentsCompleted: filteredStudySessions.filter(s => s.completedGoals.length > 0).length,
+      assignmentsCompleted: filteredStudySessions.filter((s: any) => s.completedGoals.length > 0).length,
       averageGrade: 85, // Mock data
       studySessions: filteredStudySessions.length,
       attendanceRate: 92, // Mock data
@@ -223,10 +223,10 @@ router.get('/user/:userId', async (req, res) => {
     
     // Calculate career metrics
     const careerMetrics = {
-      applicationsSubmitted: filteredCareer.filter(a => a.type === 'application').length,
-      interviewsScheduled: filteredCareer.filter(a => a.type === 'interview').length,
-      skillsDeveloped: filteredCareer.filter(a => a.type === 'skill').length,
-      networkingEvents: filteredCareer.filter(a => a.type === 'networking').length,
+      applicationsSubmitted: filteredCareer.filter((a: any) => a.type === 'application').length,
+      interviewsScheduled: filteredCareer.filter((a: any) => a.type === 'interview').length,
+      skillsDeveloped: filteredCareer.filter((a: any) => a.type === 'skill').length,
+      networkingEvents: filteredCareer.filter((a: any) => a.type === 'networking').length,
     };
     
     res.json({
@@ -255,7 +255,7 @@ router.get('/recommendations/:userId', async (req, res) => {
     const recommendations = [];
     
     // Study recommendations
-    const totalStudyHours = userData.studySessions.reduce((sum, session) => sum + session.duration, 0) / 60;
+    const totalStudyHours = userData.studySessions.reduce((sum: number, session: any) => sum + session.duration, 0) / 60;
     if (totalStudyHours < 20) {
       recommendations.push({
         id: '1',
@@ -271,9 +271,9 @@ router.get('/recommendations/:userId', async (req, res) => {
     }
     
     // Wellness recommendations
-    const sleepActivities = userData.wellnessActivities.filter(a => a.type === 'sleep');
+    const sleepActivities = userData.wellnessActivities.filter((a: any) => a.type === 'sleep');
     if (sleepActivities.length > 0) {
-      const avgSleep = sleepActivities.reduce((sum, a) => sum + a.value, 0) / sleepActivities.length;
+      const avgSleep = sleepActivities.reduce((sum: number, a: any) => sum + a.value, 0) / sleepActivities.length;
       if (avgSleep < 7) {
         recommendations.push({
           id: '2',
@@ -290,7 +290,7 @@ router.get('/recommendations/:userId', async (req, res) => {
     }
     
     // Social recommendations
-    const socialActivities = userData.socialActivities.filter(a => a.type === 'event');
+    const socialActivities = userData.socialActivities.filter((a: any) => a.type === 'event');
     if (socialActivities.length < 2) {
       recommendations.push({
         id: '3',
