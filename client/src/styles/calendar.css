@@ -12,6 +12,9 @@
   overflow: hidden;
   background-color: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .dark .modern-calendar .rbc-month-view {
@@ -23,66 +26,142 @@
 /* Clean header row */
 .modern-calendar .rbc-header {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
-  border: none;
-  padding: 16px 8px;
+  border-top: 2px solid #3b82f6;
+  border-bottom: 2px solid #3b82f6;
+  border-left: 2px solid #3b82f6;
+  border-right: 2px solid #3b82f6;
+  height: 85px;
+  min-height: 85px;
+  max-height: 85px;
+  padding: 12px 8px;
   font-weight: 600;
   color: white;
   text-align: center;
   font-size: 14px;
   letter-spacing: 0.5px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .dark .modern-calendar .rbc-header {
   background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  border-top-color: white;
+  border-bottom-color: white;
+  border-left-color: white;
+  border-right-color: white;
+}
+
+/* Consistent border thickness for all headers */
+
+/* Make sure header row has proper spacing */
+.modern-calendar .rbc-month-header .rbc-row {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+}
+
+/* Header row container styling */
+.modern-calendar .rbc-month-header {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modern-calendar .rbc-row {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove any default spacing on headers */
+.modern-calendar .rbc-header {
+  margin: 0;
+}
+
+/* Calendar body - ensure it fills remaining space */
+.modern-calendar .rbc-month-view .rbc-month-header,
+.modern-calendar .rbc-month-view .rbc-row {
+  flex-shrink: 0;
+}
+
+.modern-calendar .rbc-month-view .rbc-month-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Clean unified date cells */
 .modern-calendar .rbc-date-cell {
   background-color: transparent;
-  border: none;
+  border: 2px solid #3b82f6;
+  height: 85px;
   min-height: 85px;
+  max-height: 85px;
   padding: 12px 8px;
   position: relative;
   transition: all 0.2s ease;
-}
-
-/* Subtle vertical dividers only */
-.modern-calendar .rbc-date-cell:not(:last-child):after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 10%;
-  bottom: 10%;
-  width: 1px;
-  background-color: #e5e7eb;
-}
-
-.dark .modern-calendar .rbc-date-cell:not(:last-child):after {
-  background-color: #374151;
-}
-
-/* Subtle horizontal dividers */
-.modern-calendar .rbc-month-row:not(:last-child) .rbc-date-cell:before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background-color: #e5e7eb;
-}
-
-.dark .modern-calendar .rbc-month-row:not(:last-child) .rbc-date-cell:before {
-  background-color: #374151;
-}
-
-/* Hover effects */
-.modern-calendar .rbc-date-cell:hover {
-  background-color: rgba(59, 130, 246, 0.05);
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
 }
 
-.dark .modern-calendar .rbc-date-cell:hover {
+.dark .modern-calendar .rbc-date-cell {
+  border-color: white;
+}
+
+
+
+/* Add horizontal line across top of date boxes */
+.modern-calendar .rbc-date-cell {
+  border-top: 2px solid #3b82f6;
+}
+
+.dark .modern-calendar .rbc-date-cell {
+  border-top-color: white;
+}
+
+/* Remove duplicate top borders except for first row */
+.modern-calendar .rbc-month-row:not(:first-child) .rbc-date-cell {
+  border-top: 2px solid #3b82f6;
+}
+
+.dark .modern-calendar .rbc-month-row:not(:first-child) .rbc-date-cell {
+  border-top-color: white;
+}
+
+/* Subtle vertical dividers - remove for cleaner look */
+
+/* Horizontal dividers handled by cell borders */
+
+/* Hover effects */
+.modern-calendar .rbc-date-cell:hover {
+  cursor: pointer;
+}
+
+.modern-calendar .rbc-date-cell:hover:before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background-color: rgba(59, 130, 246, 0.05);
+  border-radius: 4px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dark .modern-calendar .rbc-date-cell:hover:before {
   background-color: rgba(59, 130, 246, 0.1);
 }
 
@@ -102,12 +181,25 @@
 
 /* Today's date highlighting */
 .modern-calendar .rbc-today {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1)) !important;
+  position: relative;
   font-weight: 600;
 }
 
-.dark .modern-calendar .rbc-today {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2)) !important;
+.modern-calendar .rbc-today:after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+  border-radius: 4px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dark .modern-calendar .rbc-today:after {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
 }
 
 /* Clean event styling */
@@ -122,6 +214,8 @@
   font-weight: 500;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .modern-calendar .rbc-event:hover {
@@ -132,7 +226,20 @@
 
 /* Selected date */
 .modern-calendar .rbc-selected {
+  position: relative;
+}
+
+.modern-calendar .rbc-selected:after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
+  border-radius: 4px;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Hide default toolbar */
@@ -154,6 +261,9 @@
   font-weight: 500;
   text-decoration: none;
   font-size: 14px;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .dark .modern-calendar .rbc-date-cell .rbc-button-link {
@@ -172,6 +282,14 @@
 /* Week row styling */
 .modern-calendar .rbc-month-row {
   border: none;
+  display: flex;
+  flex: 1;
+}
+
+/* Ensure all date cells take equal width */
+.modern-calendar .rbc-month-row .rbc-date-cell {
+  flex: 1;
+  width: calc(100% / 7);
 }
 
 /* Remove any remaining borders */
@@ -187,12 +305,17 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .modern-calendar .rbc-date-cell {
+    height: 70px;
     min-height: 70px;
+    max-height: 70px;
     padding: 8px 4px;
   }
   
   .modern-calendar .rbc-header {
-    padding: 12px 4px;
+    height: 70px;
+    min-height: 70px;
+    max-height: 70px;
+    padding: 8px 4px;
     font-size: 12px;
   }
 

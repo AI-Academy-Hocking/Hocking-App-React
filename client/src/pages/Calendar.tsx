@@ -96,12 +96,14 @@ export default function CalendarPage() {
 
   // Handle date click
   const handleDateClick = (slotInfo: any) => {
+    console.log('Date clicked:', slotInfo);
     setSelectedDate(slotInfo.start);
     setShowEventModal(true);
   };
 
   // Handle event click
   const handleEventClick = (event: any) => {
+    console.log('Event clicked:', event);
     setSelectedDate(event.start);
     setShowEventModal(true);
   };
@@ -130,14 +132,14 @@ export default function CalendarPage() {
             <Button 
               variant={activeCalendar === "academic" ? "default" : "ghost"}
               onClick={() => setActiveCalendar("academic")}
-              className="rounded-xl"
+              className="rounded-md px-6 py-2 min-w-[140px]"
             >
               Academic Calendar
             </Button>
             <Button 
               variant={activeCalendar === "activities" ? "default" : "ghost"}
               onClick={() => setActiveCalendar("activities")}
-              className="rounded-xl"
+              className="rounded-md px-6 py-2 min-w-[140px]"
             >
               Student Activities
             </Button>
@@ -208,8 +210,23 @@ export default function CalendarPage() {
                 onSelectSlot={handleDateClick}
                 onSelectEvent={handleEventClick}
                 selectable
-                popup
+                popup={false}
                 className="modern-calendar"
+                step={60}
+                showMultiDayTimes
+                components={{
+                  month: {
+                    dateHeader: ({ date, label }) => (
+                      <div 
+                        onClick={() => handleDateClick({ start: date })}
+                        className="rbc-date-header-custom"
+                        style={{ cursor: 'pointer', padding: '4px', zIndex: 10 }}
+                      >
+                        {label}
+                      </div>
+                    ),
+                  },
+                }}
               />
             </div>
           )}
@@ -255,56 +272,106 @@ export default function CalendarPage() {
         </CardContent>
       </Card>
 
-      {/* Event Modal */}
+      {/* Event Modal - Large Display */}
       {showEventModal && selectedDate && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-md mx-4 bg-white dark:bg-gray-800">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {format(selectedDate, 'MMMM d, yyyy')}
-                </h3>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => setShowEventModal(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-2xl max-h-[80vh] bg-white dark:bg-gray-800 shadow-2xl">
+            <CardContent className="p-0">
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-2xl font-bold mb-1">
+                      {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+                    </h3>
+                    <p className="text-blue-100 text-sm">
+                      {selectedDateEvents.length === 0 
+                        ? 'No events scheduled' 
+                        : `${selectedDateEvents.length} event${selectedDateEvents.length === 1 ? '' : 's'} scheduled`
+                      }
+                    </p>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setShowEventModal(false)}
+                    className="text-white hover:bg-white/20 rounded-full"
+                  >
+                    <X className="h-6 w-6" />
+                  </Button>
+                </div>
               </div>
-              
-              {selectedDateEvents.length > 0 ? (
-                <div className="space-y-3">
-                  {selectedDateEvents.map(event => (
-                    <div key={event.id} className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                      <h4 className="font-medium text-gray-900 dark:text-white">{event.title}</h4>
-                      <div className="text-sm text-gray-600 dark:text-gray-300 mt-1 space-y-1">
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {formatTime(event.startTime)} - {formatTime(event.endTime)}
+
+              {/* Modal Content */}
+              <div className="p-6 max-h-[60vh] overflow-y-auto">
+                {selectedDateEvents.length > 0 ? (
+                  <div className="space-y-4">
+                    {selectedDateEvents.map(event => (
+                      <div key={event.id} className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800 hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between mb-3">
+                          <h4 className="text-xl font-semibold text-gray-900 dark:text-white">{event.title}</h4>
+                          <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            Event
+                          </Badge>
                         </div>
-                        {event.location && (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3" />
-                            {event.location}
+                        
+                        <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-4 w-4 text-blue-600" />
+                            <span className="font-medium">Time:</span>
+                            <span>{formatTime(event.startTime)} - {formatTime(event.endTime)}</span>
                           </div>
-                        )}
+                          
+                          {event.location && (
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-4 w-4 text-blue-600" />
+                              <span className="font-medium">Location:</span>
+                              <span>{event.location}</span>
+                            </div>
+                          )}
+                        </div>
+
                         {event.description && (
-                          <div className="flex items-start gap-1">
-                            <Info className="h-3 w-3 mt-0.5" />
-                            {event.description}
+                          <div className="mt-4 p-3 bg-white/50 dark:bg-gray-800/50 rounded-lg border border-blue-100 dark:border-blue-800">
+                            <div className="flex items-start gap-2">
+                              <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                              <div>
+                                <span className="font-medium text-gray-900 dark:text-white">Description:</span>
+                                <p className="text-gray-700 dark:text-gray-300 mt-1">{event.description}</p>
+                              </div>
+                            </div>
                           </div>
                         )}
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <CalendarIcon className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      No Events Scheduled
+                    </h4>
+                    <p className="text-gray-500 dark:text-gray-400">
+                      This day is free from scheduled events. Perfect time to plan something new!
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="bg-gray-50 dark:bg-gray-900 px-6 py-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    Click on any date to view its events
+                  </div>
+                  <Button 
+                    onClick={() => setShowEventModal(false)}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                  >
+                    Close
+                  </Button>
                 </div>
-              ) : (
-                <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-                  <CalendarIcon className="h-8 w-8 mx-auto mb-2" />
-                  <p>No events scheduled for this day</p>
-                </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </div>
