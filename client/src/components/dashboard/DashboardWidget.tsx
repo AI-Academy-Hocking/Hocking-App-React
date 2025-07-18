@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 export interface WidgetConfig {
   id: string;
-  type: 'stats' | 'activity' | 'events' | 'weather' | 'achievements' | 'study' | 'wellness';
+  type: 'stats' | 'activity' | 'events' | 'weather' | 'study' | 'wellness';
   title: string;
   size: 'small' | 'medium' | 'large';
   position: { x: number; y: number };

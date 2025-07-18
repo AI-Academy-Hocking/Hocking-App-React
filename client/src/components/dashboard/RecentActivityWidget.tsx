@@ -1,9 +1,9 @@
 import React from 'react';
-import { MessageSquare, Calendar, Award, BookOpen, Users } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 
 interface Activity {
   id: string;
-  type: 'social' | 'event' | 'achievement' | 'study' | 'group';
+  type: 'social' | 'event' | 'study' | 'group';
   title: string;
   description: string;
   timestamp: Date;
@@ -21,8 +21,6 @@ export function RecentActivityWidget({ activities }: RecentActivityWidgetProps) 
         return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30';
       case 'event':
         return 'text-green-600 bg-green-100 dark:bg-green-900/30';
-      case 'achievement':
-        return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30';
       case 'study':
         return 'text-purple-600 bg-purple-100 dark:bg-purple-900/30';
       case 'group':

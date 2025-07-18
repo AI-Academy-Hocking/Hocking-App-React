@@ -1,24 +1,15 @@
 import React from 'react';
-import { TrendingUp, Users, Calendar, Award } from 'lucide-react';
+import { Users, Calendar } from 'lucide-react';
 
 interface QuickStatsWidgetProps {
   stats: {
-    loginStreak: number;
     studyHours: number;
     eventsAttended: number;
-    achievements: number;
   };
 }
 
 export function QuickStatsWidget({ stats }: QuickStatsWidgetProps) {
   const statItems = [
-    {
-      label: 'Login Streak',
-      value: stats.loginStreak,
-      icon: TrendingUp,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100 dark:bg-green-900/30'
-    },
     {
       label: 'Study Hours',
       value: stats.studyHours,
@@ -32,13 +23,6 @@ export function QuickStatsWidget({ stats }: QuickStatsWidgetProps) {
       icon: Users,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100 dark:bg-purple-900/30'
-    },
-    {
-      label: 'Achievements',
-      value: stats.achievements,
-      icon: Award,
-      color: 'text-yellow-600',
-      bgColor: 'bg-yellow-100 dark:bg-yellow-900/30'
     }
   ];
 

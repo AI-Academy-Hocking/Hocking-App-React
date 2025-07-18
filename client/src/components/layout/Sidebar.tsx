@@ -8,16 +8,7 @@ import {
   LogOut, 
   UtensilsCrossed, 
   Shield,
-  LayoutDashboard,
-  Users,
-  Calendar,
-  Heart,
-  Briefcase,
-  UserPlus,
-  BookOpen,
-  Award,
-  Brain,
-  TrendingUp
+  Calendar
 } from "lucide-react";
 import HockingLogo from "../../assets/HawkLogo.png";
 import { LucideIcon } from "lucide-react";
@@ -38,30 +29,13 @@ export default function Sidebar() {
   const navItems: NavItem[] = [
     // Main Navigation
     { path: "/home", label: "Home", icon: Home, category: "main" },
-    { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard, category: "main" },
     { path: "/calendar", label: "Calendar", icon: CalendarDays, category: "main" },
     
-    // AI & Analytics
-    { path: "/ai-study-assistant", label: "AI Study Assistant", icon: Brain, category: "ai" },
-    { path: "/predictive-analytics", label: "Predictive Analytics", icon: TrendingUp, category: "ai" },
-    
     // Academic & Study
-    { path: "/study-planner", label: "Study Planner", icon: BookOpen, category: "academic" },
-    { path: "/study-groups", label: "Study Groups", icon: Users, category: "academic" },
     { path: "/tools", label: "Student Tools", icon: Wrench, category: "academic" },
     
     // Social & Events
     { path: "/events", label: "Events", icon: Calendar, category: "social" },
-    { path: "/achievements", label: "Achievements", icon: Award, category: "social" },
-    
-    // Wellness & Health
-    { path: "/wellness", label: "Wellness Tracker", icon: Heart, category: "wellness" },
-    
-    // Career & Professional
-    { path: "/career-hub", label: "Career Hub", icon: Briefcase, category: "career" },
-    
-    // Housing & Living
-    { path: "/roommate-finder", label: "Roommate Finder", icon: UserPlus, category: "housing" },
     
     // Campus Services
     { path: "/maps", label: "Maps & Directions", icon: Map, category: "services" },
@@ -81,12 +55,8 @@ export default function Sidebar() {
   const getCategoryLabel = (category: string) => {
     switch (category) {
       case 'main': return 'Main';
-      case 'ai': return 'AI & Analytics';
       case 'academic': return 'Academic';
       case 'social': return 'Social';
-      case 'wellness': return 'Wellness';
-      case 'career': return 'Career';
-      case 'housing': return 'Housing';
       case 'services': return 'Campus Services';
       default: return 'Other';
     }

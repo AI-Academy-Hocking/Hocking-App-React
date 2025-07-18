@@ -25,111 +25,11 @@ class ApiService {
     }
   }
 
-  // Analytics API
-  async recordStudySession(data: {
-    userId: string;
-    subject: string;
-    duration: number;
-    date: string;
-    goals: string[];
-    completedGoals: string[];
-    notes?: string;
-  }) {
-    return this.request('/analytics/study-session', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
 
-  async recordWellnessActivity(data: {
-    userId: string;
-    type: 'sleep' | 'exercise' | 'nutrition' | 'social' | 'mindfulness';
-    value: number;
-    date: string;
-    notes?: string;
-  }) {
-    return this.request('/analytics/wellness-activity', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
 
-  async recordSocialActivity(data: {
-    userId: string;
-    type: 'event' | 'study_group' | 'message' | 'connection';
-    activityId: string;
-    date: string;
-    metadata?: Record<string, any>;
-  }) {
-    return this.request('/analytics/social-activity', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
 
-  async recordCareerActivity(data: {
-    userId: string;
-    type: 'application' | 'interview' | 'skill' | 'networking';
-    title: string;
-    date: string;
-    status?: string;
-    metadata?: Record<string, any>;
-  }) {
-    return this.request('/analytics/career-activity', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
 
-  async getUserAnalytics(userId: string, timeRange: 'week' | 'month' | 'semester' = 'week') {
-    return this.request(`/analytics/user/${userId}?timeRange=${timeRange}`);
-  }
 
-  async getRecommendations(userId: string) {
-    return this.request(`/analytics/recommendations/${userId}`);
-  }
-
-  // Achievements API
-  async getAchievements() {
-    return this.request('/achievements');
-  }
-
-  async getUserAchievements(userId: string) {
-    return this.request(`/achievements/user/${userId}`);
-  }
-
-  async updateAchievementProgress(data: {
-    userId: string;
-    achievementId: string;
-    progress: number;
-    metadata?: Record<string, any>;
-  }) {
-    return this.request('/achievements/progress', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
-
-  async getLeaderboard() {
-    return this.request('/achievements/leaderboard');
-  }
-
-  async getAchievementStats(userId: string) {
-    return this.request(`/achievements/stats/${userId}`);
-  }
-
-  async updateBulkProgress(data: {
-    userId: string;
-    activities: Array<{
-      type: string;
-      value: number;
-    }>;
-  }) {
-    return this.request('/achievements/bulk-progress', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  }
 
   // Social API - Study Groups
   async getStudyGroups(params?: {
