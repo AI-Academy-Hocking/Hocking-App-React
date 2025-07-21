@@ -344,10 +344,10 @@ export default function DiningHall() {
               
               {dietaryOptionsExpanded && (
                 <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
-                  <p className="text-gray-600 dark:text-white mb-4 text-center">
+                  <p className="text-gray-600 dark:text-black mb-4 text-center">
                     Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
                   </p>
-                  <ul className="space-y-2 text-gray-600 dark:text-white text-sm">
+                  <ul className="space-y-2 text-gray-600 dark:text-black text-sm">
                     <li className="flex items-start">
                       <span className="inline-flex mr-2 mt-1">•</span>
                       <span>Vegetarian and vegan options available daily</span>
@@ -379,10 +379,10 @@ export default function DiningHall() {
               
               {allergenInfoExpanded && (
                 <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
-                  <p className="text-gray-600 dark:text-white mb-4 text-center">
+                  <p className="text-gray-600 dark:text-black mb-4 text-center">
                     All menu items are clearly labeled with the following allergen information:
                   </p>
-                  <div className="grid grid-cols-2 gap-2 text-gray-900 dark:text-white">
+                  <div className="grid grid-cols-2 gap-2 text-gray-900 dark:text-black">
                     <div className="flex items-center">
                       <span className="inline-flex w-6 h-6 rounded-full bg-red-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">G</span>
                       <span className="text-sm">Gluten</span>
@@ -424,13 +424,13 @@ export default function DiningHall() {
               
               {dietaryAccommodationsExpanded && (
                 <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
-                  <p className="text-gray-600 dark:text-white mb-4 text-center">
+                  <p className="text-gray-600 dark:text-black mb-4 text-center">
                     For specific dietary accommodations or concerns, please contact:
                   </p>
                   <div className="space-y-2 text-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                       <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Contact:</span>
-                      <span className="text-gray-600 dark:text-white">Janet M. Smith</span>
+                      <span className="text-gray-600 dark:text-black">Janet M. Smith</span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                       <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Email:</span>
