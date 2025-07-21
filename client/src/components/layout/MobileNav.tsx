@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield } from "lucide-react";
+import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield, GraduationCap } from "lucide-react";
 
 export default function MobileNav() {
   
@@ -10,6 +10,7 @@ export default function MobileNav() {
     { path: "/calendar", label: "Calendar", icon: CalendarDays },
     { path: "/tools", label: "Student Tools", icon: Wrench },
     { path: "/maps", label: "Maps", icon: Map },
+    { path: "/resources", label: "Resources", icon: GraduationCap },
     { path: "/dining", label: "Dining", icon: UtensilsCrossed },
     { path: "/safety", label: "Safety", icon: Shield },
   ];

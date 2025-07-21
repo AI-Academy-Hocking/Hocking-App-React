@@ -51,6 +51,7 @@ export default function Sidebar() {
   const navItems: NavItem[] = [
     { path: "/home", label: "Home", icon: Home },
     { path: "/maps", label: "Maps & Directions", icon: Map },
+    { path: "/resources", label: "Resources", icon: GraduationCap },
     { path: "/safety", label: "Campus Safety", icon: Shield },
   ];
 

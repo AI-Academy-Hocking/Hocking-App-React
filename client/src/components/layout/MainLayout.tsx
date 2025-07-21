@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState, useRef } from "react";
 import Sidebar from "./Sidebar";
 import MobileNav from "./MobileNav";
 import Header from "./Header";
@@ -11,8 +11,9 @@ interface MainLayoutProps {
 
 export default function MainLayout({ children }: MainLayoutProps) {
   const { isAuthenticated, user } = useAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   // Force reset mobile menu state on mount
   useEffect(() => {
@@ -25,6 +26,15 @@ export default function MainLayout({ children }: MainLayoutProps) {
       setLocation("/login");
     }
   }, [isAuthenticated, setLocation]);
+
+  // Scroll to top when location changes
+  useEffect(() => {
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo(0, 0);
+    }
+    // Also scroll window to top as fallback
+    window.scrollTo(0, 0);
+  }, [location]);
 
   // Show loading state while checking authentication
   if (!isAuthenticated || !user) {
@@ -46,7 +56,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         <Header onMobileMenuChange={setIsMobileMenuOpen} />
         
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-4">
+        <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4">
           {children}
         </main>
         

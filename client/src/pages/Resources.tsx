@@ -98,13 +98,13 @@ export default function Resources() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
                   href="tel:740-753-3591" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                  className="bg-white hover:bg-gray-50 border-2 border-blue-600 dark:bg-gray-600 dark:hover:bg-gray-700 dark:border-none text-blue-600 dark:text-blue-400 font-bold py-3 px-6 rounded-lg transition-colors"
                 >
                   Call: (740) 753-3591
                 </a>
                 <a 
                   href="mailto:studentservices@hocking.edu" 
-                  className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+                  className="bg-white hover:bg-gray-50 border-2 border-blue-600 dark:bg-gray-600 dark:hover:bg-gray-700 dark:border-none text-blue-600 dark:text-blue-400 font-bold py-3 px-6 rounded-lg transition-colors"
                 >
                   Email Student Services
                 </a>

@@ -53,21 +53,21 @@ export default function CampusSafety() {
             <Card className="bg-white dark:bg-[#151c26] shadow-none border border-red-500 dark:border-none rounded-xl">
               <CardContent className="flex flex-col items-center py-4">
                 <PhoneCall className="text-red-500 h-7 w-7 mb-1" />
-                <span className="text-xs text-red-500">Emergency</span>
+                <span className="text-xs text-black dark:text-white">Emergency</span>
                 <span className="text-xl font-bold text-red-500">911</span>
               </CardContent>
             </Card>
             <Card className="bg-white dark:bg-[#151c26] shadow-none border border-blue-600 dark:border-none rounded-xl">
               <CardContent className="flex flex-col items-center py-4">
                 <Shield className="text-blue-600 h-7 w-7 mb-1" />
-                <span className="text-xs text-blue-900 dark:text-blue-400">Campus Security</span>
+                <span className="text-xs text-black dark:text-white">Campus Security</span>
                 <span className="text-xl font-bold text-blue-600">(740) 753-7050</span>
               </CardContent>
             </Card>
             <Card className="bg-white dark:bg-[#151c26] shadow-none border border-green-600 dark:border-none rounded-xl">
               <CardContent className="flex flex-col items-center py-4">
                 <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
-                <span className="text-xs text-green-900 dark:text-green-400">Health Services</span>
+                <span className="text-xs text-black dark:text-white">Health Services</span>
                 <span className="text-xl font-bold text-green-600">(740) 753-7070</span>
               </CardContent>
             </Card>

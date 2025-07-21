@@ -191,13 +191,13 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
       {/* Header */}
       <section className="max-w-6xl mx-auto text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-blue-300 mb-4">
           Academic Calendar
         </h1>
-        <p className="text-xl text-gray-600 dark:text-white">
+        <p className="text-xl text-gray-600 dark:text-gray-300">
           Stay up-to-date with important dates and campus events
         </p>
       </section>
@@ -212,7 +212,7 @@ export default function CalendarPage() {
               "rounded-xl px-6 py-3 font-medium transition-all",
               activeCalendar === "academic" 
                 ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
-                : "border-2 border-blue-500 dark:border-white text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
             )}
           >
             Academic Calendar
@@ -224,7 +224,7 @@ export default function CalendarPage() {
               "rounded-xl px-6 py-3 font-medium transition-all",
               activeCalendar === "activities" 
                 ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
-                : "border-2 border-blue-500 dark:border-white text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
             )}
           >
             Student Activities
@@ -234,7 +234,7 @@ export default function CalendarPage() {
 
       {/* Main Calendar Section */}
       <section className="max-w-6xl mx-auto">
-        <Card className="border-2 border-blue-500 dark:border-white rounded-xl shadow-lg bg-white dark:bg-gray-800">
+        <Card className="border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800">
           <CardContent className="p-6">
             {/* View Toggle */}
             <div className="flex justify-center space-x-2 mb-6">
@@ -245,7 +245,7 @@ export default function CalendarPage() {
                   "rounded-xl px-6 py-2 font-medium transition-all",
                   view === "month" 
                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
-                    : "border-2 border-blue-500 dark:border-white text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
                 )}
               >
                 Month View
@@ -257,7 +257,7 @@ export default function CalendarPage() {
                   "rounded-xl px-6 py-2 font-medium transition-all",
                   view === "list" 
                     ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
-                    : "border-2 border-blue-500 dark:border-white text-blue-600 dark:text-white hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
                 )}
               >
                 List View
@@ -290,12 +290,12 @@ export default function CalendarPage() {
                     {events.map(event => (
                       <div 
                         key={event.id}
-                        className="p-4 border-2 border-white dark:border-white rounded-2xl hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors"
+                        className="p-4 border-2 border-white dark:border-none rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
                         onClick={() => handleEventClick(event)}
                       >
                         <div className="flex justify-between items-start mb-2">
                           <h4 className="font-semibold text-gray-900 dark:text-blue-300">{event.title}</h4>
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-xl">
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-300 rounded-xl">
                             {event.date ? format(new Date(event.date), 'MMM d') : 'TBD'}
                           </Badge>
                         </div>
@@ -322,7 +322,7 @@ export default function CalendarPage() {
                     <h4 className="text-xl font-semibold text-gray-900 dark:text-blue-300 mb-2">
                       No Events Found
                     </h4>
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-gray-500 dark:text-gray-300">
                       No events are currently scheduled for this calendar.
                     </p>
                   </div>
@@ -336,7 +336,7 @@ export default function CalendarPage() {
       {/* Event Modal */}
       {showEventModal && selectedDate && (
         <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden border-2 border-blue-500 dark:border-white rounded-2xl bg-blue-950 dark:bg-blue-950">
+          <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden border-2 border-blue-500 dark:border-none rounded-2xl bg-blue-950 dark:bg-blue-950">
             <CardContent className="p-0">
               {/* Modal Header */}
               <div className="bg-blue-950 text-white p-6">
@@ -361,14 +361,14 @@ export default function CalendarPage() {
                         </h4>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                          <div className="flex items-center gap-2 text-white">
+                          <div className="flex items-center gap-2 text-gray-300">
                             <Clock className="h-4 w-4 text-blue-300" />
                             <span className="font-medium">Time:</span>
                             <span>{event.time}</span>
                             {event.end && <span> - {event.end}</span>}
                           </div>
                           
-                          <div className="flex items-center gap-2 text-white">
+                          <div className="flex items-center gap-2 text-gray-300">
                             <MapPin className="h-4 w-4 text-blue-300" />
                             <span className="font-medium">Location:</span>
                             <span>{event.location}</span>
@@ -376,12 +376,12 @@ export default function CalendarPage() {
                         </div>
 
                         {event.description && (
-                          <div className="mt-4 p-3 bg-blue-900/20 rounded-lg border border-blue-400">
+                          <div className="mt-4 p-3 bg-gray-800/50 rounded-lg border border-gray-600">
                             <div className="flex items-start gap-2">
                               <Info className="h-4 w-4 text-blue-300 mt-0.5 flex-shrink-0" />
                               <div>
-                                <span className="font-medium text-white">Description:</span>
-                                <p className="text-white mt-1">{event.description}</p>
+                                <span className="font-medium text-gray-300">Description:</span>
+                                <p className="text-gray-300 mt-1">{event.description}</p>
                               </div>
                             </div>
                           </div>
@@ -395,7 +395,7 @@ export default function CalendarPage() {
                     <h4 className="text-xl font-semibold text-white mb-2">
                       No Events Scheduled
                     </h4>
-                    <p className="text-white">
+                    <p className="text-gray-300">
                       This day is free from scheduled events. Perfect time to plan something new!
                     </p>
                   </div>
@@ -405,7 +405,7 @@ export default function CalendarPage() {
               {/* Modal Footer */}
               <div className="bg-blue-900/40 px-6 py-4">
                 <div className="flex justify-between items-center">
-                  <div className="text-sm text-white">
+                  <div className="text-sm text-gray-300">
                     Click on any date to view its events
                   </div>
                   <Button 
@@ -413,7 +413,7 @@ export default function CalendarPage() {
                       setShowEventModal(false);
                       setSelectedDate(null);
                     }}
-                    className="text-blue-400 hover:text-blue-300 bg-transparent hover:bg-transparent"
+                    className="text-blue-300 hover:text-blue-200 bg-transparent hover:bg-transparent"
                     variant="ghost"
                   >
                     Close
@@ -433,13 +433,13 @@ export default function CalendarPage() {
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 border-2 border-blue-500 dark:border-white rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+          <Card className="p-6 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Academic Calendar</h3>
-            <p className="text-gray-600 dark:text-white mb-4">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               View important dates, deadlines, and events for the academic year.
             </p>
             <Button 
-              className="w-full text-blue-600 dark:text-blue-400 bg-transparent hover:bg-transparent"
+              className="w-full text-blue-600 dark:text-blue-300 bg-transparent hover:bg-transparent"
               variant="ghost"
               onClick={() => setActiveCalendar("academic")}
             >
@@ -447,13 +447,13 @@ export default function CalendarPage() {
             </Button>
           </Card>
 
-          <Card className="p-6 border-2 border-blue-500 dark:border-white rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+          <Card className="p-6 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Activities</h3>
-            <p className="text-gray-600 dark:text-white mb-4">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               Discover campus events, clubs, and activities to get involved.
             </p>
             <Button 
-              className="w-full text-blue-600 dark:text-blue-400 bg-transparent hover:bg-transparent"
+              className="w-full text-blue-600 dark:text-blue-300 bg-transparent hover:bg-transparent"
               variant="ghost"
               onClick={() => setActiveCalendar("activities")}
             >

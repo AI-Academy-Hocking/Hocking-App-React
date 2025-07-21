@@ -14,6 +14,7 @@ import HawkLogo from "../../assets/HawkLogo.png";
 const navItems = [
   { path: "/home", label: "Home", icon: Home },
   { path: "/maps", label: "Maps & Directions", icon: Map },
+  { path: "/resources", label: "Resources", icon: GraduationCap },
   { path: "/safety", label: "Campus Safety", icon: Shield },
 ];
 
