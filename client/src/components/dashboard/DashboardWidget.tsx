@@ -16,11 +16,10 @@ export interface WidgetConfig {
 interface DashboardWidgetProps {
   config: WidgetConfig;
   onRemove: (id: string) => void;
-  onConfigChange: (id: string, config: Partial<WidgetConfig>) => void;
   children: React.ReactNode;
 }
 
-export function DashboardWidget({ config, onRemove, onConfigChange, children }: DashboardWidgetProps) {
+export function DashboardWidget({ config, onRemove, children }: DashboardWidgetProps) {
   const sizeClasses = {
     small: 'col-span-1 row-span-1',
     medium: 'col-span-2 row-span-1',
