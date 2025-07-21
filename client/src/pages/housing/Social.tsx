@@ -77,6 +77,122 @@ const CampusSocialHub: React.FC = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  // Demo mode function
+  const enableDemoMode = () => {
+    const demoUser: User = {
+      firstName: 'Demo',
+      lastName: 'Student',
+      studentId: 'DEMO123456',
+      email: 'demo@hocking.edu',
+      dormBuilding: 'North',
+      roomNumber: '101',
+      program: 'Computer Science',
+      username: 'demo_student',
+      isAuthenticated: true,
+      isVerified: true,
+      userType: 'student'
+    };
+    
+    // Sample posts for demo mode
+    const samplePosts: Post[] = [
+      {
+        id: 'demo-1',
+        type: 'text',
+        content: 'Just finished my final project for Computer Science! Anyone want to grab coffee and celebrate? ☕ #CS #Finals #Celebration',
+        author: 'Sarah Johnson',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+        likes: 12,
+        comments: 3,
+        shares: 1,
+        isLiked: false,
+        isSaved: false,
+        isPinned: false,
+        category: 'social',
+        hashtags: ['CS', 'Finals', 'Celebration']
+      },
+      {
+        id: 'demo-2',
+        type: 'event',
+        content: 'Study group for Biology 101 tomorrow at 3 PM in the library! Bring your notes and questions. All welcome! 📚',
+        author: 'Mike Chen',
+        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+        likes: 8,
+        comments: 5,
+        shares: 2,
+        isLiked: true,
+        isSaved: false,
+        isPinned: false,
+        category: 'study',
+        hashtags: ['Biology', 'StudyGroup', 'Library'],
+        eventDetails: {
+          date: '2024-01-15',
+          time: '3:00 PM',
+          location: 'Library - Study Room A',
+          description: 'Study group for Biology 101. Bring your notes and questions!'
+        }
+      },
+      {
+        id: 'demo-3',
+        type: 'poll',
+        content: 'What should we do for the dorm movie night this weekend? 🎬',
+        author: 'Emma Davis',
+        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
+        likes: 15,
+        comments: 2,
+        shares: 0,
+        isLiked: false,
+        isSaved: false,
+        isPinned: false,
+        category: 'social',
+        hashtags: ['MovieNight', 'Weekend'],
+        pollOptions: ['Action Movie', 'Comedy', 'Horror', 'Romance'],
+        pollVotes: [8, 12, 3, 7],
+        pollVoters: ['demo@hocking.edu', '1', 'sarah@hocking.edu', '2'] // demo user voted for comedy
+      },
+      {
+        id: 'demo-4',
+        type: 'alert',
+        content: '⚠️ Maintenance Notice: Hot water will be temporarily unavailable in North Hall tomorrow from 9 AM to 2 PM. Sorry for the inconvenience!',
+        author: 'Housing Office',
+        timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
+        likes: 5,
+        comments: 1,
+        shares: 8,
+        isLiked: false,
+        isSaved: true,
+        isPinned: true,
+        category: 'housing',
+        hashtags: ['Maintenance', 'NorthHall', 'Notice']
+      },
+      {
+        id: 'demo-5',
+        type: 'text',
+        content: 'Lost my student ID card somewhere between the dining hall and North Hall. If anyone finds it, please message me! 🙏 #LostCard #NorthHall',
+        author: 'Alex Thompson',
+        timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+        likes: 3,
+        comments: 2,
+        shares: 1,
+        isLiked: false,
+        isSaved: false,
+        isPinned: false,
+        category: 'housing',
+        hashtags: ['LostCard', 'NorthHall']
+      }
+    ];
+    
+    setUser(demoUser);
+    setPosts(samplePosts);
+    setShowAuth(false);
+    setShowVerification(false);
+    localStorage.setItem('campusSocialHubUser', JSON.stringify(demoUser));
+    
+    toast({
+      title: "Demo Mode Activated! 🎉",
+      description: "You're now in demo mode with sample posts. All features are available for testing.",
+    });
+  };
+
   // Check for existing login on component mount
   useEffect(() => {
     const savedUser = localStorage.getItem('campusSocialHubUser');
@@ -604,6 +720,24 @@ const CampusSocialHub: React.FC = () => {
                   Submit for Verification
                 </Button>
               </form>
+              
+              {/* Demo Mode Button */}
+              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className="text-center mb-3">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">For testing and demonstration purposes:</p>
+                </div>
+                <Button 
+                  type="button" 
+                  onClick={enableDemoMode}
+                  variant="outline"
+                  className="w-full border-2 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
+                >
+                  🚀 Try Demo Mode
+                </Button>
+                <p className="text-xs text-gray-500 dark:text-gray-500 text-center mt-2">
+                  Skip registration and explore all features instantly
+                </p>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
@@ -684,6 +818,11 @@ const CampusSocialHub: React.FC = () => {
                 <Badge variant="outline" className="text-xs">
                   {user?.userType}
                 </Badge>
+                {user?.email === 'demo@hocking.edu' && (
+                  <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                    🚀 Demo Mode
+                  </Badge>
+                )}
               </div>
               
               {/* Notification Bell with Counter */}
