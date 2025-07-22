@@ -26,11 +26,17 @@ const PROGRAM_URLS = [
 // Helper functions
 const cleanText = (text: string): string => {
   return text
-    .replace(/\s+/g, ' ')
-    .replace(/[\r\n]+/g, ' ')
-    .replace(/https?:\/\/[^\s]+/g, '')
-    .replace(/\[.*?\]|\(.*?\)/g, '')
-    .replace(/(Click here|Learn more|Visit|For more information).*?\./g, '')
+    .replace(/https?:\/\/[^\s]+/g, '') // Remove URLs
+    .replace(/\[.*?\]|\(.*?\)/g, '') // Remove text in brackets/parentheses
+    .replace(/(Click here|Learn more|Visit|For more information).*?\./gi, '') // Remove common phrases
+    .replace(/&[a-z]+;/gi, '') // Remove HTML entities
+    .replace(/[^\x00-\x7F]+/g, '') // Remove non-ASCII (non-English) characters
+    .replace(/[^a-zA-Z0-9.,;:!?'"\-\s]/g, '') // Remove non-word, non-punctuation chars
+    .replace(/\s+/g, ' ') // Collapse whitespace
+    .replace(/[\r\n]+/g, ' ') // Remove newlines
+    .replace(/\s+([.,;:!?'"\-])/g, '$1') // Remove space before punctuation
+    .replace(/([.,;:!?'"\-])(?=\S)/g, '$1 ') // Ensure space after punctuation if not present
+    .replace(/\s{2,}/g, ' ') // Remove double spaces
     .trim();
 };
 
