@@ -1,4 +1,4 @@
-import { Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText } from 'lucide-react';
+import { Building2, ClipboardCheck, FileCheck, CreditCard, Users, ClipboardList, Wrench, Mail, Book, DollarSign, PartyPopper, MessageSquare, FileText } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
@@ -19,37 +19,25 @@ const housingOptions: HousingOption[] = [
   },
   {
     title: "Residence Life Handbook",
-    icon: <div className="relative">
-            <Book className="h-8 w-8" />
-            <Building2 className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
-          </div>,
+    icon: <Book className="h-8 w-8" />,
     path: "/housing/handbook",
     description: "Access the complete guide to living on campus"
   },
   {
     title: "Pricing & Rates",
-    icon: <div className="relative">
-            <Square className="h-8 w-8" />
-            <DollarSign className="h-4 w-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          </div>,
+    icon: <DollarSign className="h-8 w-8" />,
     path: "/housing/pricing",
     description: "View housing costs and payment options"
   },
   {
     title: "Campus Life & Activities",
-    icon: <div className="relative">
-            <PartyPopper className="h-8 w-8" />
-            <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
-          </div>,
+    icon: <PartyPopper className="h-8 w-8" />,
     path: "/housing/activities",
     description: "Discover events and activities for an amazing college experience"
   },
   {
     title: "Campus Social Hub",
-    icon: <div className="relative">
-            <MessageSquare className="h-8 w-8" />
-            <Image className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
-          </div>,
+    icon: <MessageSquare className="h-8 w-8" />,
     path: "/housing/social",
     description: "Share your campus life experiences and connect with others"
   },
@@ -97,10 +85,7 @@ const housingOptions: HousingOption[] = [
   },
   {
     title: "Residence Hall Contract",
-    icon: <div className="relative">
-            <FileText className="h-8 w-8" />
-            <FileCheck className="h-4 w-4 absolute -bottom-1 -right-1 text-blue-600 dark:text-blue-400" />
-          </div>,
+    icon: <FileText className="h-8 w-8" />,
     path: "/housing/contract",
     description: "View and sign the residence hall contract"
   },
@@ -137,48 +122,52 @@ export default function Housing() {
   const [, setLocation] = useLocation();
 
   return (
-    <div className="container mx-auto p-6 bg-white dark:bg-gray-900">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-center mb-12"
-      >
-        <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-blue-300">Housing Services</h1>
-        <p className="text-lg text-gray-600 dark:text-white">
-          Everything you need to know about living on campus
-        </p>
-      </motion.div>
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-blue-300">Housing Services</h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            Everything you need to know about living on campus
+          </p>
+        </motion.div>
 
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr"
       >
         {housingOptions.map((option) => (
           <motion.div key={option.title} variants={item}>
             <Card
-              className="hover-card cursor-pointer h-full border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow rounded-xl"
+              className="hover-card cursor-pointer h-full border-2 border-blue-600 dark:border-none bg-white dark:bg-gray-800 hover:shadow-lg transition-shadow rounded-xl flex flex-col"
               onClick={() => setLocation(option.path)}
             >
-              <CardHeader>
-                <div className="flex justify-center mb-4">
-                  <div className="text-blue-600 dark:text-blue-400">
+              <CardContent className="p-4 flex-1 flex">
+                <div className="flex items-start space-x-4 w-full">
+                  <div className="text-blue-400 flex-shrink-0">
                     {option.icon}
                   </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-blue-300">
+                      {option.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                      {option.description}
+                    </p>
+                  </div>
                 </div>
-                <CardTitle className="text-center text-gray-900 dark:text-blue-300">{option.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-center text-sm text-gray-600 dark:text-white">
-                  {option.description}
-                </p>
               </CardContent>
             </Card>
           </motion.div>
         ))}
       </motion.div>
+      </div>
     </div>
   );
 } 

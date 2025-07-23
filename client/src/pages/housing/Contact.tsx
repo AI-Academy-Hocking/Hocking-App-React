@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Phone, Mail, MapPin, Clock, Building2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Building2, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLocation } from "wouter";
 
 interface ContactInfo {
   title: string;
@@ -72,6 +73,8 @@ const item = {
 };
 
 export default function Contact() {
+  const [, setLocation] = useLocation();
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement form submission logic
@@ -79,7 +82,23 @@ export default function Contact() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <button
+          onClick={() => setLocation('/housing')}
+          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Housing Services
+        </button>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -185,6 +204,7 @@ export default function Contact() {
             </CardContent>
           </Card>
         </motion.div>
+      </div>
       </div>
     </div>
   );

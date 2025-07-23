@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 
 export default function Resources() {
+  // Background images for resource boxes
+  const davisHallImage = "/davishall.JPG";
+  const library2Image = "/library2.JPG";
+  const libraryBenchImage = "/librarybench.JPG";
+  const libraryLoungeImage = "/library-lounge.JPG";
+  const library3Image = "/library3.JPG";
+  const scFoosballImage = "/sc-foosball.JPG";
+  
   const resources = [
     {
       title: "Academic Success Center",
@@ -66,15 +74,71 @@ export default function Resources() {
           {resources.map((resource, index) => (
             <Link key={index} href={resource.href}>
               <a className="block h-full">
-                <Card className="h-full hover:shadow-lg transition-shadow duration-200 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
-                  <CardContent className="p-6">
+                <Card 
+                  className={`h-full hover:shadow-lg transition-shadow duration-200 border-2 border-blue-600 dark:border-none ${
+                    resource.title === 'Academic Success Center' || resource.title === 'Library Resources' || resource.title === 'Accessibility Resources' || resource.title === 'Trio Services' || resource.title === 'Learning Labs' || resource.title === 'Student Organizations'
+                      ? 'relative overflow-hidden' 
+                      : 'bg-white dark:bg-gray-800'
+                  }`}
+                  style={
+                    resource.title === 'Academic Success Center' 
+                      ? {
+                          backgroundImage: `url(${davisHallImage})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        } 
+                      : resource.title === 'Library Resources'
+                      ? {
+                          backgroundImage: `url(${library2Image})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }
+                      : resource.title === 'Accessibility Resources'
+                      ? {
+                          backgroundImage: `url(${libraryBenchImage})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }
+                      : resource.title === 'Trio Services'
+                      ? {
+                          backgroundImage: `url(${libraryLoungeImage})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }
+                      : resource.title === 'Learning Labs'
+                      ? {
+                          backgroundImage: `url(${library3Image})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }
+                      : resource.title === 'Student Organizations'
+                      ? {
+                          backgroundImage: `url(${scFoosballImage})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center'
+                        }
+                      : {}
+                  }
+                >
+                  {(resource.title === 'Academic Success Center' || resource.title === 'Library Resources' || resource.title === 'Accessibility Resources' || resource.title === 'Trio Services' || resource.title === 'Learning Labs' || resource.title === 'Student Organizations') && (
+                    <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+                  )}
+                  <CardContent className="p-6 relative z-10">
                     <div className="flex items-start space-x-4">
-                      <resource.icon className="h-8 w-8 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+                      <resource.icon className="h-8 w-8 flex-shrink-0 text-blue-400" />
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 mb-2">
+                        <h3 className={`text-xl font-bold mb-2 ${
+                          resource.title === 'Academic Success Center' || resource.title === 'Library Resources' || resource.title === 'Accessibility Resources' || resource.title === 'Trio Services' || resource.title === 'Learning Labs' || resource.title === 'Student Organizations'
+                            ? 'text-white' 
+                            : 'text-gray-900 dark:text-blue-300'
+                        }`}>
                           {resource.title}
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">
+                        <p className={`text-sm ${
+                          resource.title === 'Academic Success Center' || resource.title === 'Library Resources' || resource.title === 'Accessibility Resources' || resource.title === 'Trio Services' || resource.title === 'Learning Labs' || resource.title === 'Student Organizations'
+                            ? 'text-gray-300' 
+                            : 'text-gray-600 dark:text-gray-300'
+                        }`}>
                           {resource.description}
                         </p>
                       </div>
@@ -87,7 +151,7 @@ export default function Resources() {
         </div>
 
         <div className="mt-12 text-center">
-          <Card className="border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <Card className="border-2 border-blue-600 dark:border-none bg-white dark:bg-gray-800">
             <CardContent className="p-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
                 Need Additional Help?
