@@ -1,6 +1,6 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "../../lib/auth";
-import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield } from "lucide-react";
+import { Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield, Bus } from "lucide-react";
 import HockingLogo from "../../assets/HawkLogo.png";
 import { LucideIcon } from "lucide-react";
 
@@ -23,6 +23,7 @@ export default function Sidebar() {
     { path: "/maps", label: "Maps & Directions", icon: Map },
     { path: "/dining", label: "Dining Hall", icon: UtensilsCrossed },
     { path: "/safety", label: "Campus Safety", icon: Shield },
+    { path: "/transportation", label: "Transportation", icon: Bus },
   ];
 
   return (
