@@ -1,13 +1,14 @@
 import { 
   Building2, ClipboardCheck, FileCheck, CreditCard, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText, ArrowLeft,
   ExternalLink, Star, CheckCircle, BookOpen, Activity, 
-  Phone, Clock, Home, Calendar
+  Phone, Clock, Home, Calendar, Send, X, Minimize2, Maximize2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useState, useEffect, useRef } from "react";
 
 interface HousingOption {
   title: string;
@@ -38,10 +39,7 @@ const housingOptions: HousingOption[] = [
 
   {
     title: "Residence Hall Contract",
-    icon: <div className="relative">
-            <FileText className="h-8 w-8" />
-            <FileCheck className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
-          </div>,
+    icon: <FileText className="h-8 w-8" />,
     path: "/housing/contract",
     description: "View and sign the residence hall contract",
     category: "legal",
@@ -65,10 +63,7 @@ const housingOptions: HousingOption[] = [
   },
   {
     title: "Pricing & Rates",
-    icon: <div className="relative">
-            <Square className="h-8 w-8" />
-            <DollarSign className="h-4 w-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          </div>,
+    icon: <DollarSign className="h-8 w-8" />,
     path: "/housing/pricing",
     description: "View housing costs and payment options",
     category: "financial",
@@ -85,10 +80,7 @@ const housingOptions: HousingOption[] = [
 
   {
     title: "Residence Life Handbook",
-    icon: <div className="relative">
-            <Book className="h-8 w-8" />
-            <Building2 className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
-          </div>,
+    icon: <Book className="h-8 w-8" />,
     path: "/housing/handbook",
     description: "Access the complete guide to living on campus",
     category: "resources",
@@ -96,10 +88,7 @@ const housingOptions: HousingOption[] = [
   },
   {
     title: "Campus Social Hub",
-    icon: <div className="relative">
-            <MessageSquare className="h-8 w-8" />
-            <Image className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
-          </div>,
+    icon: <MessageSquare className="h-8 w-8" />,
     path: "/housing/social",
     description: "Share your campus life experiences and connect with others",
     category: "social",
@@ -108,10 +97,7 @@ const housingOptions: HousingOption[] = [
 
   {
     title: "Campus Life & Activities",
-    icon: <div className="relative">
-            <PartyPopper className="h-8 w-8" />
-            <MapPin className="h-4 w-4 absolute -bottom-1 -right-1 text-primary" />
-          </div>,
+    icon: <PartyPopper className="h-8 w-8" />,
     path: "/housing/activities",
     description: "Discover events and activities for an amazing college experience",
     category: "activities",
@@ -154,74 +140,136 @@ const item = {
 
 export default function Housing() {
   const [, setLocation] = useLocation();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState<Array<{id: string, text: string, sender: 'user' | 'support', timestamp: Date}>>([]);
+  const [newMessage, setNewMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
+
+  // Initialize with welcome message
+  useEffect(() => {
+    setChatMessages([
+      {
+        id: '1',
+        text: 'Hello! Welcome to Hocking College Housing Support. How can I help you today?',
+        sender: 'support',
+        timestamp: new Date()
+      }
+    ]);
+  }, []);
+
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
+
+    const userMessage = {
+      id: Date.now().toString(),
+      text: newMessage,
+      sender: 'user' as const,
+      timestamp: new Date()
+    };
+
+    setChatMessages(prev => [...prev, userMessage]);
+    setNewMessage('');
+    setIsTyping(true);
+
+    // Simulate support response (in real implementation, this would connect to email system)
+    setTimeout(() => {
+      const supportMessage = {
+        id: (Date.now() + 1).toString(),
+        text: 'Thank you for your message! A housing staff member will respond to your inquiry at housing@hocking.edu within 24 hours. For urgent matters, please call (740) 753-7043.',
+        sender: 'support' as const,
+        timestamp: new Date()
+      };
+      setChatMessages(prev => [...prev, supportMessage]);
+      setIsTyping(false);
+    }, 2000);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="flex items-center mb-6">
-        <Link 
-          href="/tools"
-          className="flex items-center text-primary hover:text-primary-dark transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          <span>Back to Student Tools</span>
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto py-4 px-4 max-w-6xl">
+        {/* Mobile-optimized header */}
+        <div className="flex items-center justify-between mb-4">
+          <Link 
+            href="/tools"
+            className="flex items-center text-primary hover:text-primary-dark transition-colors text-sm md:text-base"
+          >
+            <ArrowLeft className="h-4 w-4 md:h-5 md:w-5 mr-1 md:mr-2" />
+            <span className="hidden sm:inline">Back to Student Tools</span>
+            <span className="sm:hidden">Back</span>
+          </Link>
+        </div>
 
+      {/* Mobile-optimized header content */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="mb-8"
+        className="mb-6 md:mb-8"
       >
-        <div className="flex items-center gap-4 mb-4">
-          <Home className="h-8 w-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-primary">Housing Services</h1>
+        <div className="flex items-center gap-2 md:gap-4 mb-3 md:mb-4">
+          <Home className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
+          <h1 className="text-2xl md:text-3xl font-bold text-primary">Housing Services</h1>
         </div>
-        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+        <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
           Everything you need to know about living on campus. From finding your perfect room to understanding campus life, we're here to make your housing experience exceptional.
         </p>
       </motion.div>
 
-      {/* Quick Stats */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <Activity className="mr-3 h-6 w-6" />
+      {/* Mobile-optimized Quick Stats */}
+      <Card className="mb-6 md:mb-8 border-2 border-green-600">
+        <CardHeader className="bg-green-50 dark:bg-green-900/20 p-4 md:p-6">
+          <CardTitle className="flex items-center text-lg md:text-xl text-green-800 dark:text-green-200">
+            <Activity className="mr-2 md:mr-3 h-5 w-5 md:h-6 md:w-6" />
             Housing Quick Facts
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-4 gap-6">
+        <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">7</div>
-              <div className="text-sm text-green-700 dark:text-green-300">Residence Halls</div>
+              <div className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">7</div>
+              <div className="text-xs md:text-sm text-green-700 dark:text-green-300">Residence Halls</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">600+</div>
-              <div className="text-sm text-green-700 dark:text-green-300">Students Housed</div>
+              <div className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">600+</div>
+              <div className="text-xs md:text-sm text-green-700 dark:text-green-300">Students Housed</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">24/7</div>
-              <div className="text-sm text-green-700 dark:text-green-300">Security</div>
+              <div className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">24/7</div>
+              <div className="text-xs md:text-sm text-green-700 dark:text-green-300">Security</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">100%</div>
-              <div className="text-sm text-green-700 dark:text-green-300">Furnished Rooms</div>
+              <div className="text-xl md:text-2xl font-bold text-green-600 dark:text-green-400">100%</div>
+              <div className="text-xs md:text-sm text-green-700 dark:text-green-300">Furnished Rooms</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Required Housing Services */}
-      <Accordion type="single" collapsible className="mb-8">
+      <Accordion type="single" collapsible className="mb-6 md:mb-8">
         <AccordionItem value="required-services" className="border-2 border-green-600">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 hover:bg-green-100 dark:hover:bg-green-900/30">
-            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
-              <CheckCircle className="mr-3 h-6 w-6" />
+          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-4 md:px-6 hover:bg-green-100 dark:hover:bg-green-900/30">
+            <div className="flex items-center text-lg md:text-xl text-green-800 dark:text-green-200">
+              <CheckCircle className="mr-2 md:mr-3 h-5 w-5 md:h-6 md:w-6" />
               Required Services
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 pt-6">
+          <AccordionContent className="px-4 md:px-6 pt-4 md:pt-6">
             <motion.div
               variants={container}
               initial="hidden"
@@ -236,15 +284,15 @@ export default function Housing() {
                       className="hover-card cursor-pointer h-full border-2 border-green-600 hover:border-green-700 bg-green-50 dark:bg-green-900/30 transition-all duration-300 hover:shadow-lg hover:scale-105"
                       onClick={() => setLocation(option.path)}
                     >
-                      <CardHeader>
-                        <div className="flex justify-center mb-4">
-                          <div className="p-3 bg-green-100 dark:bg-green-800/50 rounded-full text-green-600 dark:text-green-400">
+                      <CardHeader className="p-3 md:p-4">
+                        <div className="flex justify-center mb-3 md:mb-4">
+                          <div className="p-2 md:p-3 bg-green-100 dark:bg-green-800/50 rounded-full text-green-600 dark:text-green-400">
                             {option.icon}
                           </div>
                         </div>
-                        <CardTitle className="text-center text-sm text-green-800 dark:text-green-200">{option.title}</CardTitle>
+                        <CardTitle className="text-center text-xs md:text-sm text-green-800 dark:text-green-200">{option.title}</CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="p-3 md:p-4 pt-0">
                         <p className="text-center text-xs text-green-700 dark:text-green-300">
                           {option.description}
                         </p>
@@ -281,15 +329,15 @@ export default function Housing() {
                       className="hover-card cursor-pointer h-full border-2 border-orange-600 hover:border-orange-700 bg-orange-50 dark:bg-orange-900/30 transition-all duration-300 hover:shadow-lg hover:scale-105"
                       onClick={() => setLocation(option.path)}
                     >
-                      <CardHeader>
-                        <div className="flex justify-center mb-4">
-                          <div className="p-3 bg-orange-100 dark:bg-orange-800/50 rounded-full text-orange-600 dark:text-orange-400">
+                      <CardHeader className="p-3 md:p-4">
+                        <div className="flex justify-center mb-3 md:mb-4">
+                          <div className="p-2 md:p-3 bg-orange-100 dark:bg-orange-800/50 rounded-full text-orange-600 dark:text-orange-400">
                             {option.icon}
                           </div>
                         </div>
-                        <CardTitle className="text-center text-sm text-orange-800 dark:text-orange-200">{option.title}</CardTitle>
+                        <CardTitle className="text-center text-xs md:text-sm text-orange-800 dark:text-orange-200">{option.title}</CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="p-3 md:p-4 pt-0">
                         <p className="text-center text-xs text-orange-700 dark:text-orange-300">
                           {option.description}
                         </p>
@@ -326,15 +374,15 @@ export default function Housing() {
                       className="hover-card cursor-pointer h-full border-2 border-red-600 hover:border-red-700 bg-red-50 dark:bg-red-900/30 transition-all duration-300 hover:shadow-lg hover:scale-105"
                       onClick={() => setLocation(option.path)}
                     >
-                      <CardHeader>
-                        <div className="flex justify-center mb-4">
-                          <div className="p-3 bg-red-100 dark:bg-red-800/50 rounded-full text-red-600 dark:text-red-400">
+                      <CardHeader className="p-3 md:p-4">
+                        <div className="flex justify-center mb-3 md:mb-4">
+                          <div className="p-2 md:p-3 bg-red-100 dark:bg-red-800/50 rounded-full text-red-600 dark:text-red-400">
                             {option.icon}
                           </div>
                         </div>
-                        <CardTitle className="text-center text-sm text-red-800 dark:text-red-200">{option.title}</CardTitle>
+                        <CardTitle className="text-center text-xs md:text-sm text-red-800 dark:text-red-200">{option.title}</CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="p-3 md:p-4 pt-0">
                         <p className="text-center text-xs text-red-700 dark:text-red-300">
                           {option.description}
                         </p>
@@ -541,6 +589,114 @@ export default function Housing() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+
+      {/* Live Chat Support */}
+      <div className="fixed bottom-4 right-4 z-50">
+        {/* Chat Bubble */}
+        {!isChatOpen && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsChatOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 md:p-4 shadow-lg transition-all duration-300"
+          >
+            <MessageSquare className="h-5 w-5 md:h-6 md:w-6" />
+          </motion.button>
+        )}
+
+        {/* Chat Window */}
+        {isChatOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.8 }}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 w-72 md:w-80 h-80 md:h-96 flex flex-col"
+          >
+            {/* Chat Header */}
+            <div className="bg-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
+              <div className="flex items-center">
+                <MessageSquare className="h-5 w-5 mr-2" />
+                <span className="font-semibold">Housing Support</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setIsChatOpen(false)}
+                  className="text-white hover:text-gray-200 transition-colors"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Chat Messages */}
+            <div 
+              ref={chatRef}
+              className="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50 dark:bg-gray-900"
+            >
+              {chatMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-xs md:max-w-sm px-3 py-2 rounded-lg text-sm ${
+                      message.sender === 'user'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600'
+                    }`}
+                  >
+                    <p>{message.text}</p>
+                    <p className={`text-xs mt-1 ${
+                      message.sender === 'user' ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
+                    }`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <div className="bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-600 px-3 py-2 rounded-lg">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Chat Input */}
+            <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
+                  className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={!newMessage.trim()}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white p-2 rounded-lg transition-colors"
+                >
+                  <Send className="h-4 w-4" />
+                </button>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Messages are sent to housing@hocking.edu
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </div>
     </div>
   );
 } 
