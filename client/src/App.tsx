@@ -4,7 +4,7 @@ import { Toaster } from "./components/ui/toaster";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
-import Calendar from "@/pages/Calendar";
+import Calendar from "./pages/Calendar";
 import StudentTools from "@/pages/StudentTools";
 import Maps from "@/pages/Maps";
 import DiningHall from "@/pages/DiningHall";
@@ -44,6 +44,7 @@ import Graduation from "./pages/tools/academic/graduation";
 import Advising from "./pages/tools/academic/advising";
 import OfficeAdministration from "./pages/tools/academic/office-administration";
 import CareerUniversityCenter from "./pages/tools/academic/CareerUniversityCenter";
+import Transportation from "./pages/Transportation";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
 import './index.css';
 import './styles/globals.css';
@@ -118,6 +119,7 @@ function Router() {
         <Route path="/tools/academic/office-administration" component={OfficeAdministration} />
         <Route path="/tools/academic/career-university-center" component={CareerUniversityCenter} />
         <Route path="/tools/academic/:id" component={AcademicToolDetail} />
+        <Route path="/transportation" component={Transportation} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

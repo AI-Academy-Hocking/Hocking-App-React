@@ -1,59 +1,125 @@
 import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
+import { JWT } from 'google-auth-library';
 import { Event } from '../../shared/schema';
 
-// Initialize the Google Calendar API client
-const calendar = google.calendar({
-  version: 'v3',
-  auth: process.env.GOOGLE_API_KEY,
-});
+// Google Calendar API configuration
+const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+const CALENDAR_IDS = {
+  academic: 'c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com',
+  activities: 'gabby@aiowl.org' // Private calendar
+};
 
-export async function getEvents(calendarType?: string): Promise<Event[]> {
-  try {
-    // Calendar ID from your Google Calendar settings
-    // In a real implementation, you would use different calendar IDs for different calendar types
-    const calendarId = calendarType === 'activities' 
-      ? process.env.GOOGLE_ACTIVITIES_CALENDAR_ID 
-      : process.env.GOOGLE_CALENDAR_ID || 'primary';
+// You'll need to set these environment variables
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 
-    const response = await calendar.events.list({
-      calendarId,
-      timeMin: (new Date()).toISOString(),
-      maxResults: 10,
-      singleEvents: true,
-      orderBy: 'startTime',
-    });
+// Service Account credentials (easier alternative)
+const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+const SERVICE_ACCOUNT_PRIVATE_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
 
-    const events = response.data.items || [];
+export class GoogleCalendarService {
+  private oauth2Client: OAuth2Client;
+  private serviceAccountClient: JWT | null = null;
+
+  constructor() {
+    this.oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
     
-    // Map Google Calendar events to our app's Event format
-    return events.map((event, index) => {
-      const start = event.start?.dateTime || event.start?.date || '';
-      const end = event.end?.dateTime || event.end?.date || '';
-      
-      // Format the date and time
-      const date = new Date(start).toISOString().split('T')[0];
-      const startTime = new Date(start).toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
+    if (REFRESH_TOKEN) {
+      this.oauth2Client.setCredentials({
+        refresh_token: REFRESH_TOKEN
       });
-      const endTime = new Date(end).toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
-        minute: '2-digit',
-        hour12: true 
+    }
+
+    // Initialize service account if credentials are available
+    if (SERVICE_ACCOUNT_EMAIL && SERVICE_ACCOUNT_PRIVATE_KEY) {
+      this.serviceAccountClient = new JWT({
+        email: SERVICE_ACCOUNT_EMAIL,
+        key: SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        scopes: SCOPES,
       });
+    }
+  }
+
+  async getEvents(calendarType: 'academic' | 'activities', timeMin?: Date, timeMax?: Date) {
+    try {
+      const calendarId = CALENDAR_IDS[calendarType];
       
-      return {
-        id: index + 1,
-        title: event.summary || 'Unnamed Event',
-        date,
-        time: `${startTime} - ${endTime}`,
-        location: event.location || 'TBD',
-        description: event.description || null,
-      };
+      // Try service account first (easier setup)
+      if (this.serviceAccountClient) {
+        console.log(`Using service account for ${calendarType} calendar`);
+        const calendar = google.calendar({ version: 'v3', auth: this.serviceAccountClient });
+        
+        const response = await calendar.events.list({
+          calendarId: calendarId,
+          timeMin: timeMin?.toISOString(),
+          timeMax: timeMax?.toISOString(),
+          singleEvents: true,
+          orderBy: 'startTime',
+          maxResults: 100
+        });
+
+        const events = response.data.items?.map(event => ({
+          id: event.id || String(Math.random()),
+          title: event.summary || 'No Title',
+          startTime: event.start?.dateTime || event.start?.date || new Date().toISOString(),
+          endTime: event.end?.dateTime || event.end?.date || new Date().toISOString(),
+          location: event.location || 'No Location',
+          description: event.description || 'No Description',
+          //
+          calendarType, //
+        })) || [];
+
+        console.log(`Fetched ${events.length} events from Google Calendar API for ${calendarType}`);
+        return events;
+      }
+      
+      // Fallback to OAuth2
+      const calendar = google.calendar({ version: 'v3', auth: this.oauth2Client });
+      
+      const response = await calendar.events.list({
+        calendarId: calendarId,
+        timeMin: timeMin?.toISOString(),
+        timeMax: timeMax?.toISOString(),
+        singleEvents: true,
+        orderBy: 'startTime',
+        maxResults: 100
+      });
+
+      const events = response.data.items?.map(event => ({
+        id: event.id || String(Math.random()),
+        title: event.summary || 'No Title',
+        startTime: event.start?.dateTime || event.start?.date || new Date().toISOString(),
+        endTime: event.end?.dateTime || event.end?.date || new Date().toISOString(),
+        location: event.location || 'No Location',
+        description: event.description || 'No Description',
+        //
+        calendarType, //
+      })) || [];
+
+      console.log(`Fetched ${events.length} events from Google Calendar API for ${calendarType}`);
+      return events;
+    } catch (error) {
+      console.error('Google Calendar API error:', error);
+      throw error;
+    }
+  }
+
+  // Helper method to get authorization URL for setting up OAuth
+  getAuthUrl() {
+    return this.oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: SCOPES,
+      prompt: 'consent'
     });
-  } catch (error) {
-    console.error('Error fetching events from Google Calendar:', error);
-    return [];
+  }
+
+  // Helper method to exchange authorization code for tokens
+  async getTokensFromCode(code: string) {
+    const { tokens } = await this.oauth2Client.getToken(code);
+    return tokens;
   }
 }
+
+export const googleCalendarService = new GoogleCalendarService();

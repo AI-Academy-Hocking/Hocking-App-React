@@ -55,50 +55,70 @@ export default function CalendarPage() {
   
   const { data: events = [], isLoading } = useQuery<Event[]>({
     queryKey: ['/api/events', activeCalendar],
-    // In a real app, you would fetch different events based on activeCalendar
-    // by adding a parameter to the API endpoint
+    queryFn: async () => {
+      console.log(`\n=== FRONTEND API CALL ===`);
+      console.log(`Fetching events for calendar type: ${activeCalendar}`);
+      
+      const res = await fetch(`/api/calendar/events?type=${activeCalendar}`);
+      console.log(`API response status: ${res.status}`);
+      
+      if (!res.ok) {
+        console.error(`API call failed: ${res.status} ${res.statusText}`);
+        throw new Error('Failed to fetch events');
+      }
+      
+      const data = await res.json();
+      console.log(`Received ${data.length} events from API:`, data);
+      
+      return data;
+    },
   });
 
   // Get current month's start and end dates
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
+  
+  // Expand date range to show more events (past month to next 3 months)
+  const expandedStart = subMonths(monthStart, 1);
+  const expandedEnd = addMonths(monthEnd, 3);
 
-  // Format events for the BigCalendar
-  const formattedEvents = events.map(event => {
-    const startDate = new Date(event.startTime);
-    const endDate = new Date(event.endTime);
-    
-    return {
-      title: event.title || "Untitled Event",
-      start: startDate,
-      end: endDate,
-      resource: { 
-        location: event.location || "No Location", 
-        description: event.description || "No Description",
-        id: event.id,
-        originalEvent: event
-      },
-    };
-  });
+  console.log(`\n=== FRONTEND STATE ===`);
+  console.log(`Active calendar: ${activeCalendar}`);
+  console.log(`Total events received: ${events.length}`);
+  console.log(`Current date: ${date.toISOString()}`);
+  console.log(`Month start: ${monthStart.toISOString()}`);
+  console.log(`Month end: ${monthEnd.toISOString()}`);
+  console.log(`Expanded start: ${expandedStart.toISOString()}`);
+  console.log(`Expanded end: ${expandedEnd.toISOString()}`);
+  console.log(`Selected date: ${selectedDate?.toISOString() || 'none'}`);
 
   // Filter events based on calendar type and date range
   const getFilteredEvents = (calendarType: "academic" | "activities") => {
-    return events
+    console.log(`Filtering events for ${calendarType}:`, {
+      totalEvents: events.length,
+      monthStart: monthStart.toISOString(),
+      monthEnd: monthEnd.toISOString(),
+      expandedStart: expandedStart.toISOString(),
+      expandedEnd: expandedEnd.toISOString(),
+      selectedDate: selectedDate?.toISOString()
+    });
+    
+    const filtered = events
       .filter(event => {
-        // In a real implementation, each event would have a 'calendarType' property
-        // For now, we're using an empty array so no events will show
-        return false;
-        
-        // When you add real events, uncomment this code:
-        /*
+        // Only filter by calendarType if it exists on the event
+        if ('calendarType' in event && (event as any).calendarType !== calendarType) return false;
         const eventDate = new Date(event.startTime);
         if (selectedDate) {
+          // List view: show only events for the selected day
           return isSameDay(eventDate, selectedDate);
         }
-        return eventDate >= monthStart && eventDate <= monthEnd;
-        */
+        // Month view: show events in the expanded date range (past month to next 3 months)
+        return eventDate >= expandedStart && eventDate <= expandedEnd;
       })
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+    
+    console.log(`Filtered to ${filtered.length} events for ${calendarType}`);
+    return filtered;
   };
 
   // Get events for both calendar types
@@ -107,6 +127,23 @@ export default function CalendarPage() {
   
   // Use the active calendar to determine which events to show in the main view
   const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
+
+  // Format events for the BigCalendar (use filteredEvents, not all events)
+  const formattedEvents = filteredEvents.map(event => {
+    const startDate = new Date(event.startTime);
+    const endDate = new Date(event.endTime);
+    return {
+      title: event.title || "Untitled Event",
+      start: startDate,
+      end: endDate,
+      resource: {
+        location: event.location || "No Location",
+        description: event.description || "No Description",
+        id: event.id,
+        originalEvent: event
+      },
+    };
+  });
 
   // Format date for display
   const formatEventDate = (date: string | Date) => {
@@ -363,7 +400,7 @@ export default function CalendarPage() {
                     <div className="flex flex-col items-center justify-center h-full text-neutral-dark">
                       <CalendarIcon className="h-12 w-12 mb-2 text-primary-light" />
                       <p>No events found for this month</p>
-                      <p className="text-sm">Select another month or add new events</p>
+                      <p className="text-sm">Select another month or change the calendar type</p>
                     </div>
                   )}
                 </div>

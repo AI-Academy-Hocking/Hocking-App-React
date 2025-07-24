@@ -53,29 +53,40 @@ export default function Maps() {
     queryKey: ['/api/buildings'],
   });
 
+  // Add static academic buildings (including Davidson Hall)
+  const staticAcademicBuildings: Building[] = [
+    { id: 'davidson-hall', name: 'Davidson Hall', description: 'Academic building', category: 'academic', lat: 39.44078, lng: -82.22025 },
+    { id: 'student-center', name: 'Student Center', description: 'Student Center', category: 'academic', lat: 39.44200, lng: -82.22071 },
+  ];
+
   // Add static housing buildings if not present
   const staticHousingBuildings: Building[] = [
-    { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
-    { id: 'downhour', name: 'Downhour', description: 'Female Only Residence Hall', category: 'housing', lat: 0, lng: 0 },
-    { id: 'summit', name: 'Summit', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
-    { id: 'sycamore', name: 'Sycamore', description: 'Co-Ed Residence Hall', category: 'housing', lat: 0, lng: 0 },
+    { id: 'north-hall', name: 'North Hall', description: 'Male Only Residence Hall', category: 'housing', lat: 39.44334, lng: -82.22274 },
+    { id: 'downhour', name: 'DownHour Hall', description: 'Female Only Residence Hall', category: 'housing', lat: 39.44287, lng: -82.22264 },
+    { id: 'summit', name: 'Summit Hall', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44839, lng: -82.22052 },
+    { id: 'sycamore', name: 'Sycamore Hall', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44874, lng: -82.22119 },
   ];
 
   // Add static dining buildings
   const staticDiningBuildings: Building[] = [
-    { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.4442, lng: -82.2207 },
-    { id: 'diamond-dawgz', name: 'Diamond Dawgz', description: 'Quick hotdogs, burgers, fries, and ice cream.', category: 'dining', lat: 39.4450, lng: -82.2212 },
-    { id: 'rhapsody', name: 'Rhapsody', description: 'Student-run restaurant with casual fine dining and live music.', category: 'dining', lat: 39.4580, lng: -82.2310 },
+    { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.44341, lng: -82.22194 },
+    { id: 'diamond-dawgz', name: 'Diamond Dawgz', description: 'Quick hotdogs, burgers, fries, and ice cream.', category: 'dining', lat: 39.45925, lng: -82.23453 },
+    { id: 'rhapsody', name: 'Rhapsody Restaurant', description: 'Student-run restaurant with casual fine dining and live music.', category: 'dining', lat: 39.46029, lng: -82.23170 },
   ];
 
   // Add static parking buildings if not present
   const staticParkingBuildings: Building[] = [
-    { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
-    { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights / Downhour Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
-    { id: 'john-light-lot', name: 'John Light Lot', description: 'Parking Lot', category: 'parking', lat: 0, lng: 0 },
+    { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 39.44245, lng: -82.21952 },
+    { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights / Downhour Lot', description: 'Parking Lot', category: 'parking', lat: 39.44227, lng: -82.22279 },
+    { id: 'john-light-lot', name: 'John Light Lot', description: 'Parking Lot', category: 'parking', lat: 39.44386, lng: -82.22031 },
   ];
 
   let allBuildings = buildings ? [...buildings] : [];
+  staticAcademicBuildings.forEach(staticBldg => {
+    if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
+      allBuildings.push(staticBldg);
+    }
+  });
   staticHousingBuildings.forEach(staticBldg => {
     if (!allBuildings.some(b => b.name.toLowerCase() === staticBldg.name.toLowerCase())) {
       allBuildings.push(staticBldg);
@@ -262,13 +273,14 @@ export default function Maps() {
     });
     
     // Add markers for filtered buildings
-    if (filteredBuildings) {
-      filteredBuildings.forEach((building: Building) => {
+    if (filteredBuildings && selectedBuildingId) {
+      const building = filteredBuildings.find(b => b.id === selectedBuildingId);
+      if (building) {
         // Use colored icon based on building type
-        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
+        L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
           .addTo(map)
           .bindPopup(`<b>${building.name}</b><br>${building.description}`);
-      });
+      }
     }
     
     // Add markers for other users if viewing shared locations
