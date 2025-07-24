@@ -1,8 +1,7 @@
 import { 
   ArrowLeft, PawPrint, Phone, Mail, MapPin, Clock, Star, Award, Shield,
-  ChevronDown, ChevronRight, DollarSign, Users, Heart, Scissors
+  Users, Heart, Scissors
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
 

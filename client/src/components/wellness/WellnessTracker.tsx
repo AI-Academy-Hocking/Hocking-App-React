@@ -4,35 +4,20 @@ import {
   Heart, 
   Activity, 
   Moon, 
-  Sun, 
-  Coffee, 
   Droplets, 
   Apple, 
   Dumbbell, 
   Brain, 
   Smile, 
-  TrendingUp,
-  Calendar,
-  Clock,
-  Target,
-  Trophy,
-  Star,
-  Zap,
-  CheckCircle,
-  Plus,
-  Minus,
-  BarChart3,
-  Target as TargetIcon,
-  Users,
-  Award,
-  Bell,
-  Settings,
-  RefreshCw,
-  Play,
-  Pause,
-  Square,
-  X,
-  BookOpen
+  Trophy, 
+  BookOpen, 
+  Users, 
+  Minus, 
+  Plus, 
+  BarChart3, 
+  Play, 
+  Square, 
+  Target as TargetIcon 
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -73,14 +58,6 @@ interface WellnessChallenge {
   progress: number;
   isActive: boolean;
   category: 'fitness' | 'mental' | 'nutrition' | 'sleep';
-}
-
-interface SleepData {
-  date: string;
-  hours: number;
-  quality: number; // 1-5 scale
-  bedtime: string;
-  wakeTime: string;
 }
 
 const moodEmojis = ['😢', '😐', '🙂', '😊', '🤩'];
@@ -251,16 +228,6 @@ export default function WellnessTracker() {
   };
 
   const submitMoodEntry = () => {
-    const newEntry: MoodEntry = {
-      id: Date.now().toString(),
-      date: new Date().toISOString().split('T')[0],
-      mood: currentMood,
-      energy: currentEnergy,
-      stress: currentStress,
-      notes: moodNotes,
-      activities: selectedActivities
-    };
-
     toast({
       title: "Mood recorded! 💚",
       description: "Thanks for checking in with us. Keep up the great work!",
@@ -702,7 +669,7 @@ export default function WellnessTracker() {
                   size="sm"
                   onClick={() => setShowMoodEntry(false)}
                 >
-                  <X className="h-4 w-4" />
+                  <span className="h-4 w-4">×</span>
                 </Button>
               </div>
               

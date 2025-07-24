@@ -114,7 +114,7 @@ export function useCreateConnection() {
   return useMutation({
     mutationFn: ({ userId, targetUserId }: { userId: string; targetUserId: string }) =>
       apiService.createConnection(userId, targetUserId),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['connections', variables.userId] });
       queryClient.invalidateQueries({ queryKey: ['connections', variables.targetUserId] });
     },
@@ -136,7 +136,7 @@ export function useSendMessage() {
   
   return useMutation({
     mutationFn: apiService.sendMessage,
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       const conversationId = [variables.senderId, variables.receiverId].sort().join('-');
       queryClient.invalidateQueries({ queryKey: ['messages', variables.senderId, conversationId] });
       queryClient.invalidateQueries({ queryKey: ['messages', variables.receiverId, conversationId] });

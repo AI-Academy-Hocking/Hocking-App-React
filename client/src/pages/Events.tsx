@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { EventDiscovery } from '@/components/social/EventDiscovery';
 
 // Mock data - in real app, this would come from API

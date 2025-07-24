@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Star, Award, Target, CheckCircle, Lock, Zap, Heart, BookOpen, Users, Calendar, MapPin, Home, Wifi, Coffee, GraduationCap, Wrench } from 'lucide-react';
+import { Trophy, Star, Award, CheckCircle, Lock, Zap, Heart, BookOpen, Users, Calendar, MapPin, Home, Coffee, GraduationCap, Wrench } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

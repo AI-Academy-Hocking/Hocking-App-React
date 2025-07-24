@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -11,28 +11,15 @@ import {
   Share2, 
   Plus, 
   Search, 
-  Filter,
-  Star,
   Trophy,
   Camera,
   Video,
-  Smile,
   Send,
   MoreHorizontal,
-  UserPlus,
-  CheckCircle,
   X,
-  Bell,
-  TrendingUp,
-  Users2,
   GraduationCap,
-  Coffee,
   Music,
-  Gamepad2,
-  Palette,
-  Code,
-  Globe,
-  Zap
+  Globe
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -302,7 +289,6 @@ export default function EnhancedSocialHub() {
   const [activeTab, setActiveTab] = useState<'groups' | 'events' | 'stories' | 'challenges'>('groups');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showCreateStory, setShowCreateStory] = useState(false);
   const [newStoryContent, setNewStoryContent] = useState('');
   const { toast } = useToast();
@@ -316,28 +302,28 @@ export default function EnhancedSocialHub() {
     { id: 'wellness', name: 'Wellness', icon: <Heart className="h-4 w-4" /> }
   ];
 
-  const joinStudyGroup = (groupId: string) => {
+  const joinStudyGroup = () => {
     toast({
       title: "Joined Study Group! 📚",
       description: "You've successfully joined the study group. Check your notifications for meeting details.",
     });
   };
 
-  const rsvpToEvent = (eventId: string) => {
+  const rsvpToEvent = () => {
     toast({
       title: "RSVP Confirmed! ✅",
       description: "You're all set for the event. We'll send you a reminder closer to the date.",
     });
   };
 
-  const likeStory = (storyId: string) => {
+  const likeStory = () => {
     toast({
       title: "Story Liked! ❤️",
       description: "Thanks for showing support to your fellow students!",
     });
   };
 
-  const joinChallenge = (challengeId: string) => {
+  const joinChallenge = () => {
     toast({
       title: "Challenge Accepted! 🏆",
       description: "You're now participating in the challenge. Good luck!",
@@ -362,7 +348,7 @@ export default function EnhancedSocialHub() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Study Groups</h2>
-              <Button onClick={() => setShowCreateGroup(true)} className="flex items-center gap-2">
+              <Button onClick={() => setShowCreateStory(true)} className="flex items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create Group
               </Button>
@@ -423,7 +409,7 @@ export default function EnhancedSocialHub() {
                       </div>
                       
                       <Button 
-                        onClick={() => joinStudyGroup(group.id)}
+                        onClick={joinStudyGroup}
                         className="w-full"
                         variant={group.isJoined ? "outline" : "default"}
                       >
@@ -492,7 +478,7 @@ export default function EnhancedSocialHub() {
                       </div>
                       
                       <Button 
-                        onClick={() => rsvpToEvent(event.id)}
+                        onClick={rsvpToEvent}
                         className="w-full"
                         variant={event.isRSVPd ? "outline" : "default"}
                       >
@@ -571,7 +557,7 @@ export default function EnhancedSocialHub() {
                           <Button 
                             variant="ghost" 
                             size="sm"
-                            onClick={() => likeStory(story.id)}
+                            onClick={likeStory}
                             className={`flex items-center gap-2 ${story.isLiked ? 'text-red-500' : ''}`}
                           >
                             <Heart className={`h-4 w-4 ${story.isLiked ? 'fill-current' : ''}`} />
@@ -639,7 +625,7 @@ export default function EnhancedSocialHub() {
                       </div>
                       
                       <Button 
-                        onClick={() => joinChallenge(challenge.id)}
+                        onClick={joinChallenge}
                         className="w-full"
                         variant={challenge.isParticipating ? "outline" : "default"}
                       >

@@ -1,10 +1,9 @@
 import { 
   DollarSign, FileText, ExternalLink, Phone, 
   Building, Clock, ArrowLeft,
-  BookOpen, Car, Home, Utensils, Calculator, MapPin, CreditCard, AlertTriangle, Receipt,
-  ChevronDown, ChevronRight, Mail, Calendar
+  Car, Home, Utensils, Calculator, MapPin, CreditCard, AlertTriangle, Receipt,
+  Calendar
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
 

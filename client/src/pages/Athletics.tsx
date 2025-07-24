@@ -1,7 +1,7 @@
 import { 
   ArrowLeft, Trophy, Users, Calendar, MapPin, Phone, Mail, Clock, ExternalLink,
   Award, Building, Newspaper, Ticket, Facebook, User, BookOpen, Star, Target,
-  Heart, Zap, Shield, Crown, Flag, Medal, Gamepad2, ArrowRight
+  Heart, Zap, Shield, Crown, Flag, Medal, Gamepad2
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";

@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Book, Building2, ArrowLeft, Users, Shield, Home, FileText, Calendar, MapPin, AlertTriangle, DollarSign, Wrench, Mail, Car, Volume2, Leaf, Tv, Users2, Zap, Trash2, Wifi, Heart, Star } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
