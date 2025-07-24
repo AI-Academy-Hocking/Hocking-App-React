@@ -7,8 +7,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
-import { Badge } from "@/components/ui/badge";
 
 export default function CareerUniversityCenter() {
   const handleExternalLink = (url: string) => {

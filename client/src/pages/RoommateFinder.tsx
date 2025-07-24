@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RoommateFinder as RoommateFinderComponent } from '@/components/housing/RoommateFinder';
 
 // Mock data - in real app, this would come from API

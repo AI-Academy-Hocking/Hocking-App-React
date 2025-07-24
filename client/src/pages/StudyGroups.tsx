@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StudyGroupFinder } from '@/components/social/StudyGroupFinder';
 
 // Mock data - in real app, this would come from API

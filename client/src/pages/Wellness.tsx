@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { WellnessTracker } from '@/components/wellness/WellnessTracker';
+import { useState } from 'react';
+import WellnessTracker from '@/components/wellness/WellnessTracker';
 
 // Mock data - in real app, this would come from API
 const mockActivities = [
@@ -103,11 +103,7 @@ export default function Wellness() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <WellnessTracker
-        activities={activities}
-        onUpdateActivity={handleUpdateActivity}
-        onAddActivity={handleAddActivity}
-      />
+      <WellnessTracker />
     </div>
   );
 } 

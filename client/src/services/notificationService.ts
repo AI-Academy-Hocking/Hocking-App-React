@@ -245,7 +245,7 @@ class NotificationService {
   }
 
   // Subscribe to real-time notifications (WebSocket simulation)
-  public subscribeToNotifications(userId: string): void {
+  public subscribeToNotifications(_userId: string): void {
     // In a real implementation, this would connect to a WebSocket
     // For now, we'll simulate real-time notifications
     setInterval(() => {

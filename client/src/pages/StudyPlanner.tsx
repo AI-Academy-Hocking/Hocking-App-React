@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StudyPlanner as StudyPlannerComponent } from '@/components/study/StudyPlanner';
 
 // Mock data - in real app, this would come from API

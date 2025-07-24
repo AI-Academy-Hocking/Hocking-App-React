@@ -89,16 +89,6 @@ const buildings: Building[] = [
 
 const SPREADSHEET_ID = "1KWlVPX6emo5YsDdJsWBNAbO05fKJPUiLRxD6nSd45jI";
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
 export default function FloorPlans() {
   const [selectedBuilding, setSelectedBuilding] = useState<Building>(buildings[0]);
   return (
