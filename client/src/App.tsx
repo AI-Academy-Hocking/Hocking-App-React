@@ -22,6 +22,12 @@ import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
 import ApplicationProcess from "./pages/housing/ApplicationProcess";
 
+// New Gamification & Social Features
+import AchievementSystem from "@/components/achievements/AchievementSystem";
+import CustomizableDashboard from "@/components/dashboard/CustomizableDashboard";
+import EnhancedSocialHub from "@/components/social/EnhancedSocialHub";
+import WellnessTracker from "@/components/wellness/WellnessTracker";
+
 
 import WhatToBring from "./pages/housing/WhatToBring";
 import Maintenance from "./pages/housing/Maintenance";
@@ -154,6 +160,12 @@ function Router() {
         
         {/* New feature routes - Phase 1 */}
         <Route path="/events" component={Events} />
+        
+        {/* Gamification & Social Features */}
+        <Route path="/achievements" component={AchievementSystem} />
+        <Route path="/dashboard" component={CustomizableDashboard} />
+        <Route path="/social-hub" component={EnhancedSocialHub} />
+        <Route path="/wellness" component={WellnessTracker} />
         
         <Route component={NotFound} />
       </Switch>

@@ -698,5 +698,6 @@ export default function Housing() {
         )}
       </div>
     </div>
+    </div>
   );
 } 

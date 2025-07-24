@@ -41,6 +41,26 @@ export default function Home() {
 
   const quickLinks = [
     { 
+      href: "/dashboard", 
+      icon: Star, 
+      label: "Dashboard" 
+    },
+    { 
+      href: "/achievements", 
+      icon: Trophy, 
+      label: "Achievements" 
+    },
+    { 
+      href: "/social-hub", 
+      icon: Users2, 
+      label: "Social Hub" 
+    },
+    { 
+      href: "/wellness", 
+      icon: Heart, 
+      label: "Wellness" 
+    },
+    { 
       href: "/calendar", 
       icon: Calendar, 
       label: "Calendar" 
