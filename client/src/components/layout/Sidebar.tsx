@@ -8,7 +8,11 @@ import {
   LogOut, 
   UtensilsCrossed, 
   Shield,
-  Calendar
+  Calendar,
+  Users,
+  Trophy,
+  LayoutDashboard,
+  Heart
 } from "lucide-react";
 import HockingLogo from "../../assets/HawkLogo.png";
 import { LucideIcon } from "lucide-react";
@@ -33,9 +37,16 @@ export default function Sidebar() {
     
     // Academic & Study
     { path: "/tools", label: "Student Tools", icon: Wrench, category: "academic" },
+    { path: "/study-groups", label: "Study Groups", icon: Users, category: "academic" },
     
     // Social & Events
     { path: "/events", label: "Events", icon: Calendar, category: "social" },
+    { path: "/social-hub", label: "Social Hub", icon: Users, category: "social" },
+    
+    // Gamification & Wellness
+    { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard, category: "features" },
+    { path: "/achievements", label: "Achievements", icon: Trophy, category: "features" },
+    { path: "/wellness", label: "Wellness", icon: Heart, category: "features" },
     
     // Campus Services
     { path: "/maps", label: "Maps & Directions", icon: Map, category: "services" },
@@ -57,6 +68,7 @@ export default function Sidebar() {
       case 'main': return 'Main';
       case 'academic': return 'Academic';
       case 'social': return 'Social';
+      case 'features': return 'Features';
       case 'services': return 'Campus Services';
       default: return 'Other';
     }

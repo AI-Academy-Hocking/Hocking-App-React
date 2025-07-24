@@ -57,6 +57,7 @@ import VerifyPost from "./pages/VerifyPost";
 
 // New feature pages
 import Events from "@/pages/Events";
+import StudyGroups from "@/pages/StudyGroups";
 
 import './index.css';
 import './styles/globals.css';
@@ -160,6 +161,7 @@ function Router() {
         
         {/* New feature routes - Phase 1 */}
         <Route path="/events" component={Events} />
+        <Route path="/study-groups" component={StudyGroups} />
         
         {/* Gamification & Social Features */}
         <Route path="/achievements" component={AchievementSystem} />
