@@ -54,7 +54,7 @@ const router = express_1.default.Router();
 const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
 // Student activities calendar URL (private - needs API)
 const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
-async function fetchCalendarEvents(url) {
+async function fetchCalendarEvents(url, calendarType) {
     console.log(`\n=== GOOGLE CALENDAR DEBUG ===`);
     console.log(`Fetching calendar events from: ${url}`);
     try {
@@ -104,6 +104,7 @@ async function fetchCalendarEvents(url) {
                 endTime: endDate ? endDate.toISOString() : (startDate ? startDate.toISOString() : new Date().toISOString()),
                 location: event.location || "No Location",
                 description: event.description || "No Description",
+                calendarType, // <-- ADD THIS LINE
             };
             console.log(`Final event data:`, eventData);
             return eventData;
@@ -153,18 +154,10 @@ router.get('/events', async (req, res) => {
         if (!events) {
             console.log(`Using iCal fallback for ${calendarType} calendar`);
             if (calendarType === 'academic') {
-                events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL);
+                events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic');
             }
             else if (calendarType === 'activities') {
-                // Try the private calendar URL - it might work if the calendar is shared
-                try {
-                    events = await fetchCalendarEvents(STUDENT_CALENDAR_URL);
-                }
-                catch (icalError) {
-                    console.error('Private calendar iCal failed:', icalError);
-                    // Return empty array for private calendar if both API and iCal fail
-                    events = [];
-                }
+                events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities');
             }
         }
         console.log(`Sending ${events.length} events to frontend`);

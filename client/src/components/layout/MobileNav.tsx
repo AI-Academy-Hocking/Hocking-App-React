@@ -1,5 +1,5 @@
-import { Link } from "wouter";
-import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield, GraduationCap } from "lucide-react";
+import { useLocation, Link } from "wouter";
+import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield, Bus } from "lucide-react";
 
 export default function MobileNav() {
   
@@ -13,6 +13,7 @@ export default function MobileNav() {
     { path: "/resources", label: "Resources", icon: GraduationCap },
     { path: "/dining", label: "Dining", icon: UtensilsCrossed },
     { path: "/safety", label: "Safety", icon: Shield },
+    { path: "/transportation", label: "Transportation", icon: Bus },
   ];
 
   return (
