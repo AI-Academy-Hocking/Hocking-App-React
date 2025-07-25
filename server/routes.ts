@@ -6,7 +6,7 @@ import {
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, locationUpdateSchema, 
   insertSafetyAlertSchema, insertSafetyResourceSchema
-} from "@shared/schema";
+} from "../shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 

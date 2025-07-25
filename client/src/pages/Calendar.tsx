@@ -1,44 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/calendar.css";
-import { format, parse, startOfWeek, getDay, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
-import { enUS } from "date-fns/locale";
-import { useLocation } from "wouter";
+import { format, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday, startOfToday } from "date-fns";
 
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info, X } from "lucide-react";
-import { Skeleton } from "../components/ui/skeleton";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
 import { Event } from "../../../shared/schema";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/badge";
-import { Link } from "wouter";
-
-interface CalendarEvent {
-  id: string;
-  title: string;
-  date: string | undefined;
-  time: string;
-  end: string | undefined;
-  location: string;
-  description: string;
-}
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function CalendarPage() {
-  const [location, setLocation] = useLocation();
   const [date, setDate] = useState<Value>(new Date());
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showEventModal, setShowEventModal] = useState(false);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
-  const [error, setError] = useState<string | null>(null);
   
-  const { data: events = [], isLoading } = useQuery<Event[]>({
+  // Get today's date for upcoming events filtering
+  const today = startOfToday();
+  const todayISO = today.toISOString();
+
+  // Fetch all events for calendar view (includes past events for navigation)
+  const { data: events = [] } = useQuery<Event[]>({
     queryKey: ['/api/events', activeCalendar],
     queryFn: async () => {
       console.log(`\n=== FRONTEND API CALL ===`);
@@ -59,9 +48,52 @@ export default function CalendarPage() {
     },
   });
 
-  // Get current month's start and end dates
-  const monthStart = startOfMonth(date);
-  const monthEnd = endOfMonth(date);
+  // Fetch upcoming events for both calendar types (same as Home page)
+  const { data: upcomingAcademicEvents = [] } = useQuery<Event[]>({
+    queryKey: ['/api/events', 'academic', 'upcoming', todayISO],
+    queryFn: async () => {
+      console.log(`\n=== FRONTEND UPCOMING ACADEMIC EVENTS API CALL ===`);
+      const res = await fetch(`/api/calendar/events?type=academic&timeMin=${todayISO}`);
+      console.log(`Upcoming academic events API response status: ${res.status}`);
+      
+      if (!res.ok) {
+        console.error(`Upcoming academic events API call failed: ${res.status} ${res.statusText}`);
+        throw new Error('Failed to fetch upcoming academic events');
+      }
+      
+      const data = await res.json();
+      console.log(`Received ${data.length} upcoming academic events from API:`, data);
+      
+      return data;
+    },
+  });
+
+  const { data: upcomingActivityEvents = [] } = useQuery<Event[]>({
+    queryKey: ['/api/events', 'activities', 'upcoming', todayISO],
+    queryFn: async () => {
+      console.log(`\n=== FRONTEND UPCOMING ACTIVITY EVENTS API CALL ===`);
+      const res = await fetch(`/api/calendar/events?type=activities&timeMin=${todayISO}`);
+      console.log(`Upcoming activity events API response status: ${res.status}`);
+      
+      if (!res.ok) {
+        console.error(`Upcoming activity events API call failed: ${res.status} ${res.statusText}`);
+        throw new Error('Failed to fetch upcoming activity events');
+      }
+      
+      const data = await res.json();
+      console.log(`Received ${data.length} upcoming activity events from API:`, data);
+      
+      return data;
+    },
+  });
+
+  // Use the appropriate upcoming events based on active calendar
+  const upcomingEvents = activeCalendar === "academic" ? upcomingAcademicEvents : upcomingActivityEvents;
+
+  // Get current month's start and end dates - handle null date properly
+  const currentDate = Array.isArray(date) ? date[0] || new Date() : date || new Date();
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
   
   // Expand date range to show more events (past month to next 3 months)
   const expandedStart = subMonths(monthStart, 1);
@@ -70,7 +102,7 @@ export default function CalendarPage() {
   console.log(`\n=== FRONTEND STATE ===`);
   console.log(`Active calendar: ${activeCalendar}`);
   console.log(`Total events received: ${events.length}`);
-  console.log(`Current date: ${date.toISOString()}`);
+  console.log(`Current date: ${currentDate.toISOString()}`);
   console.log(`Month start: ${monthStart.toISOString()}`);
   console.log(`Month end: ${monthEnd.toISOString()}`);
   console.log(`Expanded start: ${expandedStart.toISOString()}`);
@@ -113,27 +145,14 @@ export default function CalendarPage() {
   // Use the active calendar to determine which events to show in the main view
   const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
 
-  // Format events for the BigCalendar (use filteredEvents, not all events)
-  const formattedEvents = filteredEvents.map(event => {
-    const startDate = new Date(event.startTime);
-    const endDate = new Date(event.endTime);
-    return {
-      title: event.title || "Untitled Event",
-      start: startDate,
-      end: endDate,
-      resource: {
-        location: event.location || "No Location",
-        description: event.description || "No Description",
-        id: event.id,
-        originalEvent: event
-      },
-    };
-  });
-
   const getEventsForDate = (date: Date) => {
+    // For calendar dots, use all events for the active calendar type
+    // This ensures dots show for all months, not just the current view
     return events.filter(event => {
-      if (!event.date) return false;
-      const eventDate = new Date(event.date);
+      // Only include events for the active calendar type
+      if ('calendarType' in event && (event as any).calendarType !== activeCalendar) return false;
+      
+      const eventDate = new Date(event.startTime);
       return isSameDay(eventDate, date);
     });
   };
@@ -143,12 +162,10 @@ export default function CalendarPage() {
     setShowEventModal(true);
   };
 
-  const handleEventClick = (event: CalendarEvent) => {
-    if (event.date) {
-      const eventDate = new Date(event.date);
-      setSelectedDate(eventDate);
-      setShowEventModal(true);
-    }
+  const handleEventClick = (event: Event) => {
+    const eventDate = new Date(event.startTime);
+    setSelectedDate(eventDate);
+    setShowEventModal(true);
   };
 
   const getTileContent = ({ date, view }: { date: Date; view: string }) => {
@@ -156,18 +173,8 @@ export default function CalendarPage() {
       const dayEvents = getEventsForDate(date);
       if (dayEvents.length > 0) {
         return (
-          <div className="calendar-event-dots">
-            {dayEvents.slice(0, 3).map((_, index) => (
-              <div 
-                key={index} 
-                className="calendar-event-dot"
-              />
-            ))}
-            {dayEvents.length > 3 && (
-              <div className="calendar-event-more">
-                +{dayEvents.length - 3}
-              </div>
-            )}
+          <div className="calendar-event-dot-container">
+            <div className="calendar-event-dot" />
           </div>
         );
       }
@@ -191,6 +198,16 @@ export default function CalendarPage() {
       return classes.join(' ');
     }
     return '';
+  };
+
+  // Helper function to format time from startTime
+  const formatEventTime = (startTime: Date, endTime: Date) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    return {
+      time: format(start, 'h:mm a'),
+      end: format(end, 'h:mm a')
+    };
   };
 
   return (
@@ -288,36 +305,39 @@ export default function CalendarPage() {
             {/* List View */}
             {view === "list" && (
               <div className="max-h-[500px] overflow-auto">
-                {events.length > 0 ? (
+                {filteredEvents.length > 0 ? (
                   <div className="space-y-4">
-                    {events.map(event => (
-                      <div 
-                        key={event.id}
-                        className="p-4 border-2 border-white dark:border-none rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-                        onClick={() => handleEventClick(event)}
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-semibold text-gray-900 dark:text-blue-300">{event.title}</h4>
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-300 rounded-xl">
-                            {event.date ? format(new Date(event.date), 'MMM d') : 'TBD'}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4" />
-                            <span>{event.time}</span>
-                            {event.end && <span> - {event.end}</span>}
+                    {filteredEvents.map(event => {
+                      const { time, end } = formatEventTime(event.startTime, event.endTime);
+                      return (
+                        <div 
+                          key={event.id}
+                          className="p-4 border-2 border-white dark:border-none rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                          onClick={() => handleEventClick(event)}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-semibold text-gray-900 dark:text-blue-300">{event.title}</h4>
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-300 rounded-xl">
+                              {format(new Date(event.startTime), 'MMM d')}
+                            </Badge>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-4 w-4" />
-                            <span>{event.location}</span>
+                          <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-4 w-4" />
+                              <span>{time}</span>
+                              {end && <span> - {end}</span>}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4" />
+                              <span>{event.location}</span>
+                            </div>
                           </div>
+                          {event.description && (
+                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">{event.description}</p>
+                          )}
                         </div>
-                        {event.description && (
-                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">{event.description}</p>
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-12">
@@ -338,67 +358,70 @@ export default function CalendarPage() {
 
       {/* Event Modal */}
       {showEventModal && selectedDate && (
-        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden border-2 border-blue-500 dark:border-none rounded-2xl bg-blue-950 dark:bg-blue-950">
+        <div className="fixed inset-0 flex items-center justify-center p-2 z-50 bg-black/50">
+          <Card className="w-full max-w-sm sm:max-w-md md:max-w-2xl max-h-[90vh] overflow-hidden border-2 border-blue-500 dark:border-none rounded-2xl bg-blue-950 dark:bg-blue-950">
             <CardContent className="p-0">
               {/* Modal Header */}
-              <div className="bg-blue-950 text-white p-6">
+              <div className="bg-blue-950 text-white p-4 sm:p-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">
+                  <h3 className="text-lg sm:text-xl font-semibold mb-2 break-words">
                     {format(selectedDate, 'EEEE, MMMM d, yyyy')}
                   </h3>
-                  <div className="text-blue-100">
+                  <div className="text-blue-100 text-sm sm:text-base">
                     {activeCalendar === "academic" ? "Academic Calendar" : "Student Activities Calendar"}
                   </div>
                 </div>
               </div>
 
               {/* Modal Content */}
-              <div className="p-6 max-h-[50vh] overflow-auto">
+              <div className="p-4 sm:p-6 max-h-[60vh] overflow-y-auto">
                 {getEventsForDate(selectedDate).length > 0 ? (
-                  <div className="space-y-6">
-                    {getEventsForDate(selectedDate).map(event => (
-                      <div key={event.id} className="border-l-4 border-blue-500 pl-4">
-                        <h4 className="text-lg font-semibold text-white mb-2">
-                          {event.title}
-                        </h4>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                          <div className="flex items-center gap-2 text-gray-300">
-                            <Clock className="h-4 w-4 text-blue-300" />
-                            <span className="font-medium">Time:</span>
-                            <span>{event.time}</span>
-                            {event.end && <span> - {event.end}</span>}
-                          </div>
+                  <div className="space-y-4 sm:space-y-6">
+                    {getEventsForDate(selectedDate).map(event => {
+                      const { time, end } = formatEventTime(event.startTime, event.endTime);
+                      return (
+                        <div key={event.id} className="border-l-4 border-blue-500 pl-3 sm:pl-4">
+                          <h4 className="text-base sm:text-lg font-semibold text-white mb-2 break-words">
+                            {event.title}
+                          </h4>
                           
-                          <div className="flex items-center gap-2 text-gray-300">
-                            <MapPin className="h-4 w-4 text-blue-300" />
-                            <span className="font-medium">Location:</span>
-                            <span>{event.location}</span>
-                          </div>
-                        </div>
-
-                        {event.description && (
-                          <div className="mt-4 p-3 bg-gray-800/50 rounded-lg border border-gray-600">
-                            <div className="flex items-start gap-2">
-                              <Info className="h-4 w-4 text-blue-300 mt-0.5 flex-shrink-0" />
-                              <div>
-                                <span className="font-medium text-gray-300">Description:</span>
-                                <p className="text-gray-300 mt-1">{event.description}</p>
-                              </div>
+                          <div className="grid grid-cols-1 gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div className="flex items-center gap-2 text-gray-300 text-sm sm:text-base">
+                              <Clock className="h-4 w-4 text-blue-300 flex-shrink-0" />
+                              <span className="font-medium">Time:</span>
+                              <span className="break-words">{time}</span>
+                              {end && <span className="break-words"> - {end}</span>}
+                            </div>
+                            
+                            <div className="flex items-start gap-2 text-gray-300 text-sm sm:text-base">
+                              <MapPin className="h-4 w-4 text-blue-300 flex-shrink-0 mt-0.5" />
+                              <span className="font-medium">Location:</span>
+                              <span className="break-words">{event.location}</span>
                             </div>
                           </div>
-                        )}
-                      </div>
-                    ))}
+
+                          {event.description && (
+                            <div className="mt-3 sm:mt-4 p-3 bg-gray-800/50 rounded-lg border border-gray-600">
+                              <div className="flex items-start gap-2">
+                                <Info className="h-4 w-4 text-blue-300 mt-0.5 flex-shrink-0" />
+                                <div className="min-w-0 flex-1">
+                                  <span className="font-medium text-gray-300 text-sm sm:text-base">Description:</span>
+                                  <p className="text-gray-300 mt-1 text-sm sm:text-base break-words leading-relaxed">{event.description}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <CalendarIcon className="h-16 w-16 mx-auto mb-4 text-blue-300" />
-                    <h4 className="text-xl font-semibold text-white mb-2">
+                  <div className="text-center py-8 sm:py-12">
+                    <CalendarIcon className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4 text-blue-300" />
+                    <h4 className="text-lg sm:text-xl font-semibold text-white mb-2">
                       No Events Scheduled
                     </h4>
-                    <p className="text-gray-300">
+                    <p className="text-gray-300 text-sm sm:text-base px-2">
                       This day is free from scheduled events. Perfect time to plan something new!
                     </p>
                   </div>
@@ -406,9 +429,9 @@ export default function CalendarPage() {
               </div>
 
               {/* Modal Footer */}
-              <div className="bg-blue-900/40 px-6 py-4">
+              <div className="bg-blue-900/40 px-4 sm:px-6 py-3 sm:py-4">
                 <div className="flex justify-between items-center">
-                  <div className="text-sm text-gray-300">
+                  <div className="text-xs sm:text-sm text-gray-300">
                     Click on any date to view its events
                   </div>
                   <Button 
@@ -416,7 +439,7 @@ export default function CalendarPage() {
                       setShowEventModal(false);
                       setSelectedDate(null);
                     }}
-                    className="text-blue-300 hover:text-blue-200 bg-transparent hover:bg-transparent"
+                    className="text-blue-300 hover:text-blue-200 bg-transparent hover:bg-transparent text-sm sm:text-base"
                     variant="ghost"
                   >
                     Close
@@ -427,6 +450,59 @@ export default function CalendarPage() {
           </Card>
         </div>
       )}
+
+      {/* Upcoming Events Section */}
+      <section className="max-w-6xl mx-auto mt-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-blue-300">
+            Upcoming Events
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {upcomingEvents.slice(0, activeCalendar === "academic" ? 5 : 3).map(event => {
+            const { time, end } = formatEventTime(event.startTime, event.endTime);
+            return (
+              <Card key={event.id} className="p-4 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+                <div className="flex justify-between items-start mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-blue-300 line-clamp-2">
+                    {event.title}
+                  </h3>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-300 rounded-xl flex-shrink-0 ml-2">
+                    {format(new Date(event.startTime), 'MMM d')}
+                  </Badge>
+                </div>
+                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>{time}</span>
+                    {end && <span>- {end}</span>}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    <span className="line-clamp-1">{event.location}</span>
+                  </div>
+                </div>
+                {event.description && (
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-3 line-clamp-2">
+                    {event.description}
+                  </p>
+                )}
+              </Card>
+            );
+          })}
+        </div>
+        {upcomingEvents.length === 0 && (
+          <div className="text-center py-12">
+            <CalendarIcon className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+            <h4 className="text-xl font-semibold text-gray-900 dark:text-blue-300 mb-2">
+              No Upcoming Events
+            </h4>
+            <p className="text-gray-500 dark:text-gray-300">
+              Check back later for new events and activities.
+            </p>
+          </div>
+        )}
+      </section>
 
       {/* Quick Access Cards */}
       <section className="max-w-6xl mx-auto mt-8">

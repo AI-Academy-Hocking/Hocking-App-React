@@ -3,28 +3,78 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
-import { Calendar, MapPin, Wrench, School } from "lucide-react";
+import { Calendar, MapPin, Wrench, School, Clock } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
 import ProgramDropdown from "@/components/ProgramDropdown";
 import { Button } from "@/components/ui/button";
-
-// Define a local Event type for type safety
-export type Event = {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-};
+import { format, isAfter, startOfToday } from "date-fns";
+import { Event } from "../../../shared/schema";
 
 export default function Home() {
   const { user } = useAuth();
   
-  // Remove unused destructured elements from useQuery
-  useQuery<Event[]>({
-    queryKey: ['/api/events'],
+  // Get today's date for filtering upcoming events
+  const today = startOfToday();
+  const todayISO = today.toISOString();
+  
+  // Fetch upcoming events only (from today onwards) for better performance
+  // Note: Calendar page fetches all events and filters client-side for full calendar view
+  const { data: academicEvents = [], isLoading: academicLoading } = useQuery<Event[]>({
+    queryKey: ['/api/events', 'academic', 'upcoming', todayISO],
+    queryFn: async () => {
+      console.log('Fetching upcoming academic events...');
+      const res = await fetch(`/api/calendar/events?type=academic&timeMin=${todayISO}`);
+      console.log('Academic events response status:', res.status);
+      if (!res.ok) throw new Error('Failed to fetch academic events');
+      const data = await res.json();
+      console.log('Upcoming academic events received:', data.length, 'events');
+      console.log('Academic events data:', data);
+      return data;
+    },
   });
+
+  const { data: activityEvents = [], isLoading: activityLoading } = useQuery<Event[]>({
+    queryKey: ['/api/events', 'activities', 'upcoming', todayISO],
+    queryFn: async () => {
+      console.log('Fetching upcoming activity events...');
+      const res = await fetch(`/api/calendar/events?type=activities&timeMin=${todayISO}`);
+      console.log('Activity events response status:', res.status);
+      if (!res.ok) throw new Error('Failed to fetch activity events');
+      const data = await res.json();
+      console.log('Upcoming activity events received:', data.length, 'events');
+      console.log('Activity events data:', data);
+      return data;
+    },
+  });
+
+  // Since we're now fetching only upcoming events from the server, we just need to sort and limit them
+  const now = new Date();
+  console.log('Today (start of day):', today.toISOString());
+  console.log('Current time:', now.toISOString());
+  console.log('Total upcoming academic events:', academicEvents.length);
+  console.log('Total upcoming activity events:', activityEvents.length);
+  
+  const upcomingAcademicEvents = academicEvents
+    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+    .slice(0, 5); // Show only next 5 events
+
+  const upcomingActivityEvents = activityEvents
+    .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+    .slice(0, 3); // Show only next 3 events
+
+  console.log('Displaying academic events:', upcomingAcademicEvents.length);
+  console.log('Displaying activity events:', upcomingActivityEvents.length);
+
+  // Helper function to format event time
+  const formatEventTime = (startTime: Date, endTime: Date) => {
+    const start = new Date(startTime);
+    const end = new Date(endTime);
+    return {
+      time: format(start, 'h:mm a'),
+      end: format(end, 'h:mm a')
+    };
+  };
 
   const handleProgramChange = (program: string) => {
     console.log('Selected program:', program);
@@ -101,16 +151,75 @@ export default function Home() {
           {/* Academic Calendar Box */}
           <div className="rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
             <h3 className="font-bold mb-4 text-gray-900 dark:text-blue-300">Academic Calendar</h3>
-            <div className="text-center py-8 text-gray-600 dark:text-gray-300">
-              No upcoming academic events
-            </div>
+            {academicLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-16 w-full" />
+                ))}
+              </div>
+            ) : upcomingAcademicEvents.length > 0 ? (
+              <div className="space-y-3">
+                {upcomingAcademicEvents.map(event => {
+                  const { time, end } = formatEventTime(event.startTime, event.endTime);
+                  return (
+                    <div key={event.id} className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-blue-300 mb-1 line-clamp-1">
+                        {event.title}
+                      </h4>
+                      <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                        <Clock className="h-3 w-3" />
+                        <span>{format(new Date(event.startTime), 'MMM d')} • {time}</span>
+                        {end && <span>- {end}</span>}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
+                        {event.location}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-600 dark:text-gray-300">
+                No upcoming academic events
+              </div>
+            )}
           </div>
+          
           {/* Student Activities Box */}
           <div className="rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm p-6 bg-white dark:bg-gray-800">
             <h3 className="font-bold mb-4 text-gray-900 dark:text-blue-300">Student Activities</h3>
-            <div className="text-center py-8 text-gray-600 dark:text-gray-300">
-              No upcoming student activities
-            </div>
+            {activityLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-16 w-full" />
+                ))}
+              </div>
+            ) : upcomingActivityEvents.length > 0 ? (
+              <div className="space-y-3">
+                {upcomingActivityEvents.map(event => {
+                  const { time, end } = formatEventTime(event.startTime, event.endTime);
+                  return (
+                    <div key={event.id} className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-blue-300 mb-1 line-clamp-1">
+                        {event.title}
+                      </h4>
+                      <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                        <Clock className="h-3 w-3" />
+                        <span>{format(new Date(event.startTime), 'MMM d')} • {time}</span>
+                        {end && <span>- {end}</span>}
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
+                        {event.location}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-600 dark:text-gray-300">
+                No upcoming student activities
+              </div>
+            )}
           </div>
         </div>
       </section>

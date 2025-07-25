@@ -30,7 +30,7 @@ const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba
 // Student activities calendar URL (private - needs API)
 const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
 
-async function fetchCalendarEvents(url: string, calendarType: string) {
+async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: Date, timeMax?: Date) {
   console.log(`\n=== GOOGLE CALENDAR DEBUG ===`);
   console.log(`Fetching calendar events from: ${url}`);
   
@@ -61,8 +61,25 @@ async function fetchCalendarEvents(url: string, calendarType: string) {
         const isVEvent = event.type === 'VEVENT';
         if (!isVEvent) {
           console.log(`Skipping non-VEVENT: ${(event as any).type}`);
+          return false;
         }
-        return isVEvent;
+        
+        // Filter by date range if specified
+        if (timeMin || timeMax) {
+          const eventStart = (event as any).start;
+          if (eventStart) {
+            const eventDate = new Date(eventStart);
+            const minDate = timeMin || new Date(0);
+            const maxDate = timeMax || new Date('2100-01-01');
+            
+            if (eventDate < minDate || eventDate > maxDate) {
+              console.log(`Skipping event outside date range: ${(event as any).summary} on ${eventDate.toISOString()}`);
+              return false;
+            }
+          }
+        }
+        
+        return true;
       })
       .map((event, index) => {
         console.log(`\n--- Processing Event ${index + 1} ---`);
@@ -127,7 +144,11 @@ router.get('/events', async (req, res) => {
   
   try {
     const calendarType = req.query.type as string;
+    const timeMin = req.query.timeMin as string; // Optional: filter events from this date
+    const timeMax = req.query.timeMax as string; // Optional: filter events until this date
+    
     console.log(`Calendar type requested: ${calendarType}`);
+    console.log(`Time range: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
     
     let events;
     
@@ -135,7 +156,11 @@ router.get('/events', async (req, res) => {
     if (googleCalendarService) {
       console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
       try {
-        events = await googleCalendarService.getEvents(calendarType as 'academic' | 'activities');
+        events = await googleCalendarService.getEvents(
+          calendarType as 'academic' | 'activities',
+          timeMin ? new Date(timeMin) : undefined,
+          timeMax ? new Date(timeMax) : undefined
+        );
         console.log(`Successfully fetched ${events.length} events via Google Calendar API`);
       } catch (apiError) {
         console.error('Google Calendar API failed, falling back to iCal:', apiError);
@@ -146,11 +171,21 @@ router.get('/events', async (req, res) => {
     // If Google Calendar API failed or is not available, use iCal
     if (!events) {
       console.log(`Using iCal fallback for ${calendarType} calendar`);
+      const minDate = timeMin ? new Date(timeMin) : undefined;
+      const maxDate = timeMax ? new Date(timeMax) : undefined;
+      
+      console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
+      
       if (calendarType === 'academic') {
-        events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic');
+        events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
       } else if (calendarType === 'activities') {
-        events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities');
+        events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities', minDate, maxDate);
       }
+    }
+    
+    // Date filtering is now handled at the source (Google Calendar API or iCal parsing)
+    if (timeMin || timeMax) {
+      console.log(`Date filtering applied at source: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
     }
     
     console.log(`Sending ${events.length} events to frontend`);
