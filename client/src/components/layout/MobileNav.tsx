@@ -1,5 +1,5 @@
 import { useLocation, Link } from "wouter";
-import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield, Bus } from "lucide-react";
+import { Home, CalendarDays, Wrench, Map, UtensilsCrossed, Shield, Bus, GraduationCap } from "lucide-react";
 
 export default function MobileNav() {
   
