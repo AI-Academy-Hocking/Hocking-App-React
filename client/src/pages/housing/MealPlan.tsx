@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CreditCard } from 'lucide-react';
+import { CreditCard, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
 
 interface MealPlan {
   name: string;
@@ -85,8 +86,26 @@ const item = {
 };
 
 export default function MealPlan() {
+  const [, setLocation] = useLocation();
+
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <button
+          onClick={() => setLocation('/housing')}
+          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Housing Services
+        </button>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -154,6 +173,7 @@ export default function MealPlan() {
           </motion.div>
         ))}
       </motion.div>
+      </div>
     </div>
   );
 } 

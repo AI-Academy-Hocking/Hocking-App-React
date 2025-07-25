@@ -46,6 +46,7 @@ import OfficeAdministration from "./pages/tools/academic/office-administration";
 import CareerUniversityCenter from "./pages/tools/academic/CareerUniversityCenter";
 import Transportation from "./pages/Transportation";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
+import Resources from "./pages/Resources";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -84,6 +85,7 @@ function Router() {
         <Route path="/calendar" component={Calendar} />
         <Route path="/tools" component={StudentTools} />
         <Route path="/maps" component={Maps} />
+        <Route path="/resources" component={Resources} />
         <Route path="/dining" component={DiningHall} />
         <Route path="/safety" component={CampusSafety} />
         <Route path="/recreation" component={RecreationPage} />

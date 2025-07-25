@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectSafetyResourceSchema = exports.insertSafetyResourceSchema = exports.selectSafetyAlertSchema = exports.insertSafetyAlertSchema = exports.selectCommentSchema = exports.insertCommentSchema = exports.selectDiscussionSchema = exports.insertDiscussionSchema = exports.selectStudentToolSchema = exports.insertStudentToolSchema = exports.selectBuildingSchema = exports.insertBuildingSchema = exports.selectEventSchema = exports.insertEventSchema = exports.selectUserSchema = exports.insertUserSchema = exports.safetyResources = exports.safetyAlerts = exports.comments = exports.discussions = exports.studentTools = exports.buildings = exports.events = exports.users = void 0;
+exports.selectSafetyResourceSchema = exports.insertSafetyResourceSchema = exports.selectSafetyAlertSchema = exports.insertSafetyAlertSchema = exports.selectCommentSchema = exports.insertCommentSchema = exports.selectDiscussionSchema = exports.insertDiscussionSchema = exports.selectStudentToolSchema = exports.insertStudentToolSchema = exports.selectBuildingSchema = exports.insertBuildingSchema = exports.selectEventSchema = exports.insertEventSchema = exports.selectUserSchema = exports.insertUserSchema = exports.locationUpdateSchema = exports.safetyResources = exports.safetyAlerts = exports.comments = exports.discussions = exports.studentTools = exports.buildings = exports.events = exports.users = void 0;
 const pg_core_1 = require("drizzle-orm/pg-core");
 const drizzle_zod_1 = require("drizzle-zod");
+const zod_1 = require("zod");
 // User schema
 exports.users = (0, pg_core_1.pgTable)('users', {
     id: (0, pg_core_1.serial)('id').primaryKey(),
@@ -82,6 +83,12 @@ exports.safetyResources = (0, pg_core_1.pgTable)('safety_resources', {
     url: (0, pg_core_1.text)('url'),
     icon: (0, pg_core_1.text)('icon'),
     order: (0, pg_core_1.integer)('order').default(0)
+});
+// Location update schema
+exports.locationUpdateSchema = zod_1.z.object({
+    lat: zod_1.z.string(),
+    lng: zod_1.z.string(),
+    isLocationShared: zod_1.z.boolean().optional()
 });
 // Zod schemas
 exports.insertUserSchema = (0, drizzle_zod_1.createInsertSchema)(exports.users);

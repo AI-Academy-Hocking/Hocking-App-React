@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users } from 'lucide-react';
+import { Users, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 
 interface RoommateProfile {
@@ -109,8 +110,26 @@ const item = {
 };
 
 export default function Roomies() {
+  const [, setLocation] = useLocation();
+
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <button
+          onClick={() => setLocation('/housing')}
+          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Housing Services
+        </button>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -167,7 +186,7 @@ export default function Roomies() {
                     <h3 className="text-sm font-semibold mb-3">Interests</h3>
                     <div className="flex flex-wrap gap-2">
                       {profile.interests.map((interest) => (
-                        <Badge key={interest} variant="secondary" className="text-xs">
+                        <Badge key={interest} variant="default" className="text-xs">
                           {interest}
                         </Badge>
                       ))}
@@ -186,7 +205,7 @@ export default function Roomies() {
                   </div>
                   <Button 
                     className="w-full"
-                    variant={profile.status === "available" ? "default" : "secondary"}
+                    variant={profile.status === "available" ? "default" : "ghost"}
                     disabled={profile.status !== "available"}
                   >
                     {profile.status === "available" ? "Connect" : 
@@ -198,6 +217,7 @@ export default function Roomies() {
           </motion.div>
         ))}
       </motion.div>
+      </div>
     </div>
   );
 } 

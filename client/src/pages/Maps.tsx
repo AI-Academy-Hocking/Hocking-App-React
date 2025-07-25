@@ -331,36 +331,16 @@ export default function Maps() {
   return (
     <div className="space-y-6">
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Campus Maps</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Campus Maps</h2>
         
-        <Card className="overflow-hidden">
+        <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a] overflow-hidden">
           {/* Map container */}
-          <div ref={mapRef} className="h-72 bg-neutral-light relative z-0"></div>
-          
-          {/* Map controls */}
-          <div className="absolute bottom-4 right-4 flex flex-col space-y-2 z-[1000]">
-            <Button 
-              size="icon" 
-              variant="default" 
-              className="rounded-full" 
-              onClick={handleZoomIn}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-            <Button 
-              size="icon" 
-              variant="default" 
-              className="rounded-full" 
-              onClick={handleZoomOut}
-            >
-              <Minus className="h-4 w-4" />
-            </Button>
-          </div>
+          <div ref={mapRef} className="h-72 bg-neutral-light dark:bg-[#353e4a] relative"></div>
           
           {/* Map search and filters */}
-          <CardContent className="p-4 border-t border-neutral-light">
-            <div className="flex items-center bg-neutral-lightest rounded-lg p-2 mb-4">
-              <Search className="text-neutral-dark ml-1 mr-2 h-4 w-4" />
+          <CardContent className="p-4 border-t border-neutral-light dark:border-transparent bg-white dark:bg-[#353e4a]">
+            <div className="flex items-center bg-neutral-lightest dark:bg-[#2a3240] rounded-xl p-2 mb-4">
+              <Search className="text-neutral-dark dark:text-blue-400 ml-1 mr-2 h-4 w-4" />
               <Input 
                 type="text" 
                 placeholder="Search for a building..." 
@@ -376,7 +356,7 @@ export default function Maps() {
                   key={category.id}
                   variant={activeCategory === category.id ? "default" : "ghost"}
                   size="default"
-                  className={`rounded-full text-sm ${
+                  className={`rounded-xl text-sm ${
                     activeCategory === category.id 
                       ? "bg-primary text-white" 
                       : "bg-neutral-lightest text-neutral-dark"
@@ -393,9 +373,9 @@ export default function Maps() {
       
       {user && !user.isGuest && (
         <section>
-          <h2 className="text-xl font-heading font-semibold mb-4">Location Sharing</h2>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Location Sharing</h2>
           
-          <Card className="p-4">
+          <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
@@ -432,7 +412,7 @@ export default function Maps() {
           </Card>
           
           <div className="mt-4">
-            <Card className="p-4">
+            <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <Users className="h-5 w-5 text-primary" />
@@ -458,19 +438,19 @@ export default function Maps() {
       )}
       
       <section>
-        <h2 className="text-xl font-heading font-semibold mb-4">Building Directory</h2>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Building Directory</h2>
         
-        <Card>
-          <ul className="divide-y divide-neutral-light">
+        <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
+          <ul className="divide-y divide-neutral-light dark:divide-[#2a3240]">
             {filteredBuildings.length > 0 ? (
               filteredBuildings.map((building) => (
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      <span className={`inline-block w-5 h-5 rounded-full border-2 transition-colors duration-200 mr-2 ${selectedBuildingId === building.id ? 'bg-blue-600 border-blue-700' : 'bg-neutral-200 border-neutral-400'}`}></span>
+                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-white dark:border-transparent flex-shrink-0"></span>
                       <div>
-                        <h3 className={`font-semibold ${selectedBuildingId === building.id ? 'text-black' : ''}`}>{building.name}</h3>
-                        <p className="text-sm text-neutral-dark">{building.description}</p>
+                        <h3 className="font-semibold text-black dark:text-blue-300">{building.name}</h3>
+                        <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>
                       </div>
                     </div>
                     <Button 
