@@ -11,6 +11,7 @@ import DiningHall from "@/pages/DiningHall";
 import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { NotificationProvider } from "@/lib/notifications";
 import RecreationPage from "./pages/Recreation";
 import LibraryResourcesPage from "./pages/LibraryResources";
 import OnlineLearningPage from "./pages/OnlineLearning";
@@ -47,6 +48,8 @@ import CareerUniversityCenter from "./pages/tools/academic/CareerUniversityCente
 import Transportation from "./pages/Transportation";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
 import Resources from "./pages/Resources";
+import Settings from "./pages/Settings";
+import AdminDashboard from "./pages/AdminDashboard";
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -122,6 +125,8 @@ function Router() {
         <Route path="/tools/academic/career-university-center" component={CareerUniversityCenter} />
         <Route path="/tools/academic/:id" component={AcademicToolDetail} />
         <Route path="/transportation" component={Transportation} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
@@ -132,8 +137,10 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <Toaster />
+        <NotificationProvider>
+          <Router />
+          <Toaster />
+        </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

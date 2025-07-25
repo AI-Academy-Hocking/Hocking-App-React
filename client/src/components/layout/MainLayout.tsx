@@ -4,6 +4,7 @@ import MobileNav from "./MobileNav";
 import Header from "./Header";
 import { useAuth } from "@/lib/auth";
 import { useLocation } from "wouter";
+import { useNotificationService } from "@/hooks/use-notification-service";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -14,6 +15,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [location, setLocation] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
+  
+  // Initialize notification service
+  useNotificationService();
 
   // Force reset mobile menu state on mount
   useEffect(() => {

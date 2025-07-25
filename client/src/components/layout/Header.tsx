@@ -3,19 +3,22 @@ import { useState, useEffect } from "react";
 import { 
   Menu, Moon, Sun, LogOut, Home, Calendar, Wrench, Map, UtensilsCrossed, Shield,
   LibraryBig, MonitorSmartphone, Users, Dumbbell, Trophy, ChevronDown, ChevronRight,
-  GraduationCap, Clock, Star, Coffee, Utensils, Music, CreditCard, Info, MapPin, CalendarDays
+  GraduationCap, Clock, Star, Coffee, Utensils, Music, CreditCard, Info, MapPin, CalendarDays,
+  Settings, Crown
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetPortal, SheetOverlay } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
 import { Link, useLocation } from "wouter";
 import HawkLogo from "../../assets/HawkLogo.png";
+import NotificationBell from "../NotificationBell";
 
 const navItems = [
   { path: "/home", label: "Home", icon: Home },
   { path: "/maps", label: "Maps & Directions", icon: Map },
   { path: "/resources", label: "Resources", icon: GraduationCap },
   { path: "/safety", label: "Campus Safety", icon: Shield },
+  { path: "/settings", label: "Settings", icon: Settings },
 ];
 
 const studentToolsDropdown = [
@@ -49,7 +52,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onMobileMenuChange }: HeaderProps) {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   const [location, setLocation] = useLocation();
@@ -262,16 +265,29 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
                 </nav>
                 
                 <div className="p-4 border-t border-gray-700 bg-gray-800/60 backdrop-blur-sm">
-                  <button 
-                    onClick={() => {
-                      logout();
-                      handleMenuOpenChange(false);
-                    }} 
-                    className="flex items-center text-sm text-white hover:text-blue-200 transition"
-                  >
-                    <LogOut className="mr-1 h-4 w-4 text-white" />
-                    <span>Return To Welcome Page</span>
-                  </button>
+                  <div className="space-y-2">
+                    {isAdmin && (
+                      <button
+                        onClick={() => {
+                          handleNavigation('/admin/dashboard');
+                        }}
+                        className="flex items-center text-sm text-white hover:text-blue-200 transition w-full"
+                      >
+                        <Crown className="mr-1 h-4 w-4 text-white" />
+                        <span>Admin Dashboard</span>
+                      </button>
+                    )}
+                    <button 
+                      onClick={() => {
+                        logout();
+                        handleMenuOpenChange(false);
+                      }} 
+                      className="flex items-center text-sm text-white hover:text-blue-200 transition w-full"
+                    >
+                      <LogOut className="mr-1 h-4 w-4 text-white" />
+                      <span>Return To Welcome Page</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </SheetPortal>
@@ -285,13 +301,16 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
             Hocking College
           </h1>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="ml-4 p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
-          aria-label="Toggle light/dark mode"
-        >
-          {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationBell />
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+            aria-label="Toggle light/dark mode"
+          >
+            {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
     </header>
   );

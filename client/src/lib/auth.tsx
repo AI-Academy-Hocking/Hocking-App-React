@@ -7,12 +7,14 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   guestLogin: () => void;
   logout: () => void;
+  isAdmin: boolean;
 }
 
 interface User {
   id: number;
   username: string;
   isGuest: boolean;
+  isAdmin?: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,6 +50,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (username: string, password: string) => {
     try {
+      // Check for admin login first
+      if (username === 'admin' && password === 'password') {
+        const adminUser: User = {
+          id: 1,
+          username: 'admin',
+          isGuest: false,
+          isAdmin: true,
+        };
+        setUser(adminUser);
+        setIsAuthenticated(true);
+        setLocation('/admin/dashboard');
+        return;
+      }
+
+      // Regular login logic (existing)
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -75,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       id: 0,
       username: 'Guest User',
       isGuest: true,
+      isAdmin: false,
     };
 
     setUser(guestUser);
@@ -88,6 +106,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLocation('/login');
   };
 
+  const isAdmin = user?.isAdmin || false;
+
   return (
     <AuthContext.Provider
       value={{
@@ -95,7 +115,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user,
         login,
         guestLogin,
-        logout
+        logout,
+        isAdmin
       }}
     >
       {children}
