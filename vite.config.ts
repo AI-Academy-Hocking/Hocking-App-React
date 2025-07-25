@@ -20,6 +20,7 @@ export default defineConfig({
         ]
       : []),
   ],
+  assetsInclude: ['**/*.JPG', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.webp'],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),

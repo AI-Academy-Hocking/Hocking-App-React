@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, AlertTriangle } from 'lucide-react';
+import { ClipboardList, AlertTriangle, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
 
 interface ChecklistItem {
   category: string;
@@ -429,8 +430,26 @@ const item = {
 };
 
 export default function WhatToBring() {
+  const [, setLocation] = useLocation();
+
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <button
+          onClick={() => setLocation('/housing')}
+          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Housing Services
+        </button>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -499,7 +518,7 @@ export default function WhatToBring() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200"
+        className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
       >
         <h2 className="text-xl font-semibold mb-4">Additional Notes from Hocking College Housing</h2>
         <ul className="space-y-2 text-sm text-blue-900">
@@ -510,6 +529,7 @@ export default function WhatToBring() {
           <li>• If you have any questions about what to bring or not to bring, please don't hesitate to contact the Housing Office.</li>
         </ul>
       </motion.div>
+      </div>
     </div>
   );
 } 

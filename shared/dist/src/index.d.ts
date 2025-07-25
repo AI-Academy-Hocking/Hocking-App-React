@@ -1,4 +1,5 @@
 import { PgTableWithColumns } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
 export declare const users: PgTableWithColumns<{
     name: "users";
     schema: undefined;
@@ -1030,6 +1031,19 @@ export interface LocationUpdate {
     lng: string;
     isLocationShared?: boolean;
 }
+export declare const locationUpdateSchema: z.ZodObject<{
+    lat: z.ZodString;
+    lng: z.ZodString;
+    isLocationShared: z.ZodOptional<z.ZodBoolean>;
+}, "strip", z.ZodTypeAny, {
+    lat: string;
+    lng: string;
+    isLocationShared?: boolean | undefined;
+}, {
+    lat: string;
+    lng: string;
+    isLocationShared?: boolean | undefined;
+}>;
 export declare const insertUserSchema: import("drizzle-zod").BuildSchema<"insert", {
     id: import("drizzle-orm/pg-core").PgColumn<{
         name: "id";

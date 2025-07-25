@@ -81,6 +81,7 @@
   --color-text: #232f3e;         /* Main text color */
   --color-accent: #20469b;       /* Blue accent instead of green */
   --color-border: #e0e0e0;       /* Light border */
+  --ring: #a0aec0;               /* Light mode focus ring */
   
   /* shadcn/ui sidebar variables */
   --sidebar: 0 0% 0%;
@@ -99,6 +100,7 @@
   --calendar-button-text: #fff;
   --color-text: #ffffff;
   --color-border: #181c24;
+  --ring: #4a5568;               /* Dark mode focus ring */
   --color-sidebar: rgba(0, 0, 0, 0.7);      /* Darker transparent for dark mode */
   --color-sidebar-accent: rgba(255, 255, 255, 0.3); /* Brighter transparent for dark mode */
   border-color: var(--color-border);

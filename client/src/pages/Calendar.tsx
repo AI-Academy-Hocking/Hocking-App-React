@@ -1,33 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar as BigCalendar, dateFnsLocalizer } from "react-big-calendar";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import "../styles/calendar.css";
 import { format, parse, startOfWeek, getDay, startOfMonth, endOfMonth, isSameDay, addMonths, subMonths, isToday } from "date-fns";
 import { enUS } from "date-fns/locale";
+import { useLocation } from "wouter";
 
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Info, X } from "lucide-react";
 import { Skeleton } from "../components/ui/skeleton";
 import { Event } from "../../../shared/schema";
 import { cn } from "../lib/utils";
 import { Badge } from "../components/ui/badge";
 import { Link } from "wouter";
-
-const locales = {
-  "en-US": enUS,
-};
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
-
-const CALENDAR_URL = "/api/calendar/events";
 
 interface CalendarEvent {
   id: string;
@@ -39,450 +26,442 @@ interface CalendarEvent {
   description: string;
 }
 
-// Custom gutter header for day view to show abbreviated day of the week
-const CustomTimeGutterHeader = ({ date }: any) => (
-  <div className="text-base font-bold text-white text-center py-2">
-    {format(date, 'EEE')}
-  </div>
-);
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 export default function CalendarPage() {
-  const [date, setDate] = useState(new Date());
+  const [location, setLocation] = useLocation();
+  const [date, setDate] = useState<Value>(new Date());
   const [view, setView] = useState<"month" | "list">("month");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [showEventModal, setShowEventModal] = useState(false);
   const [activeCalendar, setActiveCalendar] = useState<"academic" | "activities">("academic");
-  const [error, setError] = useState<string | null>(null);
   
-  const { data: events = [], isLoading } = useQuery<Event[]>({
-    queryKey: ['/api/events', activeCalendar],
-    // In a real app, you would fetch different events based on activeCalendar
-    // by adding a parameter to the API endpoint
-  });
-
-  // Get current month's start and end dates
-  const monthStart = startOfMonth(date);
-  const monthEnd = endOfMonth(date);
-
-  // Format events for the BigCalendar
-  const formattedEvents = events.map(event => {
-    const startDate = new Date(event.startTime);
-    const endDate = new Date(event.endTime);
-    
-    return {
-      title: event.title || "Untitled Event",
-      start: startDate,
-      end: endDate,
-      resource: { 
-        location: event.location || "No Location", 
-        description: event.description || "No Description",
-        id: event.id,
-        originalEvent: event
-      },
-    };
-  });
-
-  // Filter events based on calendar type and date range
-  const getFilteredEvents = (calendarType: "academic" | "activities") => {
-    return events
-      .filter(event => {
-        // In a real implementation, each event would have a 'calendarType' property
-        // For now, we're using an empty array so no events will show
-        return false;
-        
-        // When you add real events, uncomment this code:
-        /*
-        const eventDate = new Date(event.startTime);
-        if (selectedDate) {
-          return isSameDay(eventDate, selectedDate);
-        }
-        return eventDate >= monthStart && eventDate <= monthEnd;
-        */
-      })
-      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-  };
-
-  // Get events for both calendar types
-  const academicEvents = getFilteredEvents("academic");
-  const activityEvents = getFilteredEvents("activities");
-  
-  // Use the active calendar to determine which events to show in the main view
-  const filteredEvents = activeCalendar === "academic" ? academicEvents : activityEvents;
-
-  // Format date for display
-  const formatEventDate = (date: string | Date) => {
-    const eventDate = new Date(date);
-    return {
-      weekday: eventDate.toLocaleString('en-US', { weekday: 'short' }),
-      month: eventDate.toLocaleString('en-US', { month: 'short' }),
-      day: eventDate.getDate()
-    };
-  };
-
-  // Navigate between months
-  const handlePreviousMonth = () => {
-    setDate(subMonths(date, 1));
-    setSelectedDate(null);
-  };
-
-  const handleNextMonth = () => {
-    setDate(addMonths(date, 1));
-    setSelectedDate(null);
-  };
-
-  // Handle date selection
-  const handleDateSelect = (slotInfo: any) => {
-    setSelectedDate(slotInfo.start);
-  };
-
-  // Custom day renderer for the calendar
-  const dayPropGetter = (date: Date) => {
-    const hasEvents = events.some(event => isSameDay(new Date(event.startTime), date));
-    const isSelectedDay = selectedDate && isSameDay(date, selectedDate);
-    const isTodayDate = isToday(date);
-    
-    return {
-      className: cn(
-        hasEvents && "has-events",
-        isSelectedDay && "selected-day",
-        isTodayDate && "today-date"
-      ),
-      style: {
-        backgroundColor: isSelectedDay ? 'var(--primary-light)' : undefined,
-        color: isSelectedDay ? 'white' : undefined,
-        borderRadius: isSelectedDay ? '50%' : undefined,
-        border: isTodayDate && !isSelectedDay ? '2px solid var(--primary)' : undefined,
-      }
-    };
-  };
-
-  // Helper to get events for each day in the current week
-  const getEventsForWeek = (date: Date) => {
-    const start = startOfWeek(date, { weekStartsOn: 0 }); // Sunday
-    const days = Array.from({ length: 7 }, (_, i) => {
-      const day = new Date(start);
-      day.setDate(start.getDate() + i);
-      return day;
-    });
-    return days.map(day => ({
-      day,
-      events: formattedEvents.filter(event =>
-        event.start.toDateString() === day.toDateString()
-      ),
-    }));
-  };
-
-  // Group events by date
-  const groupedEvents = filteredEvents.reduce((acc, event) => {
-    const date = new Date(event.startTime).toISOString().split('T')[0];
-    if (!acc[date]) {
-      acc[date] = [];
+  // Sample events for demonstration
+  const sampleEvents = [
+    {
+      id: "1",
+      title: "Spring Registration Begins",
+      date: "2024-12-15",
+      time: "08:00",
+      end: undefined,
+      location: "Online",
+      description: "Online registration opens for spring semester courses."
+    },
+    {
+      id: "2", 
+      title: "Winter Break Begins",
+      date: "2024-12-20",
+      time: "17:00",
+      end: undefined,
+      location: "Campus",
+      description: "Classes end and winter break begins for all students."
+    },
+    {
+      id: "3",
+      title: "New Year's Day - No Classes",
+      date: "2025-01-01",
+      time: "00:00",
+      end: undefined,
+      location: "Campus Closed",
+      description: "Campus is closed for New Year's Day holiday."
+    },
+    {
+      id: "4",
+      title: "Spring Semester Begins",
+      date: "2025-01-20",
+      time: "08:00",
+      end: undefined,
+      location: "Campus",
+      description: "First day of spring semester classes."
+    },
+    {
+      id: "5",
+      title: "Career Fair",
+      date: "2025-01-25",
+      time: "10:00",
+      end: "16:00",
+      location: "Student Center",
+      description: "Annual career fair with local employers and internship opportunities."
     }
-    acc[date].push(event);
-    return acc;
-  }, {} as Record<string, Event[]>);
+  ];
 
-  // Helper to format time range
-  const formatTimeRange = (start: Date, end: Date) => {
-    const startStr = start ? format(start, 'h:mm a') : '';
-    const endStr = end ? format(end, 'h:mm a') : '';
-    return startStr && endStr ? `${startStr} - ${endStr}` : startStr || endStr;
+  const activities = [
+    {
+      id: "a1",
+      title: "Basketball Game",
+      date: "2024-12-18",
+      time: "19:00",
+      end: undefined,
+      location: "Hawks Gymnasium",
+      description: "Hocking Hawks vs. Regional Rivals - Home game."
+    },
+    {
+      id: "a2",
+      title: "Winter Dance",
+      date: "2024-12-19",
+      time: "20:00",
+      end: "23:00",
+      location: "Student Center Ballroom",
+      description: "Semi-formal winter dance event for all students."
+    },
+    {
+      id: "a3",
+      title: "Intramural Soccer Registration",
+      date: "2025-01-15",
+      time: "09:00",
+      end: "17:00",
+      location: "Recreation Center",
+      description: "Sign up for spring intramural soccer league."
+    },
+    {
+      id: "a4",
+      title: "Study Abroad Info Session",
+      date: "2025-01-22",
+      time: "15:00",
+      end: "16:30",
+      location: "International Office",
+      description: "Learn about study abroad opportunities for next academic year."
+    }
+  ];
+
+  const events = activeCalendar === "academic" ? sampleEvents : activities;
+
+  const getEventsForDate = (date: Date) => {
+    return events.filter(event => {
+      if (!event.date) return false;
+      const eventDate = new Date(event.date);
+      return isSameDay(eventDate, date);
+    });
+  };
+
+  const handleDateClick = (clickedDate: Date) => {
+    setSelectedDate(clickedDate);
+    setShowEventModal(true);
+  };
+
+  const handleEventClick = (event: CalendarEvent) => {
+    if (event.date) {
+      const eventDate = new Date(event.date);
+      setSelectedDate(eventDate);
+      setShowEventModal(true);
+    }
+  };
+
+  const getTileContent = ({ date, view }: { date: Date; view: string }) => {
+    if (view === 'month') {
+      const dayEvents = getEventsForDate(date);
+      if (dayEvents.length > 0) {
+        return (
+          <div className="calendar-event-dots">
+            {dayEvents.slice(0, 3).map((_, index) => (
+              <div 
+                key={index} 
+                className="calendar-event-dot"
+              />
+            ))}
+            {dayEvents.length > 3 && (
+              <div className="calendar-event-more">
+                +{dayEvents.length - 3}
+              </div>
+            )}
+          </div>
+        );
+      }
+    }
+    return null;
+  };
+
+  const getTileClassName = ({ date, view }: { date: Date; view: string }) => {
+    if (view === 'month') {
+      const dayEvents = getEventsForDate(date);
+      const classes = [];
+      
+      if (dayEvents.length > 0) {
+        classes.push('has-events');
+      }
+      
+      if (isToday(date)) {
+        classes.push('today');
+      }
+      
+      return classes.join(' ');
+    }
+    return '';
   };
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--color-background)' }}>
-      <section>
-        <div className="flex flex-col items-center mb-6">
-          <h2 className="text-3xl font-heading font-semibold mb-4" style={{ color: 'var(--color-text)' }}>Calendar</h2>
-          <div className="flex flex-col gap-2 items-center">
-            <div className="text-sm font-medium text-[var(--color-text)] text-center mb-2">
-              Calendar Type
-            </div>
-            <div className="flex gap-3">
-              <Button 
-                variant="default"
-                size="default"
-                onClick={() => setActiveCalendar("academic")}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 border-primary`}
-                style={{ background: 'var(--calendar-surface)', color: 'var(--calendar-button-text)' }}
-              >
-                Academic Calendar
-              </Button>
-              <Button 
-                variant="default"
-                size="default"
-                onClick={() => setActiveCalendar("activities")}
-                className={`px-4 py-2 text-sm font-medium transition-colors rounded-md border-2 border-primary`}
-                style={{ background: 'var(--calendar-surface)', color: 'var(--calendar-button-text)' }}
-              >
-                Student Activities
-              </Button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      {/* Header */}
+      <section className="max-w-6xl mx-auto text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-blue-300 mb-4">
+          Academic Calendar
+        </h1>
+        <p className="text-xl text-gray-600 dark:text-gray-300">
+          Stay up-to-date with important dates and campus events
+        </p>
+      </section>
+
+      {/* Calendar Type Toggle */}
+      <section className="max-w-6xl mx-auto mb-6">
+        <div className="flex justify-center space-x-4">
+          <Button 
+            variant={activeCalendar === "academic" ? "default" : "ghost"}
+            onClick={() => setActiveCalendar("academic")}
+            className={cn(
+              "rounded-xl px-6 py-3 font-medium transition-all",
+              activeCalendar === "academic" 
+                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
+            )}
+          >
+            Academic Calendar
+          </Button>
+          <Button 
+            variant={activeCalendar === "activities" ? "default" : "ghost"}
+            onClick={() => setActiveCalendar("activities")}
+            className={cn(
+              "rounded-xl px-6 py-3 font-medium transition-all",
+              activeCalendar === "activities" 
+                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
+            )}
+          >
+            Student Activities
+          </Button>
         </div>
-        <div className="rounded-2xl" style={{ background: 'var(--calendar-surface)' }}>
-          <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
+      </section>
+
+      {/* Main Calendar Section */}
+      <section className="max-w-6xl mx-auto">
+        <Card className="border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800">
+          <CardContent className="p-6">
+            {/* View Toggle */}
+            <div className="flex justify-center space-x-2 mb-6">
+              <Button 
+                variant={view === "month" ? "default" : "ghost"} 
+                onClick={() => setView("month")}
+                className={cn(
+                  "rounded-xl px-6 py-2 font-medium transition-all",
+                  view === "month" 
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                    : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
+                )}
+              >
+                Month View
+              </Button>
+              <Button 
+                variant={view === "list" ? "default" : "ghost"} 
+                onClick={() => setView("list")}
+                className={cn(
+                  "rounded-xl px-6 py-2 font-medium transition-all",
+                  view === "list" 
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                    : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
+                )}
+              >
+                List View
+              </Button>
+            </div>
+            
+            {/* Calendar Component */}
+            {view === "month" && (
+              <div className="mobile-calendar-container">
+                <Calendar
+                  onChange={setDate}
+                  value={date}
+                  tileContent={getTileContent}
+                  tileClassName={getTileClassName}
+                  onClickDay={handleDateClick}
+                  locale="en-US"
+                  calendarType="gregory"
+                  showNavigation={true}
+                  showNeighboringMonth={true}
+                  className="mobile-calendar"
+                />
+              </div>
+            )}
+
+            {/* List View */}
+            {view === "list" && (
+              <div className="max-h-[500px] overflow-auto">
+                {events.length > 0 ? (
+                  <div className="space-y-4">
+                    {events.map(event => (
+                      <div 
+                        key={event.id}
+                        className="p-4 border-2 border-white dark:border-none rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                        onClick={() => handleEventClick(event)}
+                      >
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-semibold text-gray-900 dark:text-blue-300">{event.title}</h4>
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-300 rounded-xl">
+                            {event.date ? format(new Date(event.date), 'MMM d') : 'TBD'}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            <span>{event.time}</span>
+                            {event.end && <span> - {event.end}</span>}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-4 w-4" />
+                            <span>{event.location}</span>
+                          </div>
+                        </div>
+                        {event.description && (
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">{event.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <CalendarIcon className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                    <h4 className="text-xl font-semibold text-gray-900 dark:text-blue-300 mb-2">
+                      No Events Found
+                    </h4>
+                    <p className="text-gray-500 dark:text-gray-300">
+                      No events are currently scheduled for this calendar.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* Event Modal */}
+      {showEventModal && selectedDate && (
+        <div className="fixed inset-0 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-2xl max-h-[80vh] overflow-hidden border-2 border-blue-500 dark:border-none rounded-2xl bg-blue-950 dark:bg-blue-950">
             <CardContent className="p-0">
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-                  {error}
-                </div>
-              )}
-              <div className="flex justify-between items-center mb-4">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={handlePreviousMonth}
-                  aria-label="Previous month"
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </Button>
-                <div className="text-center">
-                  <h3 className="font-semibold text-lg" style={{ color: 'var(--color-text)' }}>
-                    {format(date, 'MMMM yyyy')}
+              {/* Modal Header */}
+              <div className="bg-blue-950 text-white p-6">
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    {format(selectedDate, 'EEEE, MMMM d, yyyy')}
                   </h3>
-                  <div className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
+                  <div className="text-blue-100">
                     {activeCalendar === "academic" ? "Academic Calendar" : "Student Activities Calendar"}
                   </div>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  onClick={handleNextMonth}
-                  aria-label="Next month"
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </Button>
               </div>
 
-              <div className="flex space-x-2 mb-4">
-                <Button 
-                  variant={view === "month" ? "default" : "ghost"} 
-                  size="default" 
-                  onClick={() => setView("month")}
-                  aria-pressed={view === "month"}
-                >
-                  Month View
-                </Button>
-                <Button 
-                  variant={view === "list" ? "default" : "ghost"} 
-                  size="default" 
-                  onClick={() => setView("list")}
-                  aria-pressed={view === "list"}
-                >
-                  List View
-                </Button>
-                {view === "list" && selectedDate && (
-                  <Button 
-                    variant="ghost" 
-                    size="default" 
-                    onClick={() => setSelectedDate(null)}
-                    className="ml-auto flex items-center"
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-1" />
-                    Back to All Events
-                  </Button>
-                )}
-              </div>
-              
-              {view === "month" && (
-                <div className="h-[400px]">
-                  <BigCalendar
-                    localizer={localizer}
-                    events={formattedEvents}
-                    startAccessor="start"
-                    endAccessor="end"
-                    date={date}
-                    onNavigate={setDate}
-                    views={["month"]}
-                    onSelectSlot={handleDateSelect}
-                    selectable
-                    dayPropGetter={dayPropGetter}
-                    onView={() => {}}
-                    tooltipAccessor={(event: any) => event.title}
-                    formats={{
-                      weekdayFormat: (date: Date) => format(date, "EEE"),
-                    }}
-                    components={{
-                      toolbar: () => null, // Hide the default toolbar
-                      event: () => <div className="event-dot" /> // Render a dot instead of event text
-                    }}
-                  />
-                </div>
-              )}
-              
-              {view === "list" && !isLoading && (
-                <div className="border rounded-md p-2 h-[400px] overflow-auto">
-                  {selectedDate && (
-                    <div className="mb-3 px-2 py-1 bg-primary-light/10 rounded flex items-center">
-                      <CalendarIcon className="h-4 w-4 mr-2 text-primary" />
-                      <span className="font-medium">
-                        {format(selectedDate, 'MMMM d, yyyy')}
-                      </span>
-                    </div>
-                  )}
-                  {Object.keys(groupedEvents).length > 0 ? (
-                    Object.keys(groupedEvents).map(date => {
-                      const { weekday, month, day } = formatEventDate(date);
-                      return (
-                        <div key={date} className="mb-4">
-                          <div className="flex items-center mb-2">
-                            <div className="bg-primary-light text-white rounded-full w-10 h-10 flex flex-col items-center justify-center text-sm mr-3">
-                              <span className="font-bold">{day}</span>
-                            </div>
-                            <div>
-                              <span className="font-semibold">{weekday}, {month} {day}</span>
-                            </div>
+              {/* Modal Content */}
+              <div className="p-6 max-h-[50vh] overflow-auto">
+                {getEventsForDate(selectedDate).length > 0 ? (
+                  <div className="space-y-6">
+                    {getEventsForDate(selectedDate).map(event => (
+                      <div key={event.id} className="border-l-4 border-blue-500 pl-4">
+                        <h4 className="text-lg font-semibold text-white mb-2">
+                          {event.title}
+                        </h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div className="flex items-center gap-2 text-gray-300">
+                            <Clock className="h-4 w-4 text-blue-300" />
+                            <span className="font-medium">Time:</span>
+                            <span>{event.time}</span>
+                            {event.end && <span> - {event.end}</span>}
                           </div>
-                          <div className="ml-13 pl-13">
-                            {groupedEvents[date].map(event => (
-                              <div 
-                                key={event.id} 
-                                className="p-3 mb-2 border-l-4 border-primary bg-primary-light/10 rounded-r-md hover:bg-primary-light/20 transition-colors"
-                              >
-                                <h4 className="font-medium">{event.title}</h4>
-                                <div className="text-sm text-neutral-dark mt-1 flex items-center">
-                                  <Clock className="h-3.5 w-3.5 mr-1 inline" /> {formatTimeRange(new Date(event.startTime), new Date(event.endTime))}
-                                  {event.location && (
-                                    <span className="ml-2 flex items-center">
-                                      <MapPin className="h-3.5 w-3.5 mr-1 inline" /> {event.location}
-                                    </span>
-                                  )}
-                                </div>
-                                {event.description && (
-                                  <p className="mt-1 text-sm flex items-start">
-                                    <Info className="h-3.5 w-3.5 mr-1 mt-0.5 inline-flex" /> {event.description}
-                                  </p>
-                                )}
-                              </div>
-                            ))}
+                          
+                          <div className="flex items-center gap-2 text-gray-300">
+                            <MapPin className="h-4 w-4 text-blue-300" />
+                            <span className="font-medium">Location:</span>
+                            <span>{event.location}</span>
                           </div>
                         </div>
-                      );
-                    })
-                  ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-neutral-dark">
-                      <CalendarIcon className="h-12 w-12 mb-2 text-primary-light" />
-                      <p>No events found for this month</p>
-                      <p className="text-sm">Select another month or add new events</p>
-                    </div>
-                  )}
+
+                        {event.description && (
+                          <div className="mt-4 p-3 bg-gray-800/50 rounded-lg border border-gray-600">
+                            <div className="flex items-start gap-2">
+                              <Info className="h-4 w-4 text-blue-300 mt-0.5 flex-shrink-0" />
+                              <div>
+                                <span className="font-medium text-gray-300">Description:</span>
+                                <p className="text-gray-300 mt-1">{event.description}</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <CalendarIcon className="h-16 w-16 mx-auto mb-4 text-blue-300" />
+                    <h4 className="text-xl font-semibold text-white mb-2">
+                      No Events Scheduled
+                    </h4>
+                    <p className="text-gray-300">
+                      This day is free from scheduled events. Perfect time to plan something new!
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="bg-blue-900/40 px-6 py-4">
+                <div className="flex justify-between items-center">
+                  <div className="text-sm text-gray-300">
+                    Click on any date to view its events
+                  </div>
+                  <Button 
+                    onClick={() => {
+                      setShowEventModal(false);
+                      setSelectedDate(null);
+                    }}
+                    className="text-blue-300 hover:text-blue-200 bg-transparent hover:bg-transparent"
+                    variant="ghost"
+                  >
+                    Close
+                  </Button>
                 </div>
-              )}
+              </div>
             </CardContent>
           </Card>
         </div>
-      </section>
+      )}
 
+      {/* Quick Access Cards */}
       <section className="max-w-6xl mx-auto mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-heading font-semibold" style={{ color: 'var(--color-text)' }}>
-            Upcoming Events
+          <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-blue-300">
+            Quick Access
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
-            <h3 className="text-xl font-semibold mb-4">Academic Calendar</h3>
+          <Card className="p-6 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Academic Calendar</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               View important dates, deadlines, and events for the academic year.
             </p>
-            <Link href="/calendar">
-              <Button className="w-full">View Calendar</Button>
-            </Link>
+            <Button 
+              className="w-full text-blue-600 dark:text-blue-300 bg-transparent hover:bg-transparent"
+              variant="ghost"
+              onClick={() => setActiveCalendar("academic")}
+            >
+              View Academic Calendar
+            </Button>
           </Card>
 
-          <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800">
-            <h3 className="text-xl font-semibold mb-4">Student Activities</h3>
+          <Card className="p-6 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Activities</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Discover campus events, clubs, and activities to get involved.
             </p>
-            <Link href="/activities">
-              <Button className="w-full">Explore Activities</Button>
-            </Link>
+            <Button 
+              className="w-full text-blue-600 dark:text-blue-300 bg-transparent hover:bg-transparent"
+              variant="ghost"
+              onClick={() => setActiveCalendar("activities")}
+            >
+              Explore Activities
+            </Button>
           </Card>
         </div>
       </section>
-
-      <style dangerouslySetInnerHTML={{ __html: `
-        .rbc-month-view {
-          border-radius: 8px;
-          overflow: hidden;
-          border: 1px solid #e2e8f0;
-        }
-        
-        .rbc-header {
-          padding: 8px 0;
-          background-color: #1e3a8a;
-          font-weight: 600;
-          color: white;
-          text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
-        }
-        
-        .rbc-date-cell {
-          padding: 8px;
-          text-align: center;
-          background-color: #e5e7eb;
-        }
-
-        .rbc-month-row {
-          background-color: #d1d5db;
-        }
-        
-        .rbc-day-bg.selected-day {
-          background-color: var(--primary-light);
-          border-radius: 50%;
-        }
-        
-        .rbc-day-bg.today-date {
-          position: relative;
-        }
-        
-        .rbc-day-bg.has-events:before {
-          content: '';
-          position: absolute;
-          bottom: 4px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 6px;
-          height: 6px;
-          background-color: var(--primary);
-          border-radius: 50%;
-        }
-        
-        .rbc-event {
-          background-color: transparent !important;
-          border: none !important;
-          box-shadow: none !important;
-          margin: 0 !important;
-          padding: 0 !important;
-        }
-        
-        .event-dot {
-          width: 8px;
-          height: 8px;
-          background-color: var(--primary);
-          border-radius: 50%;
-          margin: 2px auto;
-        }
-        
-        .rbc-event-content {
-          display: flex;
-          justify-content: center;
-        }
-        
-        .rbc-date-cell > a {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-        }
-        
-        .rbc-date-cell.rbc-now > a {
-          background-color: var(--primary);
-          color: white;
-        }
-      ` }} />
     </div>
   );
 }

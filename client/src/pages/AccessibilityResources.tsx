@@ -142,7 +142,7 @@ function AccessibilityResources() {
                 <li>Complete the intake process</li>
                 <li>Work with our team to implement accommodations</li>
               </ol>
-              <Button className="w-full">
+              <Button className="w-full text-white">
                 Schedule an Appointment
               </Button>
             </div>

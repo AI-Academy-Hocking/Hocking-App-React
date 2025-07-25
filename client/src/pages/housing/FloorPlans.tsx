@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Building2 } from 'lucide-react';
+import { Building2, ArrowLeft } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { useLocation } from "wouter";
 
 interface Building {
   name: string;
@@ -106,8 +107,26 @@ const item = {
 
 export default function FloorPlans() {
   const [selectedBuilding, setSelectedBuilding] = useState<Building>(buildings[0]);
+  const [, setLocation] = useLocation();
+  
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-white dark:bg-popover p-4">
+      <div className="max-w-6xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        <button
+          onClick={() => setLocation('/housing')}
+          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Housing Services
+        </button>
+      </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -138,7 +157,7 @@ export default function FloorPlans() {
               {buildings.map((building) => (
                 <button
                   key={building.code}
-                  className={`flex items-center gap-2 p-3 rounded-lg border border-neutral-light transition w-full text-left ${selectedBuilding.code === building.code ? 'bg-primary/10 border-primary' : 'hover:bg-neutral-lightest'}`}
+                  className={`flex items-center gap-2 p-3 rounded-xl border border-neutral-light transition w-full text-left ${selectedBuilding.code === building.code ? 'bg-primary/10 border-primary' : 'hover:bg-neutral-lightest'}`}
                   onClick={() => setSelectedBuilding(building)}
                 >
                   <Building2 className="h-5 w-5 text-primary" />
@@ -181,6 +200,7 @@ export default function FloorPlans() {
           </CardContent>
         </Card>
       </motion.div>
+      </div>
     </div>
   );
 } 

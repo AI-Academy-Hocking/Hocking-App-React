@@ -11,10 +11,14 @@
   --color-text: #003366;         /* Dark blue text */
   --color-accent: #0057b8;       /* Blue accent instead of green */
   --color-border: #e0e0e0;       /* Optional: light border */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: #3b82f6;
+  --primary-light: #60a5fa;
 }
 
 [data-theme="dark"], .dark {
-  --color-background: #003366;   /* Dark blue background */
+  --color-background: #1f2937;   /* Matching gray-800 for seamless look */
   --color-text: #ffffff;         /* White text */
   border-color: var(--color-border);
 }
@@ -38,17 +42,12 @@ a, .accent {
   color: var(--color-text);
 }
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
-  --primary: #3b82f6;
-  --primary-light: #60a5fa;
-}
-
 /* Aggressively override all outlines and box-shadows for select triggers and their children */
+/*
 .select-trigger, .select-trigger *,
 .select-trigger:focus, .select-trigger:active, .select-trigger:hover,
 .select-trigger *:focus, .select-trigger *:active, .select-trigger *:hover {
   outline: 1.5px solid #fff !important;
   box-shadow: 0 0 0 1.5px #fff !important;
 }
+*/

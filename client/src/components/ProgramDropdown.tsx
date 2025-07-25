@@ -106,8 +106,8 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
     <div className="space-y-3">
       {/* Category Selection */}
       <Select onValueChange={handleCategoryChange} value={selectedCategory || undefined}>
-        <SelectTrigger className="w-full bg-popover dark:border-white border-2 border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-          <SelectValue placeholder="Select a category" className="text-[#1a365d] dark:text-white" />
+        <SelectTrigger className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl">
+          <SelectValue placeholder="Select a category" className="text-gray-900 dark:text-white" />
         </SelectTrigger>
         <SelectContent>
           {(Object.keys(programCategories) as Array<keyof ProgramCategories>).map((category) => (
@@ -122,7 +122,7 @@ const ProgramDropdown: React.FC<ProgramDropdownProps> = ({ onChange }) => {
       {selectedCategory && (
         <div className="space-y-3">
           <Select onValueChange={handleProgramChange} value={selectedProgram || undefined}>
-            <SelectTrigger className="w-full bg-white dark:bg-[#1a365d] dark:border-white">
+            <SelectTrigger className="w-full bg-white dark:bg-[#1a365d] rounded-xl">
               <SelectValue placeholder="Select a program" className="text-[#1a365d] dark:text-white" />
             </SelectTrigger>
             <SelectContent>
