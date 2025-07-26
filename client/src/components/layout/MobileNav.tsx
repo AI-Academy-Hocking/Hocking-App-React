@@ -13,7 +13,6 @@ export default function MobileNav() {
     { path: "/resources", label: "Resources", icon: GraduationCap },
     { path: "/dining", label: "Dining", icon: UtensilsCrossed },
     { path: "/safety", label: "Safety", icon: Shield },
-    { path: "/transportation", label: "Transportation", icon: Bus },
   ];
 
   return (

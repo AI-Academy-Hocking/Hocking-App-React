@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Bus
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -83,6 +83,7 @@ export default function StudentTools() {
     { id: 'dining', label: 'Dining', icon: Utensils, path: '/dining' },
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
     { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
+    { id: 'transportation', label: 'Transportation', icon: Bus, path: '/transportation' },
   ];
 
   return (
@@ -182,7 +183,7 @@ export default function StudentTools() {
       
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-blue-300">Quick Links</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {quickLinks.map((link) => (
             <Link 
               key={link.id} 
