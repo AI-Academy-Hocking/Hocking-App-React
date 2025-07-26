@@ -1,6 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClipboardList, AlertTriangle, CheckCircle, XCircle, ArrowLeft, Download, Printer } from 'lucide-react';
-import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -385,21 +383,6 @@ const prohibitedItems: ProhibitedItem[] = [
   }
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
-
 export default function WhatToBring() {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [selectedSeason, setSelectedSeason] = useState<"fall" | "spring" | "both">("both");
@@ -538,41 +521,35 @@ Generated on: ${new Date().toLocaleDateString()}
       </div>
 
       {/* Progress Bar and Controls */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center justify-between text-xl text-blue-800 dark:text-blue-200">
-            <span>Packing Progress: {getProgressPercentage()}%</span>
-            <div className="flex gap-2">
-              <Button onClick={printChecklist} variant="outline" size="sm" className="flex items-center gap-2">
-                <Printer className="h-4 w-4" />
-                Print
-              </Button>
-              <Button onClick={downloadChecklist} variant="outline" size="sm" className="flex items-center gap-2">
-                <Download className="h-4 w-4" />
-                Download
-              </Button>
-              <Button onClick={resetProgress} variant="outline" size="sm">
-                Reset
-              </Button>
-            </div>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-4">
-          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-            <div 
-              className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
-              style={{ width: `${getProgressPercentage()}%` }}
-            ></div>
+      <div className="mb-8">
+        <div className="flex items-center justify-between text-xl text-blue-800 dark:text-blue-200">
+          <span>Packing Progress: {getProgressPercentage()}%</span>
+          <div className="flex gap-2">
+            <Button onClick={printChecklist} variant="outline" size="sm" className="flex items-center gap-2">
+              <Printer className="h-4 w-4" />
+              Print
+            </Button>
+            <Button onClick={downloadChecklist} variant="outline" size="sm" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Download
+            </Button>
+            <Button onClick={resetProgress} variant="outline" size="sm">
+              Reset
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div 
+            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+            style={{ width: `${getProgressPercentage()}%` }}
+          ></div>
+        </div>
+      </div>
 
       {/* Season and Weather Filters */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="text-xl text-green-800 dark:text-green-200">Filter by Season & Weather</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-4">
+      <div className="mb-8">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
+          <h3 className="text-xl text-green-800 dark:text-green-200 mb-4">Filter by Season & Weather</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Semester</h4>
@@ -651,137 +628,139 @@ Generated on: ${new Date().toLocaleDateString()}
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Collapsible Sections */}
-      <Accordion type="single" collapsible className="mb-8">
-        {/* Recommended Items */}
-        <AccordionItem value="recommended" className="border-2 border-green-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
-              <CheckCircle className="mr-3 h-6 w-6" />
-              Recommended Items to Bring
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-6 pb-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {checklistItems.map((category) => (
-                <div key={category.category} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
-                  <h3 className="font-semibold text-green-800 dark:text-green-200 mb-3">{category.category}</h3>
-                  <ul className="space-y-3">
-                    {category.items
-                      .filter(item => 
-                        (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
-                        (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
-                      )
-                      .map((item) => {
-                        const itemId = `${category.category}-${item.name}`;
-                        return (
-                          <li key={item.name} className="space-y-1">
-                            <div className="flex justify-between items-start">
-                              <div className="flex items-center gap-2 flex-1">
-                                <Checkbox
-                                  checked={checkedItems[itemId] || false}
-                                  onCheckedChange={() => handleItemToggle(itemId)}
-                                  className="text-green-600"
-                                />
-                                <span className={`font-medium ${checkedItems[itemId] ? 'line-through text-green-600' : 'text-green-800 dark:text-green-200'}`}>
-                                  {item.name}
-                                </span>
-                              </div>
-                              <div className="flex gap-2">
-                                {item.season && item.season !== "both" && (
-                                  <Badge className="bg-green-200 text-green-800 text-xs">
-                                    {item.season === "fall" ? "🍂 Fall" : "🌸 Spring"}
+      <div className="mb-8">
+        <Accordion type="single" collapsible className="border-2 border-green-600 rounded-lg">
+          {/* Recommended Items */}
+          <AccordionItem value="recommended" className="border-2 border-green-600 rounded-lg mb-4">
+            <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+              <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+                <CheckCircle className="mr-3 h-6 w-6" />
+                Recommended Items to Bring
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {checklistItems.map((category) => (
+                  <div key={category.category} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                    <h3 className="font-semibold text-green-800 dark:text-green-200 mb-3">{category.category}</h3>
+                    <ul className="space-y-3">
+                      {category.items
+                        .filter(item => 
+                          (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+                          (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+                        )
+                        .map((item) => {
+                          const itemId = `${category.category}-${item.name}`;
+                          return (
+                            <li key={item.name} className="space-y-1">
+                              <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-2 flex-1">
+                                  <Checkbox
+                                    checked={checkedItems[itemId] || false}
+                                    onCheckedChange={() => handleItemToggle(itemId)}
+                                    className="text-green-600"
+                                  />
+                                  <span className={`font-medium ${checkedItems[itemId] ? 'line-through text-green-600' : 'text-green-800 dark:text-green-200'}`}>
+                                    {item.name}
+                                  </span>
+                                </div>
+                                <div className="flex gap-2">
+                                  {item.season && item.season !== "both" && (
+                                    <Badge className="bg-green-200 text-green-800 text-xs">
+                                      {item.season === "fall" ? "🍂 Fall" : "🌸 Spring"}
+                                    </Badge>
+                                  )}
+                                  {item.weather && item.weather !== "all" && (
+                                    <Badge className="bg-blue-200 text-blue-800 text-xs">
+                                      {item.weather === "cold" ? "❄️ Cold" : item.weather === "rain" ? "🌧️ Rain" : "☀️ Warm"}
+                                    </Badge>
+                                  )}
+                                  <Badge 
+                                    className={item.importance === "recommended" ? "bg-green-600 text-white" : "bg-green-200 text-green-800"}
+                                  >
+                                    {item.importance}
                                   </Badge>
-                                )}
-                                {item.weather && item.weather !== "all" && (
-                                  <Badge className="bg-blue-200 text-blue-800 text-xs">
-                                    {item.weather === "cold" ? "❄️ Cold" : item.weather === "rain" ? "🌧️ Rain" : "☀️ Warm"}
-                                  </Badge>
-                                )}
-                                <Badge 
-                                  className={item.importance === "recommended" ? "bg-green-600 text-white" : "bg-green-200 text-green-800"}
-                                >
-                                  {item.importance}
-                                </Badge>
+                                </div>
                               </div>
-                            </div>
-                            {item.description && (
-                              <p className="text-sm text-green-700 dark:text-green-300 ml-6">
-                                {item.description}
-                              </p>
-                            )}
-                          </li>
-                        );
-                      })}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Prohibited Items */}
-        <AccordionItem value="prohibited" className="border-2 border-red-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-red-800 dark:text-red-200">
-              <XCircle className="mr-3 h-6 w-6" />
-              Items NOT Allowed
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-6 pb-6">
-            <div className="grid md:grid-cols-2 gap-4">
-              {prohibitedItems.map((item, index) => (
-                <div key={index} className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
-                  <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium text-red-800 dark:text-red-200">{item.name}</p>
-                    {item.description && (
-                      <p className="text-sm text-red-700 dark:text-red-300 mt-1">{item.description}</p>
-                    )}
+                              {item.description && (
+                                <p className="text-sm text-green-700 dark:text-green-300 ml-6">
+                                  {item.description}
+                                </p>
+                              )}
+                            </li>
+                          );
+                        })}
+                    </ul>
                   </div>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-        {/* Important Notes */}
-        <AccordionItem value="notes" className="border-2 border-blue-600 rounded-lg">
-          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-              <AlertTriangle className="mr-3 h-6 w-6" />
-              Important Notes from Hocking College Housing
-            </div>
-          </AccordionTrigger>
-          <AccordionContent className="px-6 pb-6">
-            <ul className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
-              <li className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
-                <div><strong>Furniture Provided:</strong> Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</div>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
-                <div><strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</div>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
-                <div><strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</div>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
-                <div><strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</div>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
-                <div><strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</div>
-              </li>
-            </ul>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+          {/* Prohibited Items */}
+          <AccordionItem value="prohibited" className="border-2 border-red-600 rounded-lg mb-4">
+            <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 px-6 py-4 hover:no-underline">
+              <div className="flex items-center text-xl text-red-800 dark:text-red-200">
+                <XCircle className="mr-3 h-6 w-6" />
+                Items NOT Allowed
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                {prohibitedItems.map((item, index) => (
+                  <div key={index} className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
+                    <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-red-800 dark:text-red-200">{item.name}</p>
+                      {item.description && (
+                        <p className="text-sm text-red-700 dark:text-red-300 mt-1">{item.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Important Notes */}
+          <AccordionItem value="notes" className="border-2 border-blue-600 rounded-lg">
+            <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+              <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+                <AlertTriangle className="mr-3 h-6 w-6" />
+                Important Notes from Hocking College Housing
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <ul className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Furniture Provided:</strong> Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</div>
+                </li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </div>
     </div>
   );
 } 

@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Building2, ArrowLeft } from 'lucide-react';
-import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -90,16 +88,6 @@ const buildings: Building[] = [
 ];
 
 const SPREADSHEET_ID = "1KWlVPX6emo5YsDdJsWBNAbO05fKJPUiLRxD6nSd45jI";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
 
 export default function FloorPlans() {
   const [selectedBuilding, setSelectedBuilding] = useState<Building>(buildings[0]);

@@ -6,7 +6,7 @@ import { useAuth } from "../../lib/auth";
 import { Link, useLocation } from "wouter";
 import HawkLogo from "../../assets/HawkLogo.png";
 import { SearchBar } from "@/components/SearchBar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "../ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Badge } from "../ui/badge";
 
 const navItems = [

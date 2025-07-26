@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, Reorder } from 'framer-motion';
 import { 
   Settings, 
-  Plus, 
-  X, 
   Bell, 
-  User, 
   Calendar, 
-  BookOpen, 
   MapPin, 
   Home, 
   Users, 
@@ -15,18 +11,14 @@ import {
   Heart,
   TrendingUp,
   Clock,
-  Target,
   Star,
-  Zap,
   Coffee,
-  Wifi,
-  Car,
   CheckCircle
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 
@@ -136,7 +128,7 @@ const availableWidgets: Widget[] = [
 export default function CustomizableDashboard() {
   const [widgets, setWidgets] = useState<Widget[]>(availableWidgets);
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfile>({
+  const [userProfile] = useState<UserProfile>({
     name: 'Alex Johnson',
     avatar: '/api/placeholder/150/150',
     level: 8,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Calendar, MapPin, Users, Clock, Heart, Share2, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -292,7 +292,7 @@ export function EventDiscovery({ events, onAttendEvent, onLikeEvent, onShareEven
                   <div className="flex items-center gap-2">
                     <Button
                       onClick={() => onAttendEvent(event.id)}
-                      disabled={event.isAttending || (event.maxAttendees && event.attendees >= event.maxAttendees)}
+                      disabled={Boolean(event.isAttending || (event.maxAttendees && event.attendees >= event.maxAttendees))}
                       className="flex-1"
                       variant={event.isAttending ? "outline" : "default"}
                     >

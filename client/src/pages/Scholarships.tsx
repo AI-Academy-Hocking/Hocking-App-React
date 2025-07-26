@@ -1,12 +1,7 @@
 import { 
-  FileText, ExternalLink, Phone, Mail, 
-  Calendar, CheckCircle, AlertTriangle, 
-  Building, ArrowLeft,
-  BookOpen, MapPin,
-  Award, Star, Globe, UserCheck, Target, RotateCcw,
-  ChevronDown, ChevronRight
+  Calendar, Mail, Award, ArrowLeft, Building, Phone, ExternalLink,
+  FileText, UserCheck, CheckCircle, Star, Target, Globe, MapPin, AlertTriangle, RotateCcw
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
 

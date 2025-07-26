@@ -1,11 +1,10 @@
 import { 
   Heart, Phone, Clock, ArrowLeft, ExternalLink, CheckCircle, BookOpen, Activity,
-  MapPin, Users, AlertTriangle, Stethoscope, Brain, ChevronDown, ChevronRight
+  MapPin, Users, AlertTriangle, Stethoscope, Brain
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
-import { motion } from "framer-motion";
 
 export default function CampusHealth() {
   const handleExternalLink = (url: string) => {

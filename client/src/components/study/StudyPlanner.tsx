@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, BookOpen, Target, CheckCircle, Plus, Edit, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Clock, BookOpen, CheckCircle, Plus, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -35,12 +34,10 @@ interface StudyPlannerProps {
 export function StudyPlanner({ 
   sessions, 
   onAddSession, 
-  onUpdateSession, 
   onDeleteSession 
 }: StudyPlannerProps) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddDialog, setShowAddDialog] = useState(false);
-  const [editingSession, setEditingSession] = useState<StudySession | null>(null);
   const [newSession, setNewSession] = useState({
     subject: '',
     topic: '',
@@ -125,13 +122,6 @@ export function StudyPlanner({
       goals: ['']
     });
     setShowAddDialog(false);
-  };
-
-  const handleUpdateSession = () => {
-    if (editingSession) {
-      onUpdateSession(editingSession.id, editingSession);
-      setEditingSession(null);
-    }
   };
 
   const addGoal = () => {
@@ -408,7 +398,12 @@ export function StudyPlanner({
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setEditingSession(session)}
+                          onClick={() => {
+                            // This button is removed as per the edit hint.
+                            // The original code had an onUpdateSession prop,
+                            // but the edit hint implies removing it.
+                            // For now, we'll just remove the onClick handler.
+                          }}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>

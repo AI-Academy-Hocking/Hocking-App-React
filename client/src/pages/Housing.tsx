@@ -1,7 +1,6 @@
 import { 
-  Building2, ClipboardCheck, FileCheck, CreditCard, ClipboardList, Wrench, Mail, Book, Square, DollarSign, PartyPopper, MapPin, MessageSquare, Image, FileText, ArrowLeft,
-  ExternalLink, Star, CheckCircle, BookOpen, Activity, 
-  Phone, Clock, Home, Calendar, Send, X, Minimize2, Maximize2
+  Building2, ClipboardCheck, FileCheck, ClipboardList, Wrench, Mail, Book, DollarSign, PartyPopper, MapPin, MessageSquare, FileText, ArrowLeft,
+  Phone, Clock, Home, Calendar, Send, X, Activity, CheckCircle, Star, BookOpen, ExternalLink
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocation } from "wouter";

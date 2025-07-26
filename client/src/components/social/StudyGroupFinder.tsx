@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Search, Users, BookOpen, MapPin, Clock, Calendar, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -60,14 +60,6 @@ export function StudyGroupFinder({ groups, onJoinGroup, onCreateGroup }: StudyGr
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200';
     }
-  };
-
-  const getTimeSlot = (time: string) => {
-    const hour = parseInt(time.split(':')[0]);
-    if (hour < 12) return 'morning';
-    if (hour < 17) return 'afternoon';
-    if (hour < 21) return 'evening';
-    return 'weekend';
   };
 
   return (

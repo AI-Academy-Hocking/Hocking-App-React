@@ -1,15 +1,12 @@
 import { 
   DollarSign, FileText, ExternalLink, Phone, 
-  Calendar, CheckCircle, AlertTriangle, Users, 
   Building, Clock, ArrowLeft,
-  Download, BookOpen, Shield, CreditCard, Briefcase,
-  ChevronDown, ChevronRight, Mail, MapPin
+  Download, Shield, CreditCard, Briefcase,
+  MapPin, CheckCircle, AlertTriangle, Users
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
-import { useState } from "react";
 
 export default function FinancialAid() {
   const handleExternalLink = (url: string) => {
@@ -336,15 +333,6 @@ export default function FinancialAid() {
                     <a href="tel:740-753-7058" className="text-teal-600 hover:underline font-medium">740-753-7058</a>
                   </div>
                 </div>
-                <div className="flex items-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
-                  <Mail className="mr-4 h-6 w-6 text-teal-600" />
-                  <div>
-                    <p className="font-semibold text-teal-800 dark:text-teal-200">Email</p>
-                    <a href="mailto:financialaid@hocking.edu" className="text-teal-600 hover:underline font-medium">financialaid@hocking.edu</a>
-                  </div>
-          </div>
-              </div>
-              <div className="space-y-6">
                 <div className="flex items-center p-4 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
                   <MapPin className="mr-4 h-6 w-6 text-teal-600" />
                   <div>

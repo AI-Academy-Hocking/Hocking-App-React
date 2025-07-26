@@ -38,7 +38,6 @@ const VerifyUser: React.FC = () => {
   // Get URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const requestId = urlParams.get('id');
-  const action = urlParams.get('action');
 
   useEffect(() => {
     if (requestId) {

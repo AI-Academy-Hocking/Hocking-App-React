@@ -6,7 +6,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";
 import ProgramDropdown from "@/components/ProgramDropdown";
-import { Calendar, MapPin, Users, BookOpen, GraduationCap, Heart, Shield, Home as HomeIcon, Utensils, Briefcase, Trophy, Users2, Accessibility, TestTube, Building2, Mail, Clock, Star, ChevronRight, ChevronDown, Globe, DollarSign, Award, Phone } from "lucide-react";
+import { Calendar, MapPin, Users, BookOpen, GraduationCap, Shield, Home as HomeIcon, Utensils, Briefcase, Accessibility, TestTube, Building2, Mail, Clock, ChevronRight, ChevronDown, Globe, DollarSign, Award, Phone } from "lucide-react";
 
 // Define a local Event type for type safety
 export type Event = {
@@ -78,7 +78,7 @@ export default function Home() {
     {
       id: 'mission',
       title: 'Mission & Core Values',
-      icon: Trophy,
+      icon: Award,
       content: (
         <div className="space-y-4">
           <div>
@@ -91,7 +91,7 @@ export default function Home() {
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Core Values:</h4>
             <ul className="space-y-2 text-gray-700 dark:text-gray-300">
             <li className="flex items-start gap-2">
-                <Heart className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Shield className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                 <span><strong>Accessibility</strong> – Ensuring open access and support for all learners</span>
               </li>
               <li className="flex items-start gap-2">
@@ -99,7 +99,7 @@ export default function Home() {
                 <span><strong>Community Engagement</strong> – Integrating service and development with regional partners</span>
               </li>
               <li className="flex items-start gap-2">
-                <Users2 className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Users className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
                 <span><strong>Diversity & Inclusion</strong> – Embracing differences of all kinds</span>
               </li>
           
@@ -171,7 +171,7 @@ export default function Home() {
     {
       id: 'feedback',
       title: 'Student & Parent Feedback',
-      icon: Star,
+      icon: Award,
       content: (
         <div className="space-y-4">
           <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">

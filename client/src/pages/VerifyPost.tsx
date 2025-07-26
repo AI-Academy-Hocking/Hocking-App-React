@@ -51,7 +51,6 @@ const VerifyPost: React.FC = () => {
   // Get URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
-  const action = urlParams.get('action');
 
   useEffect(() => {
     if (postId) {

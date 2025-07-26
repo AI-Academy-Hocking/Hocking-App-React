@@ -1,5 +1,5 @@
 import { 
-  Calendar, Mail, Award, ArrowLeft, Users, Building, Phone, ExternalLink,
+  Calendar, Mail, Award, ArrowLeft, Users, Phone, ExternalLink,
   UserCheck, Target, Globe, Star, CheckCircle, BookOpen, Shield
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
