@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Users, 
@@ -11,28 +11,15 @@ import {
   Share2, 
   Plus, 
   Search, 
-  Filter,
-  Star,
   Trophy,
   Camera,
   Video,
-  Smile,
   Send,
   MoreHorizontal,
-  UserPlus,
-  CheckCircle,
   X,
-  Bell,
-  TrendingUp,
-  Users2,
   GraduationCap,
-  Coffee,
   Music,
-  Gamepad2,
-  Palette,
-  Code,
-  Globe,
-  Zap
+  Globe
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -107,7 +94,8 @@ interface CommunityChallenge {
   isParticipating: boolean;
 }
 
-const studyGroups: StudyGroup[] = [
+// Mock data - in real app, this would come from API
+const mockStudyGroups: StudyGroup[] = [
   {
     id: '1',
     name: 'Math Study Squad',
@@ -161,7 +149,7 @@ const studyGroups: StudyGroup[] = [
   }
 ];
 
-const campusEvents: CampusEvent[] = [
+const mockCampusEvents: CampusEvent[] = [
   {
     id: '1',
     title: 'Spring Campus Festival',
@@ -215,7 +203,7 @@ const campusEvents: CampusEvent[] = [
   }
 ];
 
-const campusStories: CampusStory[] = [
+const mockCampusStories: CampusStory[] = [
   {
     id: '1',
     user: {
@@ -265,7 +253,7 @@ const campusStories: CampusStory[] = [
   }
 ];
 
-const communityChallenges: CommunityChallenge[] = [
+const mockCommunityChallenges: CommunityChallenge[] = [
   {
     id: '1',
     title: 'April Wellness Challenge',
@@ -298,62 +286,480 @@ const communityChallenges: CommunityChallenge[] = [
   }
 ];
 
+// Separate components for better organization
+const StudyGroupCard: React.FC<{ group: StudyGroup; onJoin: (id: string) => void }> = ({ group, onJoin }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Card className="h-full hover:shadow-lg transition-shadow">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{group.name}</CardTitle>
+          <Badge variant={group.isJoined ? "default" : "secondary"}>
+            {group.isJoined ? 'Joined' : 'Open'}
+          </Badge>
+        </div>
+        <p className="text-sm text-gray-600">{group.subject}</p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-gray-700">{group.description}</p>
+        
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Clock className="h-4 w-4" aria-hidden="true" />
+          {group.meetingTime}
+        </div>
+        
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <MapPin className="h-4 w-4" aria-hidden="true" />
+          {group.location}
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={group.createdBy.avatar} alt={`${group.createdBy.name}'s avatar`} />
+              <AvatarFallback className="text-xs">
+                {group.createdBy.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm text-gray-600">{group.createdBy.name}</span>
+          </div>
+          <div className="text-sm text-gray-600">
+            {group.members}/{group.maxMembers} members
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap gap-1">
+          {group.tags.map((tag) => (
+            <Badge key={tag} variant="outline" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+        
+        <Button 
+          onClick={() => onJoin(group.id)}
+          className="w-full"
+          variant={group.isJoined ? "outline" : "default"}
+          aria-label={group.isJoined ? 'Leave group' : 'Join group'}
+        >
+          {group.isJoined ? 'Leave Group' : 'Join Group'}
+        </Button>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
+const EventCard: React.FC<{ event: CampusEvent; onRSVP: (id: string) => void }> = ({ event, onRSVP }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Card className="h-full hover:shadow-lg transition-shadow">
+      <div className="relative">
+        <img 
+          src={event.image} 
+          alt={`Event: ${event.title}`}
+          className="w-full h-48 object-cover rounded-t-lg"
+        />
+        <Badge className="absolute top-2 right-2">
+          {event.category}
+        </Badge>
+      </div>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg">{event.title}</CardTitle>
+        <p className="text-sm text-gray-600">{event.description}</p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Calendar className="h-4 w-4" aria-hidden="true" />
+          {event.date} at {event.time}
+        </div>
+        
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <MapPin className="h-4 w-4" aria-hidden="true" />
+          {event.location}
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarImage src={event.organizer.avatar} alt={`${event.organizer.name}'s avatar`} />
+              <AvatarFallback className="text-xs">
+                {event.organizer.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm text-gray-600">{event.organizer.name}</span>
+          </div>
+          <div className="text-sm text-gray-600">
+            {event.attendees}/{event.maxAttendees} attending
+          </div>
+        </div>
+        
+        <Button 
+          onClick={() => onRSVP(event.id)}
+          className="w-full"
+          variant={event.isRSVPd ? "outline" : "default"}
+          aria-label={event.isRSVPd ? 'Cancel RSVP' : 'RSVP to event'}
+        >
+          {event.isRSVPd ? 'Cancel RSVP' : 'RSVP'}
+        </Button>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
+const StoryCard: React.FC<{ story: CampusStory; onLike: (id: string) => void }> = ({ story, onLike }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Avatar>
+              <AvatarImage src={story.user.avatar} alt={`${story.user.name}'s avatar`} />
+              <AvatarFallback>
+                {story.user.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="font-semibold">{story.user.name}</div>
+              <div className="text-sm text-gray-600">Level {story.user.level} • {story.timestamp}</div>
+            </div>
+          </div>
+          <Button variant="ghost" size="sm" aria-label="More options">
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-gray-800">{story.content}</p>
+        
+        {story.media && (
+          <div className="rounded-lg overflow-hidden">
+            {story.media.type === 'image' ? (
+              <img 
+                src={story.media.url} 
+                alt="Story content"
+                className="w-full h-64 object-cover"
+              />
+            ) : (
+              <video 
+                src={story.media.url} 
+                controls
+                className="w-full h-64 object-cover"
+                aria-label="Story video content"
+              />
+            )}
+          </div>
+        )}
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => onLike(story.id)}
+              className={`flex items-center gap-2 ${story.isLiked ? 'text-red-500' : ''}`}
+              aria-label={story.isLiked ? 'Unlike story' : 'Like story'}
+            >
+              <Heart className={`h-4 w-4 ${story.isLiked ? 'fill-current' : ''}`} />
+              {story.likes}
+            </Button>
+            <Button variant="ghost" size="sm" className="flex items-center gap-2" aria-label="View comments">
+              <MessageCircle className="h-4 w-4" />
+              {story.comments}
+            </Button>
+            <Button variant="ghost" size="sm" aria-label="Share story">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
+const ChallengeCard: React.FC<{ challenge: CommunityChallenge; onJoin: (id: string) => void }> = ({ challenge, onJoin }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <Card className="h-full hover:shadow-lg transition-shadow">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg">{challenge.title}</CardTitle>
+          <Badge variant={challenge.isParticipating ? "default" : "secondary"}>
+            {challenge.isParticipating ? 'Participating' : 'Join'}
+          </Badge>
+        </div>
+        <p className="text-sm text-gray-600">{challenge.description}</p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Trophy className="h-4 w-4" aria-hidden="true" />
+          {challenge.theme}
+        </div>
+        
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Users className="h-4 w-4" aria-hidden="true" />
+          {challenge.participants} participants
+        </div>
+        
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Calendar className="h-4 w-4" aria-hidden="true" />
+          Ends {challenge.endDate}
+        </div>
+        
+        <div className="p-3 bg-yellow-50 rounded-lg">
+          <div className="text-sm font-medium text-yellow-800">Reward:</div>
+          <div className="text-sm text-yellow-700">{challenge.reward}</div>
+        </div>
+        
+        <Button 
+          onClick={() => onJoin(challenge.id)}
+          className="w-full"
+          variant={challenge.isParticipating ? "outline" : "default"}
+          aria-label={challenge.isParticipating ? 'Leave challenge' : 'Join challenge'}
+        >
+          {challenge.isParticipating ? 'Leave Challenge' : 'Join Challenge'}
+        </Button>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
+
 export default function EnhancedSocialHub() {
   const [activeTab, setActiveTab] = useState<'groups' | 'events' | 'stories' | 'challenges'>('groups');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showCreateStory, setShowCreateStory] = useState(false);
   const [newStoryContent, setNewStoryContent] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [studyGroups, setStudyGroups] = useState<StudyGroup[]>(mockStudyGroups);
+  const [campusEvents, setCampusEvents] = useState<CampusEvent[]>(mockCampusEvents);
+  const [campusStories, setCampusStories] = useState<CampusStory[]>(mockCampusStories);
+  const [communityChallenges, setCommunityChallenges] = useState<CommunityChallenge[]>(mockCommunityChallenges);
   const { toast } = useToast();
 
-  const categories = [
+  const categories = useMemo(() => [
     { id: 'all', name: 'All', icon: <Globe className="h-4 w-4" /> },
     { id: 'academic', name: 'Academic', icon: <BookOpen className="h-4 w-4" /> },
     { id: 'social', name: 'Social', icon: <Users className="h-4 w-4" /> },
     { id: 'career', name: 'Career', icon: <GraduationCap className="h-4 w-4" /> },
     { id: 'entertainment', name: 'Entertainment', icon: <Music className="h-4 w-4" /> },
     { id: 'wellness', name: 'Wellness', icon: <Heart className="h-4 w-4" /> }
-  ];
+  ], []);
 
-  const joinStudyGroup = (groupId: string) => {
-    toast({
-      title: "Joined Study Group! 📚",
-      description: "You've successfully joined the study group. Check your notifications for meeting details.",
+  const filteredStudyGroups = useMemo(() => {
+    return studyGroups.filter(group => {
+      const matchesSearch = searchQuery === '' || 
+        group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        group.subject.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        group.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = selectedCategory === 'all' || 
+        group.tags.some(tag => tag.toLowerCase() === selectedCategory);
+      
+      return matchesSearch && matchesCategory;
     });
-  };
+  }, [studyGroups, searchQuery, selectedCategory]);
 
-  const rsvpToEvent = (eventId: string) => {
-    toast({
-      title: "RSVP Confirmed! ✅",
-      description: "You're all set for the event. We'll send you a reminder closer to the date.",
+  const filteredEvents = useMemo(() => {
+    return campusEvents.filter(event => {
+      const matchesSearch = searchQuery === '' || 
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesCategory = selectedCategory === 'all' || 
+        event.category.toLowerCase() === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
     });
-  };
+  }, [campusEvents, searchQuery, selectedCategory]);
 
-  const likeStory = (storyId: string) => {
-    toast({
-      title: "Story Liked! ❤️",
-      description: "Thanks for showing support to your fellow students!",
-    });
-  };
+  const joinStudyGroup = useCallback(async (groupId: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setStudyGroups(prev => prev.map(group => 
+        group.id === groupId 
+          ? { ...group, isJoined: !group.isJoined, members: group.isJoined ? group.members - 1 : group.members + 1 }
+          : group
+      ));
+      
+      toast({
+        title: "Study Group Updated! 📚",
+        description: "Your study group status has been updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update study group. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
 
-  const joinChallenge = (challengeId: string) => {
-    toast({
-      title: "Challenge Accepted! 🏆",
-      description: "You're now participating in the challenge. Good luck!",
-    });
-  };
+  const rsvpToEvent = useCallback(async (eventId: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setCampusEvents(prev => prev.map(event => 
+        event.id === eventId 
+          ? { 
+              ...event, 
+              isRSVPd: !event.isRSVPd, 
+              attendees: event.isRSVPd ? event.attendees - 1 : event.attendees + 1 
+            }
+          : event
+      ));
+      
+      toast({
+        title: "RSVP Updated! ✅",
+        description: "Your event RSVP has been updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update RSVP. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
 
-  const createStory = () => {
-    if (newStoryContent.trim()) {
+  const likeStory = useCallback(async (storyId: string) => {
+    try {
+      setCampusStories(prev => prev.map(story => 
+        story.id === storyId 
+          ? { 
+              ...story, 
+              isLiked: !story.isLiked, 
+              likes: story.isLiked ? story.likes - 1 : story.likes + 1 
+            }
+          : story
+      ));
+      
+      toast({
+        title: "Story Updated! ❤️",
+        description: "Thanks for showing support to your fellow students!",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update story. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  const joinChallenge = useCallback(async (challengeId: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setCommunityChallenges(prev => prev.map(challenge => 
+        challenge.id === challengeId 
+          ? { 
+              ...challenge, 
+              isParticipating: !challenge.isParticipating, 
+              participants: challenge.isParticipating ? challenge.participants - 1 : challenge.participants + 1 
+            }
+          : challenge
+      ));
+      
+      toast({
+        title: "Challenge Updated! 🏆",
+        description: "Your challenge participation has been updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update challenge. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [toast]);
+
+  const createStory = useCallback(async () => {
+    if (!newStoryContent.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter some content for your story.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newStoryContent.length > 500) {
+      toast({
+        title: "Error",
+        description: "Story content must be less than 500 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const newStory: CampusStory = {
+        id: Date.now().toString(),
+        user: {
+          name: 'Current User',
+          avatar: '/api/placeholder/40/40',
+          level: 10
+        },
+        content: newStoryContent,
+        likes: 0,
+        comments: 0,
+        timestamp: 'Just now',
+        isLiked: false
+      };
+      
+      setCampusStories(prev => [newStory, ...prev]);
+      setNewStoryContent('');
+      setShowCreateStory(false);
+      
       toast({
         title: "Story Posted! 📱",
         description: "Your campus story has been shared with the community.",
       });
-      setNewStoryContent('');
-      setShowCreateStory(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to post story. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [newStoryContent, toast]);
+
+  const handleModalClose = useCallback(() => {
+    setShowCreateStory(false);
+    setNewStoryContent('');
+  }, []);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -362,78 +768,26 @@ export default function EnhancedSocialHub() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">Study Groups</h2>
-              <Button onClick={() => setShowCreateGroup(true)} className="flex items-center gap-2">
-                <Plus className="h-4 w-4" />
-                Create Group
-              </Button>
             </div>
             
+            {isLoading && (
+              <div className="text-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-2 text-gray-600">Loading...</p>
+              </div>
+            )}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {studyGroups.map((group) => (
-                <motion.div
-                  key={group.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className="h-full hover:shadow-lg transition-shadow">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{group.name}</CardTitle>
-                        <Badge variant={group.isJoined ? "default" : "secondary"}>
-                          {group.isJoined ? 'Joined' : 'Open'}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-gray-600">{group.subject}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-sm text-gray-700">{group.description}</p>
-                      
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Clock className="h-4 w-4" />
-                        {group.meetingTime}
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
-                        {group.location}
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={group.createdBy.avatar} />
-                            <AvatarFallback className="text-xs">
-                              {group.createdBy.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm text-gray-600">{group.createdBy.name}</span>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {group.members}/{group.maxMembers} members
-                        </div>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-1">
-                        {group.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                      
-                      <Button 
-                        onClick={() => joinStudyGroup(group.id)}
-                        className="w-full"
-                        variant={group.isJoined ? "outline" : "default"}
-                      >
-                        {group.isJoined ? 'Leave Group' : 'Join Group'}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+              {filteredStudyGroups.map((group) => (
+                <StudyGroupCard key={group.id} group={group} onJoin={joinStudyGroup} />
               ))}
             </div>
+            
+            {filteredStudyGroups.length === 0 && !isLoading && (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No study groups found matching your criteria.</p>
+              </div>
+            )}
           </div>
         );
 
@@ -442,67 +796,24 @@ export default function EnhancedSocialHub() {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Campus Events</h2>
             
+            {isLoading && (
+              <div className="text-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-2 text-gray-600">Loading...</p>
+              </div>
+            )}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {campusEvents.map((event) => (
-                <motion.div
-                  key={event.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className="h-full hover:shadow-lg transition-shadow">
-                    <div className="relative">
-                      <img 
-                        src={event.image} 
-                        alt={event.title}
-                        className="w-full h-48 object-cover rounded-t-lg"
-                      />
-                      <Badge className="absolute top-2 right-2">
-                        {event.category}
-                      </Badge>
-                    </div>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg">{event.title}</CardTitle>
-                      <p className="text-sm text-gray-600">{event.description}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar className="h-4 w-4" />
-                        {event.date} at {event.time}
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
-                        {event.location}
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={event.organizer.avatar} />
-                            <AvatarFallback className="text-xs">
-                              {event.organizer.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm text-gray-600">{event.organizer.name}</span>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {event.attendees}/{event.maxAttendees} attending
-                        </div>
-                      </div>
-                      
-                      <Button 
-                        onClick={() => rsvpToEvent(event.id)}
-                        className="w-full"
-                        variant={event.isRSVPd ? "outline" : "default"}
-                      >
-                        {event.isRSVPd ? 'Cancel RSVP' : 'RSVP'}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+              {filteredEvents.map((event) => (
+                <EventCard key={event.id} event={event} onRSVP={rsvpToEvent} />
               ))}
             </div>
+            
+            {filteredEvents.length === 0 && !isLoading && (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No events found matching your criteria.</p>
+              </div>
+            )}
           </div>
         );
 
@@ -519,78 +830,15 @@ export default function EnhancedSocialHub() {
             
             <div className="space-y-6">
               {campusStories.map((story) => (
-                <motion.div
-                  key={story.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage src={story.user.avatar} />
-                            <AvatarFallback>
-                              {story.user.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-semibold">{story.user.name}</div>
-                            <div className="text-sm text-gray-600">Level {story.user.level} • {story.timestamp}</div>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <p className="text-gray-800">{story.content}</p>
-                      
-                      {story.media && (
-                        <div className="rounded-lg overflow-hidden">
-                          {story.media.type === 'image' ? (
-                            <img 
-                              src={story.media.url} 
-                              alt="Story content"
-                              className="w-full h-64 object-cover"
-                            />
-                          ) : (
-                            <video 
-                              src={story.media.url} 
-                              controls
-                              className="w-full h-64 object-cover"
-                            />
-                          )}
-                        </div>
-                      )}
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => likeStory(story.id)}
-                            className={`flex items-center gap-2 ${story.isLiked ? 'text-red-500' : ''}`}
-                          >
-                            <Heart className={`h-4 w-4 ${story.isLiked ? 'fill-current' : ''}`} />
-                            {story.likes}
-                          </Button>
-                          <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                            <MessageCircle className="h-4 w-4" />
-                            {story.comments}
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Share2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                <StoryCard key={story.id} story={story} onLike={likeStory} />
               ))}
             </div>
+            
+            {campusStories.length === 0 && (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No stories available yet. Be the first to share!</p>
+              </div>
+            )}
           </div>
         );
 
@@ -599,57 +847,24 @@ export default function EnhancedSocialHub() {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold">Community Challenges</h2>
             
+            {isLoading && (
+              <div className="text-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-2 text-gray-600">Loading...</p>
+              </div>
+            )}
+            
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {communityChallenges.map((challenge) => (
-                <motion.div
-                  key={challenge.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Card className="h-full hover:shadow-lg transition-shadow">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg">{challenge.title}</CardTitle>
-                        <Badge variant={challenge.isParticipating ? "default" : "secondary"}>
-                          {challenge.isParticipating ? 'Participating' : 'Join'}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-gray-600">{challenge.description}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Trophy className="h-4 w-4" />
-                        {challenge.theme}
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Users className="h-4 w-4" />
-                        {challenge.participants} participants
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar className="h-4 w-4" />
-                        Ends {challenge.endDate}
-                      </div>
-                      
-                      <div className="p-3 bg-yellow-50 rounded-lg">
-                        <div className="text-sm font-medium text-yellow-800">Reward:</div>
-                        <div className="text-sm text-yellow-700">{challenge.reward}</div>
-                      </div>
-                      
-                      <Button 
-                        onClick={() => joinChallenge(challenge.id)}
-                        className="w-full"
-                        variant={challenge.isParticipating ? "outline" : "default"}
-                      >
-                        {challenge.isParticipating ? 'Leave Challenge' : 'Join Challenge'}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                <ChallengeCard key={challenge.id} challenge={challenge} onJoin={joinChallenge} />
               ))}
             </div>
+            
+            {communityChallenges.length === 0 && !isLoading && (
+              <div className="text-center py-8">
+                <p className="text-gray-600">No challenges available at the moment.</p>
+              </div>
+            )}
           </div>
         );
 
@@ -669,22 +884,23 @@ export default function EnhancedSocialHub() {
       {/* Search and Filter */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
           <Input
             placeholder="Search groups, events, or stories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
+            aria-label="Search content"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 overflow-x-auto">
           {categories.map((category) => (
             <Button
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               size="sm"
               onClick={() => setSelectedCategory(category.id)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 whitespace-nowrap"
             >
               {category.icon}
               {category.name}
@@ -703,12 +919,13 @@ export default function EnhancedSocialHub() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => setActiveTab(tab.id as 'groups' | 'events' | 'stories' | 'challenges')}
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === tab.id
                 ? 'bg-white dark:bg-gray-700 text-primary shadow-sm'
                 : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
             }`}
+            aria-label={`Switch to ${tab.name} tab`}
           >
             {tab.icon}
             {tab.name}
@@ -727,19 +944,22 @@ export default function EnhancedSocialHub() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            onClick={handleModalClose}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md"
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Share Your Story</h3>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setShowCreateStory(false)}
+                  onClick={handleModalClose}
+                  aria-label="Close modal"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -751,14 +971,20 @@ export default function EnhancedSocialHub() {
                   value={newStoryContent}
                   onChange={(e) => setNewStoryContent(e.target.value)}
                   rows={4}
+                  maxLength={500}
+                  aria-label="Story content"
                 />
                 
+                <div className="text-sm text-gray-500 text-right">
+                  {newStoryContent.length}/500 characters
+                </div>
+                
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" aria-label="Add photo">
                     <Camera className="h-4 w-4 mr-2" />
                     Photo
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" aria-label="Add video">
                     <Video className="h-4 w-4 mr-2" />
                     Video
                   </Button>
@@ -767,13 +993,23 @@ export default function EnhancedSocialHub() {
                 <div className="flex justify-end gap-2">
                   <Button
                     variant="outline"
-                    onClick={() => setShowCreateStory(false)}
+                    onClick={handleModalClose}
+                    disabled={isLoading}
                   >
                     Cancel
                   </Button>
-                  <Button onClick={createStory}>
-                    <Send className="h-4 w-4 mr-2" />
-                    Share
+                  <Button onClick={createStory} disabled={isLoading || !newStoryContent.trim()}>
+                    {isLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Posting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-4 w-4 mr-2" />
+                        Share
+                      </>
+                    )}
                   </Button>
                 </div>
               </div>
