@@ -3,7 +3,6 @@ import { Bell, X, Check, Trash2 } from 'lucide-react';
 import { useNotifications } from '../lib/notifications';
 import { useToast } from '../hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
-import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { ScrollArea } from './ui/scroll-area';
@@ -81,16 +80,14 @@ export default function NotificationBell() {
         onClick={() => setIsOpen(!isOpen)}
         className={`relative ${hasNewNotifications ? 'animate-pulse' : ''}`}
       >
-        <Bell className={`h-5 w-5 ${hasNewNotifications ? 'text-blue-500' : ''}`} />
-        {unreadCount > 0 && (
-          <Badge 
-            variant="destructive" 
-            className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
-          >
-            {unreadCount > 99 ? '99+' : unreadCount}
-          </Badge>
-        )}
+        <Bell className={`h-7 w-7 text-yellow-400 ${hasNewNotifications ? 'text-yellow-300' : ''}`} />
       </Button>
+      
+      {unreadCount > 0 && (
+        <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full min-w-[16px] h-4 flex items-center justify-center text-[10px] font-bold leading-none tracking-tight">
+          {unreadCount > 99 ? '99+' : unreadCount}
+        </div>
+      )}
 
       {isOpen && (
         <div className="absolute right-0 top-12 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">

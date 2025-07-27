@@ -61,7 +61,7 @@ export default function Login() {
                 />
               </div>
               <h1 className="text-3xl font-bold text-white mb-3">Welcome to Hocking College</h1>
-              <p className="text-base text-white">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
+              <p className="text-base text-white">We serve as a pathway to prosperity, teaching and inspiring all who seek to learn, growing careers and changing lives.</p>
             </div>
             <div className="pt-4 space-y-3">
               <Button 
@@ -69,7 +69,7 @@ export default function Login() {
                 onClick={handleGetStarted}
                 className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
               >
-                <User className="mr-2 h-5 w-5" />
+                <User className="mr-2 h-6 w-6" />
                 Get Started
               </Button>
               
@@ -77,9 +77,9 @@ export default function Login() {
                 type="button" 
                 variant="ghost"
                 onClick={() => setShowAdminLogin(!showAdminLogin)}
-                className="w-full text-white py-2 text-sm hover:bg-white/20 transition border border-white/30"
+                className="w-full text-white py-3 text-lg rounded-xl font-semibold hover:bg-white/20 transition border-2 border-white/30"
               >
-                <Crown className="mr-2 h-4 w-4" />
+                <Crown className="mr-2 h-6 w-6" />
                 Login as Admin
               </Button>
             </div>
