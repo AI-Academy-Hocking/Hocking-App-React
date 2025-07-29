@@ -123,7 +123,7 @@ const handbookSections: HandbookSection[] = [
       "Student Conduct - Questions about the Student Code of Conduct or appropriate actions on campus? Talk to Erick Smith in the main concourse of John Light Hall.",
       "Campus Police (HCPD) - Did you lock your keys in your car, need a jump, want to report a crime? Talk to any of the friendly officers at Campus Safety.",
       "Financial Aid – Do you have questions about your financial aid, scholarships, loans, or grants? Talk to one of our Financial Aid experts on the first floor of John Light Hall.",
-      "Hawks Center for Well-Being (JL) – Do you need an immunization, physical or other form of basic medical care? Call the Wellness Center at 740-753-7079 or stop in to John Light 241.",
+      "Hawks Center for Well-Being (JL) – Do you need an immunization, physical or other form of basic medical care? Call the Wellness Center at <a href=\"tel:740-753-7079\" className=\"text-blue-600 hover:underline\">740-753-7079</a> or stop in to John Light 241.",
       "Counseling Services – Need to talk to someone about personal matters? Visit with one of our counselors in John Light 241 completely free of charge."
     ]
   },
@@ -346,7 +346,7 @@ const handbookSections: HandbookSection[] = [
       "Students are strongly encouraged to have antivirus software on their personal computers before connecting to the internet.",
       "Wireless routers are not permitted as they interfere with the existing wireless service.",
       "Be careful about the type and size of downloads. The amount of bandwidth used by each port is monitored and excessive consumption of bandwidth may result in the port being deactivated.",
-      "Students wishing to purchase supplemental internet packages can do so by contacting Nelsonville TV Cable (740-753-2686).",
+      "Students wishing to purchase supplemental internet packages can do so by contacting Nelsonville TV Cable (<a href=\"tel:740-753-2686\" className=\"text-blue-600 hover:underline\">740-753-2686</a>).",
       "Notice to Students of Claimed Infringement – if a representative of copyrighted content detects illegal downloading or sharing of copyrighted content on the Hocking network, a letter of the alleged infringement will be sent to the university."
     ]
   },
@@ -369,7 +369,7 @@ const handbookSections: HandbookSection[] = [
     content: [
       "A full-time housekeeping staff is employed by Hocking College for Hocking Heights, Downhour, and North Halls. At Summit on the River and Sycamore, the building owners employ the housekeeping staff.",
       "Downhour, Hocking Heights, and North residence halls, maintenance requests should be made to a Residence Life staff member.",
-      "Summit and Sycamore Hall students can make requests via e-mail to workorder@lhxprop.com.",
+      "Summit and Sycamore Hall students can make requests via e-mail to <a href=\"mailto:workorder@lhxprop.com\" className=\"text-blue-600 hover:underline\">workorder@lhxprop.com</a>.",
       "Students are directly responsible for the housekeeping of their rooms. Rooms should be cleaned on a regular basis, including vacuuming, sweeping, changing and washing personal bedding, and removing trash.",
       "The Residence Life Department reserves the right to take corrective action (including cleaning the room and billing the student) in those situations that present a health or safety concern.",
       "Violations of this policy may result in referral to Campus Judiciaries."

@@ -54,6 +54,54 @@ const contactInfo: ContactInfo[] = [
   }
 ];
 
+// Helper function to render contact details with clickable links
+const renderContactDetail = (detail: string) => {
+  // Check if it's an email
+  if (detail.includes('@')) {
+    const email = detail.split(': ')[1];
+    return (
+      <li key={detail} className="text-sm flex items-center gap-2">
+        <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+        <span>{detail.split(': ')[0]}: </span>
+        <a 
+          href={`mailto:${email}`}
+          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+        >
+          {email}
+        </a>
+      </li>
+    );
+  }
+  
+  // Check if it's a phone number
+  if (detail.includes('(') && detail.includes(')')) {
+    const phoneMatch = detail.match(/\((\d{3})\) (\d{3})-(\d{4})/);
+    if (phoneMatch) {
+      const phoneNumber = `${phoneMatch[1]}${phoneMatch[2]}${phoneMatch[3]}`;
+      const label = detail.split(': ')[0];
+      return (
+        <li key={detail} className="text-sm flex items-center gap-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+          <span>{label}: </span>
+          <a 
+            href={`tel:${phoneNumber}`}
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
+          >
+            {detail.split(': ')[1]}
+          </a>
+        </li>
+      );
+    }
+  }
+  
+  // Regular text
+  return (
+    <li key={detail} className="text-sm flex items-center gap-2">
+      <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+      {detail}
+    </li>
+  );
+};
 
 
 export default function Contact() {
@@ -109,12 +157,7 @@ export default function Contact() {
                     <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">{info.description}</p>
                   )}
                   <ul className="space-y-2">
-                    {info.details.map((detail) => (
-                      <li key={detail} className="text-sm flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
-                        {detail}
-                      </li>
-                    ))}
+                    {info.details.map((detail) => renderContactDetail(detail))}
                   </ul>
                 </div>
               ))}

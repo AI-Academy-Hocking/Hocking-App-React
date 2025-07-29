@@ -1,4 +1,4 @@
-import { FileText, ArrowLeft, AlertTriangle, DollarSign, Users, Shield, Calendar, Utensils, CreditCard, Home, FileCheck } from 'lucide-react';
+import { FileText, ArrowLeft, AlertTriangle, DollarSign, Users, Shield, Utensils, CreditCard, Home, FileCheck } from 'lucide-react';
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
@@ -15,38 +15,33 @@ interface ContractSection {
 const contractSections: ContractSection[] = [
 
   {
-    title: "General Contract Terms",
+    title: "Residence Halls Service Agreement",
     icon: <FileCheck className="h-5 w-5" />,
     category: "general",
     content: [
-      "All students who choose to live in Hocking College Residence Halls (Downhour, Hocking Heights, North, Summit and Sycamore), are required to fill out the Application for Housing and pay the application fee.",
-      "Students who elect to live in the residence halls in the Fall semester are required to sign up for the Spring semester and MUST pay the initial fee for Spring.",
-      "In the event that a student decides not to live in the residence hall in the Spring semester, they forfeit the initial fees that are required to reserve their room.",
-      "Students may receive a partial refund of fees for Spring if they notify the College prior to November 1 of the academic year. No proration or refunds will be given after that date.",
-      "If you are approved to live in campus housing, you are required to sign the Residence Hall Contract and the Contract will serve as an official Contract between Hocking College and the Resident student.",
-      "All incoming Summer Students who apply for and are granted a Contract for Residential Housing will be committing to living in campus housing for the entire semester, unless otherwise released from the housing obligations explained in the Contract.",
-      "Summer and Spring only housing are available upon request. There is not an option for a Fall semester only contract unless the applicant graduates at the end of the Fall term.",
-      "If an applicant is graduating at the end of the Fall semester, notification in writing must be submitted within 30 calendar days to the end of the academic term."
+      "This Residence Halls Service Agreement (this 'Agreement') is entered into between Hocking College (hereinafter referred to as 'College'), and the Resident.",
+      "If Resident qualifies and is approved by College, College agrees to provide a space in Downhour Hall, Hocking Heights, North Hall, Sycamore Hall, Summit Hall, Columbus Street Residences, or Opportunity House (the 'College-Operated Residence Halls') during the academic year (the 'License Term').",
+      "Residency in College-Operated Residence Halls is available only to full-time students enrolled and in good standing at Hocking College (each, a 'Student'). If Resident does not qualify as a Student at the time this Agreement is signed and submitted to the College, or at any time during the License Term, College may terminate this Agreement in accordance with the provisions of the Residence Halls Service Agreement Terms and Conditions.",
+      "This Agreement is Resident's personal, non-transferable license to occupy and use the residence space assigned to the Resident (the 'Unit') for limited purposes and is not a lease of College property.",
+      "Resident's occupancy of the Unit is governed by and subject to Resident's compliance with the Terms and Conditions and the Student Code of Conduct Handbook and the Residence Hall Handbook published by the College on its website (https://www.hocking.edu/student-conduct), incorporated as an exhibit hereto, as may be amended from time to time.",
+      "College reserves the right, at its sole discretion to determine if any past behavior, conduct, or activity of any student is such that the interest of College, Resident, and/or other students would be best served by terminating this Agreement.",
+      "Resident acknowledges that convicted and/or registered sexual offenders are not allowed to live in College-Operated Residence Halls. Resident hereby certifies that Resident is not a convicted and/or registered sexual offender and covenants that Resident will not permit access to College-Operated Residence Halls to any convicted and/or registered sexual offender.",
+      "Resident must submit, with this Agreement, sixty dollars ($60) in good and immediate funds as a non-refundable annual Application Fee.",
+      "This Agreement is legal and binding for the term set forth above in this Agreement and is in effect when College receives the Application Fee and an executed copy of this Agreement, which may be accomplished via electronic means.",
+      "If Resident is not yet eighteen (18) years of age at the time this Agreement is executed, Resident's parent or legal guardian must also execute and be a party to this Agreement for the Agreement to be valid and enforceable."
     ],
     important: true
   },
   {
-    title: "Application Information",
+    title: "Attestation and Signature",
     icon: <FileCheck className="h-5 w-5" />,
     category: "application",
     content: [
-      "Financial aid may not be used to cover the application or reservations fees (student should apply for financial aid as soon as possible to try to defray these expenses).",
-      "The required fees must be paid in order to process the application.",
-      "The date the completed application and payment of the application and reservation fees are received will determine the applicant's priority number when assigning facility and room type.",
-      "Applications must be submitted electronically (apply.hocking.edu). Any other means will not be accepted.",
-      "If applying for Summer semester housing and the applicant intends to reside in the residence halls for Summer semester, the applicant must submit a second application for Fall/Spring semester.",
-      "Applying for Summer semester housing does not automatically enroll you in housing for Fall/Spring semester.",
-      "The application fee is paid per year and 30 calendar days prior to the Summer semester.",
-      "All applicants are billed for the type of accommodations in which they are residing during the ninth week of each semester, if changes have occurred.",
-      "Changes will not be made to the applicant's account after the ninth week. Accounts are not prorated for partial semester assignments.",
-      "The applicant will be held responsible for the fees for the entire semester of the contract.",
-      "Applicants who do not fulfill the Fall/Spring semester will still be required to pay for the entire contract period unless the student has been released from their contract.",
-      "Dropping below 12 credit hours can disqualify a student from on-campus housing, but does not release an applicant from their contractual obligations. Students dropping below half-time status must provide documentation from their academic advisor as to the need for this status."
+      "I understand that I am entering into a legally binding contract with Hocking College. I am aware that Hocking College offers equal educational, housing, and employment opportunities without regard for race, color, nation of origin, sex, age, or disability.",
+      "I have carefully read and reviewed this Agreement, along with the Terms and Conditions below and the up-to-date Student Code of Conduct and Residence Hall Handbook, of which I am subject to and agree to abide by.",
+      "I am further aware that I am required to disclose and immediately notify the Housing Office of any felony conviction in writing, through mail address and/or email address below.",
+      "By signing this Agreement, I agree to accept a Unit for the License Term and comply with this Agreement, which is subject to the Terms and Conditions and up-to-date Student Code of Conduct and Residence Hall Handbook.",
+      "By requesting housing and signing below, Resident and their parent or guardian (if applicable) acknowledges that Resident is subject to Terms and Conditions and the current Student Code of Conduct and Residence Hall Handbook in effect at the time of the License Term, and agrees and covenants that Student will abide by them."
     ],
     important: true
   },
@@ -55,14 +50,25 @@ const contractSections: ContractSection[] = [
     icon: <DollarSign className="h-5 w-5" />,
     category: "fees",
     content: [
-      "A $60 non-refundable application fee is required at the time of submission of the housing application. Financial aid cannot be used to cover this fee.",
-      "A $250 Security Deposit (SD) is due, in full, before a room assignment will be made. Financial aid cannot be used to cover this fee.",
-      "The SD is refundable depending on the condition of the room at the end of the term as determined by College Personnel at the time of check out.",
-      "The SD may not be refunded if the Resident did not properly check out of their room on or before the stated hall closing day and time.",
-      "The SD will be credited to the applicant's housing charges should the contract be successfully fulfilled. If there is a refund, it will be mailed to the address on file with the College.",
-      "The SD is refundable the first term of residence if cancellation, in writing, is received 30 days prior to the first day of term for which the applicant is applying."
+      "All Residents are required to pay an annual sixty-dollar ($60) Application Fee in good and immediate funds as a non-refundable Application Fee.",
+      "All Residents are required to make a two hundred and fifty-dollar ($250) Security Deposit in good and immediate funds. The Security Deposit is refundable after checkout if Resident meets all of the following criteria:",
+      "Resident successfully and fully completes the proper College determined Check Out Process.",
+      "The Condition of the Unit is determined by College to be acceptable at time of Check Out.",
+      "If Resident owes College any balance to the College, for housing, tuition, fees, and/or any other reason, then Resident authorizes College to offset any Security Deposits to those balances owed to the College.",
+      "The Security Deposit is non-refundable if dorm cancellation occurs between the date that is thirty (30) days before the start of the semester and fifteen (15) days after the start of the semester."
     ],
     important: true
+  },
+  {
+    title: "Assignment of Unit",
+    icon: <Home className="h-5 w-5" />,
+    category: "assignment",
+    content: [
+      "The Agreement does not cover a specific room or building and College cannot guarantee room facility assignment although all reasonable efforts will be made to honor the preferences listed on the housing application. No guarantee of a specific assignment, room occupancy, area of campus, building, or roommate is implied.",
+      "Resident agrees that occupancy of Unit is limited only to residents assigned to that Unit, that the Unit will be used only as a living space, and that the Unit may not be occupied or used by non-residents.",
+      "Resident acknowledges and agrees that College has the right to reassign Resident to Units and/or adjust the occupancy of Units to maximize space utilization or for any other reason. Resident agrees to accept any other Student as a roommate.",
+      "College, in compliance with the Civil Rights Act of 1964, Title IX of the Higher Education Act, and other laws, does not discriminate on the basis of age, race, ethnic background, national origin, handicap, veteran status, or gender in any of its policies, practices, or procedures."
+    ]
   },
   {
     title: "Housing Eligibility Requirements",
@@ -78,19 +84,27 @@ const contractSections: ContractSection[] = [
     ]
   },
   {
-    title: "Rates and Payment Terms",
+    title: "Rates and Payments",
     icon: <DollarSign className="h-5 w-5" />,
     category: "payment",
     content: [
-      "The rate for the room is established and published in advance and must be paid upon the commencement of selected Semester for the academic year.",
-      "The student agrees to pay late fees if the payment is not received by the aforementioned due dates. Fees for late payments will be assessed at a rate established by the College's Cashier Office.",
-      "Failure to make timely payments may result in the termination of this contract by the College.",
-      "Applicants whose payment is returned due insufficient funds or any other reason agrees to pay a returned check processing fee and any other late fees incurred.",
-      "This contract is executed when the application, application fee, reservation fee, and signed contract are received. A signed contract and submission of all fees must be received by the payment deadline. Failure to meet the specified timelines may result in the termination of the housing status.",
-      "The Hocking College reserves the right to alter the fee schedule when necessary. Students will be given a 30 calendar day notice of such changes.",
-      "Students who do not pay the agreed upon payment schedule will be prohibited from registering for semester classes until the balance is paid in full.",
-      "The student agrees that failure to make a payment as described above does not release the student from the housing contract.",
-      "The student understands that non-payment of fees and fines may result in the subsequent denial of the release of a diploma, certificates, transcripts, or other documents until the balance is paid in full."
+      "Resident acknowledges and agrees that they have entered into a Financial Responsibility Statement with College and that all charges resulting from housing and/or meal plans is included in the Resident's Financial Responsibility and that this Agreement does not alter or modify the Resident's Financial Responsibility Statement.",
+      "The Unit is charged by semester and payment is due concurrently with the deadline for payment of tuition and fees. If any payment is fifteen (15) days or more past due, College reserves the right to terminate this Agreement, require that Resident vacate the Unit, and/or suspend or terminate the Meal Plan.",
+      "College reserves the right to change rates to its housing and meal plans.",
+      "Resident agrees and understands that they waive their right to appeal any additional charge related to the Unit (such as, by way of example and not of limitation, damage, cleaning and/or fire safety) unless the written appeal is received by Student Housing and Residential Life within thirty (30) days of the charge.",
+      "Occupancy of the Unit during winter break and the spring to fall break is expressly excluded from the license under the Agreement."
+    ]
+  },
+  {
+    title: "Meal Plans",
+    icon: <Utensils className="h-5 w-5" />,
+    category: "meals",
+    content: [
+      "Resident must obtain and pay for a College meal plan during the entire License Term, failure to do so will result in the Resident being in default of its obligations under the Agreement and College will have the option to exercise its remedies including, but not limited to, termination.",
+      "In addition to the foregoing, College shall have the option, but not the obligation, and Resident hereby authorizes College on Resident's behalf to select the default meal plan and charge Resident's account with the cost for such meal plan.",
+      "Resident acknowledges and agrees that refunds are not made for unused meals and are not carried over to following weeks.",
+      "Resident acknowledges and agrees that unused Hawk Bucks are not carried forward to the following semester.",
+      "College's Dining Services may, at its sole discretion, consolidate dining services and reduce serving hours in the dining facilities for various reasons."
     ]
   },
   {
@@ -98,8 +112,28 @@ const contractSections: ContractSection[] = [
     icon: <Shield className="h-5 w-5" />,
     category: "liability",
     content: [
-      "Residents of each room are severally responsible for all charges arising from this contract.",
-      "If two Residents share a room, each shall be individually responsible for the full amount of all charges."
+      "Residents of each Unit are jointly and severally responsible for all charges arising from this Agreement. If multiple Residents share a Unit, each shall be individually responsible for the full amount of all charges."
+    ]
+  },
+  {
+    title: "Liability and Risk Assumption",
+    icon: <Shield className="h-5 w-5" />,
+    category: "liability",
+    content: [
+      "College acknowledges, and the Resident is hereby made aware, that criminal activity, personal injury, and theft occur in residence halls, and the risk exists for such future occurrences on College premises, specifically within and around Housing and Residence Education facilities. Therefore, Resident agrees to assume responsibility for their own personal safety and security, as well as for their own personal belongings.",
+      "College does not assume responsibility for Resident's or Resident's guest's losses or injuries, including, but not limited to the loss of money or valuables, the loss of or damage to property, the cost of replacement for such losses, or injuries, personal or otherwise, sustained on or about the College.",
+      "Resident acknowledges that in the event of any pending or future public health crisis, Resident may be assuming additional risks to their health and safety by residing in Unit and using the dining services. Resident agrees that Resident is knowingly, voluntarily, and expressly assuming this risk and responsibility for any damages, liabilities, loss, or expenses related to a public health crisis that they may incur as a result of residing in College housing. Resident further acknowledges that during a public health crisis, College may have limited staff availability and/or reduce or eliminate certain services in its sole discretion for health and safety reasons, including but not limited to, reduction in dining service offerings and elimination of residence hall programming."
+    ]
+  },
+  {
+    title: "Legal Action",
+    icon: <Shield className="h-5 w-5" />,
+    category: "legal",
+    content: [
+      "Resident understands and agrees that in the event it becomes necessary for College to enforce the terms and conditions of the Contract by legal means, or otherwise, and if by such action College suffers additional expense, including attorney and legal fees, including court costs, then the Resident shall reimburse College for such costs and expenses as additional monies due under this Contract.",
+      "The rights and remedies of College set forth herein are in addition to all other rights and remedies allowed under law and equity. Resident agrees to be bounds by all the Terms and Conditions stated herein and adhere to written policies and procedures of College.",
+      "This Agreement shall be construed in accordance with the laws of the State of Ohio, regardless of the place of execution. Any legal action arising pursuant to this contract shall be brought in a court of competent jurisdiction in the State of Ohio.",
+      "If any provision of this Agreement between College and Resident is determined to be invalid or unenforceable, the remainder of the Agreement shall not be affected and shall remain in full force and effect."
     ]
   },
   {
@@ -133,31 +167,58 @@ const contractSections: ContractSection[] = [
     ]
   },
   {
-    title: "Release from Contract, Early Termination and Cancellation",
-    icon: <Calendar className="h-5 w-5" />,
+    title: "Termination of Agreement by College",
+    icon: <AlertTriangle className="h-5 w-5" />,
     category: "termination",
     content: [
-      "The College may at its discretion, release a Resident from his or her obligations under this contract. Requests must be submitted in writing.",
-      "A Resident requesting to terminate their room contract must provide a detailed written explanation with supporting verifiable documentation for the reasons and must meet one the following criteria listed.",
-      "Failure to provide the necessary documentation will result in housing changes and penalties on the students account and possible further legal action.",
-      "If the student is not attending classes because of academic or personal behavior the student will not be excused or waived from the full financial responsibility for payment of resident fees even if the student has been asked to leave the residence hall because of non-compliance with student conduct and academic rules.",
-      "Appeals relating to the release of the contract must be made in writing within five (5) business days of determination and notification sent to the Housing Account Appeals Committee at housing-mealappeal@hocking.edu.",
-      "Criteria for release: Completion of Graduation Requirements; Marriage; Compulsory Military Duty; Birth or Adoption of a child; Medical/Dietary Limitations/Reasons (with recent medical documentation); Financial Hardship (with verifiable documentation).",
-      "The following are not eligible for review: financial savings, commuting to campus, reaching a certain age, or previously living on campus. Additionally, students who self-withdraw or are suspended or expelled for disciplinary or academic reasons."
+      "College may terminate the Agreement upon written notice to Resident because of Resident's default of its obligations to College, including but not limited to Resident's obligations under the Agreement. The amount of notice Resident will receive of College's termination depends on the seriousness of the cause. At the College's discretion, it may provide notice to allow for sufficient opportunity for Resident to cure their default.",
+      "If College has reasonable cause to believe that Resident's conduct constitutes a threat of imminent harm to Resident, others, or to College property, College shall have the immediate right to exclude Resident from College-Operated Residence Halls.",
+      "Resident's dismissal from College for any reason, or Resident's violation of the rules and regulations of College (including, but not limited to, these Terms and Conditions, the Student Code of Conduct and/or Residence Hall Handbook), or any other conduct by Resident for which the sanction of removal from College-Operated Residence Halls is assessed, shall constitute a material breach of the Agreement by Resident and shall be grounds for the immediate termination of the Agreement at College's discretion.",
+      "College may terminate Agreement for failure to attend classes, falling below twelve (12) credits per semester, or violating the code of conduct.",
+      "If Resident fails to check into the Unit assigned to them by the first day of classes following the Date of Occupancy, College may, at its discretion, terminate the Agreement.",
+      "If College Terminates Agreement, Resident's account at the College will be debited for all costs, including charges and fees incurred by Resident or by College on behalf of or because of Resident, and Resident will not be eligible for a refund of any charges."
     ]
   },
   {
-    title: "Refund Policy",
+    title: "Termination of Agreement by Resident",
+    icon: <AlertTriangle className="h-5 w-5" />,
+    category: "termination",
+    content: [
+      "All termination requests must be submitted to Student Housing & Residential Life by the Resident. Termination requests must be received in writing. Termination of the contract by Resident does not excuse or waive financial responsibility for any charges incurred or to be incurred by Resident for housing per the terms of this contract.",
+      "College may at its discretion, release Resident from their obligations under this Agreement. A Resident requesting to terminate this Agreement and be released from their obligations must provide a detailed written explanation with supporting verifiable documentation for the reason(s) indicated and must meet one the acceptable criteria listed below.",
+      "The request must be made in writing and in a timely manner and the appeal and supporting documentation must be sent to the Housing Account Appeals Committee at housing-mealappeal@hocking.edu.",
+      "IMPORTANT NOTE: If Resident is not attending classes because of academic or personal behavior, Resident will not be excused or waived from the full financial responsibility for payment of resident fees, even if the Resident has been asked to leave the residence hall because of non-compliance with student conduct and academic rules, this includes students who self-withdraw or are suspended/expelled for disciplinary or academic reasons.",
+      "Acceptable criteria for Resident to be released from their obligations to this Agreement are: Completion of Graduation Requirements, Marriage, Compulsory Military Duty, Birth or Adoption of a Child, Medical/Dietary Limitations/Reasons (with recent medical documentation), and Financial Hardship (with verifiable documentation of extreme financial hardship)."
+    ]
+  },
+  {
+    title: "Refunds",
     icon: <DollarSign className="h-5 w-5" />,
     category: "refunds",
     content: [
-      "Room fees are refundable at the following rates and are only available in the event that the student is no longer enrolled because of the reasons stated in the release criteria.",
-      "Refunds are processed in accordance with the on-campus refund policy of the College. Please allow ten business days for refunds to be processed.",
-      "If a balance is owed on the account, the refund will be applied to the student's account balance. No checks will be issued without credit showing on the student's Hocking College account.",
+      "Housing charges are refundable only in the following circumstances.",
+      "Please note that refunds are processed in accordance with the on-campus refund policy of the College. Please allow ten (10) business days for refunds to be processed. If a balance is owed on the account, the refund will be applied to the Resident's account balance. No refunds will be issued without credit showing on the Resident's Hocking College account.",
       "The refund is calculated from the time the Resident has removed all their belongings from their Residential assignment and has officially checked out with a residence hall staff member.",
-      "100% before move-in date or the first day of the semester, whichever comes first.",
-      "85% from the move-in date or first day of the semester until the 15th calendar day of the semester.",
-      "There will not be any refunds issued after the 15th day of the semester start."
+      "Please note that Security Deposits will be issued at the end of the academic year (or rolled over to the next academic year for students remaining in dorms for the next academic year).",
+      "100% refund will be issued for Residents who provide written notice to Housing before move-in date or the first day of the semester, whichever comes first.",
+      "85% refund will be issued if Resident provides written notice to Housing from the move-in date or first day of the semester until the 15th calendar day of the semester.",
+      "A pro-rated refund will be issued for Residents who are approved to receive one by College for an approved circumstance as outlined in Section 5.",
+      "EXCEPT FOR SECTION 7d, NO REFUNDS WILL BE ISSUED FIFTEEN DAYS AFTER THE START OF THE SEMESTER OR ANY TIME THEREAFTER."
+    ]
+  },
+  {
+    title: "College Reserves Rights",
+    icon: <Shield className="h-5 w-5" />,
+    category: "rights",
+    content: [
+      "The rights reserved by College includes but is not limited to:",
+      "To prohibit convicted and/or registered sexual offenders from living in campus housing.",
+      "To enter any room (including the Unit) without permission for the purpose of inspection, repair, cleaning, inventory, health and safety reviews, emergencies, etc. Conditions that necessitate immediate entry include but are not limited to: perceived threat of physical harm and/or danger to any person; damage to College property, or reasonable danger thereof; to determine if Resident has vacated during a fire alarm or drill; when necessary for the health, safety or welfare of Resident or anyone else in the Unit; and for other reasons determined necessary by College.",
+      "To make rules and regulations and/or modify rules and regulations as College deems necessary for the proper safety, care, comfort, welfare, and cleanliness of the premises.",
+      "To review applicants with prior felony convictions, including violent offenses, and consider for disqualification of on-campus residency. College reserves the right to review such matters on a case-by-case-basis. A felony conviction does not automatically disqualify a student from on-campus residency.",
+      "To change or cancel Resident's Unit assignment in the interest of order, health or safety, discipline, or other administrative reasons.",
+      "To levy and collect charges for attorney and legal fees, including court costs; damages to Unit, furnishings, and/or the building; unauthorized use of Unit, furnishings, and /or building; alterations of any room, furnishings, and/or building facilities; and/or special cleaning necessitated by improper or unreasonable care of room, furnishings, and/or building.",
+      "To change billing rates and to terminate the Agreement."
     ]
   },
   {
@@ -165,31 +226,83 @@ const contractSections: ContractSection[] = [
     icon: <Home className="h-5 w-5" />,
     category: "occupancy",
     content: [
-      "Residents agree to maintain eligibility to live in the College Residential room, as determined by this contract, the Student's Rights and Responsibilities, Hocking College Student Handbook, the laws and rules of the State of Ohio, Athens County, city of Nelsonville, and all applicable federal rules and regulations.",
-      "Failure to maintain eligibility constitutes a material breach of the contract. Resident agrees to vacate the room no later than the last day in which he/she is no longer eligible to live in College premises.",
-      "The Resident agrees further not to sublet or assign any part of the premises to another person."
+      "Resident agrees to maintain eligibility to live at the College, as determined by this contract, the Residence Hall Handbook, the laws and rules of the State of Ohio, Athens County, city of Nelsonville, and all applicable federal rules and regulations. Failure to maintain eligibility constitutes a material breach of the Agreement and Resident agrees to vacate the Unit, remove all their personal belongings, and return the Unit key no later than the last day in which he/she is no longer eligible to live in College premises.",
+      "If Resident fails to vacate by the end of their last day, College may take possession of the Unit, change the locks to the Unit, mailbox, etc. and charge all costs associated with such changes to the Resident.",
+      "Minimum Requirement to Stay in Housing: Residents must meet the following criteria to maintain eligibility for on-campus housing: Maintain full-time credit hours per semester; Attend all classes; Comply with community standards in the Student Code of Conduct; Attend new student orientation; Attend mandatory housing meetings; Attend Convocation; Attend Professional Development Day each semester."
     ]
   },
   {
-    title: "Conduct and Behavior",
+    title: "Conduct Behavior",
     icon: <Shield className="h-5 w-5" />,
     category: "conduct",
     content: [
-      "The College reserves the right to refer any Resident for judicial misconduct to the Office of Student Conduct should the student violate the Student Code of Conduct or Residence Hall Policy.",
-      "The student agrees to not use or possess intoxicating beverages, marijuana, tobacco, firearms, firecrackers, gunpowder, explosive devices, or deadly weapon which means any instrument, device, or thing capable of inflicting death, and designed or specially adapted for use as a weapon, or possessed, carried, or used as a weapon or any other weapon listed in the Ohio Revised Code 2923.11.",
-      "The use of alcohol by minors on the premises constitutes a breach of this Contract by the Resident, allowing the College to terminate this Contract."
+      "The College reserves the right to refer any Resident for judicial misconduct to the Office of Student Conduct should the Resident violate the Student Code of Conduct or Residence Hall Handbook.",
+      "The Resident agrees to not use or possess intoxicating beverages, marijuana, illegal drugs, and/or tobacco on Hocking College property.",
+      "The Resident agrees to not use or possess firearms, firecrackers, gunpowder, explosive devices, and/or deadly weapon which means any instrument, device, or thing capable of inflicting death, and designed or specially adapted for use as a weapon, or possessed, carried, or used as a weapon or any other weapon listed in the Ohio Revised Code 2923.11.",
+      "The Resident agrees to not store combustible or flammable material within the premises.",
+      "The Resident agrees to use public areas, residential corridors, rooms, equipment, and furnishings in a careful and proper manner.",
+      "Entranceways, landings, stairways, and other public areas shall not be obstructed by the Resident or Resident's guest(s), nor used for any other purpose than ingress or egress to the premises. No furniture or bulky articles shall be stored in any public area of the building any time. Furnishings located in these areas must remain in their assigned location.",
+      "The Resident agrees to not interfere with the lawful and proper use and enjoyment of the Unit or building by College, its agents/employees, or other Residents.",
+      "The Resident shall not permit the playing of radios, televisions, other electronics, or musical instruments at levels loud enough to be heard by Residents in any other room or at levels and in locations where it becomes a nuisance or disturbance to others.",
+      "Resident agrees not to give solicitors or salespersons access to the premises unless approved in advance by College."
     ]
   },
   {
-    title: "Delivery and Destruction of Premises",
+    title: "Pets",
+    icon: <Home className="h-5 w-5" />,
+    category: "pets",
+    content: [
+      "Pets are not allowed in College room/apartments with the exception of fish. Aquariums for fish are limited to 10 gallons or less.",
+      "Residents with disabilities in need of service/therapy animals are to contact the Office of Disability Services on campus to make the appropriate accommodations and necessary arrangements.",
+      "Residents who are part of the Animal Assisted Therapy program should contact the program manager to make the appropriate arrangements to live with their animal."
+    ]
+  },
+  {
+    title: "Personal & College Property",
+    icon: <Home className="h-5 w-5" />,
+    category: "property",
+    content: [
+      "Resident may not, and will not authorize or empower another to, remove, alter or damage any furniture or other furnishings provided and located by College within the Unit or any College-Operated Residence Halls; such conduct is considered theft and Resident will be charged the full replacement cost of missing furniture.",
+      "College is not responsible for loss or damage to personal property or injury to person, regardless of cause. Residents are strongly encouraged to insure their personal property and carry liability insurance.",
+      "Any personal property remaining in the Unit after it has been vacated by Resident, whether willingly or not, will be deemed abandoned. Abandoned property will be disposed of as determined by College in its sole discretion. College is given the authority to act in good faith to determine if a Resident has vacated the Residence Halls."
+    ]
+  },
+  {
+    title: "Additional Facilities",
+    icon: <Home className="h-5 w-5" />,
+    category: "facilities",
+    content: [
+      "College provides paid parking spaces, laundry facilities and other such facilities and College shall not be liable for any loss of property through theft, loss, casualty, or otherwise, or for any damage or injury whatsoever to person or property related to their use."
+    ]
+  },
+  {
+    title: "Utilities; Services; Repairs",
+    icon: <Home className="h-5 w-5" />,
+    category: "utilities",
+    content: [
+      "Each Unit in College-Operated Residence Halls is connected for utility service. College agrees to use commercially reasonable efforts to provide utility-powered services (such as, by way of example and not of limitation, ventilation, heating and air conditioning as well as, depending on the building and the Unit, elevator service, water and wastewater).",
+      "Under no circumstances will College be held responsible or liable for interruptions in utility service.",
+      "College's responsibility to restore utility-powered services after an interruption is limited to commercially reasonable efforts.",
+      "Resident understands and agrees that any repairs to be made by College may be delayed beyond circumstances reasonably beyond its control, the obligations of the Resident herein shall not be affected whatsoever, nor shall any claim accrue to the Resident against College for such delay.",
+      "While College will provide light housekeeping to common areas, Resident is responsible for the upkeep of their own areas, including removal of trash to designated dumpsters and cleaning."
+    ]
+  },
+  {
+    title: "Maintenance",
+    icon: <Home className="h-5 w-5" />,
+    category: "maintenance",
+    content: [
+      "Resident agrees that no alterations or improvements, including but not limited to, paint, wallpaper, miscellaneous fixtures, and permanent shelving units or mounting systems, will be made to or upon the premises without written consent from College.",
+      "Resident shall refrain from placing nails, any other hole indentations, or scratches on any surfaces on, in, or around the premises and will not fasten items to the walls without permission from College.",
+      "Resident shall not duplicate any College-issued keys. Resident agrees to report lost keys immediately to College, which keys will be replaced by College at Resident's expense."
+    ]
+  },
+  {
+    title: "Destruction of Premises",
     icon: <Home className="h-5 w-5" />,
     category: "premises",
     content: [
-      "It is mutually understood and agreed by the Resident and the College that in the event the College shall be unable, for any reason, to deliver possession of the premises at the beginning of the Contract Period, the College shall not be liable to Resident for damage caused by such failure to deliver possession, nor shall the Contract become void for that reason, but in such event the Resident shall not be liable for payment until complete possession is delivered or the College supplies other housing options.",
-      "If the premises are damaged or destroyed by fire or casualty, the College may terminate this contract by notice to the Resident (Casualty Termination Option).",
-      "The notice of termination must begin within 15 calendar days after the occurrence of the casualty.",
-      "Within 15 calendar days after notice of termination has been given, the Resident must surrender the premises to the College (Surrender Date).",
-      "After the Surrender Date, the College and the Resident are released from any further obligations or liability under this Contract, with exceptions for charges accruing through the Surrender Date and reservation fee handling."
+      "If the premises are damaged or destroyed by fire or casualty, College may terminate this contract at its discretion by notice to Resident. Should this occur, College and Resident are released from any further obligations to each other except the Resident will be responsible for a prorated charge through the destruction date."
     ]
   },
   {

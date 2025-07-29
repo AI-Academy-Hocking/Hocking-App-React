@@ -4,10 +4,6 @@ import {
   CalendarDays, 
   Wrench, 
   Calendar,
-  Users,
-  Trophy,
-  LayoutDashboard,
-  Heart,
   Map,
   UtensilsCrossed,
   Shield
@@ -23,13 +19,6 @@ export default function MobileNav() {
     { path: "/home", label: "Home", icon: Home },
     { path: "/calendar", label: "Calendar", icon: CalendarDays },
     { path: "/tools", label: "Tools", icon: Wrench },
-    
-    // Features (Dashboard, Achievements, Social, Wellness)
-    { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { path: "/achievements", label: "Achievements", icon: Trophy },
-    { path: "/social-hub", label: "Social", icon: Users },
-    { path: "/wellness", label: "Wellness", icon: Heart },
-    { path: "/study-groups", label: "Study Groups", icon: Users },
     
     // Campus Services
     { path: "/events", label: "Events", icon: Calendar },

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { EventDiscovery } from '@/components/social/EventDiscovery';
 
 // Mock data - in real app, this would come from API
 const mockEvents = [
@@ -124,19 +123,82 @@ export default function Events() {
     console.log('Like event:', eventId);
   };
 
-  const handleShareEvent = (eventId: string) => {
-    // In real app, this would open share dialog
-    console.log('Share event:', eventId);
-  };
+
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <EventDiscovery
-        events={events}
-        onAttendEvent={handleAttendEvent}
-        onLikeEvent={handleLikeEvent}
-        onShareEvent={handleShareEvent}
-      />
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          Campus Events
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          Discover and join exciting events happening on campus
+        </p>
+      </div>
+      
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {events.map((event) => (
+          <div key={event.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  {event.title}
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                  {event.description}
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-2 mb-4">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Date:</span>
+                <span className="ml-2">{event.date.toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Time:</span>
+                <span className="ml-2">{event.time}</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Location:</span>
+                <span className="ml-2">{event.location}</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Organizer:</span>
+                <span className="ml-2">{event.organizer}</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                {event.attendees}/{event.maxAttendees} attending
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleLikeEvent(event.id)}
+                  className={`px-3 py-1 rounded text-sm ${
+                    event.isLiked 
+                      ? 'bg-red-500 text-white' 
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  }`}
+                >
+                  {event.isLiked ? 'Liked' : 'Like'}
+                </button>
+                <button
+                  onClick={() => handleAttendEvent(event.id)}
+                  className={`px-3 py-1 rounded text-sm ${
+                    event.isAttending 
+                      ? 'bg-green-500 text-white' 
+                      : 'bg-blue-500 text-white'
+                  }`}
+                >
+                  {event.isAttending ? 'Attending' : 'Attend'}
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 } 

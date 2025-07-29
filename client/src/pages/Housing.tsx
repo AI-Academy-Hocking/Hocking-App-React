@@ -93,7 +93,6 @@ const housingOptions: HousingOption[] = [
     category: "social",
     priority: "optional"
   },
-
   {
     title: "Campus Life & Activities",
     icon: <PartyPopper className="h-8 w-8" />,

@@ -63,6 +63,7 @@ export default function Header() {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // @ts-ignore
   const addNotification = (notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
     const newNotification: Notification = {
       ...notification,

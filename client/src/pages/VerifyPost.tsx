@@ -178,8 +178,8 @@ const VerifyPost: React.FC = () => {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-gray-600 mb-4">{error}</p>
-            <Button onClick={() => setLocation('/housing/social')}>
-              Return to Social Hub
+            <Button onClick={() => setLocation('/housing')}>
+              Return to Housing
             </Button>
           </CardContent>
         </Card>

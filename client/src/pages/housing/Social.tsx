@@ -1,1435 +1,993 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'wouter';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import { 
-  ArrowLeft, Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, 
-  Send, Image, Video, AlertTriangle, Calendar, 
-  Users, TrendingUp, Filter, Plus, Clock,
-  User, Building, Smile, Camera,
-  Bell, Settings, Sparkles, CheckCircle
+  User, 
+  Calendar, 
+  MapPin, 
+  Users, 
+  MessageSquare, 
+  Heart, 
+  Share2, 
+  MoreHorizontal,
+  Send,
+  Image,
+  Video,
+  FileText,
+  AlertTriangle,
+  CheckCircle,
+  XCircle,
+  ArrowLeft,
+  Trophy,
+  Star,
+  TrendingUp,
+  Award,
+  ThumbsUp,
+  MessageCircle
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "wouter";
-import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "@/hooks/use-toast";
-import { biometricAuth } from "@/services/biometricAuth";
-import { notificationService } from "@/services/notificationService";
+import { motion } from 'framer-motion';
 
 interface User {
+  id: string;
   firstName: string;
   lastName: string;
-  studentId: string;
   email: string;
+  userType: 'student' | 'faculty';
   dormBuilding: string;
   roomNumber: string;
   program: string;
   username: string;
-  isAuthenticated: boolean;
   isVerified: boolean;
-  userType: 'student' | 'faculty';
+  avatar?: string;
+  rank: 'Bronze' | 'Silver' | 'Gold' | 'Platinum' | 'Diamond';
+  points: number;
+  loginStreak: number;
+  postsCount: number;
+}
+
+interface Comment {
+  id: string;
+  author: User;
+  content: string;
+  createdAt: Date;
+  likes: number;
 }
 
 interface Post {
   id: string;
-  type: 'text' | 'image' | 'video' | 'poll' | 'event' | 'alert';
+  type: 'text' | 'image' | 'video' | 'poll' | 'event' | 'alert' | 'vote';
   content: string;
-  author: string;
-  timestamp: Date;
-  likes: number;
-  comments: number;
-  shares: number;
-  isLiked: boolean;
-  isSaved: boolean;
-  isPinned: boolean;
+  author: User;
   category: string;
-  image?: string;
-  video?: string;
-  pollOptions?: string[];
-  pollVotes?: number[];
-  pollVoters?: string[]; // Track who voted for what
+  hashtags: string[];
+  emoji?: string;
+  pollOptions?: { text: string; votes: number; voters: string[] }[];
   eventDetails?: {
     date: string;
     time: string;
     location: string;
     description: string;
   };
-  hashtags: string[];
-  emoji?: string;
+  image?: string;
+  video?: string;
+  likes: number;
+  comments: Comment[];
+  shares: number;
+  createdAt: Date;
+  isLiked: boolean;
+  isShared: boolean;
+  isVoted?: boolean;
+  voteOption?: string;
 }
 
 const CampusSocialHub: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [showAuth, setShowAuth] = useState(true);
-  const [showVerification, setShowVerification] = useState(false);
+  const [, setLocation] = useLocation();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [newPost, setNewPost] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [postType, setPostType] = useState<'text' | 'image' | 'video' | 'poll' | 'event'>('text');
-  const [hashtags, setHashtags] = useState('');
-  const [selectedEmoji, setSelectedEmoji] = useState('');
-  const [showBiometricPrompt, setShowBiometricPrompt] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(0);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showRankings, setShowRankings] = useState(false);
+  const [commentText, setCommentText] = useState('');
 
-  // Demo mode function
-  const enableDemoMode = () => {
-    const demoUser: User = {
-      firstName: 'Demo',
-      lastName: 'Student',
-      studentId: 'DEMO123456',
-      email: 'demo@hocking.edu',
-      dormBuilding: 'North',
-      roomNumber: '101',
-      program: 'Computer Science',
-      username: 'demo_student',
-      isAuthenticated: true,
-      isVerified: true,
-      userType: 'student'
-    };
-    
-    // Sample posts for demo mode
-    const samplePosts: Post[] = [
-      {
-        id: 'demo-1',
-        type: 'text',
-        content: 'Just finished my final project for Computer Science! Anyone want to grab coffee and celebrate? ☕ #CS #Finals #Celebration',
-        author: 'Sarah Johnson',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        likes: 12,
-        comments: 3,
-        shares: 1,
-        isLiked: false,
-        isSaved: false,
-        isPinned: false,
-        category: 'social',
-        hashtags: ['CS', 'Finals', 'Celebration']
-      },
-      {
-        id: 'demo-2',
-        type: 'event',
-        content: 'Study group for Biology 101 tomorrow at 3 PM in the library! Bring your notes and questions. All welcome! 📚',
-        author: 'Mike Chen',
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-        likes: 8,
-        comments: 5,
-        shares: 2,
-        isLiked: true,
-        isSaved: false,
-        isPinned: false,
-        category: 'study',
-        hashtags: ['Biology', 'StudyGroup', 'Library'],
-        eventDetails: {
-          date: '2024-01-15',
-          time: '3:00 PM',
-          location: 'Library - Study Room A',
-          description: 'Study group for Biology 101. Bring your notes and questions!'
-        }
-      },
-      {
-        id: 'demo-3',
-        type: 'poll',
-        content: 'What should we do for the dorm movie night this weekend? 🎬',
-        author: 'Emma Davis',
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
-        likes: 15,
-        comments: 2,
-        shares: 0,
-        isLiked: false,
-        isSaved: false,
-        isPinned: false,
-        category: 'social',
-        hashtags: ['MovieNight', 'Weekend'],
-        pollOptions: ['Action Movie', 'Comedy', 'Horror', 'Romance'],
-        pollVotes: [8, 12, 3, 7],
-        pollVoters: ['demo@hocking.edu', '1', 'sarah@hocking.edu', '2'] // demo user voted for comedy
-      },
-      {
-        id: 'demo-4',
-        type: 'alert',
-        content: '⚠️ Maintenance Notice: Hot water will be temporarily unavailable in North Hall tomorrow from 9 AM to 2 PM. Sorry for the inconvenience!',
-        author: 'Housing Office',
-        timestamp: new Date(Date.now() - 8 * 60 * 60 * 1000), // 8 hours ago
-        likes: 5,
-        comments: 1,
-        shares: 8,
-        isLiked: false,
-        isSaved: true,
-        isPinned: true,
-        category: 'housing',
-        hashtags: ['Maintenance', 'NorthHall', 'Notice']
-      },
-      {
-        id: 'demo-5',
-        type: 'text',
-        content: 'Lost my student ID card somewhere between the dining hall and North Hall. If anyone finds it, please message me! 🙏 #LostCard #NorthHall',
-        author: 'Alex Thompson',
-        timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
-        likes: 3,
-        comments: 2,
-        shares: 1,
-        isLiked: false,
-        isSaved: false,
-        isPinned: false,
-        category: 'housing',
-        hashtags: ['LostCard', 'NorthHall']
-      }
-    ];
-    
-    setUser(demoUser);
-    setPosts(samplePosts);
-    setShowAuth(false);
-    setShowVerification(false);
-    localStorage.setItem('campusSocialHubUser', JSON.stringify(demoUser));
-    
-    toast({
-      title: "Demo Mode Activated! 🎉",
-      description: "You're now in demo mode with sample posts. All features are available for testing.",
-    });
+  // Demo user data with ranking system
+  const demoUser: User = {
+    id: '1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@hocking.edu',
+    userType: 'student',
+    dormBuilding: 'East Hall',
+    roomNumber: '205',
+    program: 'Computer Science',
+    username: 'johndoe2024',
+    isVerified: true,
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    rank: 'Gold',
+    points: 1250,
+    loginStreak: 7,
+    postsCount: 23
   };
 
-  // Check for existing login on component mount
-  useEffect(() => {
-    const savedUser = localStorage.getItem('campusSocialHubUser');
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      if (userData.isVerified) {
-        setUser(userData);
-        setShowAuth(false);
-      } else {
-        setShowVerification(true);
-        // Check verification status periodically
-        const checkVerificationStatus = async () => {
-          try {
-            // For now, we'll simulate checking status
-            // In a real implementation, you'd store the requestId and check it
-            const response = await fetch('http://localhost:3000/api/verification/pending');
-            const data = await response.json();
-            
-            if (data.success) {
-                      // Check if our user is in the approved list
-        // This is a simplified check - in production you'd track the specific requestId
-        const approvedUser = data.verifications.find((v: any) => 
-          v.user.email === userData.email && v.status === 'approved'
-        );
-        
-        if (approvedUser) {
-          const updatedUser = { ...userData, isVerified: true, isAuthenticated: true };
-          setUser(updatedUser);
-          setShowVerification(false);
-          setShowAuth(false);
-          localStorage.setItem('campusSocialHubUser', JSON.stringify(updatedUser));
-          
-          // Request notification permission and enable biometric if available
-          notificationService.requestPermission();
-          if (await biometricAuth.isBiometricAvailable()) {
-            setShowBiometricPrompt(true);
-          }
-          
-          toast({
-            title: "Account Verified! 🎉",
-            description: "Your account has been approved. Welcome to the Campus Social Hub!",
-          });
-        }
-            }
-          } catch (error) {
-            console.error('Error checking verification status:', error);
-          }
-        };
-        
-        // Check every 30 seconds
-        const interval = setInterval(checkVerificationStatus, 30000);
-        return () => clearInterval(interval);
-      }
-    }
-  }, []);
-
-  // Sample posts data with enhanced poll functionality
-  const samplePosts: Post[] = [
-    {
-      id: '1',
-      type: 'alert',
-      content: 'Heads up, Hawks! Water will be shut off in North Hall for repairs this Friday from 10AM–2PM.',
-      author: 'Housing Office',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      likes: 34,
-      comments: 12,
-      shares: 5,
-      isLiked: false,
-      isSaved: false,
-      isPinned: true,
-      category: 'alerts',
-      hashtags: ['#maintenance', '#northhall', '#water']
-    },
-    {
-      id: '2',
-      type: 'event',
-      content: 'Karaoke Night @ The Student Center! Come sing your favorite hits & win prizes! Free Pizza | Raffle Drawings',
-      author: 'Student Center',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      likes: 98,
-      comments: 24,
-      shares: 15,
-      isLiked: false,
-      isSaved: false,
-      isPinned: false,
-      category: 'events',
-      eventDetails: {
-        date: 'Thursday',
-        time: '7PM',
-        location: 'Student Center',
-        description: 'Karaoke Night with prizes and free pizza!'
-      },
-      hashtags: ['#karaoke', '#studentcenter', '#fun']
-    },
-    {
-      id: '3',
-      type: 'text',
-      content: 'Use the ChatGPT to set up a study guide. Study 25 mins, break for 5. Comment your go-to study hack below!',
-      author: 'CA Jodian',
-      timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000),
-      likes: 60,
-      comments: 18,
-      shares: 8,
-      isLiked: false,
-      isSaved: false,
-      isPinned: false,
-      category: 'wellness',
-      hashtags: ['#studytips', '#finals', '#chatgpt'],
-      emoji: '📚'
-    },
-    {
-      id: '4',
-      type: 'image',
-      content: 'Weekend Recap: Bonfire Highlights - What a night! Catch the best moments from Saturday\'s Bonfire',
-      author: 'Campus Life',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      likes: 115,
-      comments: 20,
-      shares: 12,
-      isLiked: false,
-      isSaved: false,
-      isPinned: false,
-      category: 'student-life',
-      image: '/api/placeholder/400/300',
-      hashtags: ['#bonfire', '#weekend', '#highlights']
-    },
-    {
-      id: '5',
-      type: 'poll',
-      content: 'Vote for the Next Movie Night Feature! Vote ends Friday @ 4PM',
-      author: 'Campus Life Team',
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-      likes: 42,
-      comments: 8,
-      shares: 3,
-      isLiked: false,
-      isSaved: false,
-      isPinned: false,
-      category: 'events',
-      pollOptions: ['Barbie', 'Oppenheimer', 'Spider-Verse'],
-      pollVotes: [15, 12, 15],
-      pollVoters: [],
-      hashtags: ['#movienight', '#vote', '#campuslife']
-    },
-    {
-      id: '6',
-      type: 'poll',
-      content: 'What\'s your favorite campus dining option?',
-      author: 'Campus Life Team',
-      timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
-      likes: 28,
-      comments: 5,
-      shares: 2,
-      isLiked: false,
-      isSaved: false,
-      isPinned: false,
-      category: 'student-life',
-      pollOptions: ['Student Center Cafe', 'Dining Hall', 'Food Trucks', 'Off-campus'],
-      pollVotes: [8, 12, 6, 2],
-      pollVoters: [],
-      hashtags: ['#dining', '#campuslife', '#food']
-    }
+  const topUsers: User[] = [
+    { ...demoUser, firstName: 'Sarah', lastName: 'Wilson', username: 'sarahw', rank: 'Diamond', points: 2100, loginStreak: 15, postsCount: 45 },
+    { ...demoUser, firstName: 'Mike', lastName: 'Chen', username: 'mikechen', rank: 'Platinum', points: 1800, loginStreak: 12, postsCount: 38 },
+    { ...demoUser, firstName: 'Emma', lastName: 'Davis', username: 'emmad', rank: 'Gold', points: 1250, loginStreak: 7, postsCount: 23 },
+    { ...demoUser, firstName: 'Alex', lastName: 'Johnson', username: 'alexj', rank: 'Silver', points: 850, loginStreak: 5, postsCount: 15 },
+    { ...demoUser, firstName: 'Taylor', lastName: 'Brown', username: 'taylorb', rank: 'Bronze', points: 450, loginStreak: 3, postsCount: 8 }
   ];
 
   useEffect(() => {
-    setPosts(samplePosts);
-    
-    // Load approved posts from server
-    const loadApprovedPosts = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/posts/approved');
-        const data = await response.json();
-        
-        if (data.success) {
-          // Convert server posts to local format
-          const serverPosts = data.posts.map((post: any) => ({
-            id: post.id,
-            type: post.type,
-            content: post.content,
-            author: post.author.firstName + ' ' + post.author.lastName,
-            timestamp: new Date(post.submittedAt),
-            likes: 0,
-            comments: 0,
-            shares: 0,
-            isLiked: false,
-            isSaved: false,
-            isPinned: false,
-            category: post.category,
-            hashtags: post.hashtags,
-            emoji: post.emoji,
-            pollOptions: post.pollOptions,
-            pollVotes: post.pollOptions ? new Array(post.pollOptions.length).fill(0) : undefined,
-            pollVoters: [],
-            eventDetails: post.eventDetails
-          }));
-          
-          setPosts([...serverPosts, ...samplePosts]);
-        }
-      } catch (error) {
-        console.error('Error loading approved posts:', error);
-      }
-    };
-    
-    loadApprovedPosts();
-    
-    // Update notification count
-    const updateNotificationCount = () => {
-      setNotificationCount(notificationService.getUnreadCount());
-    };
-    
-    updateNotificationCount();
-    const interval = setInterval(updateNotificationCount, 5000);
-    
-    return () => clearInterval(interval);
+    // Load user data from localStorage or create demo user
+    const savedUser = localStorage.getItem('campusSocialHubUser');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    } else {
+      setCurrentUser(demoUser);
+      localStorage.setItem('campusSocialHubUser', JSON.stringify(demoUser));
+    }
+
+    // Load demo posts
+    loadDemoPosts();
+    setIsLoading(false);
   }, []);
 
-  const handleAuthSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    
-    const userData = {
-      firstName: formData.get('firstName') as string,
-      lastName: formData.get('lastName') as string,
-      studentId: formData.get('studentId') as string,
-      email: formData.get('email') as string,
-      dormBuilding: formData.get('dormBuilding') as string,
-      roomNumber: formData.get('roomNumber') as string,
-      program: formData.get('program') as string,
-      username: formData.get('username') as string,
-      userType: formData.get('userType') as 'student' | 'faculty'
+  const loadDemoPosts = () => {
+    const demoPosts: Post[] = [
+      {
+        id: '1',
+        type: 'vote',
+        content: '🎬 Movie Night Vote! Which movie should we watch this Friday? Vote below! #movienight #campuslife',
+        author: { ...demoUser, firstName: 'Campus', lastName: 'Activities', username: 'campusactivities' },
+        category: 'events',
+        hashtags: ['movienight', 'campuslife', 'vote'],
+        emoji: '🎬',
+        pollOptions: [
+          { text: 'Avengers: Endgame 🦸‍♂️', votes: 45, voters: [] },
+          { text: 'The Lion King 🦁', votes: 32, voters: [] },
+          { text: 'Jurassic Park 🦖', votes: 28, voters: [] },
+          { text: 'Frozen ❄️', votes: 15, voters: [] }
+        ],
+        likes: 89,
+        comments: [
+          {
+            id: 'c1',
+            author: { ...demoUser, firstName: 'Sarah', lastName: 'Wilson', username: 'sarahw' },
+            content: 'Avengers all the way! 🦸‍♂️',
+            createdAt: new Date(Date.now() - 1000 * 60 * 30),
+            likes: 12
+          },
+          {
+            id: 'c2',
+            author: { ...demoUser, firstName: 'Mike', lastName: 'Chen', username: 'mikechen' },
+            content: 'Jurassic Park is a classic! 🦖',
+            createdAt: new Date(Date.now() - 1000 * 60 * 25),
+            likes: 8
+          }
+        ],
+        shares: 15,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+        isLiked: true,
+        isShared: false,
+        isVoted: false
+      },
+      {
+        id: '2',
+        type: 'image',
+        content: '🎨 Door decoration contest is heating up! Check out my Harry Potter themed door! #doorcontest #harrypotter #dormlife',
+        author: { ...demoUser, firstName: 'Emma', lastName: 'Davis', username: 'emmad' },
+        category: 'housing',
+        hashtags: ['doorcontest', 'harrypotter', 'dormlife'],
+        emoji: '🎨',
+        image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&h=400&fit=crop',
+        likes: 156,
+        comments: [
+          {
+            id: 'c3',
+            author: { ...demoUser, firstName: 'Alex', lastName: 'Johnson', username: 'alexj' },
+            content: 'This is amazing! How did you do the floating candles? ✨',
+            createdAt: new Date(Date.now() - 1000 * 60 * 45),
+            likes: 5
+          }
+        ],
+        shares: 23,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 4),
+        isLiked: false,
+        isShared: true
+      },
+      {
+        id: '3',
+        type: 'event',
+        content: '🏈 Hocking Hawks vs. Rival College - Homecoming Game! 🏈\n\nJoin us for the biggest game of the season!',
+        author: { ...demoUser, firstName: 'Athletics', lastName: 'Department', username: 'hockingathletics' },
+        category: 'sports',
+        hashtags: ['football', 'homecoming', 'hawks'],
+        eventDetails: {
+          date: '2024-10-15',
+          time: '7:00 PM',
+          location: 'Hocking College Stadium',
+          description: 'Homecoming football game with pre-game tailgate party starting at 4 PM'
+        },
+        likes: 234,
+        comments: [
+          {
+            id: 'c4',
+            author: { ...demoUser, firstName: 'Taylor', lastName: 'Brown', username: 'taylorb' },
+            content: 'Can\'t wait! Go Hawks! 🦅',
+            createdAt: new Date(Date.now() - 1000 * 60 * 60),
+            likes: 18
+          }
+        ],
+        shares: 67,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 6),
+        isLiked: true,
+        isShared: false
+      },
+      {
+        id: '4',
+        type: 'alert',
+        content: '📚 HOCKING LEARNING DAY & CAREER DAY 📚\n\nMark your calendars! This Friday is our annual Learning Day and Career Fair. Over 50 employers will be on campus!',
+        author: { ...demoUser, firstName: 'Hocking', lastName: 'College', username: 'hockingcollege' },
+        category: 'alerts',
+        hashtags: ['learningday', 'careerday', 'hockingcollege'],
+        image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop',
+        likes: 189,
+        comments: [
+          {
+            id: 'c5',
+            author: { ...demoUser, firstName: 'Sarah', lastName: 'Wilson', username: 'sarahw' },
+            content: 'I\'m so excited! I have 3 interviews scheduled! 🎉',
+            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+            likes: 12
+          }
+        ],
+        shares: 45,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 8),
+        isLiked: false,
+        isShared: true
+      },
+      {
+        id: '5',
+        type: 'video',
+        content: '🎵 Campus Band Practice - Check out our new song! 🎵 #campusband #music #practice',
+        author: { ...demoUser, firstName: 'Campus', lastName: 'Band', username: 'campusband' },
+        category: 'activities',
+        hashtags: ['campusband', 'music', 'practice'],
+        emoji: '🎵',
+        video: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        likes: 78,
+        comments: [
+          {
+            id: 'c6',
+            author: { ...demoUser, firstName: 'Mike', lastName: 'Chen', username: 'mikechen' },
+            content: 'Sounds amazing! When\'s the next concert? 🎤',
+            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3),
+            likes: 6
+          }
+        ],
+        shares: 12,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 10),
+        isLiked: true,
+        isShared: false
+      },
+      {
+        id: '6',
+        type: 'vote',
+        content: '🎉 Event Planning Vote! What should we do for Spring Break? 🌸 #springbreak #vote #campuslife',
+        author: { ...demoUser, firstName: 'Student', lastName: 'Council', username: 'studentcouncil' },
+        category: 'events',
+        hashtags: ['springbreak', 'vote', 'campuslife'],
+        emoji: '🎉',
+        pollOptions: [
+          { text: 'Beach Trip 🏖️', votes: 67, voters: [] },
+          { text: 'Mountain Hiking 🏔️', votes: 34, voters: [] },
+          { text: 'City Tour 🏙️', votes: 28, voters: [] },
+          { text: 'Stay on Campus 📚', votes: 12, voters: [] }
+        ],
+        likes: 145,
+        comments: [
+          {
+            id: 'c7',
+            author: { ...demoUser, firstName: 'Emma', lastName: 'Davis', username: 'emmad' },
+            content: 'Beach trip would be perfect! 🏖️',
+            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 1),
+            likes: 15
+          }
+        ],
+        shares: 34,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 12),
+        isLiked: false,
+        isShared: false,
+        isVoted: false
+      },
+      {
+        id: '7',
+        type: 'text',
+        content: '🏠 Living on campus has been such an amazing experience! Just finished my first month and I love the community here. The dining hall food is actually pretty good, and I\'ve made so many friends in my dorm. Late night study sessions in the common room are the best! 📚✨ #campuslife #dormlife #hockingcollege #newstudent',
+        author: { ...demoUser, firstName: 'Jessica', lastName: 'Martinez', username: 'jessmartinez', rank: 'Silver', points: 750, loginStreak: 4, postsCount: 12 },
+        category: 'housing',
+        hashtags: ['campuslife', 'dormlife', 'hockingcollege', 'newstudent'],
+        emoji: '🏠',
+        image: 'https://images.unsplash.com/photo-1523240797358-0c6d0c4b0e1c?w=600&h=400&fit=crop',
+        likes: 89,
+        comments: [
+          {
+            id: 'c8',
+            author: { ...demoUser, firstName: 'Sarah', lastName: 'Wilson', username: 'sarahw' },
+            content: 'Welcome to the Hocking family! 🎉 The community here is really special',
+            createdAt: new Date(Date.now() - 1000 * 60 * 45),
+            likes: 8
+          },
+          {
+            id: 'c9',
+            author: { ...demoUser, firstName: 'Mike', lastName: 'Chen', username: 'mikechen' },
+            content: 'Wait until you try the weekend brunch! 🍳',
+            createdAt: new Date(Date.now() - 1000 * 60 * 30),
+            likes: 5
+          }
+        ],
+        shares: 12,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 14),
+        isLiked: true,
+        isShared: false
+      },
+      {
+        id: '8',
+        type: 'text',
+        content: '🚗 Commuter life update! The new commuter lounge is absolutely amazing! 🏢 Perfect place to study between classes, grab coffee, and meet other commuter students. The free WiFi is super fast and there\'s even a quiet room for when I need to focus. Thanks Hocking for thinking of us commuters! ☕📖 #commuterlife #studylounge #hockingcollege #commuterstudent',
+        author: { ...demoUser, firstName: 'David', lastName: 'Thompson', username: 'davidthompson', rank: 'Bronze', points: 320, loginStreak: 2, postsCount: 6 },
+        category: 'academic',
+        hashtags: ['commuterlife', 'studylounge', 'hockingcollege', 'commuterstudent'],
+        emoji: '🚗',
+        image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop',
+        likes: 67,
+        comments: [
+          {
+            id: 'c10',
+            author: { ...demoUser, firstName: 'Alex', lastName: 'Johnson', username: 'alexj' },
+            content: 'I love the commuter lounge too! The coffee machine is a lifesaver ☕',
+            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+            likes: 4
+          },
+          {
+            id: 'c11',
+            author: { ...demoUser, firstName: 'Emma', lastName: 'Davis', username: 'emmad' },
+            content: 'As a residential student, I\'m jealous! 😄 The lounge looks so nice',
+            createdAt: new Date(Date.now() - 1000 * 60 * 60 * 1),
+            likes: 3
+          }
+        ],
+        shares: 8,
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 16),
+        isLiked: false,
+        isShared: true
+      }
+    ];
+
+    setPosts(demoPosts);
+  };
+
+  const handleCreatePost = () => {
+    if (!newPost.trim() || !currentUser) return;
+
+    const post: Post = {
+      id: Date.now().toString(),
+      type: 'text',
+      content: newPost,
+      author: currentUser,
+      category: selectedCategory,
+      hashtags: newPost.match(/#\w+/g)?.map(tag => tag.slice(1)) || [],
+      likes: 0,
+      comments: [],
+      shares: 0,
+      createdAt: new Date(),
+      isLiked: false,
+      isShared: false
     };
 
-    try {
-      const response = await fetch('http://localhost:3000/api/verification/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setShowAuth(false);
-        setShowVerification(true);
-        
-        // Store user data locally for later use
-        const fullUserData: User = {
-          ...userData,
-          isAuthenticated: false,
-          isVerified: false
-        };
-        localStorage.setItem('campusSocialHubUser', JSON.stringify(fullUserData));
-        
-        toast({
-          title: "Registration Submitted! 📧",
-          description: "Your registration has been sent to the housing office for verification. You'll receive an email notification once approved.",
-        });
-      } else {
-        toast({
-          title: "Registration Failed",
-          description: data.message || "Failed to submit registration. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Error submitting registration:', error);
-      toast({
-        title: "Registration Failed",
-        description: "Failed to connect to server. Please try again.",
-        variant: "destructive",
-      });
+    setPosts(prev => [post, ...prev]);
+    setNewPost('');
+    setShowCreatePost(false);
+    
+    // Award points for posting
+    if (currentUser) {
+      const updatedUser = { ...currentUser, points: currentUser.points + 10, postsCount: currentUser.postsCount + 1 };
+      setCurrentUser(updatedUser);
+      localStorage.setItem('campusSocialHubUser', JSON.stringify(updatedUser));
     }
   };
 
-  const handleLogout = () => {
-    setUser(null);
-    setShowAuth(true);
-    setShowVerification(false);
-    localStorage.removeItem('campusSocialHubUser');
-    
-    toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out.",
-    });
-  };
-
-  const handleLike = (postId: string) => {
-    setPosts(posts.map(post => 
+  const handleLikePost = (postId: string) => {
+    setPosts(prev => prev.map(post => 
       post.id === postId 
-        ? { ...post, likes: post.isLiked ? post.likes - 1 : post.likes + 1, isLiked: !post.isLiked }
+        ? { ...post, isLiked: !post.isLiked, likes: post.isLiked ? post.likes - 1 : post.likes + 1 }
         : post
     ));
   };
 
-  const handleSave = (postId: string) => {
-    setPosts(posts.map(post => 
+  const handleSharePost = (postId: string) => {
+    setPosts(prev => prev.map(post => 
       post.id === postId 
-        ? { ...post, isSaved: !post.isSaved }
+        ? { ...post, isShared: !post.isShared, shares: post.isShared ? post.shares - 1 : post.shares + 1 }
         : post
     ));
   };
 
   const handleVote = (postId: string, optionIndex: number) => {
-    if (!user) return;
-
-    setPosts(posts.map(post => {
-      if (post.id === postId && post.type === 'poll') {
-        const currentVotes = [...(post.pollVotes || [])];
-        const currentVoters = [...(post.pollVoters || [])];
-        
-        // Check if user already voted
-        const userVoteIndex = currentVoters.indexOf(user.email);
-        
-        if (userVoteIndex !== -1) {
-          // User already voted, remove their previous vote
-          const previousVote = parseInt(currentVoters[userVoteIndex + 1] || '0');
-          currentVotes[previousVote] = Math.max(0, currentVotes[previousVote] - 1);
-          currentVoters.splice(userVoteIndex, 2); // Remove user and their vote
-        }
-        
-        // Add new vote
-        currentVotes[optionIndex] = (currentVotes[optionIndex] || 0) + 1;
-        currentVoters.push(user.email, optionIndex.toString());
-        
-        return {
-          ...post,
-          pollVotes: currentVotes,
-          pollVoters: currentVoters
-        };
+    setPosts(prev => prev.map(post => {
+      if (post.id === postId && post.pollOptions) {
+        const updatedOptions = post.pollOptions.map((option, index) => {
+          if (index === optionIndex) {
+            return { ...option, votes: option.votes + 1, voters: [...option.voters, currentUser?.id || ''] };
+          }
+          return option;
+        });
+        return { ...post, pollOptions: updatedOptions, isVoted: true, voteOption: post.pollOptions[optionIndex].text };
       }
       return post;
     }));
-
-    toast({
-      title: "Vote Cast! 🗳️",
-      description: "Your vote has been recorded and the results updated.",
-    });
   };
 
-  const handleCreatePost = async () => {
-    if (!newPost.trim() || !user) return;
+  const handleAddComment = (postId: string) => {
+    if (!commentText.trim() || !currentUser) return;
 
-    try {
-      const postData = {
-        type: postType,
-        content: newPost,
-        author: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          userType: user.userType
-        },
-        category: selectedCategory,
-        hashtags: hashtags.split(' ').filter(tag => tag.startsWith('#')),
-        emoji: selectedEmoji,
-        pollOptions: postType === 'poll' ? ['Option 1', 'Option 2', 'Option 3'] : undefined,
-        eventDetails: postType === 'event' ? {
-          date: 'TBD',
-          time: 'TBD',
-          location: 'TBD',
-          description: 'Event details to be determined'
-        } : undefined
-      };
+    const comment: Comment = {
+      id: Date.now().toString(),
+      author: currentUser,
+      content: commentText,
+      createdAt: new Date(),
+      likes: 0
+    };
 
-      const response = await fetch('http://localhost:3000/api/posts/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
+    setPosts(prev => prev.map(post => 
+      post.id === postId 
+        ? { ...post, comments: [...post.comments, comment] }
+        : post
+    ));
 
-      const data = await response.json();
+    setCommentText('');
+  };
 
-      if (data.success) {
-        setNewPost('');
-        setHashtags('');
-        setSelectedEmoji('');
-        setShowCreatePost(false);
-        
-        toast({
-          title: "Post Submitted for Approval 📝",
-          description: "Your post has been sent to the housing office for review. You'll be notified when it's approved!",
-        });
-      } else {
-        toast({
-          title: "Post Submission Failed",
-          description: data.message || "Failed to submit post. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Error submitting post:', error);
-      toast({
-        title: "Post Submission Failed",
-        description: "Failed to connect to server. Please try again.",
-        variant: "destructive",
-      });
+  const getPostTypeIcon = (type: string) => {
+    switch (type) {
+      case 'image': return <Image className="h-4 w-4" />;
+      case 'video': return <Video className="h-4 w-4" />;
+      case 'poll': return <FileText className="h-4 w-4" />;
+      case 'vote': return <ThumbsUp className="h-4 w-4" />;
+      case 'event': return <Calendar className="h-4 w-4" />;
+      case 'alert': return <AlertTriangle className="h-4 w-4" />;
+      default: return <MessageSquare className="h-4 w-4" />;
     }
   };
 
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const days = Math.floor(hours / 24);
-
-    if (days > 0) return `${days}d ago`;
-    if (hours > 0) return `${hours}h ago`;
-    return 'Just now';
+  const getPostTypeColor = (type: string) => {
+    switch (type) {
+      case 'alert': return 'bg-red-100 text-red-800 border-red-200';
+      case 'event': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'vote': return 'bg-green-100 text-green-800 border-green-200';
+      case 'poll': return 'bg-purple-100 text-purple-800 border-purple-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
   };
 
-  const getVotePercentage = (votes: number, totalVotes: number) => {
-    if (totalVotes === 0) return 0;
-    return Math.round((votes / totalVotes) * 100);
+  const getRankIcon = (rank: string) => {
+    switch (rank) {
+      case 'Diamond': return <Trophy className="h-4 w-4 text-purple-500" />;
+      case 'Platinum': return <Award className="h-4 w-4 text-blue-500" />;
+      case 'Gold': return <Star className="h-4 w-4 text-yellow-500" />;
+      case 'Silver': return <TrendingUp className="h-4 w-4 text-gray-400" />;
+      case 'Bronze': return <ThumbsUp className="h-4 w-4 text-orange-500" />;
+      default: return <Star className="h-4 w-4 text-gray-400" />;
+    }
   };
 
-  const getUserVote = (post: Post) => {
-    if (!user || !post.pollVoters) return -1;
-    const userIndex = post.pollVoters.indexOf(user.email);
-    if (userIndex === -1) return -1;
-    return parseInt(post.pollVoters[userIndex + 1] || '-1');
-  };
-
-  const filteredPosts = selectedCategory === 'all' 
-    ? posts 
-    : posts.filter(post => post.category === selectedCategory);
-
-  if (showAuth) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md"
-        >
-          <Card className="border-2 border-blue-600 shadow-xl">
-            <CardHeader className="text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-white/20 rounded-full">
-                  <Users className="h-8 w-8" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl">Campus Social Hub</CardTitle>
-              <p className="text-blue-100">Join the community!</p>
-            </CardHeader>
-            <CardContent className="p-6">
-              <form onSubmit={handleAuthSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-sm font-medium">First Name *</label>
-                    <Input name="firstName" required />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Last Name *</label>
-                    <Input name="lastName" required />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium">Student ID Number *</label>
-                  <Input name="studentId" required />
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium">School Email *</label>
-                  <Input name="email" type="email" required />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium">User Type *</label>
-                  <Select name="userType" required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select user type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="student">Student</SelectItem>
-                      <SelectItem value="faculty">Faculty</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-sm font-medium">Dorm Building *</label>
-                    <Select name="dormBuilding" required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select building" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="North">North</SelectItem>
-                        <SelectItem value="Downhour">Downhour</SelectItem>
-                        <SelectItem value="Hocking Heights">Hocking Heights</SelectItem>
-                        <SelectItem value="Summit">Summit</SelectItem>
-                        <SelectItem value="Sycamore">Sycamore</SelectItem>
-                        <SelectItem value="International Housing">International Housing</SelectItem>
-                        <SelectItem value="Opportunity House">Opportunity House</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Room Number *</label>
-                    <Input name="roomNumber" required />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium">Program of Study *</label>
-                  <Input name="program" required />
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium">Username *</label>
-                  <Input name="username" required />
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium">Password *</label>
-                  <Input name="password" type="password" required />
-                </div>
-                
-                <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                  Submit for Verification
-                </Button>
-              </form>
-              
-              {/* Demo Mode Button */}
-              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <div className="text-center mb-3">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">For testing and demonstration purposes:</p>
-                </div>
-                <Button 
-                  type="button" 
-                  onClick={enableDemoMode}
-                  variant="outline"
-                  className="w-full border-2 border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
-                >
-                  🚀 Try Demo Mode
-                </Button>
-                <p className="text-xs text-gray-500 dark:text-gray-500 text-center mt-2">
-                  Skip registration and explore all features instantly
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
   }
 
-  if (showVerification) {
+  if (!currentUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md"
-        >
-          <Card className="border-2 border-yellow-600 shadow-xl">
-            <CardHeader className="text-center bg-gradient-to-r from-yellow-600 to-orange-600 text-white">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-white/20 rounded-full">
-                  <CheckCircle className="h-8 w-8" />
-                </div>
-              </div>
-              <CardTitle className="text-2xl">Verification Pending</CardTitle>
-              <p className="text-yellow-100">Your account is being reviewed</p>
-            </CardHeader>
-            <CardContent className="p-6 text-center">
-              <div className="space-y-4">
-                <div className="animate-pulse">
-                  <div className="w-16 h-16 bg-yellow-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Clock className="h-8 w-8 text-yellow-600" />
-                  </div>
-                </div>
-                <p className="text-gray-700 dark:text-gray-300">
-                  Your registration has been submitted to the housing office for verification. 
-                  You'll receive an email notification once your account is approved.
-                </p>
-                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
-                  <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                    <strong>Note:</strong> Only verified students and faculty members can access the Campus Social Hub.
-                  </p>
-                </div>
-                <Button 
-                  onClick={() => setShowAuth(true)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Back to Registration
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="mx-auto mb-4 p-3 bg-red-100 rounded-full w-fit">
+              <XCircle className="h-8 w-8 text-red-600" />
+            </div>
+            <CardTitle className="text-red-600">Access Denied</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="text-gray-600 mb-4">
+              You need to be a verified student or faculty member to access the Campus Social Hub.
+            </p>
+            <Button onClick={() => setLocation('/housing')}>
+              Return to Housing
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/housing">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
+              <button 
+                onClick={() => setLocation('/housing')}
+                className="flex items-center text-primary hover:text-primary-dark transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5 mr-2" />
+                <span>Back to Housing</span>
+              </button>
               <div>
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Campus Social Hub</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Where Campus Life Comes to Life!</p>
+                <h1 className="text-2xl font-bold text-gray-900">Campus Social Hub</h1>
+                <p className="text-gray-600">Connect with your campus community</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Welcome, {user?.firstName}!</span>
-                <Badge variant="outline" className="text-xs">
-                  {user?.userType}
-                </Badge>
-                {user?.email === 'demo@hocking.edu' && (
-                  <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                    🚀 Demo Mode
+            <div className="flex items-center gap-3">
+              <Badge className="bg-green-100 text-green-800 border-green-200">
+                <CheckCircle className="h-4 w-4 mr-1" />
+                Verified User
+              </Badge>
+              <Button onClick={() => setShowRankings(true)} variant="outline">
+                <Trophy className="h-4 w-4 mr-2" />
+                Rankings
+              </Button>
+              <Button onClick={() => setShowCreatePost(true)}>
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Create Post
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        {/* User Stats Card */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6 border border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                {currentUser.firstName[0]}{currentUser.lastName[0]}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-900">
+                    {currentUser.firstName} {currentUser.lastName}
+                  </span>
+                  {getRankIcon(currentUser.rank)}
+                  <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                    {currentUser.rank}
                   </Badge>
-                )}
+                </div>
+                <div className="text-sm text-gray-500">
+                  {currentUser.points} points • {currentUser.loginStreak} day streak • {currentUser.postsCount} posts
+                </div>
               </div>
-              
-              {/* Notification Bell with Counter */}
-              <div className="relative">
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  onClick={() => setShowNotifications(!showNotifications)}
-                >
-                  <Bell className="h-4 w-4" />
-                  {notificationCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {notificationCount > 99 ? '99+' : notificationCount}
-                    </span>
-                  )}
-                </Button>
-                
-                {/* Notifications Dropdown */}
-                {showNotifications && (
-                  <div className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
-                    <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                      <h3 className="font-semibold text-gray-900 dark:text-white">Notifications</h3>
-                      <p className="text-sm text-gray-500">{notificationCount} unread</p>
-                    </div>
-                    <div className="p-2">
-                      {notificationService.getNotifications().slice(0, 10).map((notification) => (
-                        <div 
-                          key={notification.id} 
-                          className={`p-3 rounded-lg mb-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                            !notification.isRead ? 'bg-blue-50 dark:bg-blue-900/20' : ''
-                          }`}
-                          onClick={() => {
-                            notificationService.markAsRead(notification.id);
-                            setNotificationCount(notificationService.getUnreadCount());
-                          }}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="flex-shrink-0">
-                              {notification.type === 'post_approved' && '🎉'}
-                              {notification.type === 'post_rejected' && '❌'}
-                              {notification.type === 'new_post' && '📝'}
-                              {notification.type === 'system' && '🔔'}
-                              {notification.type === 'event' && '📅'}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-gray-900 dark:text-white">
-                                {notification.title}
-                              </p>
-                              <p className="text-sm text-gray-500 dark:text-gray-400">
-                                {notification.message}
-                              </p>
-                              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                                {new Date(notification.timestamp).toLocaleString()}
-                              </p>
-                            </div>
-                            {!notification.isRead && (
-                              <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                      {notificationService.getNotifications().length === 0 && (
-                        <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-                          No notifications yet
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleLogout}>
-                Logout
-              </Button>
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-gray-900">{currentUser.points}</div>
+              <div className="text-sm text-gray-500">Total Points</div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        {/* Welcome Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <Card className="border-2 border-gradient-to-r from-blue-600 to-purple-600 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
-            <CardContent className="p-6 text-center">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white">
-                  <Sparkles className="h-6 w-6" />
-                </div>
+        {/* Rankings Modal */}
+        {showRankings && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            onClick={() => setShowRankings(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-lg p-6 w-full max-w-md mx-4 max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">🏆 Campus Rankings</h3>
+                <button onClick={() => setShowRankings(false)}>
+                  <XCircle className="h-5 w-5 text-gray-400" />
+                </button>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                Welcome to the Campus Social Hub! 🎉
-              </h2>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">
-                This is your scrollable space to catch events, updates, alerts, giveaways, photos, and all the fun stuff happening on campus.
-              </p>
-              <div className="flex justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                <span className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  Get connected
-                </span>
-                <span className="flex items-center gap-1">
-                  <Bell className="h-4 w-4" />
-                  Stay updated
-                </span>
-                <span className="flex items-center gap-1">
-                  <Heart className="h-4 w-4" />
-                  Never miss a moment
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Trending Banner */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="mb-6"
-        >
-          <Card className="border-2 border-orange-600 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="h-5 w-5 text-orange-600" />
-                <span className="font-semibold text-orange-800 dark:text-orange-200">Trending on Campus</span>
-                <Badge variant="secondary" className="ml-auto">Live</Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Create Post */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <Card className="border-2 border-green-600">
-            <CardContent className="p-4">
-              <div className="flex gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                  {user?.firstName?.charAt(0) || 'U'}
-                </div>
-                <div className="flex-1">
-                  <Textarea
-                    placeholder="What's happening on campus? Share your thoughts, events, or updates..."
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="min-h-[80px] resize-none"
-                  />
-                  <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowCreatePost(true)}
-                      >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Create Post
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Smile className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Image className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Video className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <Button 
-                      onClick={handleCreatePost}
-                      disabled={!newPost.trim()}
-                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                    >
-                      <Send className="h-4 w-4 mr-1" />
-                      Post
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {['all', 'events', 'alerts', 'wellness', 'student-life', 'reminders'].map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory(category)}
-                className="whitespace-nowrap"
-              >
-                <Filter className="h-3 w-3 mr-1" />
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </Button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Posts Feed */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="space-y-6"
-        >
-          <AnimatePresence>
-            {filteredPosts.map((post, index) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                exit={{ opacity: 0, y: -20 }}
-              >
-                <Card className={`border-2 transition-all duration-300 hover:shadow-lg ${
-                  post.isPinned 
-                    ? 'border-red-600 bg-red-50 dark:bg-red-900/20' 
-                    : 'border-gray-200 dark:border-gray-700'
-                }`}>
-                  <CardContent className="p-6">
-                    {/* Post Header */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                          {post.author.charAt(0)}
-                        </div>
-                        <div>
-                          <div className="font-semibold text-gray-900 dark:text-white">
-                            {post.author}
-                            {post.isPinned && (
-                              <Badge variant="destructive" className="ml-2">
-                                <AlertTriangle className="h-3 w-3 mr-1" />
-                                Pinned
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                            <Clock className="h-3 w-3" />
-                            {formatTimeAgo(post.timestamp)}
-                            <Badge variant="outline" className="text-xs">
-                              {post.category}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </div>
-
-                    {/* Post Content */}
-                    <div className="mb-4">
-                      {post.emoji && (
-                        <span className="text-2xl mr-2">{post.emoji}</span>
-                      )}
-                      <p className="text-gray-900 dark:text-white mb-3">{post.content}</p>
-                      
-                      {/* Event Details */}
-                      {post.type === 'event' && post.eventDetails && (
-                        <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
-                          <CardContent className="p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Calendar className="h-4 w-4 text-blue-600" />
-                              <span className="font-semibold text-blue-800 dark:text-blue-200">
-                                {post.eventDetails.date} at {post.eventDetails.time}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2 mb-2">
-                              <Building className="h-4 w-4 text-blue-600" />
-                              <span className="text-blue-700 dark:text-blue-300">
-                                {post.eventDetails.location}
-                              </span>
-                            </div>
-                            <p className="text-blue-700 dark:text-blue-300 text-sm">
-                              {post.eventDetails.description}
-                            </p>
-                          </CardContent>
-                        </Card>
-                      )}
-
-                      {/* Enhanced Poll with Live Voting */}
-                      {post.type === 'poll' && post.pollOptions && (
-                        <div className="space-y-3">
-                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                            Total votes: {post.pollVotes?.reduce((a, b) => a + b, 0) || 0}
-                          </div>
-                          {post.pollOptions.map((option, idx) => {
-                            const votes = post.pollVotes?.[idx] || 0;
-                            const totalVotes = post.pollVotes?.reduce((a, b) => a + b, 0) || 0;
-                            const percentage = getVotePercentage(votes, totalVotes);
-                            const userVote = getUserVote(post);
-                            const isUserVote = userVote === idx;
-                            
-                            return (
-                              <div 
-                                key={idx} 
-                                className={`relative p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                                  isUserVote 
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                                    : 'border-gray-200 dark:border-gray-700 hover:border-blue-300'
-                                }`}
-                                onClick={() => handleVote(post.id, idx)}
-                              >
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                                      isUserVote 
-                                        ? 'border-blue-500 bg-blue-500' 
-                                        : 'border-gray-400'
-                                    }`}>
-                                      {isUserVote && <CheckCircle className="h-3 w-3 text-white" />}
-                                    </div>
-                                    <span className="font-medium">{option}</span>
-                                  </div>
-                                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                                    {votes} votes ({percentage}%)
-                                  </div>
-                                </div>
-                                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                                  <div 
-                                    className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                                    style={{ width: `${percentage}%` }}
-                                  >        </div>
-      </div>
-
-      {/* Biometric Authentication Modal */}
-      {showBiometricPrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-sm w-full mx-4 text-center">
-            <div className="mb-6">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">👤</span>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Enable Biometric Authentication</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Would you like to enable Face ID or fingerprint authentication for quick access to the Campus Social Hub?
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={() => setShowBiometricPrompt(false)}
-              >
-                Skip
-              </Button>
-              <Button
-                className="flex-1"
-                onClick={async () => {
-                  try {
-                    const availableTypes = await biometricAuth.getAvailableBiometricTypes();
-                    if (availableTypes.includes('face')) {
-                      await biometricAuth.enableBiometric(user?.email || '', 'face');
-                    } else if (availableTypes.includes('fingerprint')) {
-                      await biometricAuth.enableBiometric(user?.email || '', 'fingerprint');
-                    }
-                    setShowBiometricPrompt(false);
-                    toast({
-                      title: "Biometric Authentication Enabled! 🔐",
-                      description: "You can now use Face ID or fingerprint to quickly access the app.",
-                    });
-                  } catch (error) {
-                    toast({
-                      title: "Biometric Setup Failed",
-                      description: "Please try again or contact support.",
-                      variant: "destructive",
-                    });
-                  }
-                }}
-              >
-                Enable
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-})}
-                        </div>
-                      )}
-
-                      {/* Image */}
-                      {post.image && (
-                        <div className="mt-3">
-                          <img 
-                            src={post.image} 
-                            alt="Post content" 
-                            className="w-full rounded-lg"
-                          />
-                        </div>
-                      )}
-
-                      {/* Hashtags */}
-                      {post.hashtags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-3">
-                          {post.hashtags.map((tag, idx) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Post Actions */}
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center gap-6">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleLike(post.id)}
-                          className={`flex items-center gap-1 ${
-                            post.isLiked ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'
-                          }`}
-                        >
-                          <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-current' : ''}`} />
-                          {post.likes}
-                        </Button>
-                        <Button variant="ghost" size="sm" className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                          <MessageCircle className="h-4 w-4" />
-                          {post.comments}
-                        </Button>
-                        <Button variant="ghost" size="sm" className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                          <Share2 className="h-4 w-4" />
-                          {post.shares}
-                        </Button>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleSave(post.id)}
-                        className={`flex items-center gap-1 ${
-                          post.isSaved ? 'text-yellow-600' : 'text-gray-600 dark:text-gray-400'
-                        }`}
-                      >
-                        <Bookmark className={`h-4 w-4 ${post.isSaved ? 'fill-current' : ''}`} />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        {/* Create Post Dialog */}
-        <Dialog open={showCreatePost} onOpenChange={setShowCreatePost}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
-                Create New Post
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <Tabs value={postType} onValueChange={(value) => setPostType(value as any)}>
-                <TabsList className="grid w-full grid-cols-5">
-                  <TabsTrigger value="text">Text</TabsTrigger>
-                  <TabsTrigger value="image">Image</TabsTrigger>
-                  <TabsTrigger value="video">Video</TabsTrigger>
-                  <TabsTrigger value="poll">Poll</TabsTrigger>
-                  <TabsTrigger value="event">Event</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="text" className="space-y-4">
-                  <Textarea
-                    placeholder="Write your post content..."
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="min-h-[120px]"
-                  />
-                </TabsContent>
-                
-                <TabsContent value="image" className="space-y-4">
-                  <Textarea
-                    placeholder="Write your post content..."
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="min-h-[120px]"
-                  />
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <Camera className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-gray-600">Click to upload image</p>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="video" className="space-y-4">
-                  <Textarea
-                    placeholder="Write your post content..."
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="min-h-[120px]"
-                  />
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <Video className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-gray-600">Click to upload video (max 60 seconds)</p>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="poll" className="space-y-4">
-                  <Textarea
-                    placeholder="Ask your question..."
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="min-h-[80px]"
-                  />
-                  <div className="space-y-2">
-                    <Input placeholder="Option 1" />
-                    <Input placeholder="Option 2" />
-                    <Input placeholder="Option 3" />
-                    <Input placeholder="Option 4" />
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="event" className="space-y-4">
-                  <Textarea
-                    placeholder="Event description..."
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    className="min-h-[80px]"
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input placeholder="Date" type="date" />
-                    <Input placeholder="Time" type="time" />
-                  </div>
-                  <Input placeholder="Location" />
-                </TabsContent>
-              </Tabs>
               
               <div className="space-y-3">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="events">Events</SelectItem>
-                    <SelectItem value="alerts">Alerts</SelectItem>
-                    <SelectItem value="wellness">Wellness & Tips</SelectItem>
-                    <SelectItem value="student-life">Student Life</SelectItem>
-                    <SelectItem value="reminders">Reminders</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Input
-                  placeholder="Hashtags (e.g., #campus #fun #events)"
-                  value={hashtags}
-                  onChange={(e) => setHashtags(e.target.value)}
-                />
-                
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">Add emoji:</span>
-                  {['🎉', '📚', '🎵', '🍕', '🔥', '💡', '🎮', '🏠'].map((emoji) => (
-                    <button
-                      key={emoji}
-                      onClick={() => setSelectedEmoji(emoji)}
-                      className={`text-xl p-1 rounded ${
-                        selectedEmoji === emoji ? 'bg-blue-100 dark:bg-blue-900' : ''
-                      }`}
-                    >
-                      {emoji}
-                    </button>
-                  ))}
-                </div>
+                {topUsers.map((user, index) => (
+                  <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">{user.firstName} {user.lastName}</span>
+                          {getRankIcon(user.rank)}
+                        </div>
+                        <div className="text-sm text-gray-500">@{user.username}</div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold">{user.points}</div>
+                      <div className="text-xs text-gray-500">points</div>
+                    </div>
+                  </div>
+                ))}
               </div>
               
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowCreatePost(false)}>
-                  Cancel
-                </Button>
-                <Button 
-                  onClick={handleCreatePost}
-                  disabled={!newPost.trim()}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  Submit for Approval
-                </Button>
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">How to earn points:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Daily login: +5 points</li>
+                  <li>• Create a post: +10 points</li>
+                  <li>• Like a post: +1 point</li>
+                  <li>• Comment on a post: +3 points</li>
+                  <li>• Share a post: +2 points</li>
+                  <li>• Vote in polls: +2 points</li>
+                </ul>
               </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+            </motion.div>
+          </motion.div>
+        )}
 
-      {/* Footer Note */}
-      <div className="bg-white dark:bg-gray-800 border-t mt-12">
-        <div className="container mx-auto px-4 py-6 text-center">
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
-            The Campus Social Hub is more than a feed, it's a real-time digital community space that will improve communication, 
-            student engagement, and help Hocking College feel more connected and fun. Let's make the app a place students want to check every day.
+        {/* Create Post Modal */}
+        {showCreatePost && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            onClick={() => setShowCreatePost(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Create a Post</h3>
+                <button onClick={() => setShowCreatePost(false)}>
+                  <XCircle className="h-5 w-5 text-gray-400" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category
+                  </label>
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="all">General</option>
+                    <option value="academic">Academic</option>
+                    <option value="events">Events</option>
+                    <option value="housing">Housing</option>
+                    <option value="sports">Sports</option>
+                    <option value="alerts">Alerts</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Post
+                  </label>
+                  <Textarea
+                    value={newPost}
+                    onChange={(e) => setNewPost(e.target.value)}
+                    placeholder="What's on your mind? Use emojis! 😊"
+                    className="min-h-[100px]"
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm">
+                    <Image className="h-4 w-4 mr-1" />
+                    Photo
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Video className="h-4 w-4 mr-1" />
+                    Video
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    Event
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <ThumbsUp className="h-4 w-4 mr-1" />
+                    Poll
+                  </Button>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleCreatePost}
+                    disabled={!newPost.trim()}
+                    className="flex-1"
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Post
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowCreatePost(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Posts Feed */}
+        <div className="space-y-6">
+          {posts.map((post) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-lg shadow-md border border-gray-200"
+            >
+              {/* Post Header */}
+              <div className="p-4 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-semibold">
+                      {post.author.firstName[0]}{post.author.lastName[0]}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-900">
+                          {post.author.firstName} {post.author.lastName}
+                        </span>
+                        {post.author.isVerified && (
+                          <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Verified
+                          </Badge>
+                        )}
+                        {getRankIcon(post.author.rank)}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <span>@{post.author.username}</span>
+                        <span>•</span>
+                        <span>{post.createdAt.toLocaleString()}</span>
+                        <span>•</span>
+                        <Badge className={`${getPostTypeColor(post.type)} text-xs`}>
+                          {getPostTypeIcon(post.type)}
+                          <span className="ml-1">{post.type.toUpperCase()}</span>
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <button className="text-gray-400 hover:text-gray-600">
+                    <MoreHorizontal className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Post Content */}
+              <div className="p-4">
+                <p className="text-gray-900 mb-4 text-lg">{post.content}</p>
+                
+                {/* Image */}
+                {post.image && (
+                  <div className="mb-4">
+                    <img 
+                      src={post.image} 
+                      alt="Post content" 
+                      className="w-full rounded-lg"
+                    />
+                  </div>
+                )}
+
+                {/* Video */}
+                {post.video && (
+                  <div className="mb-4">
+                    <video 
+                      controls 
+                      className="w-full rounded-lg"
+                      poster="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=600&h=400&fit=crop"
+                    >
+                      <source src={post.video} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                )}
+                
+                {post.eventDetails && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <h4 className="font-semibold text-blue-900 mb-2">Event Details</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-blue-600" />
+                        <span>{post.eventDetails.date} at {post.eventDetails.time}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-blue-600" />
+                        <span>{post.eventDetails.location}</span>
+                      </div>
+                      <p className="text-blue-800">{post.eventDetails.description}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Poll Options */}
+                {post.pollOptions && (
+                  <div className="space-y-2 mb-4">
+                    {post.pollOptions.map((option, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleVote(post.id, index)}
+                        disabled={post.isVoted}
+                        className={`w-full p-3 text-left rounded-lg border transition ${
+                          post.isVoted && post.voteOption === option.text
+                            ? 'bg-green-100 border-green-300 text-green-800'
+                            : post.isVoted
+                            ? 'bg-gray-100 border-gray-300 text-gray-600'
+                            : 'bg-white border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{option.text}</span>
+                          <span className="font-semibold">{option.votes} votes</span>
+                        </div>
+                        {post.isVoted && (
+                          <div className="mt-2">
+                            <div className="w-full bg-gray-200 rounded-full h-2">
+                              <div 
+                                className="bg-green-500 h-2 rounded-full transition-all"
+                                style={{ width: `${(option.votes / Math.max(...post.pollOptions!.map(o => o.votes))) * 100}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {post.hashtags.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {post.hashtags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Comments */}
+              {post.comments.length > 0 && (
+                <div className="px-4 py-3 border-t border-gray-100 bg-gray-50">
+                  <div className="space-y-3">
+                    {post.comments.map((comment) => (
+                      <div key={comment.id} className="flex gap-3">
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-semibold">
+                          {comment.author.firstName[0]}{comment.author.lastName[0]}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-semibold text-sm">{comment.author.firstName} {comment.author.lastName}</span>
+                            <span className="text-xs text-gray-500">@{comment.author.username}</span>
+                            <span className="text-xs text-gray-500">•</span>
+                            <span className="text-xs text-gray-500">{comment.createdAt.toLocaleString()}</span>
+                          </div>
+                          <p className="text-sm text-gray-900">{comment.content}</p>
+                          <div className="flex items-center gap-4 mt-2">
+                            <button className="text-xs text-gray-500 hover:text-red-500 flex items-center gap-1">
+                              <Heart className="h-3 w-3" />
+                              {comment.likes}
+                            </button>
+                            <button className="text-xs text-gray-500 hover:text-blue-500 flex items-center gap-1">
+                              <MessageCircle className="h-3 w-3" />
+                              Reply
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Add Comment */}
+              <div className="px-4 py-3 border-t border-gray-100">
+                <div className="flex gap-3">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white text-xs font-semibold">
+                    {currentUser.firstName[0]}{currentUser.lastName[0]}
+                  </div>
+                  <div className="flex-1">
+                    <Textarea
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="Add a comment..."
+                      className="min-h-[60px] resize-none"
+                    />
+                    <div className="flex justify-end mt-2">
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleAddComment(post.id)}
+                        disabled={!commentText.trim()}
+                      >
+                        <Send className="h-3 w-3 mr-1" />
+                        Comment
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Post Actions */}
+              <div className="px-4 py-3 border-t border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <button
+                      onClick={() => handleLikePost(post.id)}
+                      className={`flex items-center gap-2 text-sm transition ${
+                        post.isLiked 
+                          ? 'text-red-500' 
+                          : 'text-gray-500 hover:text-red-500'
+                      }`}
+                    >
+                      <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-current' : ''}`} />
+                      <span>{post.likes}</span>
+                    </button>
+                    
+                    <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-blue-500 transition">
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{post.comments.length}</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => handleSharePost(post.id)}
+                      className={`flex items-center gap-2 text-sm transition ${
+                        post.isShared 
+                          ? 'text-green-500' 
+                          : 'text-gray-500 hover:text-green-500'
+                      }`}
+                    >
+                      <Share2 className={`h-4 w-4 ${post.isShared ? 'fill-current' : ''}`} />
+                      <span>{post.shares}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Info Card */}
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">
+            About Campus Social Hub
+          </h3>
+          <p className="text-blue-800 text-sm leading-relaxed">
+            The Campus Social Hub is more than a feed, it's a real-time digital community space that will improve communication,
+            foster connections, and create a vibrant campus culture. Share your experiences, discover events, and stay connected
+            with your fellow students and faculty members. Earn points and climb the rankings by being active in the community!
           </p>
-          <div className="mt-4 text-xs text-gray-500 dark:text-gray-500">
-            <p>Maintenance Contact: Housing Office / App Admin</p>
-            <p>Email: <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">Housing@hocking.edu</a> | Secondary: <a href="mailto:kennedyj1@hocking.edu" className="text-blue-600 hover:underline">kennedyj1@hocking.edu</a></p>
+          <div className="mt-4 flex items-center gap-2 text-sm text-blue-700">
+            <Users className="h-4 w-4" />
+            <span>1,247 active members</span>
           </div>
         </div>
       </div>
