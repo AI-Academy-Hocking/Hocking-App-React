@@ -7,13 +7,11 @@ class MemStorage {
         this.events = new Map();
         this.buildings = new Map();
         this.studentTools = new Map();
-        this.comments = new Map();
         this.safetyAlerts = new Map();
         this.safetyResources = new Map();
         this.currentUserId = 1;
         this.currentEventId = 1;
         this.currentBuildingId = 1;
-        this.currentCommentId = 1;
         this.currentSafetyAlertId = 1;
         this.currentSafetyResourceId = 1;
         // Initialize with sample data
@@ -32,13 +30,12 @@ class MemStorage {
             id,
             username: insertUser.username,
             password: insertUser.password,
-            name: insertUser.name ?? null,
-            email: insertUser.email ?? null,
-            isGuest: insertUser.isGuest ?? null,
-            lat: null,
-            lng: null,
-            isLocationShared: false,
-            lastLocationUpdate: null
+            name: insertUser.name,
+            isGuest: insertUser.isGuest ?? false,
+            createdAt: new Date(),
+            lastLogin: null,
+            location: insertUser.location ?? null,
+            isSharingLocation: insertUser.isSharingLocation ?? false
         };
         this.users.set(id, user);
         return user;
@@ -50,16 +47,14 @@ class MemStorage {
         }
         const updatedUser = {
             ...user,
-            lat: locationUpdate.lat,
-            lng: locationUpdate.lng,
-            isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
-            lastLocationUpdate: new Date()
+            location: locationUpdate.location ?? user.location,
+            isSharingLocation: locationUpdate.isSharingLocation ?? user.isSharingLocation
         };
         this.users.set(userId, updatedUser);
         return updatedUser;
     }
     async getSharedLocations() {
-        return Array.from(this.users.values()).filter((user) => user.isLocationShared && user.lat !== null && user.lng !== null);
+        return Array.from(this.users.values()).filter((user) => user.isSharingLocation && user.location !== null);
     }
     // Event operations
     async getEvents() {
@@ -72,11 +67,14 @@ class MemStorage {
         const id = this.currentEventId++;
         const event = {
             id,
-            date: insertEvent.date,
             title: insertEvent.title,
-            description: insertEvent.description ?? null,
-            time: insertEvent.time,
-            location: insertEvent.location
+            description: insertEvent.description,
+            startTime: insertEvent.startTime,
+            endTime: insertEvent.endTime,
+            location: insertEvent.location,
+            createdAt: new Date(),
+            isRecurring: insertEvent.isRecurring ?? false,
+            recurrencePattern: insertEvent.recurrencePattern ?? null
         };
         this.events.set(id, event);
         return event;
@@ -93,10 +91,12 @@ class MemStorage {
         const building = {
             id,
             name: insertBuilding.name,
-            lat: insertBuilding.lat,
-            lng: insertBuilding.lng,
-            description: insertBuilding.description ?? null,
-            category: insertBuilding.category
+            description: insertBuilding.description,
+            location: insertBuilding.location,
+            createdAt: new Date(),
+            isOpen: insertBuilding.isOpen ?? true,
+            openHours: insertBuilding.openHours ?? null,
+            contactInfo: insertBuilding.contactInfo ?? null
         };
         this.buildings.set(id, building);
         return building;
@@ -109,34 +109,13 @@ class MemStorage {
         return this.studentTools.get(id);
     }
     async createStudentTool(tool) {
-        this.studentTools.set(tool.id, tool);
-        return tool;
-    }
-    // Comment operations
-    async getAllComments() {
-        return Array.from(this.comments.values());
-    }
-    async getComments(discussionId) {
-        return Array.from(this.comments.values()).filter((comment) => comment.discussionId === discussionId && comment.parentId === null);
-    }
-    async getCommentReplies(commentId) {
-        return Array.from(this.comments.values()).filter((comment) => comment.parentId === commentId);
-    }
-    async createComment(insertComment) {
-        const id = this.currentCommentId++;
-        const comment = {
-            id,
-            discussionId: insertComment.discussionId,
-            authorId: insertComment.authorId,
-            content: insertComment.content,
+        const studentTool = {
+            ...tool,
             createdAt: new Date(),
-            parentId: insertComment.parentId ?? null
+            isActive: tool.isActive ?? true
         };
-        this.comments.set(id, comment);
-        return comment;
-    }
-    async getUserComments(userId) {
-        return Array.from(this.comments.values()).filter((comment) => comment.authorId === userId);
+        this.studentTools.set(tool.id, studentTool);
+        return studentTool;
     }
     // Safety Alert operations
     async getSafetyAlerts() {
@@ -145,7 +124,7 @@ class MemStorage {
     async getActiveSafetyAlerts() {
         const now = new Date();
         return Array.from(this.safetyAlerts.values()).filter(alert => alert.isActive &&
-            (alert.endDate === null || alert.endDate > now));
+            (alert.expiresAt === null || alert.expiresAt > now));
     }
     async getSafetyAlert(id) {
         return this.safetyAlerts.get(id);
@@ -155,25 +134,23 @@ class MemStorage {
         const alert = {
             id,
             title: insertAlert.title,
-            content: insertAlert.content,
+            description: insertAlert.description,
             severity: insertAlert.severity,
-            startDate: insertAlert.startDate ?? new Date(),
-            endDate: insertAlert.endDate ?? null,
+            location: insertAlert.location,
+            createdAt: new Date(),
             isActive: insertAlert.isActive ?? true,
-            location: insertAlert.location ?? null
+            expiresAt: insertAlert.expiresAt ?? null
         };
         this.safetyAlerts.set(id, alert);
         return alert;
     }
     // Safety Resource operations
     async getSafetyResources() {
-        return Array.from(this.safetyResources.values())
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
+        return Array.from(this.safetyResources.values());
     }
     async getSafetyResourcesByCategory(category) {
         return Array.from(this.safetyResources.values())
-            .filter(resource => resource.category === category)
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
+            .filter(resource => resource.category === category);
     }
     async getSafetyResource(id) {
         return this.safetyResources.get(id);
@@ -185,10 +162,9 @@ class MemStorage {
             title: insertResource.title,
             description: insertResource.description,
             category: insertResource.category,
-            url: insertResource.url ?? null,
-            phoneNumber: insertResource.phoneNumber ?? null,
-            icon: insertResource.icon ?? null,
-            order: insertResource.order ?? 0
+            url: insertResource.url,
+            createdAt: new Date(),
+            isActive: insertResource.isActive ?? true
         };
         this.safetyResources.set(id, resource);
         return resource;
