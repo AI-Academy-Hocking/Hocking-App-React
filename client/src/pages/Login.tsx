@@ -75,11 +75,10 @@ export default function Login() {
               
               <Button 
                 type="button" 
-                variant="ghost"
                 onClick={() => setShowAdminLogin(!showAdminLogin)}
-                className="w-full text-white py-3 text-lg rounded-xl font-semibold hover:bg-white/20 transition border-2 border-white/30"
+                className="w-full bg-white/1 !text-white py-3 text-lg rounded-xl font-semibold hover:bg-white/8 transition border-2 border-white/30"
               >
-                <Crown className="mr-2 h-6 w-6" />
+                <Crown className="mr-2 h-6 w-6 text-white" />
                 Login as Admin
               </Button>
             </div>
@@ -132,7 +131,7 @@ export default function Login() {
         >
           <source src="/src/assets/AISecondCut.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
     </div>
   );

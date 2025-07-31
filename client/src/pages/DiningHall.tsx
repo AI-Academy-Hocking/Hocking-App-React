@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import "../styles/animations.css";
 import dining1Image from "../components/assets/dining1.JPG";
+import diamondDawgsImage from "../components/assets/DiamondDawgs.jpeg";
+import rhapsodyImage from "../components/assets/rhapsody.webp";
 
 export default function DiningHall() {
   const [location, setLocation] = useLocation();
@@ -79,19 +81,31 @@ export default function DiningHall() {
   };
 
   useEffect(() => {
-    // Load images safely
+    // Load images with static imports
     try {
-      // Use static import for dining1 image
-      setImages(prev => ({ ...prev, hawksNest: dining1Image }));
-      
-      import("../components/assets/DiamondDawgs.jpeg").then(module => {
-        setImages(prev => ({ ...prev, diamondDawgs: module.default }));
+      setImages({
+        hawksNest: dining1Image,
+        diamondDawgs: diamondDawgsImage,
+        rhapsody: rhapsodyImage
       });
-      import("../components/assets/rhapsody.webp").then(module => {
-        setImages(prev => ({ ...prev, rhapsody: module.default }));
+      setImageLoading({
+        hawksNest: false,
+        diamondDawgs: false,
+        rhapsody: false
       });
     } catch (error) {
       console.error('Error loading images:', error);
+      // Fallback to placeholder images
+      setImages({
+        hawksNest: 'https://via.placeholder.com/400x300?text=Hawks+Nest',
+        diamondDawgs: 'https://via.placeholder.com/400x300?text=Diamond+Dawgz',
+        rhapsody: 'https://via.placeholder.com/400x300?text=Rhapsody'
+      });
+      setImageLoading({
+        hawksNest: false,
+        diamondDawgs: false,
+        rhapsody: false
+      });
     }
   }, []);
 
@@ -146,7 +160,7 @@ export default function DiningHall() {
                   <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">BREAKFAST</div>
                   <div className="text-lg font-medium text-gray-900 dark:text-white">7:00 AM - 10:00 AM</div>
                 </div>
-                <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="pt-4">
                   <div className="text-center">
                     <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">DINNER</div>
                     <div className="text-lg font-medium text-gray-900 dark:text-white">10:30 AM - 7:00 PM</div>
@@ -163,7 +177,7 @@ export default function DiningHall() {
                   <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">BRUNCH</div>
                   <div className="text-lg font-medium text-gray-900 dark:text-white">11:00 AM - 1:00 PM</div>
                 </div>
-                <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="pt-4">
                   <div className="text-center">
                     <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">DINNER</div>
                     <div className="text-lg font-medium text-gray-900 dark:text-white">11:00 AM - 5:00 PM</div>
@@ -202,7 +216,7 @@ export default function DiningHall() {
               </div>
               
               {expandedMealPlan === 'full' && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <div className="text-center mb-4">
                     <span className="text-lg text-gray-900 dark:text-white">19</span>
                     <span className="text-lg text-gray-900 dark:text-white ml-2">meals per week</span>
@@ -227,7 +241,7 @@ export default function DiningHall() {
               </div>
               
               {expandedMealPlan === 'partial' && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <div className="text-center mb-4">
                     <span className="text-lg text-gray-900 dark:text-white">14</span>
                     <span className="text-lg text-gray-900 dark:text-white ml-2">meals per week</span>
@@ -303,17 +317,17 @@ export default function DiningHall() {
                 
                 {expandedDay === day.day && (
                   <div className="bg-gray-50 dark:bg-gray-700">
-                    <div className="p-3 border-b border-gray-200 dark:border-gray-600">
+                    <div className="p-3">
                       <div className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-1">Breakfast</div>
-                      <div className="text-sm text-white">{day.menu.breakfast}</div>
+                      <div className="text-sm text-gray-900 dark:text-white">{day.menu.breakfast}</div>
                     </div>
-                    <div className="p-3 border-b border-gray-200 dark:border-gray-600">
+                    <div className="p-3">
                       <div className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-1">Lunch</div>
-                      <div className="text-sm text-white">{day.menu.lunch}</div>
+                      <div className="text-sm text-gray-900 dark:text-white">{day.menu.lunch}</div>
                     </div>
                     <div className="p-3">
                       <div className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-1">Dinner</div>
-                      <div className="text-sm text-white">{day.menu.dinner}</div>
+                      <div className="text-sm text-gray-900 dark:text-white">{day.menu.dinner}</div>
                     </div>
                   </div>
                 )}
@@ -343,7 +357,7 @@ export default function DiningHall() {
               </div>
               
               {dietaryOptionsExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <p className="text-gray-600 dark:text-black mb-4 text-center">
                     Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
                   </p>
@@ -378,7 +392,7 @@ export default function DiningHall() {
               </div>
               
               {allergenInfoExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <p className="text-gray-600 dark:text-black mb-4 text-center">
                     All menu items are clearly labeled with the following allergen information:
                   </p>
@@ -423,7 +437,7 @@ export default function DiningHall() {
               </div>
               
               {dietaryAccommodationsExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <p className="text-gray-600 dark:text-black mb-4 text-center">
                     For specific dietary accommodations or concerns, please contact:
                   </p>
@@ -468,7 +482,7 @@ export default function DiningHall() {
               </div>
               
               {hawksNestExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
                     <div className="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-gray-700">
                       {imageLoading.hawksNest && (
@@ -511,7 +525,7 @@ export default function DiningHall() {
               </div>
               
               {diamondDawgzExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
                     <div className="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-gray-700">
                       {imageLoading.diamondDawgs && (
@@ -557,7 +571,7 @@ export default function DiningHall() {
               </div>
               
               {rhapsodyExpanded && (
-                <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+                <div className="px-6 pb-6 pt-4">
                   <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
                     {imageLoading.rhapsody && (
                       <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80">

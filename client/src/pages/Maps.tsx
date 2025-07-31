@@ -441,13 +441,13 @@ export default function Maps() {
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Building Directory</h2>
         
         <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
-          <ul className="divide-y divide-neutral-light dark:divide-[#2a3240]">
+          <ul className="">
             {filteredBuildings.length > 0 ? (
               filteredBuildings.map((building) => (
                 <li key={building.id} className="p-4">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
-                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-white dark:border-transparent flex-shrink-0"></span>
+                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400 flex-shrink-0"></span>
                       <div>
                         <h3 className="font-semibold text-black dark:text-blue-300">{building.name}</h3>
                         <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>
@@ -456,7 +456,7 @@ export default function Maps() {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="text-primary hover:text-primary-dark"
+                      className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
                       onClick={() => {
                         setSelectedBuildingId(building.id);
                         if (map) map.setView([building.lat, building.lng], 18);

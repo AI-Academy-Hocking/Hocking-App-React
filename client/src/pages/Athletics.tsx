@@ -4,11 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-// Image paths (in public folder)
-const WeightsImage = "/sc-weights.JPG";
-const BaseballHomebaseImage = "/baseball-homebase.JPG";
-const BasketballCourtImage = "/basketball-court.JPG";
-const SportsWallImage = "/sports-wall.JPG";
+
+// Import images properly
+import WeightsImage from "../components/assets/sc weights.JPG";
+import BaseballHomebaseImage from "../components/assets/baseball homebase.JPG";
+import BasketballCourtImage from "../components/assets/basketball court.JPG";
+import SportsWallImage from "../components/assets/sports wall.JPG";
 
 interface Sport {
   name: string;

@@ -121,7 +121,7 @@ export default function Transportation() {
           className="text-center mb-8"
         >
           <div className="flex items-center justify-center gap-4 mb-4">
-            <Bus className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+            <Bus className="h-12 w-12 text-blue-600 dark:text-blue-400" />
             <h1 className="text-4xl font-bold text-gray-900 dark:text-blue-300">Campus Transportation</h1>
           </div>
           <p className="text-lg text-gray-600 dark:text-gray-300">
@@ -147,143 +147,187 @@ export default function Transportation() {
 
         {/* Service Hours */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <Clock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">Service Hours</h2>
-          </div>
-          <div className="space-y-4">
-            {serviceHours.map((h, i) => (
-              <Card key={i} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700">
-                <CardContent className="p-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                    <div className="font-semibold text-gray-900 dark:text-blue-300">
-                      {h.days}
-                    </div>
-                    <div className="font-semibold text-lg text-center md:text-left text-gray-600 dark:text-gray-300">
-                      {h.time}
-                    </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-300 md:text-right">
-                      {h.service}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="service-hours" className="border-none">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+                <div className="flex items-center gap-4">
+                  <Clock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                  <span>Service Hours</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-0 pt-6">
+                <div className="space-y-4">
+                  {serviceHours.map((h, i) => (
+                    <Card key={i} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                          <div className="font-semibold text-gray-900 dark:text-blue-300">
+                            {h.days}
+                          </div>
+                          <div className="font-semibold text-lg text-center md:text-left text-gray-600 dark:text-gray-300">
+                            {h.time}
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-300 md:text-right">
+                            {h.service}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         {/* Transportation Options */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <Car className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">Transportation Options</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-6">
-            {transportationOptions.map(opt => (
-              <Card key={opt.title} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 h-full">
-                <CardHeader className="flex flex-row items-center gap-3 pb-2">
-                  <opt.icon className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-                  <CardTitle className="text-lg font-semibold text-gray-900 dark:text-blue-300">{opt.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-gray-700 dark:text-gray-300">{opt.description}</p>
-                  <div className="space-y-2">
-                    {opt.details.map((detail, index) => (
-                      <div key={index} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
-                        <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
-                        <span>{detail}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {opt.features.map((feature, index) => (
-                      <span key={index} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 text-xs rounded-md">
-                        {feature === "Wi-Fi" && <Wifi className="h-3 w-3" />}
-                        {feature === "Cash Fare" && <DollarSign className="h-3 w-3" />}
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="transportation-options" className="border-none">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+                <div className="flex items-center gap-4">
+                  <Car className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                  <span>Transportation Options</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-0 pt-6">
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                  {transportationOptions.map((opt, i) => (
+                    <AccordionItem key={opt.title} value={String(i)} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <AccordionTrigger hideChevron className="text-lg font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">
+                        <div className="flex items-center gap-3">
+                          <opt.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                          <span>{opt.title}</span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4">
+                        <div className="space-y-4">
+                          <p className="text-gray-700 dark:text-gray-300">{opt.description}</p>
+                          <div className="space-y-2">
+                            {opt.details.map((detail, index) => (
+                              <div key={index} className="text-sm text-gray-600 dark:text-gray-300 flex items-start gap-2">
+                                <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
+                                <span>{detail}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex flex-wrap gap-2 pt-2">
+                            {opt.features.map((feature, index) => (
+                              <span key={index} className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300 text-xs rounded-md">
+                                {feature === "Wi-Fi" && <Wifi className="h-3 w-3" />}
+                                {feature === "Cash Fare" && <DollarSign className="h-3 w-3" />}
+                                {feature}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         {/* FAQ */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <div className="flex items-center gap-4 mb-6">
-            <HelpCircle className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">Transportation FAQ</h2>
-          </div>
           <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, i) => (
-              <AccordionItem key={i} value={String(i)} className="border-b border-gray-200 dark:border-gray-600">
-                <AccordionTrigger className="text-lg font-medium text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-gray-700 dark:text-gray-300">{faq.answer}</AccordionContent>
-              </AccordionItem>
-            ))}
+            <AccordionItem value="transportation-faq" className="border-none">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+                <div className="flex items-center gap-4">
+                  <HelpCircle className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                  <span>Transportation FAQ</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-0 pt-6">
+                <Accordion type="single" collapsible className="w-full space-y-4">
+                  {faqs.map((faq, i) => (
+                    <AccordionItem key={i} value={String(i)} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <AccordionTrigger hideChevron className="text-lg font-medium text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">{faq.question}</AccordionTrigger>
+                      <AccordionContent className="text-gray-700 dark:text-gray-300 px-4">{faq.answer}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
         </div>
 
         {/* Contact Information */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700">
-          <div className="flex items-center gap-4 mb-6">
-            <Mail className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">Contact Information</h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <Card className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base text-gray-900 dark:text-blue-300">Campus Transportation Office</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 pt-0">
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Location:</span>
-                  <span>{contactInfo.location}</span>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="contact-information" className="border-none">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+                <div className="flex items-center gap-4">
+                  <Mail className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                  <span>Contact Information</span>
                 </div>
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Phone:</span>
-                  <a href={`tel:${contactInfo.phone}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.phone}</a>
-                </div>
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Email:</span>
-                  <a href={`mailto:${contactInfo.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.email}</a>
-                </div>
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Office Hours:</span>
-                  <span>{contactInfo.hours}</span>
-                </div>
-              </CardContent>
-            </Card>
+              </AccordionTrigger>
+              <AccordionContent className="px-0 pt-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="campus-office" className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <AccordionTrigger hideChevron className="text-base font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">
+                        Campus Transportation Office
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4">
+                        <div className="space-y-2 pt-0">
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Location:</span>
+                            <span>{contactInfo.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Phone:</span>
+                            <a href={`tel:${contactInfo.phone}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.phone}</a>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Email:</span>
+                            <a href={`mailto:${contactInfo.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.email}</a>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Office Hours:</span>
+                            <span>{contactInfo.hours}</span>
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
 
-            <Card className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base text-gray-900 dark:text-blue-300">GoBus Customer Service</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 pt-0">
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Phone:</span>
-                  <a href={`tel:${contactInfo.gobusPhone}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.gobusPhone}</a>
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="gobus-service" className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
+                      <AccordionTrigger hideChevron className="text-base font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">
+                        GoBus Customer Service
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4">
+                        <div className="space-y-2 pt-0">
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Phone:</span>
+                            <a href={`tel:${contactInfo.gobusPhone}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.gobusPhone}</a>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <ExternalLink className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Website:</span>
+                            <a href={contactInfo.gobusWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">ridegobus.com</a>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
+                            <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                            <span className="font-medium">Boarding:</span>
+                            <span>Hocking College Bus Stop (in front of mailroom)</span>
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </div>
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <ExternalLink className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Website:</span>
-                  <a href={contactInfo.gobusWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">ridegobus.com</a>
-                </div>
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
-                  <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                  <span className="font-medium">Boarding:</span>
-                  <span>Hocking College Bus Stop (in front of mailroom)</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>

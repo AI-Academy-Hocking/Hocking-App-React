@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Mail, Clock, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import studentCenterImage from "@/components/assets/studentCenter.jpg"; // Import the image
+import studentCenterImage from "../components/assets/studentCenter.jpg"; // Import the image
+import scPianoImage from "../components/assets/sc piano.JPG";
+import scPatioImage from "../components/assets/sc patio.JPG";
 import { Link } from "wouter";
 
 function RecreationPage() {
   const [infoExpanded, setInfoExpanded] = useState(false);
   const [facilitiesExpanded, setFacilitiesExpanded] = useState(false);
   
-  // Image paths for backgrounds
-  const scPianoImage = "/sc-piano.JPG";
-  const scPatioImage = "/sc-patio.JPG";
-
   return (
     <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
       <div className="flex items-center mb-6">

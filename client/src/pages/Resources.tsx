@@ -1,59 +1,58 @@
 import React from 'react';
 import { Link } from "wouter";
-import { Card, CardContent } from "../components/ui/card";
-import { 
-  GraduationCap, 
-  BookOpen, 
-  Users, 
-  Heart, 
-  Laptop, 
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import {
+  BookOpen, Users, Award, Calendar, Map, UtensilsCrossed, 
+  Dumbbell, Gamepad2, Library, UserCheck, FileText, Accessibility,
   Star 
 } from "lucide-react";
 
+// Import images properly
+import davisHallImage from "../components/assets/davishall.JPG";
+import library2Image from "../components/assets/library 2.JPG";
+import libraryBenchImage from "../components/assets/library bench.JPG";
+import libraryLoungeImage from "../components/assets/library lounge.JPG";
+import library3Image from "../components/assets/library 3.JPG";
+import scFoosballImage from "../components/assets/sc phoosbal.JPG";
+
 export default function Resources() {
-  // Background images for resource boxes
-  const davisHallImage = "/davishall.JPG";
-  const library2Image = "/library2.JPG";
-  const libraryBenchImage = "/librarybench.JPG";
-  const libraryLoungeImage = "/library-lounge.JPG";
-  const library3Image = "/library3.JPG";
-  const scFoosballImage = "/sc-foosball.JPG";
-  
   const resources = [
     {
       title: "Academic Success Center",
       description: "Get support with study skills, time management, and academic coaching to help you succeed.",
-      icon: GraduationCap,
+      icon: Award,
       href: "/academic-success-center"
     },
     {
       title: "Library Resources",
       description: "Access books, databases, research assistance, and quiet study spaces.",
-      icon: BookOpen,
+      icon: Library,
       href: "/library"
     },
     {
       title: "Accessibility Resources",
       description: "Support services and accommodations for students with disabilities.",
-      icon: Heart,
+      icon: Accessibility,
       href: "/accessibility-resources"
     },
     {
       title: "Student Organizations",
       description: "Join clubs, organizations, and groups to connect with other students.",
-      icon: Users,
+      icon: UserCheck,
       href: "/student-organizations"
     },
     {
       title: "Learning Labs",
       description: "Access computer labs, tutoring, and specialized learning resources.",
-      icon: Laptop,
+      icon: FileText,
       href: "/learning-labs"
     },
     {
       title: "Trio Services",
       description: "Support programs for first-generation college students and those with financial need.",
-      icon: Star,
+      icon: UtensilsCrossed,
       href: "/trio-services"
     }
   ];
