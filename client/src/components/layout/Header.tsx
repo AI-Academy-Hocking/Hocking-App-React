@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Menu, Moon, Sun, LogOut, Home, Calendar, Wrench, Map, UtensilsCrossed, Shield, Bell, X, MessageSquare, AlertTriangle } from "lucide-react";
+import { Menu, Moon, Sun, LogOut, Home, Calendar, Wrench, Map, UtensilsCrossed, Shield, Bell, X, MessageSquare, AlertTriangle, Search } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
@@ -132,6 +132,12 @@ export default function Header() {
                   className="h-8 w-auto object-contain" 
                 />
               </div>
+              
+              {/* Mobile Search Bar */}
+              <div className="p-4 border-b border-gray-700">
+                <SearchBar className="w-full" placeholder="Search..." />
+              </div>
+              
               <nav className="flex-1 p-4">
                 <ul className="space-y-2">
                   {navItems.map((item) => (
@@ -172,9 +178,21 @@ export default function Header() {
         </div>
         {/* Compact SearchBar */}
         <div className="flex items-center gap-2">
+          {/* Desktop SearchBar */}
           <div className="hidden md:block">
             <SearchBar className="w-48" placeholder="Search..." />
           </div>
+          
+          {/* Mobile Search Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Open menu with search"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
           
           {/* Notification Bell */}
           <DropdownMenu open={isNotificationOpen} onOpenChange={setIsNotificationOpen}>
