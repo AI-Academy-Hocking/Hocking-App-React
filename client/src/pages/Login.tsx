@@ -4,11 +4,20 @@ import HockingLogo from "../components/assets/HockingLogo.png";
 import { Button } from "../components/ui/button";
 import { useLocation } from "wouter";
 import { useAuth } from "../lib/auth";
+import { useState } from "react";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Crown, User } from "lucide-react";
 
 export default function Login() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
-  const { guestLogin } = useAuth();
+  const { guestLogin, login } = useAuth();
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [adminCredentials, setAdminCredentials] = useState({
+    username: '',
+    password: ''
+  });
 
   const handleGetStarted = () => {
     localStorage.setItem('hasClickedGetStarted', 'true');
@@ -18,6 +27,23 @@ export default function Login() {
       description: "Let's get started with your Hocking College experience",
     });
     setLocation("/home");
+  };
+
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await login(adminCredentials.username, adminCredentials.password);
+      toast({
+        title: "Admin Login Successful",
+        description: "Welcome to the admin dashboard",
+      });
+    } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: "Invalid admin credentials",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -37,15 +63,62 @@ export default function Login() {
               <h1 className="text-3xl font-bold text-white mb-3">Welcome to Hocking College</h1>
               <p className="text-base text-white">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
             </div>
-            <div className="pt-4">
+            <div className="pt-4 space-y-3">
               <Button 
                 type="button" 
                 onClick={handleGetStarted}
                 className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
               >
+                <User className="mr-2 h-5 w-5" />
                 Get Started
               </Button>
+              
+              <Button 
+                type="button" 
+                variant="ghost"
+                onClick={() => setShowAdminLogin(!showAdminLogin)}
+                className="w-full text-white py-2 text-sm hover:bg-white/20 transition border border-white/30"
+              >
+                <Crown className="mr-2 h-4 w-4" />
+                Login as Admin
+              </Button>
             </div>
+
+            {showAdminLogin && (
+              <div className="mt-4 p-4 bg-white/10 rounded-lg border border-white/20">
+                <form onSubmit={handleAdminLogin} className="space-y-3">
+                  <div>
+                    <Label htmlFor="username" className="text-white text-sm">Username</Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      value={adminCredentials.username}
+                      onChange={(e) => setAdminCredentials(prev => ({ ...prev, username: e.target.value }))}
+                      className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+                      placeholder="Enter username"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="password" className="text-white text-sm">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={adminCredentials.password}
+                      onChange={(e) => setAdminCredentials(prev => ({ ...prev, password: e.target.value }))}
+                      className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+                      placeholder="Enter password"
+                    />
+                  </div>
+                  <Button 
+                    type="submit"
+                    className="w-full bg-blue-600/90 text-white py-2 hover:bg-blue-700 transition"
+                  >
+                    <Crown className="mr-2 h-4 w-4" />
+                    Login as Admin
+                  </Button>
+                </form>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

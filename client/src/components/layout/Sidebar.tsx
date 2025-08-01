@@ -1,14 +1,10 @@
 import { useLocation, Link } from "wouter";
 import { useAuth } from "../../lib/auth";
 import { 
-  Home, 
-  CalendarDays, 
-  Wrench, 
-  Map, 
-  LogOut, 
-  UtensilsCrossed, 
-  Shield,
-  Calendar
+  Home, CalendarDays, Wrench, Map, LogOut, UtensilsCrossed, MessageSquare, Shield,
+  LibraryBig, MonitorSmartphone, Users, Dumbbell, Trophy, ChevronDown, ChevronRight,
+  GraduationCap, Clock, Calendar, Star, Coffee, Utensils, Music, CreditCard, Info, MapPin,
+  Settings, Crown
 } from "lucide-react";
 import HockingLogo from "../../assets/HawkLogo.png";
 import { LucideIcon } from "lucide-react";
@@ -37,7 +33,7 @@ interface DropdownItem {
 
 export default function Sidebar() {
   const [location, setLocation] = useLocation();
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const [isStudentToolsOpen, setIsStudentToolsOpen] = useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isDiningOpen, setIsDiningOpen] = useState(false);
@@ -65,6 +61,8 @@ export default function Sidebar() {
     // Main Navigation
     { path: "/home", label: "Home", icon: Home, category: "main" },
     { path: "/calendar", label: "Calendar", icon: CalendarDays, category: "main" },
+    { path: "/settings", label: "Settings", icon: Settings },
+
     
     // Academic & Study
     { path: "/tools", label: "Student Tools", icon: Wrench, category: "academic" },
@@ -146,13 +144,24 @@ export default function Sidebar() {
       </nav>
       
       <div className="p-4 border-t border-slate-700 bg-slate-800/90 backdrop-blur-sm">
-        <button 
-          onClick={logout} 
-          className="flex items-center text-sm text-white hover:text-blue-200 transition"
-        >
-          <LogOut className="mr-1 h-4 w-4 text-white" />
-          <span>Log Out</span>
-        </button>
+        <div className="space-y-2">
+          {isAdmin && (
+            <button
+              onClick={() => setLocation('/admin/dashboard')}
+              className="flex items-center text-sm text-white hover:text-blue-200 transition w-full"
+            >
+              <Crown className="mr-1 h-4 w-4 text-white" />
+              <span>Admin Dashboard</span>
+            </button>
+          )}
+          <button 
+            onClick={logout} 
+            className="flex items-center text-sm text-white hover:text-blue-200 transition w-full"
+          >
+            <LogOut className="mr-1 h-4 w-4 text-white" />
+            <span>Log Out</span>
+          </button>
+        </div>
       </div>
     </div>
   );

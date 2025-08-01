@@ -11,21 +11,20 @@ import DiningHall from "@/pages/DiningHall";
 import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { NotificationProvider } from "@/lib/notifications";
 import RecreationPage from "./pages/Recreation";
 import LibraryResourcesPage from "./pages/LibraryResources";
 import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
 import Athletics from "./pages/Athletics";
+import ProgramDetails from "./pages/ProgramDetails";
 import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
 import ApplicationProcess from "./pages/housing/ApplicationProcess";
-
-// Wellness Features
-import WellnessTracker from "@/components/wellness/WellnessTracker";
-
-
+import MealPlan from "./pages/housing/MealPlan";
+import Roomies from "./pages/housing/Roomies";
 import WhatToBring from "./pages/housing/WhatToBring";
 import Maintenance from "./pages/housing/Maintenance";
 import Contact from "./pages/housing/Contact";
@@ -34,7 +33,7 @@ import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
 import Contract from "./pages/housing/Contract";
-
+import HowToApply from "./pages/housing/HowToApply";
 import FloorPlans from "./pages/housing/FloorPlans";
 import Tutoring from "./pages/Tutoring";
 import TestingCenter from "./pages/TestingCenter";
@@ -49,20 +48,11 @@ import CareerUniversityCenter from "./pages/tools/academic/CareerUniversityCente
 import Transportation from "./pages/Transportation";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
 import Resources from "./pages/Resources";
-import InternationalStudents from "./pages/InternationalStudents";
-import CanineFacility from "./pages/CanineFacility";
-import FinancialAid from "./pages/FinancialAid";
-import Billing from "./pages/Billing";
-import Scholarships from "./pages/Scholarships";
-import CampusHealth from "./pages/CampusHealth";
-import VerifyUser from "./pages/VerifyUser";
-import VerifyPost from "./pages/VerifyPost";
-
-// New feature pages
-import Events from "@/pages/Events";
-
+import Settings from "./pages/Settings";
+import AdminDashboard from "./pages/AdminDashboard";
 import './index.css';
 import './styles/globals.css';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { useEffect, useState } from 'react';
 
 const queryClient = new QueryClient();
@@ -111,8 +101,8 @@ function Router() {
         <Route path="/housing/dormitories" component={Dormitories} />
         <Route path="/housing/amenities" component={Amenities} />
         <Route path="/housing/application" component={ApplicationProcess} />
-
-
+        <Route path="/housing/meal-plan" component={MealPlan} />
+        <Route path="/housing/roomies" component={Roomies} />
         <Route path="/housing/what-to-bring" component={WhatToBring} />
         <Route path="/housing/maintenance" component={Maintenance} />
         <Route path="/housing/contact" component={Contact} />
@@ -121,35 +111,22 @@ function Router() {
         <Route path="/housing/activities" component={Activities} />
         <Route path="/housing/social" component={Social} />
         <Route path="/housing/contract" component={Contract} />
-
+        <Route path="/housing/how-to-apply" component={HowToApply} />
         <Route path="/housing/floor-plans" component={FloorPlans} />
         <Route path="/tutoring" component={Tutoring} />
         <Route path="/testing-center" component={TestingCenter} />
         <Route path="/trio-services" component={TrioServices} />
         <Route path="/learning-labs" component={LearningLabs} />
         <Route path="/accessibility-resources" component={AccessibilityResources} />
-        <Route path="/international-students" component={InternationalStudents} />
-        <Route path="/canine-facility" component={CanineFacility} />
-        <Route path="/graduation" component={Graduation} />
-        <Route path="/financial-aid" component={FinancialAid} />
-        <Route path="/billing" component={Billing} />
-        <Route path="/scholarships" component={Scholarships} />
-        <Route path="/campus-health" component={CampusHealth} />
-        <Route path="/career-university-center" component={CareerUniversityCenter} />
-        <Route path="/verify-user/:id" component={VerifyUser} />
-        <Route path="/verify-post/:id" component={VerifyPost} />
-        
-        {/* New feature routes - Phase 1 */}
-        <Route path="/events" component={Events} />
-        
-        {/* Wellness Features */}
-        <Route path="/wellness" component={WellnessTracker} />
-        
         <Route path="/tools/academic/course-catalog" component={CourseCatalog} />
+        <Route path="/tools/academic/graduation" component={Graduation} />
         <Route path="/tools/academic/advising" component={Advising} />
         <Route path="/tools/academic/office-administration" component={OfficeAdministration} />
+        <Route path="/tools/academic/career-university-center" component={CareerUniversityCenter} />
         <Route path="/tools/academic/:id" component={AcademicToolDetail} />
         <Route path="/transportation" component={Transportation} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/admin/dashboard" component={AdminDashboard} />
         <Route component={NotFound} />
       </Switch>
     </MainLayout>
@@ -160,8 +137,10 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <Toaster />
+        <NotificationProvider>
+          <Router />
+          <Toaster />
+        </NotificationProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
