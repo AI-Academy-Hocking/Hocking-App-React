@@ -183,7 +183,7 @@ export default function CampusHealth() {
                   <div className="space-y-3">
                     <div className="flex items-center">
                       <Phone className="mr-3 h-5 w-5 text-green-600" />
-                      <a href="tel:740-753-7079" className="text-blue-600 hover:underline">740‑753‑7079</a>
+                      <a href="tel:7407537079" className="text-blue-600 hover:underline">740‑753‑7079</a>
                     </div>
                     <div className="flex items-center">
                       <Clock className="mr-3 h-5 w-5 text-green-600" />
@@ -227,7 +227,7 @@ export default function CampusHealth() {
                 </p>
                 <div className="flex items-center">
                   <Phone className="mr-3 h-5 w-5 text-orange-600" />
-                  <a href="tel:1-888-475-8484" className="text-blue-600 hover:underline">1‑888‑475‑8484</a>
+                  <a href="tel:18884758484" className="text-blue-600 hover:underline">1‑888‑475‑8484</a>
                 </div>
               </div>
 
@@ -238,7 +238,7 @@ export default function CampusHealth() {
                 </p>
                 <div className="flex items-center">
                   <Phone className="mr-3 h-5 w-5 text-orange-600" />
-                  <a href="tel:740-753-6598" className="text-blue-600 hover:underline">740‑753‑6598</a>
+                  <a href="tel:7407536598" className="text-blue-600 hover:underline">740‑753‑6598</a>
                 </div>
               </div>
 
@@ -329,7 +329,7 @@ export default function CampusHealth() {
                   <div className="space-y-3">
                     <div className="flex items-center">
                       <Phone className="mr-3 h-5 w-5 text-gray-600" />
-                      <a href="tel:740-753-7079" className="text-blue-600 hover:underline">740‑753‑7079</a>
+                      <a href="tel:7407537079" className="text-blue-600 hover:underline">740‑753‑7079</a>
                     </div>
                     <div className="flex items-center">
                       <MapPin className="mr-3 h-5 w-5 text-gray-600" />

@@ -425,7 +425,7 @@ function Athletics() {
                 <Phone className="mr-3 h-5 w-5 text-purple-600" />
                 <div>
                   <p className="font-semibold">Main Office</p>
-                  <a href="tel:740-753-3591" className="text-blue-600 hover:underline">740-753-3591</a>
+                  <a href="tel:7407533591" className="text-blue-600 hover:underline">740-753-3591</a>
                 </div>
               </div>
             </div>

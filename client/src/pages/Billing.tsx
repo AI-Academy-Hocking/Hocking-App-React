@@ -52,7 +52,7 @@ export default function Billing() {
                   <Phone className="mr-4 h-6 w-6 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-800 dark:text-blue-200">Phone</p>
-                    <a href="tel:740-753-7029" className="text-blue-600 hover:underline font-medium">740-753-7029</a>
+                    <a href="tel:7407537029" className="text-blue-600 hover:underline font-medium">740-753-7029</a>
                   </div>
                 </div>
                 <div className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">

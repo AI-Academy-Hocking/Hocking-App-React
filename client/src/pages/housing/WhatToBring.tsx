@@ -385,8 +385,6 @@ const prohibitedItems: ProhibitedItem[] = [
 
 export default function WhatToBring() {
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
-  const [selectedSeason, setSelectedSeason] = useState<"fall" | "spring" | "both">("both");
-  const [selectedWeather, setSelectedWeather] = useState<"cold" | "warm" | "rain" | "all">("all");
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -445,10 +443,6 @@ export default function WhatToBring() {
               <div class="category">
                 <h3>${category.category}</h3>
                 ${category.items
-                  .filter(item => 
-                    (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
-                    (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
-                  )
                   .map(item => `
                     <div class="item ${item.importance}">
                       <input type="checkbox" class="checkbox" ${checkedItems[`${category.category}-${item.name}`] ? 'checked' : ''}>
@@ -476,10 +470,6 @@ Progress: ${getProgressPercentage()}% complete
 ${checklistItems.map(category => `
 ${category.category.toUpperCase()}
 ${category.items
-  .filter(item => 
-    (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
-    (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
-  )
   .map(item => `[ ] ${item.name}${item.description ? ` - ${item.description}` : ''}${item.season && item.season !== "both" ? ` (${item.season})` : ''}${item.weather && item.weather !== "all" ? ` (${item.weather})` : ''}`)
   .join('\n')}
 `).join('\n')}
@@ -546,90 +536,7 @@ Generated on: ${new Date().toLocaleDateString()}
         </div>
       </div>
 
-      {/* Season and Weather Filters */}
-      <div className="mb-8">
-        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
-          <h3 className="text-xl text-green-800 dark:text-green-200 mb-4">Filter by Season & Weather</h3>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Semester</h4>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="season"
-                    value="both"
-                    checked={selectedSeason === "both"}
-                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
-                    className="text-green-600"
-                  />
-                  <span className="text-green-700 dark:text-green-300">Both Semesters</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="season"
-                    value="fall"
-                    checked={selectedSeason === "fall"}
-                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
-                    className="text-green-600"
-                  />
-                  <span className="text-green-700 dark:text-green-300">Fall Only</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="season"
-                    value="spring"
-                    checked={selectedSeason === "spring"}
-                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
-                    className="text-green-600"
-                  />
-                  <span className="text-green-700 dark:text-green-300">Spring Only</span>
-                </label>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Weather</h4>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="weather"
-                    value="all"
-                    checked={selectedWeather === "all"}
-                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
-                    className="text-green-600"
-                  />
-                  <span className="text-green-700 dark:text-green-300">All Weather</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="weather"
-                    value="cold"
-                    checked={selectedWeather === "cold"}
-                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
-                    className="text-green-600"
-                  />
-                  <span className="text-green-700 dark:text-green-300">Cold Weather</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="weather"
-                    value="rain"
-                    checked={selectedWeather === "rain"}
-                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
-                    className="text-green-600"
-                  />
-                  <span className="text-green-700 dark:text-green-300">Rain Gear</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Collapsible Sections */}
       <div className="mb-8">
@@ -649,10 +556,6 @@ Generated on: ${new Date().toLocaleDateString()}
                     <h3 className="font-semibold text-green-800 dark:text-green-200 mb-3">{category.category}</h3>
                     <ul className="space-y-3">
                       {category.items
-                        .filter(item => 
-                          (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
-                          (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
-                        )
                         .map((item) => {
                           const itemId = `${category.category}-${item.name}`;
                           return (
@@ -754,7 +657,7 @@ Generated on: ${new Date().toLocaleDateString()}
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
-                  <div><strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</div>
+                  <div><strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at <a href="tel:7407536462" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline">(740) 753-6462</a> or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline">housing@hocking.edu</a>.</div>
                 </li>
               </ul>
             </AccordionContent>

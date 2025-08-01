@@ -196,7 +196,7 @@ export default function CareerUniversityCenter() {
                     </div>
                     <div className="flex items-center">
                       <Phone className="mr-3 h-5 w-5 text-purple-600" />
-                      <a href="tel:740-753-6076" className="text-blue-600 hover:underline">740-753-6076</a>
+                      <a href="tel:7407536076" className="text-blue-600 hover:underline">740-753-6076</a>
                     </div>
                   </div>
                 </div>
@@ -482,7 +482,7 @@ export default function CareerUniversityCenter() {
                   <div className="space-y-3">
                     <div className="flex items-center">
                       <Phone className="mr-3 h-5 w-5 text-gray-600" />
-                      <a href="tel:740-753-6076" className="text-blue-600 hover:underline">740-753-6076</a>
+                      <a href="tel:7407536076" className="text-blue-600 hover:underline">740-753-6076</a>
                     </div>
                     <div className="flex items-center">
                       <Mail className="mr-3 h-5 w-5 text-gray-600" />
