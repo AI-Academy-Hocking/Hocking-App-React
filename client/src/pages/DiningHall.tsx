@@ -3,13 +3,20 @@ import {
   CheckCircle, BookOpen, Activity, Star,
   Building, Phone, Mail, Users
 } from "lucide-react";
-import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { format, startOfWeek, addDays, addWeeks, subWeeks, isToday } from "date-fns";
+import { useLocation } from "wouter";
 import "../styles/animations.css";
 import dining1Image from "../components/assets/dining1.JPG";
+import diamondDawgsImage from "../components/assets/DiamondDawgs.jpeg";
+import rhapsodyImage from "../components/assets/rhapsody.webp";
 
 export default function DiningHall() {
   const [location, setLocation] = useLocation();
@@ -32,6 +39,98 @@ export default function DiningHall() {
     diamondDawgs: '',
     rhapsody: ''
   });
+  const [currentWeek, setCurrentWeek] = useState(new Date());
+
+  // Close all expanded sections when clicking outside
+  const closeAllSections = () => {
+    setExpandedMealPlan(null);
+    setExpandedDay(null);
+    setDietaryAccommodationsExpanded(false);
+    setDietaryOptionsExpanded(false);
+    setAllergenInfoExpanded(false);
+    setHawksNestExpanded(false);
+    setDiamondDawgzExpanded(false);
+    setRhapsodyExpanded(false);
+  };
+
+  // Handle clicks outside content areas
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      // Only close if clicking directly on the background area
+      if (target.getAttribute('data-background') === 'true') {
+        closeAllSections();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Generate menu data for any given week
+  const generateWeeklyMenu = (weekStartDate: Date) => {
+    const weekStart = startOfWeek(weekStartDate, { weekStartsOn: 1 }); // Monday start
+    
+    const menuTemplates = [
+      {
+        breakfast: "Scrambled Eggs, Bacon, Hash Browns, Toast",
+        lunch: "Italian Pasta Bar, Garlic Bread, Caesar Salad", 
+        dinner: "Grilled Chicken, Roasted Potatoes, Steamed Broccoli"
+      },
+      {
+        breakfast: "Pancakes, Sausage Links, Fresh Fruit",
+        lunch: "Taco Tuesday: Build Your Own Tacos, Spanish Rice", 
+        dinner: "Stir Fry Station with Chicken/Tofu, Vegetables, Rice"
+      },
+      {
+        breakfast: "French Toast, Turkey Bacon, Yogurt Parfait",
+        lunch: "Deli Sandwich Bar, Potato Chips, Pasta Salad", 
+        dinner: "Rotisserie Chicken, Mashed Potatoes, Green Beans"
+      },
+      {
+        breakfast: "Breakfast Burritos, Home Fries, Sliced Fruit",
+        lunch: "Burger Bar, French Fries, Garden Salad", 
+        dinner: "Baked Ziti, Garlic Bread, Roasted Vegetables"
+      },
+      {
+        breakfast: "Assorted Pastries, Oatmeal Bar, Boiled Eggs",
+        lunch: "Grilled Cheese, Tomato Soup, Vegetable Medley", 
+        dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
+      }
+    ];
+
+    return Array.from({ length: 5 }, (_, i) => {
+      const currentDay = addDays(weekStart, i);
+      const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      
+      return {
+        day: dayNames[i],
+        date: format(currentDay, "MMM d"),
+        fullDate: currentDay,
+        menu: menuTemplates[i],
+        isToday: isToday(currentDay)
+      };
+    });
+  };
+
+  const weeklyMenuData = generateWeeklyMenu(currentWeek);
+  const weekStartDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
+  const weekEndDate = addDays(weekStartDate, 6);
+
+  const goToPreviousWeek = () => {
+    setCurrentWeek(prevWeek => subWeeks(prevWeek, 1));
+  };
+
+  const goToNextWeek = () => {
+    setCurrentWeek(prevWeek => addWeeks(prevWeek, 1));
+  };
+
+  const goToCurrentWeek = () => {
+    setCurrentWeek(new Date());
+  };
 
   // Watch for URL changes including query parameters
   useEffect(() => {
@@ -85,19 +184,31 @@ export default function DiningHall() {
   };
 
   useEffect(() => {
-    // Load images safely
+    // Load images with static imports
     try {
-      // Use static import for dining1 image
-      setImages(prev => ({ ...prev, hawksNest: dining1Image }));
-      
-      import("../components/assets/DiamondDawgs.jpeg").then(module => {
-        setImages(prev => ({ ...prev, diamondDawgs: module.default }));
+      setImages({
+        hawksNest: dining1Image,
+        diamondDawgs: diamondDawgsImage,
+        rhapsody: rhapsodyImage
       });
-      import("../components/assets/rhapsody.webp").then(module => {
-        setImages(prev => ({ ...prev, rhapsody: module.default }));
+      setImageLoading({
+        hawksNest: false,
+        diamondDawgs: false,
+        rhapsody: false
       });
     } catch (error) {
       console.error('Error loading images:', error);
+      // Fallback to placeholder images
+      setImages({
+        hawksNest: 'https://via.placeholder.com/400x300?text=Hawks+Nest',
+        diamondDawgs: 'https://via.placeholder.com/400x300?text=Diamond+Dawgz',
+        rhapsody: 'https://via.placeholder.com/400x300?text=Rhapsody'
+      });
+      setImageLoading({
+        hawksNest: false,
+        diamondDawgs: false,
+        rhapsody: false
+      });
     }
   }, []);
 
@@ -129,372 +240,372 @@ export default function DiningHall() {
         </p>
       </div>
 
-      {/* Tab Navigation */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-            <Activity className="mr-3 h-6 w-6" />
-            Dining Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="flex flex-wrap gap-2">
-            {[
-              { value: "hours", label: "Hours of Operation", icon: Clock },
-              { value: "meal-plans", label: "Meal Plans", icon: CreditCard },
-              { value: "menu", label: "Weekly Menu", icon: Calendar },
-              { value: "dietary", label: "Dietary Info", icon: Info },
-              { value: "locations", label: "Locations", icon: MapPin }
-            ].map((tab) => {
-              const IconComponent = tab.icon;
-              return (
-                <button
-                  key={tab.value}
-                  onClick={() => setSelectedTab(tab.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                    selectedTab === tab.value
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-blue-900/30'
-                  }`}
-                >
-                  <IconComponent className="h-4 w-4" />
-                  <span className="text-sm font-medium">{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
-        <Card className="mb-8 border-2 border-green-600 animate-fadeIn">
-          <CardHeader className="bg-green-50 dark:bg-green-900/20">
-            <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-              <Clock className="mr-3 h-6 w-6" />
-              Hours of Operation
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="overflow-hidden rounded-lg border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/30">
-              <table className="w-full">
-                <thead className="bg-green-100 dark:bg-green-900/50">
-                  <tr>
-                    <th className="py-3 px-4 text-left font-semibold text-green-800 dark:text-green-200">Days</th>
-                    <th className="py-3 px-4 text-left font-semibold text-green-800 dark:text-green-200">Breakfast</th>
-                    <th className="py-3 px-4 text-left font-semibold text-green-800 dark:text-green-200">Dinner</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-green-200 dark:divide-green-800">
-                  <tr className="hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors duration-200">
-                    <td className="py-3 px-4 font-medium text-green-700 dark:text-green-300">Monday - Friday</td>
-                    <td className="py-3 px-4 text-green-700 dark:text-green-300">7:00 AM - 10:00 AM</td>
-                    <td className="py-3 px-4 text-green-700 dark:text-green-300">10:30 AM - 7:00 PM</td>
-                  </tr>
-                  <tr className="hover:bg-green-100 dark:hover:bg-green-900/40 transition-colors duration-200">
-                    <td className="py-3 px-4 font-medium text-green-700 dark:text-green-300">Saturday - Sunday</td>
-                    <td className="py-3 px-4 text-green-700 dark:text-green-300">11:00 AM - 1:00 PM</td>
-                    <td className="py-3 px-4 text-green-700 dark:text-green-300">11:00 AM - 5:00 PM</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="flex items-center">
-                <Info className="mr-2 h-4 w-4 text-green-600" />
-                <span className="text-sm text-green-700 dark:text-green-300">* Holiday hours may vary. Check announcements for special hours.</span>
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-6">
+            <Clock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+            Hours of Operation
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Weekdays Card */}
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 mb-4 text-center">Monday - Friday</h3>
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">BREAKFAST</div>
+                  <div className="text-lg font-medium text-gray-900 dark:text-white">7:00 AM - 10:00 AM</div>
+                </div>
+                <div className="pt-4">
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">DINNER</div>
+                    <div className="text-lg font-medium text-gray-900 dark:text-white">10:30 AM - 7:00 PM</div>
+                  </div>
+                </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* Weekend Card */}
+            <div className="border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 mb-4 text-center">Saturday - Sunday</h3>
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">BRUNCH</div>
+                  <div className="text-lg font-medium text-gray-900 dark:text-white">11:00 AM - 1:00 PM</div>
+                </div>
+                <div className="pt-4">
+                  <div className="text-center">
+                    <div className="text-sm font-semibold text-blue-600 dark:text-blue-300 mb-1">DINNER</div>
+                    <div className="text-lg font-medium text-gray-900 dark:text-white">11:00 AM - 5:00 PM</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-blue-600 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-2">
+              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <span className="text-sm font-medium text-gray-900 dark:text-blue-300">Important Note</span>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-white">
+              Holiday hours may vary. Check announcements for special hours during breaks and holidays.
+            </p>
+          </div>
+        </div>
       )}
 
       {selectedTab === "meal-plans" && (
-        <div className="space-y-8">
-          <Card className="border-2 border-purple-600 animate-fadeIn">
-            <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-              <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-                <CreditCard className="mr-3 h-6 w-6" />
-                Meal Plans
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="border-2 border-purple-600 dark:border-purple-700 rounded-lg shadow-sm bg-purple-50 dark:bg-purple-900/30 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                  <h3 className="text-2xl font-bold mb-3 text-purple-800 dark:text-purple-200">Full Meal Plan</h3>
-                  <div className="text-2xl font-extrabold text-purple-600 dark:text-purple-400 mb-5">19 meals/week</div>
-                  <ul className="space-y-3 text-purple-700 dark:text-purple-300 mb-6 text-lg">
-                    <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-purple-600" />
-                      <span>3 meals per day (Mon-Fri)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-purple-600" />
-                      <span>2 meals per day (Sat-Sun)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-purple-600" />
-                      <span>$100 in Hawk Bucks per semester</span>
-                    </li>
-                  </ul>
-                  <p className="text-base text-purple-600 dark:text-purple-400">Perfect for residential students</p>
-                </div>
-                <div className="border-2 border-purple-600 dark:border-purple-700 rounded-lg shadow-sm bg-purple-50 dark:bg-purple-900/30 p-8 flex flex-col items-center justify-between min-h-[340px] animate-fadeIn shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                  <h3 className="text-2xl font-bold mb-3 text-purple-800 dark:text-purple-200">Partial Meal Plan</h3>
-                  <div className="text-2xl font-extrabold text-purple-600 dark:text-purple-400 mb-5">14 meals/week</div>
-                  <ul className="space-y-3 text-purple-700 dark:text-purple-300 mb-6 text-lg">
-                    <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-purple-600" />
-                      <span>2 meals per day (Mon-Fri)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-purple-600" />
-                      <span>2 meals per day (Sat-Sun)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-purple-600" />
-                      <span>$75 in Hawk Dollars per semester</span>
-                    </li>
-                  </ul>
-                  <p className="text-base text-purple-600 dark:text-purple-400">Great for most students</p>
-                </div>
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
+            <CreditCard className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+            Meal Plans
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center items-stretch">
+            {/* Full Meal Plan */}
+            <div 
+              className={`border-2 ${expandedMealPlan === 'full' ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setExpandedMealPlan(expandedMealPlan === 'full' ? null : 'full')}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Full Meal Plan</h3>
               </div>
-            </CardContent>
-          </Card>
+              
+              {expandedMealPlan === 'full' && (
+                <div className="px-6 pb-6 pt-4">
+                  <div className="text-center mb-4">
+                    <span className="text-lg text-gray-900 dark:text-white">19</span>
+                    <span className="text-lg text-gray-900 dark:text-white ml-2">meals per week</span>
+                  </div>
+                  <ul className="space-y-2 text-gray-700 dark:text-white text-sm mb-4">
+                    <li>• 3 meals per day (Mon-Fri)</li>
+                    <li>• 2 meals per day (Sat-Sun)</li>
+                    <li>• $100 in Hawk Bucks per semester</li>
+                  </ul>
+                  <p className="text-sm text-gray-500 dark:text-gray-300 text-center">Perfect for residential students</p>
+                </div>
+              )}
+            </div>
 
-          <Card className="border-2 border-orange-600">
-            <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-              <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-                <Users className="mr-3 h-6 w-6" />
-                How to Update Your Meal Plan
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <div className="flex items-center">
-                    <Building className="mr-2 h-4 w-4 text-orange-600" />
-                    <span className="text-sm text-orange-700 dark:text-orange-300">Student Services office in Davidson Hall</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Phone className="mr-2 h-4 w-4 text-orange-600" />
-                    <a href="tel:7407536000" className="text-blue-600 hover:underline text-sm">(740) 753-6000</a>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center">
-                    <Mail className="mr-2 h-4 w-4 text-orange-600" />
-                    <a href="mailto:dining@hocking.edu" className="text-blue-600 hover:underline text-sm">dining@hocking.edu</a>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4 text-orange-600" />
-                    <span className="text-sm text-orange-700 dark:text-orange-300">Office hours: 8:00 AM - 5:00 PM</span>
-                  </div>
-                </div>
+            {/* Partial Meal Plan */}
+            <div 
+              className={`border-2 ${expandedMealPlan === 'partial' ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setExpandedMealPlan(expandedMealPlan === 'partial' ? null : 'partial')}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Partial Meal Plan</h3>
               </div>
-            </CardContent>
-          </Card>
+              
+              {expandedMealPlan === 'partial' && (
+                <div className="px-6 pb-6 pt-4">
+                  <div className="text-center mb-4">
+                    <span className="text-lg text-gray-900 dark:text-white">14</span>
+                    <span className="text-lg text-gray-900 dark:text-white ml-2">meals per week</span>
+                  </div>
+                  <ul className="space-y-2 text-gray-700 dark:text-white text-sm mb-4">
+                    <li>• 2 meals per day (Mon-Fri)</li>
+                    <li>• 2 meals per day (Sat-Sun)</li>
+                    <li>• $75 in Hawk Dollars per semester</li>
+                  </ul>
+                  <p className="text-sm text-gray-500 dark:text-gray-300 text-center">Great for most students</p>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
+            <h4 className="font-medium mb-2 text-gray-900 dark:text-blue-300">How to Update Your Meal Plan</h4>
+            <p className="text-gray-600 dark:text-white">
+              For more information about meal plans or to upgrade your current plan, 
+              please visit the Student Services office in Davidson Hall or call (740) 753-6000.
+            </p>
+          </div>
         </div>
       )}
 
       {selectedTab === "menu" && (
-        <Card className="border-2 border-teal-600 animate-fadeIn">
-          <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
-            <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-              <Calendar className="mr-3 h-6 w-6" />
-              This Week's Menu
-              <Badge className="ml-auto bg-teal-600 text-white">March 31 - April 6</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-              {[
-                { day: "Monday", date: "March 31", menu: {
-                  breakfast: "Scrambled Eggs, Bacon, Hash Browns, Toast",
-                  lunch: "Italian Pasta Bar, Garlic Bread, Caesar Salad", 
-                  dinner: "Grilled Chicken, Roasted Potatoes, Steamed Broccoli"
-                }},
-                { day: "Tuesday", date: "April 1", menu: {
-                  breakfast: "Pancakes, Sausage Links, Fresh Fruit",
-                  lunch: "Taco Tuesday: Build Your Own Tacos, Spanish Rice", 
-                  dinner: "Stir Fry Station with Chicken/Tofu, Vegetables, Rice"
-                }},
-                { day: "Wednesday", date: "April 2", menu: {
-                  breakfast: "French Toast, Turkey Bacon, Yogurt Parfait",
-                  lunch: "Deli Sandwich Bar, Potato Chips, Pasta Salad", 
-                  dinner: "Rotisserie Chicken, Mashed Potatoes, Green Beans"
-                }},
-                { day: "Thursday", date: "April 3", menu: {
-                  breakfast: "Breakfast Burritos, Home Fries, Sliced Fruit",
-                  lunch: "Burger Bar, French Fries, Garden Salad", 
-                  dinner: "Baked Ziti, Garlic Bread, Roasted Vegetables"
-                }},
-                { day: "Friday", date: "April 4", menu: {
-                  breakfast: "Assorted Pastries, Oatmeal Bar, Boiled Eggs",
-                  lunch: "Grilled Cheese, Tomato Soup, Vegetable Medley", 
-                  dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
-                }}
-              ].map((day) => (
-                <div key={day.day} className="border-2 border-teal-600 dark:border-teal-700 rounded-lg shadow-sm bg-teal-50 dark:bg-teal-900/30 overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
-                  <div className="bg-teal-600 text-white py-2 px-4 font-medium">
-                    <div className="text-lg">{day.day}</div>
-                    <div className="text-xs opacity-80">{day.date}</div>
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="mb-6">
+            <div className="flex items-center gap-3 mb-4">
+              <Calendar className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">Weekly Menu</h2>
+            </div>
+            
+            {/* Week Navigation */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <button
+                onClick={goToPreviousWeek}
+                className="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600"
+                title="Previous Week"
+              >
+                <ChevronLeft className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </button>
+              
+                              <div className="text-center">
+                  <div className="text-sm bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 font-semibold shadow-sm">
+                    {format(weekStartDate, "MMM d")} - {format(weekEndDate, "MMM d, yyyy")}
                   </div>
-                  <div className="p-3 border-b border-teal-200 dark:border-teal-800">
-                    <div className="text-xs uppercase font-semibold text-teal-600 dark:text-teal-400 mb-1">Breakfast</div>
-                    <div className="text-sm text-teal-700 dark:text-teal-300">{day.menu.breakfast}</div>
-                  </div>
-                  <div className="p-3 border-b border-teal-200 dark:border-teal-800">
-                    <div className="text-xs uppercase font-semibold text-teal-600 dark:text-teal-400 mb-1">Lunch</div>
-                    <div className="text-sm text-teal-700 dark:text-teal-300">{day.menu.lunch}</div>
-                  </div>
-                  <div className="p-3">
-                    <div className="text-xs uppercase font-semibold text-teal-600 dark:text-teal-400 mb-1">Dinner</div>
-                    <div className="text-sm text-teal-700 dark:text-teal-300">{day.menu.dinner}</div>
+                                  <button
+                    onClick={goToCurrentWeek}
+                    className="text-xs bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors mt-2 font-medium"
+                  >
+                  Go to This Week
+                </button>
+              </div>
+              
+              <button
+                onClick={goToNextWeek}
+                className="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600"
+                title="Next Week"
+              >
+                <ChevronRight className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </button>
+            </div>
+            
+            <p className="text-gray-600 dark:text-gray-300 text-lg text-center">Click on any day to view the full menu details</p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            {weeklyMenuData.map((day) => (
+              <div 
+                key={day.day} 
+                className="border-2 border-blue-600 dark:border-gray-700 rounded-2xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn overflow-hidden"
+                onClick={() => setExpandedDay(expandedDay === day.day ? null : day.day)}
+              >
+                <div className="bg-gray-50 dark:bg-gray-700 text-black dark:text-white py-3 px-4 font-medium">
+                  <div className="text-lg flex items-center gap-2">
+                    {day.day} {day.date}
+                    {day.isToday && <span className="text-xs bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">Today</span>}
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="mt-4 p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg border border-teal-200 dark:border-teal-800">
-              <div className="flex items-center">
-                <Info className="mr-2 h-4 w-4 text-teal-600" />
-                <span className="text-sm text-teal-700 dark:text-teal-300">* Menu items are subject to change based on availability.</span>
+                
+                {expandedDay === day.day && (
+                  <div className="bg-gray-50 dark:bg-gray-700">
+                    <div className="p-3">
+                      <div className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-1">Breakfast</div>
+                      <div className="text-sm text-gray-900 dark:text-white">{day.menu.breakfast}</div>
+                    </div>
+                    <div className="p-3">
+                      <div className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-1">Lunch</div>
+                      <div className="text-sm text-gray-900 dark:text-white">{day.menu.lunch}</div>
+                    </div>
+                    <div className="p-3">
+                      <div className="text-xs uppercase font-semibold text-gray-500 dark:text-gray-400 mb-1">Dinner</div>
+                      <div className="text-sm text-gray-900 dark:text-white">{day.menu.dinner}</div>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            ))}
+          </div>
+          
+          <div className="mt-4 text-sm text-gray-600 dark:text-white">
+            <p>* Menu items are subject to change based on availability.</p>
+          </div>
+        </div>
       )}
 
       {selectedTab === "dietary" && (
-        <div className="space-y-8">
-          <Card className="border-2 border-indigo-600 animate-fadeIn">
-            <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
-              <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-                <Info className="mr-3 h-6 w-6" />
-                Special Dietary Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="border-2 border-indigo-600 dark:border-indigo-700 rounded-lg shadow-sm bg-indigo-50 dark:bg-indigo-900/30 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
-                  <h3 className="text-lg font-semibold mb-3 text-indigo-800 dark:text-indigo-200">Dietary Accommodations</h3>
-                  <p className="text-indigo-700 dark:text-indigo-300 mb-4">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
+            <Info className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+            Special Dietary Information
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div 
+              className={`border-2 ${dietaryOptionsExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setDietaryOptionsExpanded(!dietaryOptionsExpanded)}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Dietary Accommodations</h3>
+              </div>
+              
+              {dietaryOptionsExpanded && (
+                <div className="px-6 pb-6 pt-4">
+                  <p className="text-gray-600 dark:text-black mb-4 text-center">
                     Hocking College Dining Services is committed to accommodating students with various dietary needs and preferences.
                   </p>
-                  <ul className="space-y-2 text-indigo-700 dark:text-indigo-300">
+                  <ul className="space-y-2 text-gray-600 dark:text-black text-sm">
                     <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-indigo-600" />
+                      <span className="inline-flex mr-2 mt-1">•</span>
                       <span>Vegetarian and vegan options available daily</span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-indigo-600" />
+                      <span className="inline-flex mr-2 mt-1">•</span>
                       <span>Gluten-free alternatives at every meal</span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-indigo-600" />
+                      <span className="inline-flex mr-2 mt-1">•</span>
                       <span>Dairy-free choices clearly labeled</span>
                     </li>
                     <li className="flex items-start">
-                      <CheckCircle className="mr-2 mt-1 h-4 w-4 text-indigo-600" />
+                      <span className="inline-flex mr-2 mt-1">•</span>
                       <span>Allergen-free station with dedicated preparation area</span>
                     </li>
                   </ul>
                 </div>
-                
-                <div className="border-2 border-indigo-600 dark:border-indigo-700 rounded-lg shadow-sm bg-indigo-50 dark:bg-indigo-900/30 p-5 hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn">
-                  <h3 className="text-lg font-semibold mb-3 text-indigo-800 dark:text-indigo-200">Food Allergen Information</h3>
-                  <p className="text-indigo-700 dark:text-indigo-300 mb-4">
+              )}
+            </div>
+            
+            <div 
+              className={`border-2 ${allergenInfoExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setAllergenInfoExpanded(!allergenInfoExpanded)}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Food Allergen Information</h3>
+              </div>
+              
+              {allergenInfoExpanded && (
+                <div className="px-6 pb-6 pt-4">
+                  <p className="text-gray-600 dark:text-black mb-4 text-center">
                     All menu items are clearly labeled with the following allergen information:
                   </p>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-2 text-gray-900 dark:text-black">
                     <div className="flex items-center">
-                      <span className="inline-block w-6 h-6 rounded-full bg-red-500 text-white text-xs flex items-center justify-center mr-2">G</span>
-                      <span className="text-indigo-700 dark:text-indigo-300">Gluten</span>
+                      <span className="inline-flex w-6 h-6 rounded-full bg-red-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">G</span>
+                      <span className="text-sm">Gluten</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="inline-block w-6 h-6 rounded-full bg-yellow-500 text-white text-xs flex items-center justify-center mr-2">D</span>
-                      <span className="text-indigo-700 dark:text-indigo-300">Dairy</span>
+                      <span className="inline-flex w-6 h-6 rounded-full bg-yellow-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">D</span>
+                      <span className="text-sm">Dairy</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="inline-block w-6 h-6 rounded-full bg-blue-500 text-white text-xs flex items-center justify-center mr-2">N</span>
-                      <span className="text-indigo-700 dark:text-indigo-300">Nuts</span>
+                      <span className="inline-flex w-6 h-6 rounded-full bg-blue-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">N</span>
+                      <span className="text-sm">Nuts</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="inline-block w-6 h-6 rounded-full bg-white text-gray-800 text-xs flex items-center justify-center mr-2">S</span>
-                      <span className="text-indigo-700 dark:text-indigo-300">Soy</span>
+                      <span className="inline-flex w-6 h-6 rounded-full bg-gray-600 dark:bg-gray-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">S</span>
+                      <span className="text-sm">Soy</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="inline-block w-6 h-6 rounded-full bg-purple-500 text-white text-xs flex items-center justify-center mr-2">E</span>
-                      <span className="text-indigo-700 dark:text-indigo-300">Eggs</span>
+                      <span className="inline-flex w-6 h-6 rounded-full bg-purple-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">E</span>
+                      <span className="text-sm">Eggs</span>
                     </div>
                     <div className="flex items-center">
-                      <span className="inline-block w-6 h-6 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center mr-2">F</span>
-                      <span className="text-indigo-700 dark:text-indigo-300">Fish/Shellfish</span>
+                      <span className="inline-flex w-6 h-6 rounded-full bg-orange-500 text-white text-xs items-center justify-center mr-2 font-medium flex-shrink-0">F</span>
+                      <span className="text-sm">Fish/Shellfish</span>
                     </div>
                   </div>
                 </div>
+              )}
+            </div>
+          </div>
+          
+          <div className="mt-6">
+            <div 
+              className={`border-2 ${dietaryAccommodationsExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn max-w-md mx-auto`}
+              onClick={() => setDietaryAccommodationsExpanded(!dietaryAccommodationsExpanded)}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Contact for Dietary Accommodations</h3>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-gray-600">
-            <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-              <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-                <Users className="mr-3 h-6 w-6" />
-                Special Accommodations
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-700 dark:text-gray-300">Contact Information</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <Mail className="mr-2 h-4 w-4 text-gray-600" />
-                      <a href="mailto:smithj28721@hocking.edu" className="text-blue-600 hover:underline text-sm">smithj28721@hocking.edu</a>
+              
+              {dietaryAccommodationsExpanded && (
+                <div className="px-6 pb-6 pt-4">
+                  <p className="text-gray-600 dark:text-black mb-4 text-center">
+                    For specific dietary accommodations or concerns, please contact:
+                  </p>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                      <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Contact:</span>
+                      <span className="text-gray-600 dark:text-black">Janet M. Smith</span>
                     </div>
-                    <div className="flex items-center">
-                      <Phone className="mr-2 h-4 w-4 text-gray-600" />
-                      <a href="tel:7407536000" className="text-blue-600 hover:underline text-sm">(740) 753-6000</a>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                      <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Email:</span>
+                      <a href="mailto:smithj28721@hocking.edu" className="text-blue-600 dark:text-blue-400 ">
+                        smithj28721@hocking.edu
+                      </a>
                     </div>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <h4 className="font-semibold text-gray-700 dark:text-gray-300">Dietary Specialist</h4>
-                  <div className="space-y-2">
-                    <div className="flex items-center">
-                      <Users className="mr-2 h-4 w-4 text-gray-600" />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Janet M. Smith</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="mr-2 h-4 w-4 text-gray-600" />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Available for consultations</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1">
+                      <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Phone:</span>
+                      <a href="tel:7407536000" className="text-blue-600 dark:text-blue-400 ">
+                        (740) 753-6000
+                      </a>
                     </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              )}
+            </div>
+          </div>
         </div>
       )}
 
       {selectedTab === "locations" && (
-        <div className="space-y-8">
-          <Card className="border-2 border-green-600 animate-fadeIn">
-            <CardHeader className="bg-green-50 dark:bg-green-900/20">
-              <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-                <MapPin className="mr-3 h-6 w-6" />
-                Campus Dining Locations
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="flex flex-col h-full animate-fadeIn">
-                  <div className="rounded-lg overflow-hidden border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/30 h-48 mb-4 relative group">
-                    <div className="w-full h-full flex items-center justify-center bg-green-100 dark:bg-green-900/50">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
+            <MapPin className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+            Campus Dining Locations
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div 
+              className={`border-2 ${hawksNestExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setHawksNestExpanded(!hawksNestExpanded)}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Hawks Nest Dining Hall</h3>
+              </div>
+              
+              {hawksNestExpanded && (
+                <div className="px-6 pb-6 pt-4">
+                  <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
+                    <div className="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-gray-700">
                       {imageLoading.hawksNest && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80">
+                          <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
                         </div>
                       )}
                       <img 
@@ -509,25 +620,35 @@ export default function DiningHall() {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 text-green-800 dark:text-green-200">Hawks Nest Dining Hall</h3>
-                  <p className="text-green-700 dark:text-green-300 mb-4">
+                  <p className="text-gray-600 dark:text-white mb-4 text-center">
                     Our primary dining facility offering a wide variety of food options, including 
                     Grab-and-go and pre-made meals, including subs, sandwiches, and salads.
                   </p>
-                  <ul className="space-y-1 text-green-700 dark:text-green-300 mb-4">
-                    <li className="flex items-start text-sm">
-                      <Building className="mr-2 mt-1 h-4 w-4 text-green-600" />
+                  <ul className="space-y-1 text-gray-600 dark:text-white text-sm">
+                    <li className="flex items-start">
+                      <span className="font-medium w-20">Location:</span>
                       <span>John Light, second Floor</span>
                     </li>
                   </ul>
                 </div>
-          
-                <div className="flex flex-col h-full animate-fadeIn">
-                  <div className="rounded-lg overflow-hidden border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/30 h-48 mb-4 relative group">
-                    <div className="w-full h-full flex items-center justify-center bg-green-100 dark:bg-green-900/50">
+              )}
+            </div>
+      
+            <div 
+              className={`border-2 ${diamondDawgzExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setDiamondDawgzExpanded(!diamondDawgzExpanded)}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Diamond Dawgz</h3>
+              </div>
+              
+              {diamondDawgzExpanded && (
+                <div className="px-6 pb-6 pt-4">
+                  <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
+                    <div className="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-gray-700">
                       {imageLoading.diamondDawgs && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
+                        <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80">
+                          <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
                         </div>
                       )}
                       <img 
@@ -542,136 +663,73 @@ export default function DiningHall() {
                       />
                     </div>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2 text-green-800 dark:text-green-200">Diamond Dawgz</h3>
-                  <p className="text-green-700 dark:text-green-300 mb-4">
+                  <p className="text-gray-600 dark:text-white mb-4 text-center">
                     A convenient spot for a quick hotdog, burger, fries, or some chicken tenders, or enjoy a refreshing milkshake and ice cream.
                   </p>
-                  <ul className="space-y-1 text-green-700 dark:text-green-300 mb-4">
-                    <li className="flex items-start text-sm">
-                      <MapPin className="mr-2 mt-1 h-4 w-4 text-green-600" />
+                  <ul className="space-y-1 text-gray-600 dark:text-white text-sm">
+                    <li className="flex items-start">
+                      <span className="font-medium w-20">Location:</span>
                       <span>185 W Canal St Nelsonville, OH 45764</span>
                     </li>
-                    <li className="flex items-start text-sm">
-                      <Phone className="mr-2 mt-1 h-4 w-4 text-green-600" />
-                      <a href="tel:7407536100" className="text-blue-600 hover:underline">(740) 753-6100</a>
+                    <li className="flex items-start">
+                      <span className="font-medium w-20">Phone:</span>
+                      <span>(740) 753-6100</span>
                     </li>
                   </ul>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              )}
+            </div>
 
-          <Card className="border-2 border-purple-600">
-            <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-              <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-                <Star className="mr-3 h-6 w-6" />
-                Rhapsody Restaurant
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <p className="text-purple-700 dark:text-purple-300">
+            <div 
+              className={`border-2 ${rhapsodyExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
+              onClick={() => setRhapsodyExpanded(!rhapsodyExpanded)}
+            >
+              <div className="p-6 flex flex-col items-center">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Rhapsody Restaurant</h3>
+              </div>
+              
+              {rhapsodyExpanded && (
+                <div className="px-6 pb-6 pt-4">
+                  <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
+                    {imageLoading.rhapsody && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80">
+                        <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+                      </div>
+                    )}
+                    <img 
+                      src={images.rhapsody} 
+                      alt="Rhapsody Restaurant" 
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onLoad={() => handleImageLoad('rhapsody')}
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Rhapsody';
+                        handleImageLoad('rhapsody');
+                      }}
+                    />
+                  </div>
+                  <p className="text-gray-600 dark:text-white mb-4 text-center">
                     Rhapsody is a student-run restaurant that offers a casual fine dining experience with live music every Friday and Saturday.
                   </p>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-purple-700 dark:text-purple-300">Hours of Operation</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center">
-                        <Clock className="mr-2 h-4 w-4 text-purple-600" />
-                        <span className="text-sm text-purple-700 dark:text-purple-300">Sunday - Tuesday: Closed</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="mr-2 h-4 w-4 text-purple-600" />
-                        <span className="text-sm text-purple-700 dark:text-purple-300">Wednesday & Thursday: 5:00 PM - 9:00 PM</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="mr-2 h-4 w-4 text-purple-600" />
-                        <span className="text-sm text-purple-700 dark:text-purple-300">Friday & Saturday: 5:00 PM - 9:00 PM</span>
-                      </div>
-                    </div>
-                  </div>
+                  <ul className="space-y-1 text-sm text-gray-600 dark:text-white">
+                    <li className="flex items-start">
+                      <span className="font-medium w-32">Sunday - Tuesday:</span>
+                      <span>(Closed)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="font-medium w-32">Wednesday & Thursday:</span>
+                      <span>(5:00 PM - 9:00 PM)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="font-medium w-32">Friday & Saturday:</span>
+                      <span>(5:00 PM - 9:00 PM)</span>
+                    </li>
+                  </ul>
                 </div>
-                <div className="flex-shrink-0 w-full md:w-64 h-48 rounded-lg overflow-hidden border border-purple-200 dark:border-purple-800 relative group animate-fadeIn">
-                  {imageLoading.rhapsody && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-                      <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
-                    </div>
-                  )}
-                  <img 
-                    src={images.rhapsody} 
-                    alt="Rhapsody Restaurant" 
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    onLoad={() => handleImageLoad('rhapsody')}
-                    onError={(e) => {
-                      e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Rhapsody';
-                      handleImageLoad('rhapsody');
-                    }}
-                  />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              )}
+            </div>
+          </div>
         </div>
       )}
-
-      {/* FAQ Section */}
-      <Card className="border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Frequently Asked Questions (FAQ)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="meal-plan-changes">
-              <AccordionTrigger className="text-left">
-                How do I change my meal plan?
-              </AccordionTrigger>
-              <AccordionContent>
-                Contact the Student Services office in Davidson Hall or call (740) 753-6000. Changes can typically be made within the first two weeks of each semester.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="hawk-bucks">
-              <AccordionTrigger className="text-left">
-                What are Hawk Bucks and how do I use them?
-              </AccordionTrigger>
-              <AccordionContent>
-                Hawk Bucks are dining dollars included with your meal plan that can be used at any campus dining location. They are loaded onto your student ID card and can be used for additional meals, snacks, or guest meals.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="guest-meals">
-              <AccordionTrigger className="text-left">
-                Can I bring guests to the dining hall?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes! You can use your Hawk Bucks to purchase guest meals, or guests can pay with cash or card at the entrance. Guest meal prices are typically lower than regular meal prices.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="dietary-accommodations">
-              <AccordionTrigger className="text-left">
-                How do I request special dietary accommodations?
-              </AccordionTrigger>
-              <AccordionContent>
-                Contact Janet M. Smith at <a href="mailto:smithj28721@hocking.edu" className="text-blue-600 hover:underline">smithj28721@hocking.edu</a> or call (740) 753-6000. We can accommodate most dietary restrictions and allergies with advance notice.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="menu-updates">
-              <AccordionTrigger className="text-left">
-                How often is the menu updated?
-              </AccordionTrigger>
-              <AccordionContent>
-                The weekly menu is updated every Friday for the following week. Daily specials and changes are posted at the dining hall entrance and on our website.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
     </div>
   );
 }

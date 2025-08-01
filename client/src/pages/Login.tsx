@@ -7,7 +7,7 @@ import { useAuth } from "../lib/auth";
 import { useState } from "react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Crown, User } from "lucide-react";
+import { Crown, User, Info } from "lucide-react";
 
 export default function Login() {
   const { toast } = useToast();
@@ -61,7 +61,7 @@ export default function Login() {
                 />
               </div>
               <h1 className="text-3xl font-bold text-white mb-3">Welcome to Hocking College</h1>
-              <p className="text-base text-white">Your go-to hub for schedules, tools, maps, and more right at your fingertips</p>
+              <p className="text-base text-white">We serve as a pathway to prosperity, teaching and inspiring all who seek to learn, growing careers and changing lives.</p>
             </div>
             <div className="pt-4 space-y-3">
               <Button 
@@ -69,18 +69,25 @@ export default function Login() {
                 onClick={handleGetStarted}
                 className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
               >
-                <User className="mr-2 h-5 w-5" />
+                <User className="mr-2 h-6 w-6" />
                 Get Started
               </Button>
               
               <Button 
                 type="button" 
-                variant="ghost"
                 onClick={() => setShowAdminLogin(!showAdminLogin)}
-                className="w-full text-white py-2 text-sm hover:bg-white/20 transition border border-white/30"
+                className="w-full bg-white/1 !text-white py-3 text-lg rounded-xl font-semibold hover:bg-white/8 transition border-2 border-white/30"
               >
-                <Crown className="mr-2 h-4 w-4" />
+                <Crown className="mr-2 h-6 w-6 text-white" />
                 Login as Admin
+              </Button>
+              
+              <Button 
+                type="button" 
+                className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
+              >
+                <Info className="mr-2 h-6 w-6" />
+                More about Hocking
               </Button>
             </div>
 
@@ -130,9 +137,9 @@ export default function Login() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/src/assets/AISecondCut.mp4" type="video/mp4" />
+          <source src="/src/assets/landing page.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/50"></div>
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ export default function AcademicToolDetail() {
           <CardContent className="space-y-4 pt-4">
             <p>{tool.description}</p>
             {tool.url && tool.url !== "#" && (
-              <a href={tool.url} className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+              <a href={tool.url} className="text-primary" target="_blank" rel="noopener noreferrer">
                 Go to {tool.name}
               </a>
             )}

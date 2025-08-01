@@ -140,14 +140,16 @@
   margin-bottom: 0;
 }
 
-/* Hover State */
+/* Hover State - Remove the moving highlight effect */
 .mobile-calendar .react-calendar__tile:hover {
-  background: #dbeafe !important;
-  transform: scale(0.98);
+  /* Remove the random moving highlight - no more background or transform changes */
+  background: inherit !important;
+  transform: none;
 }
 
 .dark .mobile-calendar .react-calendar__tile:hover {
-  background: #1e40af !important;
+  /* Remove the random moving highlight in dark mode too */
+  background: inherit !important;
 }
 
 /* Today */
@@ -202,7 +204,7 @@
   border-color: #4b5563 !important;
 }
 
-/* Event Indicators */
+/* Event Indicators - Make them more prominent */
 .calendar-event-dot-container {
   display: flex;
   justify-content: center;
@@ -210,21 +212,29 @@
 }
 
 .calendar-event-dot {
-  width: 8px;
-  height: 8px;
-  background: #ef4444;
+  width: 10px;
+  height: 10px;
+  background: #10b981;
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
 }
 
+/* Dates with Events - Make them really stand out! */
 .has-events {
-  background: #fef2f2;
-  border-color: #ef4444;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
+  border: 2px solid #10b981 !important;
+  color: #064e3b !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
 .dark .has-events {
-  background: #450a0a;
-  border-color: #ef4444;
+  background: linear-gradient(135deg, #064e3b, #065f46) !important;
+  border: 2px solid #10b981 !important;
+  color: #6ee7b7 !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 
 /* Focus States for Accessibility */
@@ -260,8 +270,8 @@
   }
   
   .calendar-event-dot {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 }
 
@@ -287,7 +297,7 @@
   }
   
   .calendar-event-dot {
-    width: 5px;
-    height: 5px;
+    width: 7px;
+    height: 7px;
   }
 } 

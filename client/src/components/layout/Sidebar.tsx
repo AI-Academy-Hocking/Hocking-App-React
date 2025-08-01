@@ -15,6 +15,12 @@ interface NavItem {
   path: string;
   label: string;
   icon: LucideIcon;
+}
+
+interface DropdownItem {
+  path: string;
+  label: string;
+  icon: LucideIcon;
   category?: string;
 }
 

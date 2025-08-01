@@ -9,7 +9,11 @@ import calendarRouter from './src/routes/calendar';
 import verificationRouter from './api/verification';
 import postsRouter from './api/posts';
 import socialRouter from './api/social';
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
 
 const app = express();
 app.use(express.json());

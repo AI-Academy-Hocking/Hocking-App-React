@@ -1,32 +1,41 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { Phone, Mail, Clock, ArrowLeft } from 'lucide-react';
-=======
 import { 
   Phone, Mail, Clock, ArrowLeft, Dumbbell, Users, MapPin, ExternalLink,
   Calendar, CheckCircle, BookOpen, Activity, 
   Building, Coffee, Waves, Mountain, Timer
 } from 'lucide-react';
->>>>>>> origin/Jodian-Branch
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import studentCenterImage from "@/components/assets/studentCenter.jpg"; // Import the image
+import studentCenterImage from "../components/assets/studentCenter.jpg"; // Import the image
+import scPianoImage from "../components/assets/sc piano.JPG";
+import scPatioImage from "../components/assets/sc patio.JPG";
 import { Link } from "wouter";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 function RecreationPage() {
-  const [infoExpanded, setInfoExpanded] = useState(false);
-  const [facilitiesExpanded, setFacilitiesExpanded] = useState(false);
-  
-  // Image paths for backgrounds
-  const scPianoImage = "/sc-piano.JPG";
-  const scPatioImage = "/sc-patio.JPG";
+  const [openSection, setOpenSection] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  const handleSectionToggle = (section: string) => {
+    setOpenSection(openSection === section ? "" : section);
+  };
+
+  // Close section when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpenSection("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
   return (
-<<<<<<< HEAD
     <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
-=======
     <div className="container mx-auto py-8 px-4 max-w-6xl">
->>>>>>> origin/Jodian-Branch
       <div className="flex items-center mb-6">
         <Link href="/tools">
           <button className="flex items-center text-blue-600 dark:text-white hover:text-blue-800 dark:hover:text-gray-300 transition-colors">
@@ -36,12 +45,10 @@ function RecreationPage() {
         </Link>
       </div>
 
-<<<<<<< HEAD
       <h1 className="text-2xl font-bold text-gray-900 dark:text-blue-300 mb-6">Recreation & Student Center</h1>
       
       <Card className="overflow-hidden mb-6 border-2 border-blue-600 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl">
         <div className="h-48 w-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center border-b border-blue-600 dark:border-gray-700">
-=======
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
           <Activity className="h-8 w-8 text-blue-600" />
@@ -55,7 +62,6 @@ function RecreationPage() {
       {/* Hero Image */}
       <Card className="mb-8 overflow-hidden border-2 border-blue-600">
         <div className="h-64 w-full bg-gray-200 flex items-center justify-center">
->>>>>>> origin/Jodian-Branch
           <img 
             src={studentCenterImage} 
             alt="Recreation Center" 
@@ -63,7 +69,6 @@ function RecreationPage() {
           />
         </div>
       </Card>
-<<<<<<< HEAD
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card 
@@ -111,7 +116,6 @@ function RecreationPage() {
                   <div>
                     <p className="font-medium text-white">Email</p>
                     <a href="mailto:studentcenter@hocking.edu" className="text-blue-300 hover:text-blue-200 hover:underline">studentcenter@hocking.edu</a>
-=======
 
       {/* Hours & Contact Information */}
       {/* Collapsible Sections */}
@@ -157,12 +161,10 @@ function RecreationPage() {
                   <div className="flex items-center">
                     <MapPin className="mr-2 h-4 w-4 text-green-600" />
                     <span className="text-sm text-green-700 dark:text-green-300">Student Center Building</span>
->>>>>>> origin/Jodian-Branch
                   </div>
                 </div>
               </div>
             </div>
-<<<<<<< HEAD
           )}
         </Card>
         
@@ -202,7 +204,6 @@ function RecreationPage() {
           )}
         </Card>
       </div>
-=======
           </AccordionContent>
         </AccordionItem>
 
@@ -484,7 +485,6 @@ function RecreationPage() {
           </div>
         </CardContent>
       </Card>
->>>>>>> origin/Jodian-Branch
     </div>
   );
 }

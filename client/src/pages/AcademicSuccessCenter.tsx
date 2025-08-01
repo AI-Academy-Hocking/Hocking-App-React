@@ -5,7 +5,6 @@ import {
   UserCheck, Target
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -14,8 +13,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 // Custom icon for Tutoring (chat bubble with pencil)
 const ChatWithPencil: React.FC<{ className?: string }> = ({ className }) => (
   <div className={`relative ${className}`}>
-    <MessageSquare className="h-8 w-8 text-blue-600 dark:text-blue-400" />
-    <Pencil className="h-4 w-4 text-blue-600 dark:text-blue-400 absolute bottom-0 right-0" />
+    <MessageSquare className="h-8 w-8 text-blue-600" />
+    <Pencil className="h-4 w-4 text-blue-600 absolute bottom-0 right-0" />
   </div>
 );
 
@@ -28,9 +27,6 @@ interface Section {
 }
 
 function AcademicSuccessCenter() {
-  const [isContactOpen, setIsContactOpen] = useState(false);
-  const [isGetStartedOpen, setIsGetStartedOpen] = useState(false);
-
   const sections: Section[] = [
     {
       title: "Tutoring",
@@ -80,7 +76,7 @@ function AcademicSuccessCenter() {
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       <div className="flex items-center mb-6">
         <Link href="/tools">
-          <button className="flex items-center text-blue-600 dark:text-white hover:text-blue-800 dark:hover:text-gray-300 transition-colors">
+          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
           </button>

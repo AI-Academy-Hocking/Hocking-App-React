@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
   Globe, PawPrint, DollarSign, CreditCard, Award, Heart, ArrowLeft
+  ChevronDown, ChevronUp
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { useBackNavigation } from "../hooks/use-back-navigation";
 
 // Define the StudentTool interface locally since we can't import it
 interface StudentTool {
@@ -55,9 +55,9 @@ export default function StudentTools() {
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
   const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
-  const resourceTools = tools?.filter(tool => tool.category === 'resources' && tool.id !== 'campus-resources') || [];
+  const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
@@ -73,10 +73,6 @@ export default function StudentTools() {
     'recreation': Dumbbell,
     'dining': Utensils,
     'events': Calendar,
-    'financial-aid': DollarSign,
-    'billing': CreditCard,
-    'scholarships': Award,
-    'health-services': Heart,
   };
 
   // Quick links for bottom section
@@ -93,17 +89,6 @@ export default function StudentTools() {
 
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
-      {/* Back Navigation */}
-      <div className="flex items-center mb-6 px-6 pt-6">
-        <button 
-          onClick={goBack}
-          className="flex items-center text-primary hover:text-primary-dark transition-colors"
-        >
-          <ArrowLeft className="h-5 w-5 mr-2" />
-          <span>Back</span>
-        </button>
-      </div>
-
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
         

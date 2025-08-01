@@ -1,32 +1,26 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import { Laptop, HelpCircle, BookOpen, Video, MessageSquare, ArrowLeft } from 'lucide-react';
-=======
+
 import { 
   Laptop, HelpCircle, BookOpen, Video, MessageSquare, ArrowLeft,
   CheckCircle, BookOpen as BookOpenIcon, ExternalLink,
   Target, MonitorSmartphone, Phone, Clock
 } from 'lucide-react';
->>>>>>> origin/Jodian-Branch
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 function OnlineLearningPage() {
-<<<<<<< HEAD
   const [canvasExpanded, setCanvasExpanded] = useState(false);
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
 
   return (
     <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
-=======
   const handleExternalLink = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
->>>>>>> origin/Jodian-Branch
       <div className="flex items-center mb-6">
         <Link href="/tools">
           <button className="flex items-center text-blue-600 dark:text-white hover:text-blue-800 dark:hover:text-gray-300 transition-colors">
@@ -35,7 +29,6 @@ function OnlineLearningPage() {
           </button>
         </Link>
       </div>
-<<<<<<< HEAD
       <h1 className="text-2xl font-bold text-gray-900 dark:text-blue-300 mb-6">Online Learning</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -122,7 +115,7 @@ function OnlineLearningPage() {
           )}
         </Card>
       </div>
-=======
+
 
       <div className="mb-8">
         <div className="flex items-center gap-4 mb-4">
@@ -400,7 +393,6 @@ function OnlineLearningPage() {
           </div>
         </CardContent>
       </Card>
->>>>>>> origin/Jodian-Branch
     </div>
   );
 }

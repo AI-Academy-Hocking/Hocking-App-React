@@ -10,7 +10,11 @@ import {
   type LocationUpdate 
 =======
   studentTools, type StudentTool, type InsertStudentTool
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
 } from "@shared/schema";
 
 // Interface for storage operations
@@ -40,7 +44,11 @@ export interface IStorage {
   getSafetyResource(id: number): Promise<SafetyResource | undefined>;
   createSafetyResource(resource: InsertSafetyResource): Promise<SafetyResource>;
 =======
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
 }
 
 export class MemStorage implements IStorage {
@@ -57,7 +65,11 @@ export class MemStorage implements IStorage {
   private currentSafetyAlertId: number;
   private currentSafetyResourceId: number;
 =======
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
 
   constructor() {
     this.studentTools = new Map();
@@ -73,7 +85,11 @@ export class MemStorage implements IStorage {
     this.currentSafetyAlertId = 1;
     this.currentSafetyResourceId = 1;
 =======
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
     
     // Initialize with sample data
     this.initializeSampleData();
@@ -198,7 +214,11 @@ export class MemStorage implements IStorage {
     // Just store the tool as-is, don't add createdAt or isActive
     this.studentTools.set(tool.id, tool as StudentTool);
     return tool as StudentTool;
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
   }
   
   // Initialize with sample data
@@ -363,7 +383,11 @@ export class MemStorage implements IStorage {
     
 =======
     // Sample student tools - only what's needed for Career & University Center
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
     await this.createStudentTool({
       id: "career-services",
       name: "Career & University Center",
@@ -469,7 +493,11 @@ export class MemStorage implements IStorage {
       order: 8
 =======
       url: "/career-university-center",
+<<<<<<< HEAD
 >>>>>>> origin/Jodian-Branch
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
     });
   }
 }

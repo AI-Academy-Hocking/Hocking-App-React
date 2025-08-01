@@ -1,10 +1,43 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PhoneCall, Shield, HeartPulse, AlertTriangle, ArrowLeft } from "lucide-react";
-import { useBackNavigation } from "../hooks/use-back-navigation";
+import { Button } from "@/components/ui/button";
+
+interface SafetyResource {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  phoneNumber: string | null;
+  url: string | null;
+  icon: string | null;
+  order: number | null;
+}
 
 export default function CampusSafety() {
-  const { goBack } = useBackNavigation();
+  const [resourceCategory, setResourceCategory] = useState<string>("all");
+
+  // Fetch safety resources (filtered by category if selected)
+  const { data: resources = [], isLoading: resourcesLoading } = useQuery({
+    queryKey: ["/api/safety/resources", resourceCategory],
+    queryFn: async () => {
+      const url = resourceCategory !== "all" 
+        ? `/api/safety/resources?category=${resourceCategory}`
+        : "/api/safety/resources";
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error("Failed to fetch safety resources");
+      }
+      return response.json() as Promise<SafetyResource[]>;
+    }
+  });
+
+  // Get unique resource categories
+  const categories = resources && resources.length > 0
+    ? Array.from(new Set(resources.map(resource => resource.category)))
+    : [];
 
   return (
     <div className="container py-6 max-w-2xl bg-white dark:bg-[#151c26] min-h-screen rounded-xl">
@@ -46,7 +79,7 @@ export default function CampusSafety() {
               <CardContent className="flex flex-col items-center py-4">
                 <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
                 <span className="text-xs text-black dark:text-white">Health Services</span>
-                <span className="text-xl font-bold text-green-600">(740) 753-7070</span>
+                <span className="text-xl font-bold text-green-600">(740) 753-6598</span>
               </CardContent>
             </Card>
           </div>

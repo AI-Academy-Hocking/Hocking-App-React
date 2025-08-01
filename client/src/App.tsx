@@ -50,6 +50,20 @@ import AcademicToolDetail from "./pages/tools/academic/[id]";
 import Resources from "./pages/Resources";
 import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
+
+// Student Services (from Jodian-Branch)
+import InternationalStudents from "./pages/InternationalStudents";
+import CanineFacility from "./pages/CanineFacility";
+import FinancialAid from "./pages/FinancialAid";
+import Billing from "./pages/Billing";
+import Scholarships from "./pages/Scholarships";
+import CampusHealth from "./pages/CampusHealth";
+import VerifyUser from "./pages/VerifyUser";
+import VerifyPost from "./pages/VerifyPost";
+
+// New feature pages
+import Events from "./pages/Events";
+
 import './index.css';
 import './styles/globals.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -127,6 +141,23 @@ function Router() {
         <Route path="/transportation" component={Transportation} />
         <Route path="/settings" component={Settings} />
         <Route path="/admin/dashboard" component={AdminDashboard} />
+        <Route path="/international-students" component={InternationalStudents} />
+        <Route path="/canine-facility" component={CanineFacility} />
+        <Route path="/graduation" component={Graduation} />
+        <Route path="/financial-aid" component={FinancialAid} />
+        <Route path="/billing" component={Billing} />
+        <Route path="/scholarships" component={Scholarships} />
+        <Route path="/campus-health" component={CampusHealth} />
+        <Route path="/career-university-center" component={CareerUniversityCenter} />
+        <Route path="/verify-user/:id" component={VerifyUser} />
+        <Route path="/verify-post/:id" component={VerifyPost} />
+        
+        {/* New feature routes - Phase 1 */}
+        <Route path="/events" component={Events} />
+        
+        {/* Wellness Features */}
+        <Route path="/wellness" component={WellnessTracker} />
+        
         <Route component={NotFound} />
       </Switch>
     </MainLayout>

@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Mail, Phone, MapPin, Clock, Users, Briefcase } from "lucide-react";
@@ -174,14 +175,35 @@ const offices = [
 ];
 
 export default function OfficeAdministration() {
+  const [openAccordion, setOpenAccordion] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleAccordionChange = (value: string) => {
+    setOpenAccordion(value === openAccordion ? "" : value);
+  };
+
+  // Close accordion when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpenAccordion("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div ref={containerRef} className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-8">
         <h1 className="text-3xl font-heading font-bold mb-2">Office & Administration</h1>
         <p className="text-gray-600">Select an office or service below to view detailed information, contact details, and available services.</p>
       </div>
 
-      <Accordion type="single" collapsible className="w-full space-y-4">
+      <Accordion type="single" collapsible className="w-full space-y-4" value={openAccordion} onValueChange={handleAccordionChange}>
         {offices.map((office) => (
           <AccordionItem key={office.id} value={office.id} className="border rounded-lg">
             <AccordionTrigger className="px-6 py-4 hover:no-underline">
@@ -208,14 +230,14 @@ export default function OfficeAdministration() {
                     <div className="flex items-center gap-2 text-sm">
                       <Phone className="h-4 w-4 text-gray-500" />
                       <span className="font-medium">Phone:</span>
-                      <a href={`tel:${office.phone.replace(/[^\d]/g, "")}`} className="text-primary hover:underline">
+                      <a href={`tel:${office.phone.replace(/[^\d]/g, "")}`} className="text-primary ">
                         {office.phone}
                       </a>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
                       <Mail className="h-4 w-4 text-gray-500" />
                       <span className="font-medium">Email:</span>
-                      <a href={`mailto:${office.email}`} className="text-primary hover:underline">
+                      <a href={`mailto:${office.email}`} className="text-primary ">
                         {office.email}
                       </a>
                     </div>
@@ -264,7 +286,7 @@ export default function OfficeAdministration() {
                       <div key={i} className="bg-gray-50 rounded-lg p-3 border">
                         <div className="font-semibold text-gray-900 text-sm">{person.name}</div>
                         <div className="text-xs text-gray-600 mb-1">{person.title}</div>
-                        <a href={`mailto:${person.email}`} className="text-primary text-xs hover:underline">
+                        <a href={`mailto:${person.email}`} className="text-primary text-xs ">
                           {person.email}
                         </a>
                       </div>
