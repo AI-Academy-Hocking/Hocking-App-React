@@ -7,7 +7,7 @@ import { useAuth } from "../lib/auth";
 import { useState } from "react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Crown, User } from "lucide-react";
+import { Crown, User, Info } from "lucide-react";
 
 export default function Login() {
   const { toast } = useToast();
@@ -81,6 +81,14 @@ export default function Login() {
                 <Crown className="mr-2 h-6 w-6 text-white" />
                 Login as Admin
               </Button>
+              
+              <Button 
+                type="button" 
+                className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
+              >
+                <Info className="mr-2 h-6 w-6" />
+                More about Hocking
+              </Button>
             </div>
 
             {showAdminLogin && (
@@ -129,7 +137,7 @@ export default function Login() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/src/assets/AISecondCut.mp4" type="video/mp4" />
+          <source src="/src/assets/landing page.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50"></div>
       </div>

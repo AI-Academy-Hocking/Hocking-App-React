@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Trophy, Users, Calendar, MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
@@ -19,11 +19,26 @@ interface Sport {
 }
 
 function Athletics() {
-  const [contactExpanded, setContactExpanded] = useState(false);
-  const [quickLinksExpanded, setQuickLinksExpanded] = useState(false);
-  const [facilitiesExpanded, setFacilitiesExpanded] = useState(false);
-  const [resourcesExpanded, setResourcesExpanded] = useState(false);
-  const [sportsExpanded, setSportsExpanded] = useState(false);
+  const [openSection, setOpenSection] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleSectionToggle = (section: string) => {
+    setOpenSection(openSection === section ? "" : section);
+  };
+
+  // Close section when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpenSection("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const sports: Sport[] = [
     {
@@ -53,7 +68,7 @@ function Athletics() {
   ];
 
   return (
-    <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
+    <div ref={containerRef} className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
       <div className="flex items-center mb-6">
         <Link href="/tools">
           <button className="flex items-center text-blue-600 dark:text-white hover:text-blue-800 dark:hover:text-gray-300 transition-colors">
@@ -72,11 +87,11 @@ function Athletics() {
         {/* Contact Information */}
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl max-w-md mx-auto overflow-hidden relative ${
-            contactExpanded 
+            openSection === "contact" 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
-          onClick={() => setContactExpanded(!contactExpanded)}
+          onClick={() => handleSectionToggle("contact")}
           style={{ 
             backgroundImage: `url(${SportsWallImage})`,
             backgroundSize: 'cover',
@@ -90,7 +105,7 @@ function Athletics() {
             </h3>
           </div>
           
-          {contactExpanded && (
+          {openSection === "contact" && (
             <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
@@ -123,11 +138,11 @@ function Athletics() {
       <div className="mb-8">
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl max-w-md mx-auto overflow-hidden relative ${
-            sportsExpanded 
+            openSection === "sports" 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
-          onClick={() => setSportsExpanded(!sportsExpanded)}
+          onClick={() => handleSectionToggle("sports")}
           style={{ 
             backgroundImage: `url(${BaseballHomebaseImage})`,
             backgroundSize: 'cover',
@@ -141,7 +156,7 @@ function Athletics() {
             </h3>
           </div>
           
-          {sportsExpanded && (
+          {openSection === "sports" && (
             <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {sports.map((sport, index) => (
@@ -163,11 +178,11 @@ function Athletics() {
         {/* Athletic Facilities */}
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
-            facilitiesExpanded 
+            openSection === "facilities" 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
-          onClick={() => setFacilitiesExpanded(!facilitiesExpanded)}
+          onClick={() => handleSectionToggle("facilities")}
           style={{ 
             backgroundImage: `url(${WeightsImage})`,
             backgroundSize: 'cover',
@@ -181,7 +196,7 @@ function Athletics() {
             </h3>
           </div>
           
-          {facilitiesExpanded && (
+          {openSection === "facilities" && (
             <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -208,11 +223,11 @@ function Athletics() {
         {/* Student-Athlete Resources */}
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
-            resourcesExpanded 
+            openSection === "resources" 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
-          onClick={() => setResourcesExpanded(!resourcesExpanded)}
+          onClick={() => handleSectionToggle("resources")}
           style={{ 
             backgroundImage: `url(${BasketballCourtImage})`,
             backgroundSize: 'cover',
@@ -226,7 +241,7 @@ function Athletics() {
             </h3>
           </div>
           
-          {resourcesExpanded && (
+          {openSection === "resources" && (
             <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-3">
                 <div className="flex items-center gap-2">

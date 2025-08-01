@@ -1,15 +1,11 @@
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Mail, Phone, MapPin, Clock, Bus, Car, Bike, HelpCircle, Calendar, Map, ExternalLink, DollarSign, Wifi } from "lucide-react";
 import { motion } from "framer-motion";
 
-const quickLinks = [
-  { label: "N7 Bus Schedule", icon: Calendar, href: "#", description: "View local bus times" },
-  { label: "Track Your Bus", icon: Map, href: "https://athenstransit.org", description: "See bus locations live" },
-  { label: "Buy Bus Tickets", icon: Bus, href: "https://ridegobus.com", description: "Book long-distance trips" },
-  { label: "Call GoBus", icon: Phone, href: "tel:1-888-954-6287", description: "Get help: 1-888-954-6287" },
-];
+
 
 const serviceHours = [
   { days: "Monday - Friday", time: "7:00 AM - 7:00 PM", service: "Local Athens bus (every hour)" },
@@ -111,8 +107,29 @@ const contactInfo = {
 };
 
 export default function Transportation() {
+  const [openAccordion, setOpenAccordion] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleAccordionChange = (value: string) => {
+    setOpenAccordion(value === openAccordion ? "" : value);
+  };
+
+  // Close accordion when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpenAccordion("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white dark:bg-popover p-4">
+    <div ref={containerRef} className="min-h-screen bg-white dark:bg-popover p-4">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -129,27 +146,13 @@ export default function Transportation() {
           </p>
         </motion.div>
 
-        {/* Quick Access Buttons */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">Quick Links</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {quickLinks.map(link => (
-              <Button asChild key={link.label} className="flex flex-col items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-6 h-auto">
-                <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
-                  <link.icon className="h-6 w-6 mb-1" />
-                  <span className="text-sm">{link.label}</span>
-                  <span className="text-xs opacity-90">{link.description}</span>
-                </a>
-              </Button>
-            ))}
-          </div>
-        </div>
+
 
         {/* Service Hours */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" value={openAccordion} onValueChange={handleAccordionChange}>
             <AccordionItem value="service-hours" className="border-none">
-              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 px-0 py-0">
                 <div className="flex items-center gap-4">
                   <Clock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
                   <span>Service Hours</span>
@@ -182,9 +185,9 @@ export default function Transportation() {
 
         {/* Transportation Options */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" value={openAccordion} onValueChange={handleAccordionChange}>
             <AccordionItem value="transportation-options" className="border-none">
-              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 px-0 py-0">
                 <div className="flex items-center gap-4">
                   <Car className="h-7 w-7 text-blue-600 dark:text-blue-400" />
                   <span>Transportation Options</span>
@@ -194,7 +197,7 @@ export default function Transportation() {
                 <Accordion type="single" collapsible className="w-full space-y-4">
                   {transportationOptions.map((opt, i) => (
                     <AccordionItem key={opt.title} value={String(i)} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
-                      <AccordionTrigger hideChevron className="text-lg font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">
+                      <AccordionTrigger hideChevron className="text-lg font-bold text-left text-gray-900 dark:text-blue-300 px-4">
                         <div className="flex items-center gap-3">
                           <opt.icon className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                           <span>{opt.title}</span>
@@ -232,9 +235,9 @@ export default function Transportation() {
 
         {/* FAQ */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 mb-8">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" value={openAccordion} onValueChange={handleAccordionChange}>
             <AccordionItem value="transportation-faq" className="border-none">
-              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 px-0 py-0">
                 <div className="flex items-center gap-4">
                   <HelpCircle className="h-7 w-7 text-blue-600 dark:text-blue-400" />
                   <span>Transportation FAQ</span>
@@ -244,7 +247,7 @@ export default function Transportation() {
                 <Accordion type="single" collapsible className="w-full space-y-4">
                   {faqs.map((faq, i) => (
                     <AccordionItem key={i} value={String(i)} className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
-                      <AccordionTrigger hideChevron className="text-lg font-medium text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">{faq.question}</AccordionTrigger>
+                      <AccordionTrigger hideChevron className="text-lg font-medium text-left text-gray-900 dark:text-blue-300 px-4">{faq.question}</AccordionTrigger>
                       <AccordionContent className="text-gray-700 dark:text-gray-300 px-4">{faq.answer}</AccordionContent>
                     </AccordionItem>
                   ))}
@@ -256,9 +259,9 @@ export default function Transportation() {
 
         {/* Contact Information */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" value={openAccordion} onValueChange={handleAccordionChange}>
             <AccordionItem value="contact-information" className="border-none">
-              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-0 py-0 hover:no-underline">
+              <AccordionTrigger hideChevron className="text-2xl font-bold text-left text-gray-900 dark:text-blue-300 px-0 py-0">
                 <div className="flex items-center gap-4">
                   <Mail className="h-7 w-7 text-blue-600 dark:text-blue-400" />
                   <span>Contact Information</span>
@@ -268,9 +271,9 @@ export default function Transportation() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="campus-office" className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
-                      <AccordionTrigger hideChevron className="text-base font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">
-                        Campus Transportation Office
-                      </AccordionTrigger>
+                                      <AccordionTrigger hideChevron className="text-base font-bold text-left text-gray-900 dark:text-blue-300 px-4">
+                  Campus Transportation Office
+                </AccordionTrigger>
                       <AccordionContent className="px-4">
                         <div className="space-y-2 pt-0">
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
@@ -281,12 +284,12 @@ export default function Transportation() {
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                             <span className="font-medium">Phone:</span>
-                            <a href={`tel:${contactInfo.phone}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.phone}</a>
+                            <a href={`tel:${contactInfo.phone}`} className="text-blue-600 dark:text-blue-400">{contactInfo.phone}</a>
                           </div>
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                             <span className="font-medium">Email:</span>
-                            <a href={`mailto:${contactInfo.email}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.email}</a>
+                            <a href={`mailto:${contactInfo.email}`} className="text-blue-600 dark:text-blue-400">{contactInfo.email}</a>
                           </div>
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <Clock className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -300,20 +303,20 @@ export default function Transportation() {
 
                   <Accordion type="single" collapsible className="w-full">
                     <AccordionItem value="gobus-service" className="bg-white dark:bg-popover border-2 border-blue-600 dark:border-gray-700 rounded-lg overflow-hidden">
-                      <AccordionTrigger hideChevron className="text-base font-bold text-left text-gray-900 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400 px-4">
-                        GoBus Customer Service
-                      </AccordionTrigger>
+                                      <AccordionTrigger hideChevron className="text-base font-bold text-left text-gray-900 dark:text-blue-300 px-4">
+                  GoBus Customer Service
+                </AccordionTrigger>
                       <AccordionContent className="px-4">
                         <div className="space-y-2 pt-0">
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <Phone className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                             <span className="font-medium">Phone:</span>
-                            <a href={`tel:${contactInfo.gobusPhone}`} className="text-blue-600 dark:text-blue-400 hover:underline">{contactInfo.gobusPhone}</a>
+                            <a href={`tel:${contactInfo.gobusPhone}`} className="text-blue-600 dark:text-blue-400">{contactInfo.gobusPhone}</a>
                           </div>
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <ExternalLink className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                             <span className="font-medium">Website:</span>
-                            <a href={contactInfo.gobusWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">ridegobus.com</a>
+                            <a href={contactInfo.gobusWebsite} target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400">ridegobus.com</a>
                           </div>
                           <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 text-sm">
                             <MapPin className="h-4 w-4 text-blue-600 dark:text-blue-400" />

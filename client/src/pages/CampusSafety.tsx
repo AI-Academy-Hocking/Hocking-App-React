@@ -68,7 +68,7 @@ export default function CampusSafety() {
               <CardContent className="flex flex-col items-center py-4">
                 <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
                 <span className="text-xs text-black dark:text-white">Health Services</span>
-                <span className="text-xl font-bold text-green-600">(740) 753-7070</span>
+                <span className="text-xl font-bold text-green-600">(740) 753-6598</span>
               </CardContent>
             </Card>
           </div>

@@ -1,6 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { UtensilsCrossed, Clock, CreditCard, Calendar, Info, MapPin, Loader2, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { format, startOfWeek, addDays, addWeeks, subWeeks, isToday } from "date-fns";
 import { useLocation } from "wouter";
 import "../styles/animations.css";
 import dining1Image from "../components/assets/dining1.JPG";
@@ -28,6 +30,98 @@ export default function DiningHall() {
     diamondDawgs: '',
     rhapsody: ''
   });
+  const [currentWeek, setCurrentWeek] = useState(new Date());
+
+  // Close all expanded sections when clicking outside
+  const closeAllSections = () => {
+    setExpandedMealPlan(null);
+    setExpandedDay(null);
+    setDietaryAccommodationsExpanded(false);
+    setDietaryOptionsExpanded(false);
+    setAllergenInfoExpanded(false);
+    setHawksNestExpanded(false);
+    setDiamondDawgzExpanded(false);
+    setRhapsodyExpanded(false);
+  };
+
+  // Handle clicks outside content areas
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      // Only close if clicking directly on the background area
+      if (target.getAttribute('data-background') === 'true') {
+        closeAllSections();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Generate menu data for any given week
+  const generateWeeklyMenu = (weekStartDate: Date) => {
+    const weekStart = startOfWeek(weekStartDate, { weekStartsOn: 1 }); // Monday start
+    
+    const menuTemplates = [
+      {
+        breakfast: "Scrambled Eggs, Bacon, Hash Browns, Toast",
+        lunch: "Italian Pasta Bar, Garlic Bread, Caesar Salad", 
+        dinner: "Grilled Chicken, Roasted Potatoes, Steamed Broccoli"
+      },
+      {
+        breakfast: "Pancakes, Sausage Links, Fresh Fruit",
+        lunch: "Taco Tuesday: Build Your Own Tacos, Spanish Rice", 
+        dinner: "Stir Fry Station with Chicken/Tofu, Vegetables, Rice"
+      },
+      {
+        breakfast: "French Toast, Turkey Bacon, Yogurt Parfait",
+        lunch: "Deli Sandwich Bar, Potato Chips, Pasta Salad", 
+        dinner: "Rotisserie Chicken, Mashed Potatoes, Green Beans"
+      },
+      {
+        breakfast: "Breakfast Burritos, Home Fries, Sliced Fruit",
+        lunch: "Burger Bar, French Fries, Garden Salad", 
+        dinner: "Baked Ziti, Garlic Bread, Roasted Vegetables"
+      },
+      {
+        breakfast: "Assorted Pastries, Oatmeal Bar, Boiled Eggs",
+        lunch: "Grilled Cheese, Tomato Soup, Vegetable Medley", 
+        dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
+      }
+    ];
+
+    return Array.from({ length: 5 }, (_, i) => {
+      const currentDay = addDays(weekStart, i);
+      const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+      
+      return {
+        day: dayNames[i],
+        date: format(currentDay, "MMM d"),
+        fullDate: currentDay,
+        menu: menuTemplates[i],
+        isToday: isToday(currentDay)
+      };
+    });
+  };
+
+  const weeklyMenuData = generateWeeklyMenu(currentWeek);
+  const weekStartDate = startOfWeek(currentWeek, { weekStartsOn: 1 });
+  const weekEndDate = addDays(weekStartDate, 6);
+
+  const goToPreviousWeek = () => {
+    setCurrentWeek(prevWeek => subWeeks(prevWeek, 1));
+  };
+
+  const goToNextWeek = () => {
+    setCurrentWeek(prevWeek => addWeeks(prevWeek, 1));
+  };
+
+  const goToCurrentWeek = () => {
+    setCurrentWeek(new Date());
+  };
 
   // Watch for URL changes including query parameters
   useEffect(() => {
@@ -117,7 +211,10 @@ export default function DiningHall() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 bg-white dark:bg-gray-900 min-h-screen">
+    <div 
+      className="container mx-auto py-6 px-4 bg-white dark:bg-gray-900 min-h-screen" 
+      data-background="true"
+    >
       <div className="flex items-center gap-2 mb-2">
         <UtensilsCrossed className="h-8 w-8 text-blue-600 dark:text-blue-400" />
         <h1 className="text-3xl font-bold text-gray-900 dark:text-blue-300">
@@ -130,22 +227,26 @@ export default function DiningHall() {
 
       {/* Dropdown Menu */}
       <div className="mb-6">
-        <select
-          value={selectedTab}
-          onChange={(e) => handleTabChange(e.target.value)}
-          className="p-2 border-2 border-blue-600 rounded-xl w-full md:w-auto dark:bg-gray-800 dark:text-white dark:border-gray-700 focus:outline-none"
-        >
-          <option value="hours">Hours Of Operation</option>
-          <option value="meal-plans">Meal Plans</option>
-          <option value="menu">Weekly Menu</option>
-          <option value="dietary">Dietary Info</option>
-          <option value="locations">Locations</option>
-        </select>
+        <Select value={selectedTab} onValueChange={handleTabChange}>
+          <SelectTrigger className="w-full md:w-auto bg-white dark:bg-gray-900 border-2 border-blue-600 dark:border-gray-700 rounded-xl">
+            <SelectValue placeholder="Select a section" className="text-gray-900 dark:text-white" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="hours" className="[&_svg]:hidden">Hours of Operation</SelectItem>
+            <SelectItem value="meal-plans" className="[&_svg]:hidden">Meal Plans</SelectItem>
+            <SelectItem value="menu" className="[&_svg]:hidden">Weekly Menu</SelectItem>
+            <SelectItem value="dietary" className="[&_svg]:hidden">Dietary Info</SelectItem>
+            <SelectItem value="locations" className="[&_svg]:hidden">Locations</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
           <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-6">
             <Clock className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             Hours of Operation
@@ -200,7 +301,10 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "meal-plans" && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
           <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
             <CreditCard className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             Meal Plans
@@ -267,52 +371,61 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "menu" && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="mb-6">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-4">
               <Calendar className="h-7 w-7 text-blue-600 dark:text-blue-400" />
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">This Week's Menu</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-blue-300">Weekly Menu</h2>
             </div>
-            <div className="mb-3 text-center">
-              <span className="text-sm bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300 px-4 py-2 rounded-full font-semibold shadow-sm">March 31 - April 6</span>
+            
+            {/* Week Navigation */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <button
+                onClick={goToPreviousWeek}
+                className="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600"
+                title="Previous Week"
+              >
+                <ChevronLeft className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </button>
+              
+                              <div className="text-center">
+                  <div className="text-sm bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-600 font-semibold shadow-sm">
+                    {format(weekStartDate, "MMM d")} - {format(weekEndDate, "MMM d, yyyy")}
+                  </div>
+                                  <button
+                    onClick={goToCurrentWeek}
+                    className="text-xs bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors mt-2 font-medium"
+                  >
+                  Go to This Week
+                </button>
+              </div>
+              
+              <button
+                onClick={goToNextWeek}
+                className="p-2 rounded-lg bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors border border-gray-200 dark:border-gray-600"
+                title="Next Week"
+              >
+                <ChevronRight className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              </button>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">Click on any day to view the full menu details</p>
+            
+            <p className="text-gray-600 dark:text-gray-300 text-lg text-center">Click on any day to view the full menu details</p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-            {[
-              { day: "Monday", date: "March 31", menu: {
-                breakfast: "Scrambled Eggs, Bacon, Hash Browns, Toast",
-                lunch: "Italian Pasta Bar, Garlic Bread, Caesar Salad", 
-                dinner: "Grilled Chicken, Roasted Potatoes, Steamed Broccoli"
-              }},
-              { day: "Tuesday", date: "April 1", menu: {
-                breakfast: "Pancakes, Sausage Links, Fresh Fruit",
-                lunch: "Taco Tuesday: Build Your Own Tacos, Spanish Rice", 
-                dinner: "Stir Fry Station with Chicken/Tofu, Vegetables, Rice"
-              }},
-              { day: "Wednesday", date: "April 2", menu: {
-                breakfast: "French Toast, Turkey Bacon, Yogurt Parfait",
-                lunch: "Deli Sandwich Bar, Potato Chips, Pasta Salad", 
-                dinner: "Rotisserie Chicken, Mashed Potatoes, Green Beans"
-              }},
-              { day: "Thursday", date: "April 3", menu: {
-                breakfast: "Breakfast Burritos, Home Fries, Sliced Fruit",
-                lunch: "Burger Bar, French Fries, Garden Salad", 
-                dinner: "Baked Ziti, Garlic Bread, Roasted Vegetables"
-              }},
-              { day: "Friday", date: "April 4", menu: {
-                breakfast: "Assorted Pastries, Oatmeal Bar, Boiled Eggs",
-                lunch: "Grilled Cheese, Tomato Soup, Vegetable Medley", 
-                dinner: "Pizza Night: Assorted Pizzas, Breadsticks, Salad"
-              }}
-            ].map((day) => (
+            {weeklyMenuData.map((day) => (
               <div 
                 key={day.day} 
                 className="border-2 border-blue-600 dark:border-gray-700 rounded-2xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn overflow-hidden"
                 onClick={() => setExpandedDay(expandedDay === day.day ? null : day.day)}
               >
                 <div className="bg-gray-50 dark:bg-gray-700 text-black dark:text-white py-3 px-4 font-medium">
-                  <div className="text-lg">{day.day} {day.date}</div>
+                  <div className="text-lg flex items-center gap-2">
+                    {day.day} {day.date}
+                    {day.isToday && <span className="text-xs bg-blue-200 dark:bg-blue-800 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">Today</span>}
+                  </div>
                 </div>
                 
                 {expandedDay === day.day && (
@@ -342,7 +455,10 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "dietary" && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
           <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
             <Info className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             Special Dietary Information
@@ -448,13 +564,13 @@ export default function DiningHall() {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                       <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Email:</span>
-                      <a href="mailto:smithj28721@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:underline">
+                      <a href="mailto:smithj28721@hocking.edu" className="text-blue-600 dark:text-blue-400 ">
                         smithj28721@hocking.edu
                       </a>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1">
                       <span className="font-medium text-gray-900 dark:text-blue-300 min-w-[60px]">Phone:</span>
-                      <a href="tel:7407536000" className="text-blue-600 dark:text-blue-400 hover:underline">
+                      <a href="tel:7407536000" className="text-blue-600 dark:text-blue-400 ">
                         (740) 753-6000
                       </a>
                     </div>
@@ -467,7 +583,10 @@ export default function DiningHall() {
       )}
 
       {selectedTab === "locations" && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn">
+        <div 
+          className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border-2 border-blue-600 dark:border-gray-700 animate-fadeIn"
+          onClick={(e) => e.stopPropagation()}
+        >
           <h2 className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-blue-300 mb-4">
             <MapPin className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             Campus Dining Locations

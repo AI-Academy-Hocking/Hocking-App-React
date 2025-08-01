@@ -43,7 +43,7 @@ function OnlineLearningPage() {
                 <Laptop className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">Access Canvas</p>
-                  <a href="#" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">Log in to Canvas</a>
+                  <a href="#" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">Log in to Canvas</a>
                 </div>
               </div>
               
@@ -52,7 +52,7 @@ function OnlineLearningPage() {
                 <div>
                   <p className="font-medium text-gray-900 dark:text-white">Canvas Support</p>
                   <p className="text-gray-900 dark:text-white">Available 24/7</p>
-                  <a href="tel:8554850526" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">(855) 485-0526</a>
+                  <a href="tel:8554850526" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">(855) 485-0526</a>
                 </div>
               </div>
             </div>

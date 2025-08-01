@@ -49,7 +49,7 @@ function StudentOrganizationsPage() {
               </div>
               <div className="flex items-center gap-2 text-gray-900 dark:text-white mt-2">
                 <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <a href="mailto:sga@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">sga@hocking.edu</a>
+                <a href="mailto:sga@hocking.edu" className="text-blue-600 dark:text-blue-400">sga@hocking.edu</a>
               </div>
             </div>
           )}
@@ -79,7 +79,7 @@ function StudentOrganizationsPage() {
               </div>
               <div className="flex items-center gap-2 text-gray-900 dark:text-white mt-2">
                 <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <a href="mailto:adventure@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">adventure@hocking.edu</a>
+                <a href="mailto:adventure@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">adventure@hocking.edu</a>
               </div>
             </div>
           )}
@@ -109,7 +109,7 @@ function StudentOrganizationsPage() {
               </div>
               <div className="flex items-center gap-2 text-gray-900 dark:text-white mt-2">
                 <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <a href="mailto:arts@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">arts@hocking.edu</a>
+                <a href="mailto:arts@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">arts@hocking.edu</a>
               </div>
             </div>
           )}
@@ -139,7 +139,7 @@ function StudentOrganizationsPage() {
               </div>
               <div className="flex items-center gap-2 text-gray-900 dark:text-white mt-2">
                 <Mail className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <a href="mailto:business@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">business@hocking.edu</a>
+                <a href="mailto:business@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">business@hocking.edu</a>
               </div>
             </div>
           )}
@@ -169,8 +169,8 @@ function StudentOrganizationsPage() {
                 <Award className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-gray-900 dark:text-blue-300">Contact the Student Life Office</p>
-                  <p className="text-gray-900 dark:text-white">Email: <a href="mailto:studentlife@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">studentlife@hocking.edu</a></p>
-                  <p className="text-gray-900 dark:text-white">Phone: <a href="tel:7407536462" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:underline">(740) 753-6462</a></p>
+                  <p className="text-gray-900 dark:text-white">Email: <a href="mailto:studentlife@hocking.edu" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">studentlife@hocking.edu</a></p>
+                  <p className="text-gray-900 dark:text-white">Phone: <a href="tel:7407536462" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 ">(740) 753-6462</a></p>
                 </div>
               </div>
             </div>

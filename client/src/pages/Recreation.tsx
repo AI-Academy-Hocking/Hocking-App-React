@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Mail, Clock, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import studentCenterImage from "../components/assets/studentCenter.jpg"; // Import the image
@@ -7,11 +7,29 @@ import scPatioImage from "../components/assets/sc patio.JPG";
 import { Link } from "wouter";
 
 function RecreationPage() {
-  const [infoExpanded, setInfoExpanded] = useState(false);
-  const [facilitiesExpanded, setFacilitiesExpanded] = useState(false);
+  const [openSection, setOpenSection] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleSectionToggle = (section: string) => {
+    setOpenSection(openSection === section ? "" : section);
+  };
+
+  // Close section when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpenSection("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   
   return (
-    <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
+    <div ref={containerRef} className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
       <div className="flex items-center mb-6">
         <Link href="/tools">
           <button className="flex items-center text-blue-600 dark:text-white hover:text-blue-800 dark:hover:text-gray-300 transition-colors">
@@ -36,11 +54,11 @@ function RecreationPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
-            infoExpanded 
+            openSection === "info" 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
-          onClick={() => setInfoExpanded(!infoExpanded)}
+          onClick={() => handleSectionToggle("info")}
           style={{ 
             backgroundImage: `url(${scPianoImage})`,
             backgroundSize: 'cover',
@@ -54,7 +72,7 @@ function RecreationPage() {
             </h3>
           </div>
           
-          {infoExpanded && (
+          {openSection === "info" && (
             <div className="pt-4 px-6 pb-6 relative z-10">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
@@ -70,7 +88,7 @@ function RecreationPage() {
                   <Phone className="h-5 w-5 text-blue-300 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-white">Phone</p>
-                    <a href="tel:7407536535" className="text-blue-300 hover:text-blue-200 hover:underline">(740) 753-6535</a>
+                    <a href="tel:7407536535" className="text-blue-300">(740) 753-6535</a>
                   </div>
                 </div>
                 
@@ -78,7 +96,7 @@ function RecreationPage() {
                   <Mail className="h-5 w-5 text-blue-300 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-medium text-white">Email</p>
-                    <a href="mailto:studentcenter@hocking.edu" className="text-blue-300 hover:text-blue-200 hover:underline">studentcenter@hocking.edu</a>
+                    <a href="mailto:studentcenter@hocking.edu" className="text-blue-300">studentcenter@hocking.edu</a>
                   </div>
                 </div>
               </div>
@@ -88,11 +106,11 @@ function RecreationPage() {
         
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
-            facilitiesExpanded 
+            openSection === "facilities" 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
-          onClick={() => setFacilitiesExpanded(!facilitiesExpanded)}
+          onClick={() => handleSectionToggle("facilities")}
           style={{ 
             backgroundImage: `url(${scPatioImage})`,
             backgroundSize: 'cover',
@@ -106,7 +124,7 @@ function RecreationPage() {
             </h3>
           </div>
           
-          {facilitiesExpanded && (
+          {openSection === "facilities" && (
             <div className="pt-4 px-6 pb-6 relative z-10">
               <ul className="list-disc list-inside space-y-2 pl-2 text-white">
                 <li>Full-size gymnasium</li>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, LibraryBig, Phone, Mail, MapPin, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
@@ -7,8 +7,29 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 function LibraryResources() {
+  const [openAccordion, setOpenAccordion] = useState<string>("");
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleAccordionChange = (value: string) => {
+    setOpenAccordion(value === openAccordion ? "" : value);
+  };
+
+  // Close accordion when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpenAccordion("");
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div ref={containerRef} className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
         <Link href="/academic-success">
           <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
@@ -111,7 +132,7 @@ function LibraryResources() {
           <CardTitle className="text-xl">Policies & Services</CardTitle>
         </CardHeader>
         <CardContent className="pt-4">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full" value={openAccordion} onValueChange={handleAccordionChange}>
             <AccordionItem value="borrowing">
               <AccordionTrigger>Borrowing Materials</AccordionTrigger>
               <AccordionContent>
