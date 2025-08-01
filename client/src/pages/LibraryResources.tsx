@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowLeft, LibraryBig, Phone, Mail, MapPin, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";

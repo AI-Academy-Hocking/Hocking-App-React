@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowLeft, BookOpen, Phone, Mail, Users, Clock, Brain, Calculator, Stethoscope } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
@@ -6,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 function LearningLabs() {
-  const [activeTab, setActiveTab] = React.useState("math");
-
   const labs = [
     {
       id: "math",

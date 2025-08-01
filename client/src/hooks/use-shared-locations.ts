@@ -1,21 +1,23 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useWebSocket } from './use-websocket';
-import { User } from '@shared/schema';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getQueryFn } from '../lib/queryClient';
 
-type UserWithoutPassword = Omit<User, 'password'>;
-
-interface LocationUpdateMessage {
-  type: 'location_update';
-  data: UserWithoutPassword[];
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
 }
+
+type UserWithoutPassword = Omit<User, 'password'>;
 
 export function useSharedLocations() {
   // Setup WebSocket connection
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const wsUrl = `${protocol}//${window.location.host}/ws`;
-  const { lastMessage } = useWebSocket(wsUrl, {
+  const host = window.location.host || 'localhost:3000';
+  const wsUrl = `${protocol}//${host}/ws`;
+  useWebSocket(wsUrl, {
     onMessage: (event) => {
       try {
         const data = JSON.parse(event.data);
