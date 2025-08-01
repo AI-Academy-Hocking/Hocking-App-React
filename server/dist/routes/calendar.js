@@ -55,7 +55,7 @@ const router = express_1.default.Router();
 const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
 // Student activities calendar URL (private - needs API)
 const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
-async function fetchCalendarEvents(url, calendarType) {
+async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
     console.log(`\n=== GOOGLE CALENDAR DEBUG ===`);
     console.log(`Fetching calendar events from: ${url}`);
     try {
@@ -79,8 +79,22 @@ async function fetchCalendarEvents(url, calendarType) {
             const isVEvent = event.type === 'VEVENT';
             if (!isVEvent) {
                 console.log(`Skipping non-VEVENT: ${event.type}`);
+                return false;
             }
-            return isVEvent;
+            // Filter by date range if specified
+            if (timeMin || timeMax) {
+                const eventStart = event.start;
+                if (eventStart) {
+                    const eventDate = new Date(eventStart);
+                    const minDate = timeMin || new Date(0);
+                    const maxDate = timeMax || new Date('2100-01-01');
+                    if (eventDate < minDate || eventDate > maxDate) {
+                        console.log(`Skipping event outside date range: ${event.summary} on ${eventDate.toISOString()}`);
+                        return false;
+                    }
+                }
+            }
+            return true;
         })
             .map((event, index) => {
             console.log(`\n--- Processing Event ${index + 1} ---`);
@@ -137,13 +151,16 @@ router.get('/events', async (req, res) => {
     console.log(`Query params:`, req.query);
     try {
         const calendarType = req.query.type;
+        const timeMin = req.query.timeMin; // Optional: filter events from this date
+        const timeMax = req.query.timeMax; // Optional: filter events until this date
         console.log(`Calendar type requested: ${calendarType}`);
+        console.log(`Time range: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
         let events;
         // Try Google Calendar API first if available
         if (googleCalendarService) {
             console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
             try {
-                events = await googleCalendarService.getEvents(calendarType);
+                events = await googleCalendarService.getEvents(calendarType, timeMin ? new Date(timeMin) : undefined, timeMax ? new Date(timeMax) : undefined);
                 console.log(`Successfully fetched ${events.length} events via Google Calendar API`);
             }
             catch (apiError) {
@@ -154,12 +171,19 @@ router.get('/events', async (req, res) => {
         // If Google Calendar API failed or is not available, use iCal
         if (!events) {
             console.log(`Using iCal fallback for ${calendarType} calendar`);
+            const minDate = timeMin ? new Date(timeMin) : undefined;
+            const maxDate = timeMax ? new Date(timeMax) : undefined;
+            console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
             if (calendarType === 'academic') {
-                events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic');
+                events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
             }
             else if (calendarType === 'activities') {
-                events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities');
+                events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities', minDate, maxDate);
             }
+        }
+        // Date filtering is now handled at the source (Google Calendar API or iCal parsing)
+        if (timeMin || timeMax) {
+            console.log(`Date filtering applied at source: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
         }
         console.log(`Sending ${events.length} events to frontend`);
         res.json(events);

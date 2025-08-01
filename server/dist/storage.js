@@ -5,15 +5,17 @@ class MemStorage {
     constructor() {
         this.studentTools = new Map();
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
         this.comments = new Map();
+=======
+>>>>>>> origin/Owen-Branch
         this.safetyAlerts = new Map();
         this.safetyResources = new Map();
         this.currentUserId = 1;
         this.currentEventId = 1;
         this.currentBuildingId = 1;
-        this.currentCommentId = 1;
         this.currentSafetyAlertId = 1;
         this.currentSafetyResourceId = 1;
 =======
@@ -22,6 +24,93 @@ class MemStorage {
         // Initialize with sample data
         this.initializeSampleData();
     }
+<<<<<<< HEAD
+=======
+    // User operations
+    async getUser(id) {
+        return this.users.get(id);
+    }
+    async getUserByUsername(username) {
+        return Array.from(this.users.values()).find(user => user.username === username);
+    }
+    async createUser(insertUser) {
+        const id = this.currentUserId++;
+        const user = {
+            id,
+            username: insertUser.username,
+            password: insertUser.password,
+            name: insertUser.name,
+            isGuest: insertUser.isGuest ?? false,
+            createdAt: new Date(),
+            lastLogin: null,
+            location: insertUser.location ?? null,
+            isSharingLocation: insertUser.isSharingLocation ?? false
+        };
+        this.users.set(id, user);
+        return user;
+    }
+    async updateUserLocation(userId, locationUpdate) {
+        const user = await this.getUser(userId);
+        if (!user) {
+            return undefined;
+        }
+        const updatedUser = {
+            ...user,
+            location: locationUpdate.location ?? user.location,
+            isSharingLocation: locationUpdate.isSharingLocation ?? user.isSharingLocation
+        };
+        this.users.set(userId, updatedUser);
+        return updatedUser;
+    }
+    async getSharedLocations() {
+        return Array.from(this.users.values()).filter((user) => user.isSharingLocation && user.location !== null);
+    }
+    // Event operations
+    async getEvents() {
+        return Array.from(this.events.values());
+    }
+    async getEvent(id) {
+        return this.events.get(id);
+    }
+    async createEvent(insertEvent) {
+        const id = this.currentEventId++;
+        const event = {
+            id,
+            title: insertEvent.title,
+            description: insertEvent.description,
+            startTime: insertEvent.startTime,
+            endTime: insertEvent.endTime,
+            location: insertEvent.location,
+            createdAt: new Date(),
+            isRecurring: insertEvent.isRecurring ?? false,
+            recurrencePattern: insertEvent.recurrencePattern ?? null
+        };
+        this.events.set(id, event);
+        return event;
+    }
+    // Building operations
+    async getBuildings() {
+        return Array.from(this.buildings.values());
+    }
+    async getBuilding(id) {
+        return this.buildings.get(id);
+    }
+    async createBuilding(insertBuilding) {
+        const id = this.currentBuildingId++;
+        const building = {
+            id,
+            name: insertBuilding.name,
+            description: insertBuilding.description,
+            location: insertBuilding.location,
+            createdAt: new Date(),
+            isOpen: insertBuilding.isOpen ?? true,
+            openHours: insertBuilding.openHours ?? null,
+            contactInfo: insertBuilding.contactInfo ?? null
+        };
+        this.buildings.set(id, building);
+        return building;
+    }
+>>>>>>> origin/Owen-Branch
     // Student Tool operations
     async getStudentTools() {
         return Array.from(this.studentTools.values());
@@ -30,6 +119,7 @@ class MemStorage {
         return this.studentTools.get(id);
     }
     async createStudentTool(tool) {
+<<<<<<< HEAD
         // Just store the tool as-is, don't add createdAt or isActive
         this.studentTools.set(tool.id, tool);
         return tool;
@@ -57,14 +147,15 @@ class MemStorage {
             discussionId: insertComment.discussionId,
             authorId: insertComment.authorId,
             content: insertComment.content,
+=======
+        const studentTool = {
+            ...tool,
+>>>>>>> origin/Owen-Branch
             createdAt: new Date(),
-            parentId: insertComment.parentId ?? null
+            isActive: tool.isActive ?? true
         };
-        this.comments.set(id, comment);
-        return comment;
-    }
-    async getUserComments(userId) {
-        return Array.from(this.comments.values()).filter((comment) => comment.authorId === userId);
+        this.studentTools.set(tool.id, studentTool);
+        return studentTool;
     }
     // Safety Alert operations
     async getSafetyAlerts() {
@@ -73,7 +164,7 @@ class MemStorage {
     async getActiveSafetyAlerts() {
         const now = new Date();
         return Array.from(this.safetyAlerts.values()).filter(alert => alert.isActive &&
-            (alert.endDate === null || alert.endDate > now));
+            (alert.expiresAt === null || alert.expiresAt > now));
     }
     async getSafetyAlert(id) {
         return this.safetyAlerts.get(id);
@@ -83,25 +174,23 @@ class MemStorage {
         const alert = {
             id,
             title: insertAlert.title,
-            content: insertAlert.content,
+            description: insertAlert.description,
             severity: insertAlert.severity,
-            startDate: insertAlert.startDate ?? new Date(),
-            endDate: insertAlert.endDate ?? null,
+            location: insertAlert.location,
+            createdAt: new Date(),
             isActive: insertAlert.isActive ?? true,
-            location: insertAlert.location ?? null
+            expiresAt: insertAlert.expiresAt ?? null
         };
         this.safetyAlerts.set(id, alert);
         return alert;
     }
     // Safety Resource operations
     async getSafetyResources() {
-        return Array.from(this.safetyResources.values())
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
+        return Array.from(this.safetyResources.values());
     }
     async getSafetyResourcesByCategory(category) {
         return Array.from(this.safetyResources.values())
-            .filter(resource => resource.category === category)
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
+            .filter(resource => resource.category === category);
     }
     async getSafetyResource(id) {
         return this.safetyResources.get(id);
@@ -113,10 +202,9 @@ class MemStorage {
             title: insertResource.title,
             description: insertResource.description,
             category: insertResource.category,
-            url: insertResource.url ?? null,
-            phoneNumber: insertResource.phoneNumber ?? null,
-            icon: insertResource.icon ?? null,
-            order: insertResource.order ?? 0
+            url: insertResource.url,
+            createdAt: new Date(),
+            isActive: insertResource.isActive ?? true
         };
         this.safetyResources.set(id, resource);
         return resource;
