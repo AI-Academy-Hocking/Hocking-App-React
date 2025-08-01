@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Dropdown from './ui/dropdown';
 
 const programs = [
   { id: '1', name: 'Computer Science' },
@@ -18,12 +17,18 @@ const ProgramDropdown: React.FC = () => {
   };
 
   return (
-    <Dropdown
-      options={programs}
-      selectedOption={selectedProgram}
-      onChange={handleProgramChange}
-      placeholder="Select your program of study"
-    />
+    <select
+      value={selectedProgram || ''}
+      onChange={(e) => handleProgramChange(e.target.value)}
+      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Select your program of study</option>
+      {programs.map((program) => (
+        <option key={program.id} value={program.id}>
+          {program.name}
+        </option>
+      ))}
+    </select>
   );
 };
 

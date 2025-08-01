@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface ProgramDropdownProps {
   onChange: (program: string) => void;

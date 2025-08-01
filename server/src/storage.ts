@@ -1,4 +1,5 @@
 import { 
+<<<<<<< HEAD
   users, type User, type InsertUser, 
   events, type Event, type InsertEvent, 
   buildings, type Building, type InsertBuilding, 
@@ -7,31 +8,18 @@ import {
   safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
   safetyResources, type SafetyResource, type InsertSafetyResource,
   type LocationUpdate 
+=======
+  studentTools, type StudentTool, type InsertStudentTool
+>>>>>>> Jodian-Branch
 } from "@shared/schema";
 
 // Interface for storage operations
 export interface IStorage {
-  // User operations
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUserLocation(userId: number, locationUpdate: LocationUpdate): Promise<User | undefined>;
-  getSharedLocations(): Promise<User[]>;
-  
-  // Event operations
-  getEvents(): Promise<Event[]>;
-  getEvent(id: number): Promise<Event | undefined>;
-  createEvent(event: InsertEvent): Promise<Event>;
-  
-  // Building operations
-  getBuildings(): Promise<Building[]>;
-  getBuilding(id: number): Promise<Building | undefined>;
-  createBuilding(building: InsertBuilding): Promise<Building>;
-  
   // Student Tool operations
   getStudentTools(): Promise<StudentTool[]>;
   getStudentTool(id: string): Promise<StudentTool | undefined>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
+<<<<<<< HEAD
   
   // Comment operations
   getComments(discussionId: number): Promise<Comment[]>;
@@ -51,13 +39,13 @@ export interface IStorage {
   getSafetyResourcesByCategory(category: string): Promise<SafetyResource[]>;
   getSafetyResource(id: number): Promise<SafetyResource | undefined>;
   createSafetyResource(resource: InsertSafetyResource): Promise<SafetyResource>;
+=======
+>>>>>>> Jodian-Branch
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private events: Map<number, Event>;
-  private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
+<<<<<<< HEAD
   private comments: Map<number, Comment>;
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
@@ -68,12 +56,12 @@ export class MemStorage implements IStorage {
   private currentCommentId: number;
   private currentSafetyAlertId: number;
   private currentSafetyResourceId: number;
+=======
+>>>>>>> Jodian-Branch
 
   constructor() {
-    this.users = new Map();
-    this.events = new Map();
-    this.buildings = new Map();
     this.studentTools = new Map();
+<<<<<<< HEAD
     this.comments = new Map();
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
@@ -84,109 +72,13 @@ export class MemStorage implements IStorage {
     this.currentCommentId = 1;
     this.currentSafetyAlertId = 1;
     this.currentSafetyResourceId = 1;
+=======
+>>>>>>> Jodian-Branch
     
     // Initialize with sample data
     this.initializeSampleData();
   }
 
-  // User operations
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = {
-      id,
-      username: insertUser.username,
-      password: insertUser.password,
-      name: insertUser.name ?? null,
-      email: insertUser.email ?? null,
-      isGuest: insertUser.isGuest ?? null,
-      lat: null,
-      lng: null,
-      isLocationShared: false,
-      lastLocationUpdate: null
-    };
-    this.users.set(id, user);
-    return user;
-  }
-  
-  async updateUserLocation(userId: number, locationUpdate: LocationUpdate): Promise<User | undefined> {
-    const user = await this.getUser(userId);
-    
-    if (!user) {
-      return undefined;
-    }
-    
-    const updatedUser: User = {
-      ...user,
-      lat: locationUpdate.lat,
-      lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
-      lastLocationUpdate: new Date()
-    };
-    
-    this.users.set(userId, updatedUser);
-    return updatedUser;
-  }
-  
-  async getSharedLocations(): Promise<User[]> {
-    return Array.from(this.users.values()).filter(
-      (user) => user.isLocationShared && user.lat !== null && user.lng !== null
-    );
-  }
-  
-  // Event operations
-  async getEvents(): Promise<Event[]> {
-    return Array.from(this.events.values());
-  }
-  
-  async getEvent(id: number): Promise<Event | undefined> {
-    return this.events.get(id);
-  }
-  
-  async createEvent(insertEvent: InsertEvent): Promise<Event> {
-    const id = this.currentEventId++;
-    const event: Event = {
-      id,
-      date: insertEvent.date,
-      title: insertEvent.title,
-      description: insertEvent.description ?? null,
-      time: insertEvent.time,
-      location: insertEvent.location
-    };
-    this.events.set(id, event);
-    return event;
-  }
-  
-  // Building operations
-  async getBuildings(): Promise<Building[]> {
-    return Array.from(this.buildings.values());
-  }
-  
-  async getBuilding(id: number): Promise<Building | undefined> {
-    return this.buildings.get(id);
-  }
-  
-  async createBuilding(insertBuilding: InsertBuilding): Promise<Building> {
-    const id = this.currentBuildingId++;
-    const building: Building = {
-      id,
-      name: insertBuilding.name,
-      lat: insertBuilding.lat,
-      lng: insertBuilding.lng,
-      description: insertBuilding.description ?? null,
-      category: insertBuilding.category
-    };
-    this.buildings.set(id, building);
-    return building;
-  }
-  
   // Student Tool operations
   async getStudentTools(): Promise<StudentTool[]> {
     return Array.from(this.studentTools.values());
@@ -197,6 +89,7 @@ export class MemStorage implements IStorage {
   }
   
   async createStudentTool(tool: InsertStudentTool): Promise<StudentTool> {
+<<<<<<< HEAD
     this.studentTools.set(tool.id, tool);
     return tool;
   }
@@ -301,10 +194,16 @@ export class MemStorage implements IStorage {
     };
     this.safetyResources.set(id, resource);
     return resource;
+=======
+    // Just store the tool as-is, don't add createdAt or isActive
+    this.studentTools.set(tool.id, tool as StudentTool);
+    return tool as StudentTool;
+>>>>>>> Jodian-Branch
   }
   
   // Initialize with sample data
   private async initializeSampleData() {
+<<<<<<< HEAD
     // Sample users
     await this.createUser({
       username: "admin",
@@ -462,11 +361,15 @@ export class MemStorage implements IStorage {
       url: "#",
     });
     
+=======
+    // Sample student tools - only what's needed for Career & University Center
+>>>>>>> Jodian-Branch
     await this.createStudentTool({
       id: "career-services",
-      name: "Career Services",
+      name: "Career & University Center",
       description: "Job search and career planning",
       category: "resources",
+<<<<<<< HEAD
       url: "#",
     });
     
@@ -564,8 +467,11 @@ export class MemStorage implements IStorage {
       url: "#",
       icon: "file-text",
       order: 8
+=======
+      url: "/career-university-center",
+>>>>>>> Jodian-Branch
     });
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new MemStorage(); 

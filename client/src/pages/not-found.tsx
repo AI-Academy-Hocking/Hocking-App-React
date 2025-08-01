@@ -1,9 +1,22 @@
 import { Card, CardContent } from "../components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 export default function NotFound() {
+  const { goBack } = useBackNavigation();
+
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
+      {/* Back Navigation */}
+      <div className="absolute top-6 left-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
       <Card className="w-full max-w-md mx-4">
         <CardContent className="pt-6">
           <div className="flex mb-4 gap-2">

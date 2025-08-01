@@ -2,7 +2,7 @@ import express, { type Express } from "express";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import { createServer } from "vite";
+// import { createServer } from "vite";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { type Server } from "http";
@@ -12,7 +12,6 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import SocialComments from "./SocialComments";
 
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
@@ -46,6 +45,9 @@ export async function setupVite(app: Express, server: Server) {
     hmr: { server },
     allowedHosts: true,
   };
+
+  // Dynamically import createServer for ESM compatibility
+  const { createServer } = await import("vite");
 
   const vite = await createServer({
     ...viteConfig,

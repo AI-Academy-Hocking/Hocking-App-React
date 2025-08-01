@@ -26,6 +26,7 @@ export class GoogleCalendarService {
   constructor() {
     this.oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
     
+<<<<<<< HEAD
     if (REFRESH_TOKEN) {
       this.oauth2Client.setCredentials({
         refresh_token: REFRESH_TOKEN
@@ -112,6 +113,24 @@ export class GoogleCalendarService {
       access_type: 'offline',
       scope: SCOPES,
       prompt: 'consent'
+=======
+    // Map Google Calendar events to our app's Event format
+    return events.map((event, index) => {
+      const start = event.start?.dateTime || event.start?.date || '';
+      const end = event.end?.dateTime || event.end?.date || '';
+      
+      return {
+        id: index + 1,
+        createdAt: new Date(),
+        title: event.summary || 'Unnamed Event',
+        description: event.description || '',
+        startTime: new Date(start),
+        endTime: new Date(end),
+        location: event.location || 'TBD',
+        isRecurring: false,
+        recurrencePattern: null,
+      };
+>>>>>>> Jodian-Branch
     });
   }
 

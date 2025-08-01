@@ -3,10 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.storage = exports.MemStorage = void 0;
 class MemStorage {
     constructor() {
-        this.users = new Map();
-        this.events = new Map();
-        this.buildings = new Map();
         this.studentTools = new Map();
+<<<<<<< HEAD
         this.comments = new Map();
         this.safetyAlerts = new Map();
         this.safetyResources = new Map();
@@ -16,90 +14,10 @@ class MemStorage {
         this.currentCommentId = 1;
         this.currentSafetyAlertId = 1;
         this.currentSafetyResourceId = 1;
+=======
+>>>>>>> Jodian-Branch
         // Initialize with sample data
         this.initializeSampleData();
-    }
-    // User operations
-    async getUser(id) {
-        return this.users.get(id);
-    }
-    async getUserByUsername(username) {
-        return Array.from(this.users.values()).find(user => user.username === username);
-    }
-    async createUser(insertUser) {
-        const id = this.currentUserId++;
-        const user = {
-            id,
-            username: insertUser.username,
-            password: insertUser.password,
-            name: insertUser.name ?? null,
-            email: insertUser.email ?? null,
-            isGuest: insertUser.isGuest ?? null,
-            lat: null,
-            lng: null,
-            isLocationShared: false,
-            lastLocationUpdate: null
-        };
-        this.users.set(id, user);
-        return user;
-    }
-    async updateUserLocation(userId, locationUpdate) {
-        const user = await this.getUser(userId);
-        if (!user) {
-            return undefined;
-        }
-        const updatedUser = {
-            ...user,
-            lat: locationUpdate.lat,
-            lng: locationUpdate.lng,
-            isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
-            lastLocationUpdate: new Date()
-        };
-        this.users.set(userId, updatedUser);
-        return updatedUser;
-    }
-    async getSharedLocations() {
-        return Array.from(this.users.values()).filter((user) => user.isLocationShared && user.lat !== null && user.lng !== null);
-    }
-    // Event operations
-    async getEvents() {
-        return Array.from(this.events.values());
-    }
-    async getEvent(id) {
-        return this.events.get(id);
-    }
-    async createEvent(insertEvent) {
-        const id = this.currentEventId++;
-        const event = {
-            id,
-            date: insertEvent.date,
-            title: insertEvent.title,
-            description: insertEvent.description ?? null,
-            time: insertEvent.time,
-            location: insertEvent.location
-        };
-        this.events.set(id, event);
-        return event;
-    }
-    // Building operations
-    async getBuildings() {
-        return Array.from(this.buildings.values());
-    }
-    async getBuilding(id) {
-        return this.buildings.get(id);
-    }
-    async createBuilding(insertBuilding) {
-        const id = this.currentBuildingId++;
-        const building = {
-            id,
-            name: insertBuilding.name,
-            lat: insertBuilding.lat,
-            lng: insertBuilding.lng,
-            description: insertBuilding.description ?? null,
-            category: insertBuilding.category
-        };
-        this.buildings.set(id, building);
-        return building;
     }
     // Student Tool operations
     async getStudentTools() {
@@ -109,9 +27,11 @@ class MemStorage {
         return this.studentTools.get(id);
     }
     async createStudentTool(tool) {
+        // Just store the tool as-is, don't add createdAt or isActive
         this.studentTools.set(tool.id, tool);
         return tool;
     }
+<<<<<<< HEAD
     // Comment operations
     async getAllComments() {
         return Array.from(this.comments.values());
@@ -332,11 +252,17 @@ class MemStorage {
             category: "resources",
             url: "#",
         });
+=======
+    // Initialize with sample data
+    async initializeSampleData() {
+        // Sample student tools - only what's needed for Career & University Center
+>>>>>>> Jodian-Branch
         await this.createStudentTool({
             id: "career-services",
-            name: "Career Services",
+            name: "Career & University Center",
             description: "Job search and career planning",
             category: "resources",
+<<<<<<< HEAD
             url: "#",
         });
         // Sample safety alerts
@@ -424,6 +350,9 @@ class MemStorage {
             url: "#",
             icon: "file-text",
             order: 8
+=======
+            url: "/career-university-center",
+>>>>>>> Jodian-Branch
         });
     }
 }

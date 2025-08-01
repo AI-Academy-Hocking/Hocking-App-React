@@ -51,8 +51,16 @@ export function useWebSocket(
     
     // Create new WebSocket connection
     const wsUrl = getWebSocketUrl();
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
+    
+    // Validate URL before creating WebSocket
+    if (!wsUrl || wsUrl.includes('undefined')) {
+      console.warn('Invalid WebSocket URL:', wsUrl);
+      return;
+    }
+    
+    try {
+      const socket = new WebSocket(wsUrl);
+      socketRef.current = socket;
     
     socket.onopen = (event) => {
       setIsConnected(true);
@@ -87,6 +95,11 @@ export function useWebSocket(
     socket.onerror = (event) => {
       onError?.(event);
     };
+    
+    } catch (error) {
+      console.error('Failed to create WebSocket connection:', error);
+      onError?.(new Event('error'));
+    }
     
   }, [getWebSocketUrl, onOpen, onMessage, onClose, onError, reconnectInterval, reconnectAttempts]);
   
