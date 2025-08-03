@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PhoneCall, Shield, HeartPulse, AlertTriangle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBackNavigation } from "@/hooks/use-back-navigation";
 
 interface SafetyResource {
   id: number;
@@ -18,6 +19,7 @@ interface SafetyResource {
 
 export default function CampusSafety() {
   const [resourceCategory, setResourceCategory] = useState<string>("all");
+  const { goBack } = useBackNavigation();
 
   // Fetch safety resources (filtered by category if selected)
   const { data: resources = [], isLoading: resourcesLoading } = useQuery({

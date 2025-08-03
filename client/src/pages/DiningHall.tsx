@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { format, startOfWeek, addDays, addWeeks, subWeeks, isToday } from "date-fns";
 import { useLocation } from "wouter";
 import "../styles/animations.css";
-import dining1Image from "../components/assets/dining1.JPG";
+import dining1Image from "../components/assets/dining1.jpg";
 import diamondDawgsImage from "../components/assets/DiamondDawgs.jpeg";
 import rhapsodyImage from "../components/assets/rhapsody.webp";
 

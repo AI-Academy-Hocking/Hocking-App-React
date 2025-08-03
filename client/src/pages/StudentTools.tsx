@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   History, School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  Globe, PawPrint, DollarSign, CreditCard, Award, Heart, ArrowLeft
+  Globe, PawPrint, DollarSign, CreditCard, Award, Heart, ArrowLeft,
   ChevronDown, ChevronUp
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -22,7 +22,6 @@ interface StudentTool {
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
-  const { goBack } = useBackNavigation();
   const [isToolsExpanded, setIsToolsExpanded] = useState(false);
   
   const { data: tools } = useQuery<StudentTool[]>({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
@@ -6,8 +6,7 @@ import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School, Clock, GraduationCap, ChevronDown, ChevronRight, Accessibility } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
-import ProgramDropdown from "@/components/ProgramDropdown";
-import { Button } from "@/components/ui/button";
+
 import { format, isAfter, startOfToday } from "date-fns";
 import { Event } from "../../../shared/schema";
 
@@ -77,10 +76,79 @@ export default function Home() {
     };
   };
 
-  const handleProgramChange = (program: string) => {
-    console.log('Selected program:', program);
-    // Add any additional program selection logic here
+
+
+  // Toggle section expansion
+  const toggleSection = (sectionId: string) => {
+    setExpandedSections(prev => 
+      prev.includes(sectionId) 
+        ? prev.filter(id => id !== sectionId)
+        : [...prev, sectionId]
+    );
   };
+
+  // Hocking College information sections
+  const hockingInfo = [
+    {
+      id: 'academics',
+      title: 'Academic Programs',
+      icon: School,
+      content: (
+        <div className="space-y-2">
+          <p className="text-gray-700 dark:text-gray-300">
+            Hocking College offers a wide range of academic programs designed to prepare students for successful careers. 
+            Our programs include natural resources, health sciences, business, and technical fields.
+          </p>
+          <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <li>Natural Resources & Conservation</li>
+            <li>Health Sciences & Nursing</li>
+            <li>Business & Technology</li>
+            <li>Public Safety & Criminal Justice</li>
+            <li>Hospitality & Tourism</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      id: 'campus-life',
+      title: 'Campus Life',
+      icon: MapPin,
+      content: (
+        <div className="space-y-2">
+          <p className="text-gray-700 dark:text-gray-300">
+            Experience a vibrant campus community with modern facilities, outdoor recreation opportunities, 
+            and a supportive environment for learning and personal growth.
+          </p>
+          <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <li>Modern residence halls and dining facilities</li>
+            <li>Recreation center with fitness equipment and pool</li>
+            <li>Outdoor adventure programs and activities</li>
+            <li>Student organizations and clubs</li>
+            <li>Beautiful campus in the Hocking Hills region</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      id: 'support',
+      title: 'Student Support',
+      icon: Accessibility,
+      content: (
+        <div className="space-y-2">
+          <p className="text-gray-700 dark:text-gray-300">
+            We provide comprehensive support services to help students succeed academically and personally.
+          </p>
+          <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+            <li>Academic advising and tutoring services</li>
+            <li>Career counseling and job placement</li>
+            <li>Health and wellness resources</li>
+            <li>Financial aid and scholarship opportunities</li>
+            <li>Disability services and accommodations</li>
+          </ul>
+        </div>
+      )
+    }
+  ];
 
   const quickLinks = [
     { 
@@ -115,7 +183,7 @@ export default function Home() {
           <img 
             src={HockingBackground} 
             alt="Hocking College Campus" 
-            className="w-full h-48 object-cover" 
+            className="w-full h-64 object-cover" 
           />
           <CardContent className="p-6">
             <div className="space-y-4">
@@ -123,9 +191,6 @@ export default function Home() {
                 Explore all that Hocking College has to offer. Access your student resources, 
                 check the academic calendar, find your way around campus, and more.
               </p>
-              <div className="w-full max-w-xs">
-                <ProgramDropdown onChange={handleProgramChange} />
-              </div>
             </div>
           </CardContent>
         </Card>

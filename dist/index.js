@@ -1,5 +1,7 @@
 var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
 }) : x)(function(x) {
@@ -13,6 +15,15 @@ var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
 };
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // vite.config.ts
 import { defineConfig } from "vite";
@@ -36,6 +47,7 @@ var init_vite_config = __esm({
           __require("@replit/vite-plugin-cartographer").cartographer()
         ] : []
       ],
+      assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
       resolve: {
         alias: {
           "@": path.resolve(__dirname, "client", "src"),
@@ -174,8 +186,118 @@ var init_vite = __esm({
   }
 });
 
+// server/services/googleCalendar.ts
+var googleCalendar_exports = {};
+__export(googleCalendar_exports, {
+  GoogleCalendarService: () => GoogleCalendarService,
+  googleCalendarService: () => googleCalendarService
+});
+import { google } from "googleapis";
+import { OAuth2Client } from "google-auth-library";
+import { JWT } from "google-auth-library";
+var SCOPES, CALENDAR_IDS, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_PRIVATE_KEY, GoogleCalendarService, googleCalendarService;
+var init_googleCalendar = __esm({
+  "server/services/googleCalendar.ts"() {
+    "use strict";
+    SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+    CALENDAR_IDS = {
+      academic: "c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com",
+      activities: "gabby@aiowl.org"
+      // Private calendar
+    };
+    CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+    CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+    REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+    SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+    SERVICE_ACCOUNT_PRIVATE_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+    GoogleCalendarService = class {
+      constructor() {
+        this.serviceAccountClient = null;
+        this.oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
+        if (REFRESH_TOKEN) {
+          this.oauth2Client.setCredentials({
+            refresh_token: REFRESH_TOKEN
+          });
+        }
+        if (SERVICE_ACCOUNT_EMAIL && SERVICE_ACCOUNT_PRIVATE_KEY) {
+          this.serviceAccountClient = new JWT({
+            email: SERVICE_ACCOUNT_EMAIL,
+            key: SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, "\n"),
+            scopes: SCOPES
+          });
+        }
+      }
+      async getEvents(calendarType, timeMin, timeMax) {
+        try {
+          const calendarId = CALENDAR_IDS[calendarType];
+          if (this.serviceAccountClient) {
+            console.log(`Using service account for ${calendarType} calendar`);
+            const calendar2 = google.calendar({ version: "v3", auth: this.serviceAccountClient });
+            const response2 = await calendar2.events.list({
+              calendarId,
+              timeMin: timeMin?.toISOString(),
+              timeMax: timeMax?.toISOString(),
+              singleEvents: true,
+              orderBy: "startTime",
+              maxResults: 100
+            });
+            const events4 = response2.data.items?.map((event) => ({
+              id: event.id || String(Math.random()),
+              title: event.summary || "No Title",
+              startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
+              endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
+              location: event.location || "No Location",
+              description: event.description || "No Description",
+              calendarType
+            })) || [];
+            console.log(`Fetched ${events4.length} events from Google Calendar API for ${calendarType}`);
+            return events4;
+          }
+          const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+          const response = await calendar.events.list({
+            calendarId,
+            timeMin: timeMin?.toISOString(),
+            timeMax: timeMax?.toISOString(),
+            singleEvents: true,
+            orderBy: "startTime",
+            maxResults: 100
+          });
+          const events3 = response.data.items?.map((event) => ({
+            id: event.id || String(Math.random()),
+            title: event.summary || "No Title",
+            startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
+            endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
+            location: event.location || "No Location",
+            description: event.description || "No Description",
+            calendarType
+          })) || [];
+          console.log(`Fetched ${events3.length} events from Google Calendar API for ${calendarType}`);
+          return events3;
+        } catch (error) {
+          console.error("Google Calendar API error:", error);
+          throw error;
+        }
+      }
+      // Helper method to get authorization URL for setting up OAuth
+      getAuthUrl() {
+        return this.oauth2Client.generateAuthUrl({
+          access_type: "offline",
+          scope: SCOPES,
+          prompt: "consent"
+        });
+      }
+      // Helper method to exchange authorization code for tokens
+      async getTokensFromCode(code) {
+        const { tokens } = await this.oauth2Client.getToken(code);
+        return tokens;
+      }
+    };
+    googleCalendarService = new GoogleCalendarService();
+  }
+});
+
 // server/index.ts
-import express7 from "express";
+import express6 from "express";
 
 // server/routes.ts
 import { createServer } from "http";
@@ -1144,8 +1266,162 @@ router.get("/:id", async (req, res) => {
 });
 var programs_default = router;
 
-// server/api/verification.ts
+// server/src/routes/calendar.ts
 import express2 from "express";
+import * as ical from "ical";
+import fetch2 from "node-fetch";
+var googleCalendarService2 = null;
+try {
+  const { googleCalendarService: service } = (init_googleCalendar(), __toCommonJS(googleCalendar_exports));
+  googleCalendarService2 = service;
+  console.log("Google Calendar service loaded successfully");
+} catch (error) {
+  console.log("Google Calendar service not available, will use iCal fallback:", error instanceof Error ? error.message : "Unknown error");
+}
+var router2 = express2.Router();
+var ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
+var STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
+  console.log(`
+=== GOOGLE CALENDAR DEBUG ===`);
+  console.log(`Fetching calendar events from: ${url}`);
+  try {
+    const response = await fetch2(url);
+    console.log(`Response status: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status} for URL: ${url}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const icalData = await response.text();
+    console.log(`Received ${icalData.length} characters of iCal data`);
+    console.log(`First 500 chars of iCal data:`, icalData.substring(0, 500));
+    const parsedEvents = ical.parseICS(icalData);
+    console.log(`Parsed ${Object.keys(parsedEvents).length} total events from iCal`);
+    const eventTypes = new Set(Object.values(parsedEvents).map((event) => event.type));
+    console.log(`Event types found:`, Array.from(eventTypes));
+    const events3 = Object.values(parsedEvents).filter((event) => {
+      const isVEvent = event.type === "VEVENT";
+      if (!isVEvent) {
+        console.log(`Skipping non-VEVENT: ${event.type}`);
+        return false;
+      }
+      if (timeMin || timeMax) {
+        const eventStart = event.start;
+        if (eventStart) {
+          const eventDate = new Date(eventStart);
+          const minDate = timeMin || /* @__PURE__ */ new Date(0);
+          const maxDate = timeMax || /* @__PURE__ */ new Date("2100-01-01");
+          if (eventDate < minDate || eventDate > maxDate) {
+            console.log(`Skipping event outside date range: ${event.summary} on ${eventDate.toISOString()}`);
+            return false;
+          }
+        }
+      }
+      return true;
+    }).map((event, index) => {
+      console.log(`
+--- Processing Event ${index + 1} ---`);
+      console.log(`Raw event data:`, JSON.stringify(event, null, 2));
+      let startDate = event.start;
+      let endDate = event.end;
+      console.log(`Original start: ${startDate} (type: ${typeof startDate})`);
+      console.log(`Original end: ${endDate} (type: ${typeof endDate})`);
+      if (typeof startDate === "string") {
+        startDate = new Date(startDate);
+        console.log(`Parsed start date: ${startDate.toISOString()}`);
+      }
+      if (typeof endDate === "string") {
+        endDate = new Date(endDate);
+        console.log(`Parsed end date: ${endDate.toISOString()}`);
+      }
+      const eventData = {
+        id: event.uid || String(Math.random()),
+        title: event.summary || "No Title",
+        startTime: startDate ? startDate.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+        endTime: endDate ? endDate.toISOString() : startDate ? startDate.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+        location: event.location || "No Location",
+        description: event.description || "No Description",
+        calendarType
+        // <-- ADD THIS LINE
+      };
+      console.log(`Final event data:`, eventData);
+      return eventData;
+    });
+    console.log(`
+=== SUMMARY ===`);
+    console.log(`Fetched ${events3.length} events from ${url}`);
+    if (events3.length > 0) {
+      console.log("First event:", events3[0]);
+      console.log("Last event:", events3[events3.length - 1]);
+      const dates = events3.map((e) => new Date(e.startTime));
+      const earliest = new Date(Math.min(...dates.map((d) => d.getTime())));
+      const latest = new Date(Math.max(...dates.map((d) => d.getTime())));
+      console.log(`Event date range: ${earliest.toISOString()} to ${latest.toISOString()}`);
+    } else {
+      console.warn("No events found in calendar!");
+    }
+    return events3;
+  } catch (error) {
+    console.error(`Error in fetchCalendarEvents:`, error);
+    throw error;
+  }
+}
+router2.get("/events", async (req, res) => {
+  console.log(`
+=== API REQUEST ===`);
+  console.log(`Query params:`, req.query);
+  try {
+    const calendarType = req.query.type;
+    const timeMin = req.query.timeMin;
+    const timeMax = req.query.timeMax;
+    console.log(`Calendar type requested: ${calendarType}`);
+    console.log(`Time range: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+    let events3;
+    if (googleCalendarService2) {
+      console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
+      try {
+        events3 = await googleCalendarService2.getEvents(
+          calendarType,
+          timeMin ? new Date(timeMin) : void 0,
+          timeMax ? new Date(timeMax) : void 0
+        );
+        console.log(`Successfully fetched ${events3.length} events via Google Calendar API`);
+      } catch (apiError) {
+        console.error("Google Calendar API failed, falling back to iCal:", apiError);
+      }
+    }
+    if (!events3) {
+      console.log(`Using iCal fallback for ${calendarType} calendar`);
+      const minDate = timeMin ? new Date(timeMin) : void 0;
+      const maxDate = timeMax ? new Date(timeMax) : void 0;
+      console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
+      if (calendarType === "academic") {
+        events3 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
+      } else if (calendarType === "activities") {
+        events3 = await fetchCalendarEvents(STUDENT_CALENDAR_URL, "activities", minDate, maxDate);
+      } else {
+        console.log("No calendar type specified, defaulting to academic");
+        events3 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
+      }
+    }
+    if (timeMin || timeMax) {
+      console.log(`Date filtering applied at source: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+    }
+    const eventsArray = events3 || [];
+    console.log(`Sending ${eventsArray.length} events to frontend`);
+    res.json(eventsArray);
+  } catch (error) {
+    console.error(`API Error:`, error);
+    res.status(500).json({
+      error: "Failed to fetch calendar events",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+});
+var calendar_default = router2;
+
+// server/api/verification.ts
+import express3 from "express";
 
 // server/services/emailService.ts
 import nodemailer from "nodemailer";
@@ -1258,8 +1534,8 @@ var getAllPendingVerifications = () => {
 };
 
 // server/api/verification.ts
-var router2 = express2.Router();
-router2.post("/register", async (req, res) => {
+var router3 = express3.Router();
+router3.post("/register", async (req, res) => {
   try {
     const {
       firstName,
@@ -1316,7 +1592,7 @@ router2.post("/register", async (req, res) => {
     });
   }
 });
-router2.post("/verify", async (req, res) => {
+router3.post("/verify", async (req, res) => {
   try {
     const { requestId, action, verifiedBy } = req.body;
     if (!requestId || !action || !verifiedBy) {
@@ -1345,7 +1621,7 @@ router2.post("/verify", async (req, res) => {
     });
   }
 });
-router2.get("/status/:requestId", (req, res) => {
+router3.get("/status/:requestId", (req, res) => {
   try {
     const { requestId } = req.params;
     const status = getVerificationStatus(requestId);
@@ -1367,7 +1643,7 @@ router2.get("/status/:requestId", (req, res) => {
     });
   }
 });
-router2.get("/pending", (req, res) => {
+router3.get("/pending", (req, res) => {
   try {
     const pendingVerifications = getAllPendingVerifications();
     res.json({
@@ -1382,10 +1658,10 @@ router2.get("/pending", (req, res) => {
     });
   }
 });
-var verification_default = router2;
+var verification_default = router3;
 
 // server/api/posts.ts
-import express3 from "express";
+import express4 from "express";
 
 // server/services/postVerificationService.ts
 import nodemailer2 from "nodemailer";
@@ -1576,8 +1852,8 @@ var getApprovedPosts = () => {
 };
 
 // server/api/posts.ts
-var router3 = express3.Router();
-router3.post("/submit", async (req, res) => {
+var router4 = express4.Router();
+router4.post("/submit", async (req, res) => {
   try {
     const {
       type,
@@ -1636,7 +1912,7 @@ router3.post("/submit", async (req, res) => {
     });
   }
 });
-router3.post("/verify", async (req, res) => {
+router4.post("/verify", async (req, res) => {
   try {
     const { postId, action, reviewedBy, rejectionReason } = req.body;
     if (!postId || !action || !reviewedBy) {
@@ -1665,7 +1941,7 @@ router3.post("/verify", async (req, res) => {
     });
   }
 });
-router3.get("/status/:postId", (req, res) => {
+router4.get("/status/:postId", (req, res) => {
   try {
     const { postId } = req.params;
     const status = getPostStatus(postId);
@@ -1687,7 +1963,7 @@ router3.get("/status/:postId", (req, res) => {
     });
   }
 });
-router3.get("/pending", (req, res) => {
+router4.get("/pending", (req, res) => {
   try {
     const pendingPosts = getAllPendingPosts();
     res.json({
@@ -1702,7 +1978,7 @@ router3.get("/pending", (req, res) => {
     });
   }
 });
-router3.get("/approved", (req, res) => {
+router4.get("/approved", (req, res) => {
   try {
     const approvedPosts = getApprovedPosts();
     res.json({
@@ -1717,610 +1993,48 @@ router3.get("/approved", (req, res) => {
     });
   }
 });
-var posts_default = router3;
-
-// server/api/analytics.ts
-import express4 from "express";
-import { z } from "zod";
-var router4 = express4.Router();
-var StudySessionSchema = z.object({
-  userId: z.string(),
-  subject: z.string(),
-  duration: z.number(),
-  date: z.string(),
-  goals: z.array(z.string()),
-  completedGoals: z.array(z.string()),
-  notes: z.string().optional()
-});
-var WellnessActivitySchema = z.object({
-  userId: z.string(),
-  type: z.enum(["sleep", "exercise", "nutrition", "social", "mindfulness"]),
-  value: z.number(),
-  date: z.string(),
-  notes: z.string().optional()
-});
-var SocialActivitySchema = z.object({
-  userId: z.string(),
-  type: z.enum(["event", "study_group", "message", "connection"]),
-  activityId: z.string(),
-  date: z.string(),
-  metadata: z.record(z.any()).optional()
-});
-var CareerActivitySchema = z.object({
-  userId: z.string(),
-  type: z.enum(["application", "interview", "skill", "networking"]),
-  title: z.string(),
-  date: z.string(),
-  status: z.string().optional(),
-  metadata: z.record(z.any()).optional()
-});
-var analyticsData = /* @__PURE__ */ new Map();
-router4.post("/study-session", async (req, res) => {
-  try {
-    const data = StudySessionSchema.parse(req.body);
-    if (!analyticsData.has(data.userId)) {
-      analyticsData.set(data.userId, {
-        studySessions: [],
-        wellnessActivities: [],
-        socialActivities: [],
-        careerActivities: []
-      });
-    }
-    const userData = analyticsData.get(data.userId);
-    userData.studySessions.push({
-      ...data,
-      id: Date.now().toString(),
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
-    res.json({ success: true, message: "Study session recorded" });
-  } catch (error) {
-    res.status(400).json({ error: "Invalid data format" });
-  }
-});
-router4.post("/wellness-activity", async (req, res) => {
-  try {
-    const data = WellnessActivitySchema.parse(req.body);
-    if (!analyticsData.has(data.userId)) {
-      analyticsData.set(data.userId, {
-        studySessions: [],
-        wellnessActivities: [],
-        socialActivities: [],
-        careerActivities: []
-      });
-    }
-    const userData = analyticsData.get(data.userId);
-    userData.wellnessActivities.push({
-      ...data,
-      id: Date.now().toString(),
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
-    res.json({ success: true, message: "Wellness activity recorded" });
-  } catch (error) {
-    res.status(400).json({ error: "Invalid data format" });
-  }
-});
-router4.post("/social-activity", async (req, res) => {
-  try {
-    const data = SocialActivitySchema.parse(req.body);
-    if (!analyticsData.has(data.userId)) {
-      analyticsData.set(data.userId, {
-        studySessions: [],
-        wellnessActivities: [],
-        socialActivities: [],
-        careerActivities: []
-      });
-    }
-    const userData = analyticsData.get(data.userId);
-    userData.socialActivities.push({
-      ...data,
-      id: Date.now().toString(),
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
-    res.json({ success: true, message: "Social activity recorded" });
-  } catch (error) {
-    res.status(400).json({ error: "Invalid data format" });
-  }
-});
-router4.post("/career-activity", async (req, res) => {
-  try {
-    const data = CareerActivitySchema.parse(req.body);
-    if (!analyticsData.has(data.userId)) {
-      analyticsData.set(data.userId, {
-        studySessions: [],
-        wellnessActivities: [],
-        socialActivities: [],
-        careerActivities: []
-      });
-    }
-    const userData = analyticsData.get(data.userId);
-    userData.careerActivities.push({
-      ...data,
-      id: Date.now().toString(),
-      timestamp: (/* @__PURE__ */ new Date()).toISOString()
-    });
-    res.json({ success: true, message: "Career activity recorded" });
-  } catch (error) {
-    res.status(400).json({ error: "Invalid data format" });
-  }
-});
-router4.get("/user/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { timeRange = "week" } = req.query;
-    const userData = analyticsData.get(userId);
-    if (!userData) {
-      return res.json({
-        studyHours: { daily: [], weekly: [], monthly: [] },
-        wellnessScores: { sleep: [], exercise: [], social: [], nutrition: [] },
-        socialEngagement: { eventsAttended: 0, studyGroupsJoined: 0, connectionsMade: 0, messagesSent: 0 },
-        academicProgress: { assignmentsCompleted: 0, averageGrade: 0, studySessions: 0, attendanceRate: 0 },
-        careerMetrics: { applicationsSubmitted: 0, interviewsScheduled: 0, skillsDeveloped: 0, networkingEvents: 0 }
-      });
-    }
-    const now = /* @__PURE__ */ new Date();
-    const timeRangeMs = timeRange === "week" ? 7 * 24 * 60 * 60 * 1e3 : timeRange === "month" ? 30 * 24 * 60 * 60 * 1e3 : 90 * 24 * 60 * 60 * 1e3;
-    const filteredStudySessions = userData.studySessions.filter(
-      (session) => now.getTime() - new Date(session.timestamp).getTime() <= timeRangeMs
-    );
-    const filteredWellness = userData.wellnessActivities.filter(
-      (activity) => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
-    );
-    const filteredSocial = userData.socialActivities.filter(
-      (activity) => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
-    );
-    const filteredCareer = userData.careerActivities.filter(
-      (activity) => now.getTime() - new Date(activity.timestamp).getTime() <= timeRangeMs
-    );
-    const studyHours = {
-      daily: Array(7).fill(0),
-      weekly: [filteredStudySessions.reduce((sum, session) => sum + session.duration, 0) / 60],
-      monthly: [filteredStudySessions.reduce((sum, session) => sum + session.duration, 0) / 60]
-    };
-    const wellnessScores = {
-      sleep: filteredWellness.filter((a) => a.type === "sleep").map((a) => a.value),
-      exercise: filteredWellness.filter((a) => a.type === "exercise").map((a) => a.value),
-      social: filteredWellness.filter((a) => a.type === "social").map((a) => a.value),
-      nutrition: filteredWellness.filter((a) => a.type === "nutrition").map((a) => a.value)
-    };
-    const socialEngagement = {
-      eventsAttended: filteredSocial.filter((a) => a.type === "event").length,
-      studyGroupsJoined: filteredSocial.filter((a) => a.type === "study_group").length,
-      connectionsMade: filteredSocial.filter((a) => a.type === "connection").length,
-      messagesSent: filteredSocial.filter((a) => a.type === "message").length
-    };
-    const academicProgress = {
-      assignmentsCompleted: filteredStudySessions.filter((s) => s.completedGoals.length > 0).length,
-      averageGrade: 85,
-      // Mock data
-      studySessions: filteredStudySessions.length,
-      attendanceRate: 92
-      // Mock data
-    };
-    const careerMetrics = {
-      applicationsSubmitted: filteredCareer.filter((a) => a.type === "application").length,
-      interviewsScheduled: filteredCareer.filter((a) => a.type === "interview").length,
-      skillsDeveloped: filteredCareer.filter((a) => a.type === "skill").length,
-      networkingEvents: filteredCareer.filter((a) => a.type === "networking").length
-    };
-    res.json({
-      studyHours,
-      wellnessScores,
-      socialEngagement,
-      academicProgress,
-      careerMetrics
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve analytics" });
-  }
-});
-router4.get("/recommendations/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const userData = analyticsData.get(userId);
-    if (!userData) {
-      return res.json([]);
-    }
-    const recommendations = [];
-    const totalStudyHours = userData.studySessions.reduce((sum, session) => sum + session.duration, 0) / 60;
-    if (totalStudyHours < 20) {
-      recommendations.push({
-        id: "1",
-        type: "study",
-        title: "Increase Study Time",
-        description: `You've studied ${totalStudyHours.toFixed(1)} hours this week. Consider increasing to 20+ hours for better performance.`,
-        confidence: 0.85,
-        priority: "high",
-        category: "Academic Performance",
-        impact: "High - Direct impact on grades",
-        timeToComplete: "Ongoing"
-      });
-    }
-    const sleepActivities = userData.wellnessActivities.filter((a) => a.type === "sleep");
-    if (sleepActivities.length > 0) {
-      const avgSleep = sleepActivities.reduce((sum, a) => sum + a.value, 0) / sleepActivities.length;
-      if (avgSleep < 7) {
-        recommendations.push({
-          id: "2",
-          type: "wellness",
-          title: "Improve Sleep Schedule",
-          description: `Your average sleep is ${avgSleep.toFixed(1)} hours. Aim for 7-9 hours for better focus.`,
-          confidence: 0.92,
-          priority: "high",
-          category: "Health & Wellness",
-          impact: "High - Better focus and energy",
-          timeToComplete: "Ongoing"
-        });
-      }
-    }
-    const socialActivities = userData.socialActivities.filter((a) => a.type === "event");
-    if (socialActivities.length < 2) {
-      recommendations.push({
-        id: "3",
-        type: "social",
-        title: "Attend More Events",
-        description: "You've attended few social events. Consider joining campus activities to build connections.",
-        confidence: 0.78,
-        priority: "medium",
-        category: "Social Connection",
-        impact: "Medium - Improved collaboration",
-        timeToComplete: "1-2 hours"
-      });
-    }
-    res.json(recommendations);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to generate recommendations" });
-  }
-});
-var analytics_default = router4;
-
-// server/api/achievements.ts
-import express5 from "express";
-import { z as z2 } from "zod";
-var router5 = express5.Router();
-var ACHIEVEMENTS = [
-  {
-    id: "week_warrior",
-    name: "Week Warrior",
-    description: "Complete your first week of classes",
-    category: "academic",
-    criteria: [
-      { type: "attendance", value: 5, description: "Attend 5 classes" },
-      { type: "assignment", value: 1, description: "Complete first assignment" }
-    ],
-    rarity: "common",
-    icon: "award",
-    points: 10
-  },
-  {
-    id: "social_butterfly",
-    name: "Social Butterfly",
-    description: "Join 3 study groups or clubs",
-    category: "social",
-    criteria: [
-      { type: "study_groups", value: 3, description: "Join 3 groups" },
-      { type: "meetings", value: 5, description: "Attend 5 meetings" }
-    ],
-    rarity: "rare",
-    icon: "users",
-    points: 25
-  },
-  {
-    id: "housing_hero",
-    name: "Housing Hero",
-    description: "Complete all housing requirements",
-    category: "housing",
-    criteria: [
-      { type: "application", value: 1, description: "Submit application" },
-      { type: "orientation", value: 1, description: "Complete orientation" },
-      { type: "move_in", value: 1, description: "Move in" }
-    ],
-    rarity: "epic",
-    icon: "home",
-    points: 50
-  },
-  {
-    id: "wellness_champion",
-    name: "Wellness Champion",
-    description: "Maintain wellness streak for 30 days",
-    category: "wellness",
-    criteria: [
-      { type: "wellness_streak", value: 30, description: "30 day streak" }
-    ],
-    rarity: "legendary",
-    icon: "heart",
-    points: 100
-  },
-  {
-    id: "study_master",
-    name: "Study Master",
-    description: "Complete 50 study sessions",
-    category: "academic",
-    criteria: [
-      { type: "study_sessions", value: 50, description: "Complete 50 sessions" },
-      { type: "completion_rate", value: 80, description: "Maintain 80% completion rate" }
-    ],
-    rarity: "rare",
-    icon: "book-open",
-    points: 75
-  },
-  {
-    id: "career_explorer",
-    name: "Career Explorer",
-    description: "Attend 5 career events",
-    category: "career",
-    criteria: [
-      { type: "career_events", value: 5, description: "Attend 5 events" }
-    ],
-    rarity: "epic",
-    icon: "target",
-    points: 60
-  },
-  {
-    id: "perfect_attendance",
-    name: "Perfect Attendance",
-    description: "Attend all classes for a full semester",
-    category: "academic",
-    criteria: [
-      { type: "attendance_rate", value: 100, description: "100% attendance" },
-      { type: "semester_complete", value: 1, description: "Complete semester" }
-    ],
-    rarity: "legendary",
-    icon: "star",
-    points: 150
-  },
-  {
-    id: "community_leader",
-    name: "Community Leader",
-    description: "Organize 3 campus events",
-    category: "social",
-    criteria: [
-      { type: "events_organized", value: 3, description: "Organize 3 events" },
-      { type: "attendees", value: 20, description: "Get 20+ attendees" }
-    ],
-    rarity: "epic",
-    icon: "users",
-    points: 80
-  },
-  {
-    id: "fitness_fanatic",
-    name: "Fitness Fanatic",
-    description: "Exercise for 30 days straight",
-    category: "wellness",
-    criteria: [
-      { type: "exercise_streak", value: 30, description: "30 day exercise streak" }
-    ],
-    rarity: "rare",
-    icon: "heart",
-    points: 40
-  },
-  {
-    id: "academic_excellence",
-    name: "Academic Excellence",
-    description: "Maintain 4.0 GPA for a semester",
-    category: "academic",
-    criteria: [
-      { type: "gpa", value: 4, description: "4.0 GPA" },
-      { type: "semester_complete", value: 1, description: "Complete semester" }
-    ],
-    rarity: "legendary",
-    icon: "trophy",
-    points: 200
-  }
-];
-var userAchievements = /* @__PURE__ */ new Map();
-var ProgressUpdateSchema = z2.object({
-  userId: z2.string(),
-  achievementId: z2.string(),
-  progress: z2.number(),
-  metadata: z2.record(z2.any()).optional()
-});
-router5.get("/", async (req, res) => {
-  try {
-    res.json(ACHIEVEMENTS);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve achievements" });
-  }
-});
-router5.get("/user/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const userData = userAchievements.get(userId) || { unlocked: [], progress: {} };
-    const achievementsWithProgress = ACHIEVEMENTS.map((achievement) => {
-      const userProgress = userData.progress[achievement.id] || 0;
-      const isUnlocked = userData.unlocked.includes(achievement.id);
-      return {
-        ...achievement,
-        unlocked: isUnlocked,
-        progress: userProgress,
-        maxProgress: Math.max(...achievement.criteria.map((c) => c.value)),
-        unlockedAt: isUnlocked ? userData.unlockedDates?.[achievement.id] : void 0
-      };
-    });
-    res.json(achievementsWithProgress);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve user achievements" });
-  }
-});
-router5.post("/progress", async (req, res) => {
-  try {
-    const data = ProgressUpdateSchema.parse(req.body);
-    if (!userAchievements.has(data.userId)) {
-      userAchievements.set(data.userId, {
-        unlocked: [],
-        progress: {},
-        unlockedDates: {},
-        totalPoints: 0
-      });
-    }
-    const userData = userAchievements.get(data.userId);
-    const achievement = ACHIEVEMENTS.find((a) => a.id === data.achievementId);
-    if (!achievement) {
-      return res.status(404).json({ error: "Achievement not found" });
-    }
-    userData.progress[data.achievementId] = data.progress;
-    const shouldUnlock = achievement.criteria.every((criterion) => {
-      const currentProgress = userData.progress[data.achievementId] || 0;
-      return currentProgress >= criterion.value;
-    });
-    if (shouldUnlock && !userData.unlocked.includes(data.achievementId)) {
-      userData.unlocked.push(data.achievementId);
-      userData.unlockedDates[data.achievementId] = (/* @__PURE__ */ new Date()).toISOString();
-      userData.totalPoints += achievement.points;
-      console.log(`Achievement unlocked: ${achievement.name} for user ${data.userId}`);
-    }
-    res.json({
-      success: true,
-      unlocked: shouldUnlock && !userData.unlocked.includes(data.achievementId),
-      totalPoints: userData.totalPoints
-    });
-  } catch (error) {
-    res.status(400).json({ error: "Invalid data format" });
-  }
-});
-router5.get("/leaderboard", async (req, res) => {
-  try {
-    const leaderboard = Array.from(userAchievements.entries()).map(([userId, data]) => ({
-      userId,
-      totalPoints: data.totalPoints || 0,
-      unlockedCount: data.unlocked?.length || 0,
-      achievements: data.unlocked || []
-    })).sort((a, b) => b.totalPoints - a.totalPoints).slice(0, 10);
-    res.json(leaderboard);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve leaderboard" });
-  }
-});
-router5.get("/stats/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const userData = userAchievements.get(userId) || { unlocked: [], progress: {} };
-    const stats = {
-      totalAchievements: ACHIEVEMENTS.length,
-      unlockedCount: userData.unlocked?.length || 0,
-      totalPoints: userData.totalPoints || 0,
-      completionRate: Math.round((userData.unlocked?.length || 0) / ACHIEVEMENTS.length * 100),
-      rarityBreakdown: {
-        common: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.rarity === "common"
-        ).length || 0,
-        rare: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.rarity === "rare"
-        ).length || 0,
-        epic: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.rarity === "epic"
-        ).length || 0,
-        legendary: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.rarity === "legendary"
-        ).length || 0
-      },
-      categoryBreakdown: {
-        academic: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.category === "academic"
-        ).length || 0,
-        social: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.category === "social"
-        ).length || 0,
-        wellness: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.category === "wellness"
-        ).length || 0,
-        career: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.category === "career"
-        ).length || 0,
-        housing: userData.unlocked?.filter(
-          (id) => ACHIEVEMENTS.find((a) => a.id === id)?.category === "housing"
-        ).length || 0
-      }
-    };
-    res.json(stats);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve achievement stats" });
-  }
-});
-router5.post("/bulk-progress", async (req, res) => {
-  try {
-    const { userId, activities } = req.body;
-    if (!userAchievements.has(userId)) {
-      userAchievements.set(userId, {
-        unlocked: [],
-        progress: {},
-        unlockedDates: {},
-        totalPoints: 0
-      });
-    }
-    const userData = userAchievements.get(userId);
-    const newlyUnlocked = [];
-    for (const activity of activities) {
-      for (const achievement of ACHIEVEMENTS) {
-        for (const criterion of achievement.criteria) {
-          if (criterion.type === activity.type) {
-            const currentProgress = userData.progress[achievement.id] || 0;
-            const newProgress = Math.min(currentProgress + activity.value, criterion.value);
-            userData.progress[achievement.id] = newProgress;
-            const shouldUnlock = achievement.criteria.every((c) => {
-              const progress = userData.progress[achievement.id] || 0;
-              return progress >= c.value;
-            });
-            if (shouldUnlock && !userData.unlocked.includes(achievement.id)) {
-              userData.unlocked.push(achievement.id);
-              userData.unlockedDates[achievement.id] = (/* @__PURE__ */ new Date()).toISOString();
-              userData.totalPoints += achievement.points;
-              newlyUnlocked.push(achievement);
-            }
-          }
-        }
-      }
-    }
-    res.json({
-      success: true,
-      newlyUnlocked,
-      totalPoints: userData.totalPoints
-    });
-  } catch (error) {
-    res.status(400).json({ error: "Invalid data format" });
-  }
-});
-var achievements_default = router5;
+var posts_default = router4;
 
 // server/api/social.ts
-import express6 from "express";
-import { z as z3 } from "zod";
-var router6 = express6.Router();
+import express5 from "express";
+import { z } from "zod";
+var router5 = express5.Router();
 var studyGroups = /* @__PURE__ */ new Map();
 var events2 = /* @__PURE__ */ new Map();
 var userConnections = /* @__PURE__ */ new Map();
 var messages = /* @__PURE__ */ new Map();
-var StudyGroupSchema = z3.object({
-  name: z3.string(),
-  subject: z3.string(),
-  description: z3.string(),
-  maxMembers: z3.number(),
-  meetingTime: z3.string(),
-  meetingDays: z3.array(z3.string()),
-  location: z3.string(),
-  difficulty: z3.enum(["beginner", "intermediate", "advanced"]),
-  tags: z3.array(z3.string()),
-  createdBy: z3.string()
+var StudyGroupSchema = z.object({
+  name: z.string(),
+  subject: z.string(),
+  description: z.string(),
+  maxMembers: z.number(),
+  meetingTime: z.string(),
+  meetingDays: z.array(z.string()),
+  location: z.string(),
+  difficulty: z.enum(["beginner", "intermediate", "advanced"]),
+  tags: z.array(z.string()),
+  createdBy: z.string()
 });
-var EventSchema = z3.object({
-  title: z3.string(),
-  description: z3.string(),
-  date: z3.string(),
-  time: z3.string(),
-  location: z3.string(),
-  maxAttendees: z3.number().optional(),
-  category: z3.enum(["academic", "social", "housing", "career", "wellness", "sports"]),
-  tags: z3.array(z3.string()),
-  organizer: z3.string(),
-  isFree: z3.boolean(),
-  price: z3.number().optional()
+var EventSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  date: z.string(),
+  time: z.string(),
+  location: z.string(),
+  maxAttendees: z.number().optional(),
+  category: z.enum(["academic", "social", "housing", "career", "wellness", "sports"]),
+  tags: z.array(z.string()),
+  organizer: z.string(),
+  isFree: z.boolean(),
+  price: z.number().optional()
 });
-var MessageSchema = z3.object({
-  senderId: z3.string(),
-  receiverId: z3.string(),
-  content: z3.string(),
-  type: z3.enum(["text", "image", "file"]).default("text")
+var MessageSchema = z.object({
+  senderId: z.string(),
+  receiverId: z.string(),
+  content: z.string(),
+  type: z.enum(["text", "image", "file"]).default("text")
 });
-router6.get("/study-groups", async (req, res) => {
+router5.get("/study-groups", async (req, res) => {
   try {
     const { subject, difficulty, search } = req.query;
     let filteredGroups = Array.from(studyGroups.values());
@@ -2346,7 +2060,7 @@ router6.get("/study-groups", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve study groups" });
   }
 });
-router6.post("/study-groups", async (req, res) => {
+router5.post("/study-groups", async (req, res) => {
   try {
     const data = StudyGroupSchema.parse(req.body);
     const newGroup = {
@@ -2363,7 +2077,7 @@ router6.post("/study-groups", async (req, res) => {
     res.status(400).json({ error: "Invalid data format" });
   }
 });
-router6.post("/study-groups/:groupId/join", async (req, res) => {
+router5.post("/study-groups/:groupId/join", async (req, res) => {
   try {
     const { groupId } = req.params;
     const { userId } = req.body;
@@ -2383,7 +2097,7 @@ router6.post("/study-groups/:groupId/join", async (req, res) => {
     res.status(500).json({ error: "Failed to join study group" });
   }
 });
-router6.post("/study-groups/:groupId/rate", async (req, res) => {
+router5.post("/study-groups/:groupId/rate", async (req, res) => {
   try {
     const { groupId } = req.params;
     const { userId, rating } = req.body;
@@ -2403,7 +2117,7 @@ router6.post("/study-groups/:groupId/rate", async (req, res) => {
     res.status(500).json({ error: "Failed to submit rating" });
   }
 });
-router6.get("/events", async (req, res) => {
+router5.get("/events", async (req, res) => {
   try {
     const { category, date, search } = req.query;
     let filteredEvents = Array.from(events2.values());
@@ -2432,7 +2146,7 @@ router6.get("/events", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve events" });
   }
 });
-router6.post("/events", async (req, res) => {
+router5.post("/events", async (req, res) => {
   try {
     const data = EventSchema.parse(req.body);
     const newEvent = {
@@ -2448,7 +2162,7 @@ router6.post("/events", async (req, res) => {
     res.status(400).json({ error: "Invalid data format" });
   }
 });
-router6.post("/events/:eventId/attend", async (req, res) => {
+router5.post("/events/:eventId/attend", async (req, res) => {
   try {
     const { eventId } = req.params;
     const { userId } = req.body;
@@ -2474,7 +2188,7 @@ router6.post("/events/:eventId/attend", async (req, res) => {
     res.status(500).json({ error: "Failed to update attendance" });
   }
 });
-router6.post("/events/:eventId/like", async (req, res) => {
+router5.post("/events/:eventId/like", async (req, res) => {
   try {
     const { eventId } = req.params;
     const { userId } = req.body;
@@ -2497,7 +2211,7 @@ router6.post("/events/:eventId/like", async (req, res) => {
     res.status(500).json({ error: "Failed to update like" });
   }
 });
-router6.get("/connections/:userId", async (req, res) => {
+router5.get("/connections/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const userConnectionsList = userConnections.get(userId) || [];
@@ -2506,7 +2220,7 @@ router6.get("/connections/:userId", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve connections" });
   }
 });
-router6.post("/connections", async (req, res) => {
+router5.post("/connections", async (req, res) => {
   try {
     const { userId, targetUserId } = req.body;
     if (!userConnections.has(userId)) {
@@ -2527,7 +2241,7 @@ router6.post("/connections", async (req, res) => {
     res.status(500).json({ error: "Failed to establish connection" });
   }
 });
-router6.get("/messages/:userId", async (req, res) => {
+router5.get("/messages/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const { conversationId } = req.query;
@@ -2557,7 +2271,7 @@ router6.get("/messages/:userId", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve messages" });
   }
 });
-router6.post("/messages", async (req, res) => {
+router5.post("/messages", async (req, res) => {
   try {
     const data = MessageSchema.parse(req.body);
     const newMessage = {
@@ -2572,7 +2286,7 @@ router6.post("/messages", async (req, res) => {
     res.status(400).json({ error: "Invalid data format" });
   }
 });
-router6.get("/roommates", async (req, res) => {
+router5.get("/roommates", async (req, res) => {
   try {
     const { year, dorm, sleepSchedule, studyHabits, minCompatibility } = req.query;
     const mockRoommates = [
@@ -2619,13 +2333,14 @@ router6.get("/roommates", async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve roommates" });
   }
 });
-var social_default = router6;
+var social_default = router5;
 
 // server/index.ts
-var app2 = express7();
-app2.use(express7.json());
-app2.use(express7.urlencoded({ extended: false }));
+var app2 = express6();
+app2.use(express6.json());
+app2.use(express6.urlencoded({ extended: false }));
 app2.use(cors());
+app2.use("/api/calendar", calendar_default);
 app2.use((req, res, next) => {
   const start = Date.now();
   const path3 = req.path;
@@ -2661,8 +2376,6 @@ app2.use((req, res, next) => {
   app2.use("/api/programs", programs_default);
   app2.use("/api/verification", verification_default);
   app2.use("/api/posts", posts_default);
-  app2.use("/api/analytics", analytics_default);
-  app2.use("/api/achievements", achievements_default);
   app2.use("/api/social", social_default);
   if (app2.get("env") === "development") {
     await setupVite(app2, server);

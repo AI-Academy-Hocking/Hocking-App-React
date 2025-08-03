@@ -12,9 +12,9 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { NotificationProvider } from "@/lib/notifications";
-import RecreationPage from "./pages/Recreation";
+// import RecreationPage from "./pages/Recreation";
 import LibraryResourcesPage from "./pages/LibraryResources";
-import OnlineLearningPage from "./pages/OnlineLearning";
+// import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
 import Athletics from "./pages/Athletics";
@@ -23,8 +23,6 @@ import Housing from "./pages/Housing";
 import Dormitories from "./pages/housing/Dormitories";
 import Amenities from "./pages/housing/Amenities";
 import ApplicationProcess from "./pages/housing/ApplicationProcess";
-import MealPlan from "./pages/housing/MealPlan";
-import Roomies from "./pages/housing/Roomies";
 import WhatToBring from "./pages/housing/WhatToBring";
 import Maintenance from "./pages/housing/Maintenance";
 import Contact from "./pages/housing/Contact";
@@ -33,7 +31,6 @@ import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
 import Social from "./pages/housing/Social";
 import Contract from "./pages/housing/Contract";
-import HowToApply from "./pages/housing/HowToApply";
 import FloorPlans from "./pages/housing/FloorPlans";
 import Tutoring from "./pages/Tutoring";
 import TestingCenter from "./pages/TestingCenter";
@@ -63,6 +60,9 @@ import VerifyPost from "./pages/VerifyPost";
 
 // New feature pages
 import Events from "./pages/Events";
+
+// Wellness Features
+import WellnessTracker from "./components/wellness/WellnessTracker";
 
 import './index.css';
 import './styles/globals.css';
@@ -105,9 +105,9 @@ function Router() {
         <Route path="/resources" component={Resources} />
         <Route path="/dining" component={DiningHall} />
         <Route path="/safety" component={CampusSafety} />
-        <Route path="/recreation" component={RecreationPage} />
+        {/* <Route path="/recreation" component={RecreationPage} /> */}
         <Route path="/library" component={LibraryResourcesPage} />
-        <Route path="/online-learning" component={OnlineLearningPage} />
+        {/* <Route path="/online-learning" component={OnlineLearningPage} /> */}
         <Route path="/student-organizations" component={StudentOrganizationsPage} />
         <Route path="/academic-success-center" component={AcademicSuccessCenter} />
         <Route path="/athletics" component={Athletics} />
@@ -115,8 +115,6 @@ function Router() {
         <Route path="/housing/dormitories" component={Dormitories} />
         <Route path="/housing/amenities" component={Amenities} />
         <Route path="/housing/application" component={ApplicationProcess} />
-        <Route path="/housing/meal-plan" component={MealPlan} />
-        <Route path="/housing/roomies" component={Roomies} />
         <Route path="/housing/what-to-bring" component={WhatToBring} />
         <Route path="/housing/maintenance" component={Maintenance} />
         <Route path="/housing/contact" component={Contact} />
@@ -125,7 +123,6 @@ function Router() {
         <Route path="/housing/activities" component={Activities} />
         <Route path="/housing/social" component={Social} />
         <Route path="/housing/contract" component={Contract} />
-        <Route path="/housing/how-to-apply" component={HowToApply} />
         <Route path="/housing/floor-plans" component={FloorPlans} />
         <Route path="/tutoring" component={Tutoring} />
         <Route path="/testing-center" component={TestingCenter} />

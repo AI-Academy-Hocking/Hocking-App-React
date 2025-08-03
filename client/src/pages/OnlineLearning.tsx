@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { Laptop, HelpCircle, BookOpen, Video, MessageSquare, ArrowLeft } from 'lucide-react';
-
 import { 
   Laptop, HelpCircle, BookOpen, Video, MessageSquare, ArrowLeft,
   CheckCircle, BookOpen as BookOpenIcon, ExternalLink,
   Target, MonitorSmartphone, Phone, Clock
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Link } from "wouter";
 
 function OnlineLearningPage() {
   const [canvasExpanded, setCanvasExpanded] = useState(false);
   const [resourcesExpanded, setResourcesExpanded] = useState(false);
 
-  return (
-    <div className="container mx-auto py-8 px-4 bg-white dark:bg-gray-900">
   const handleExternalLink = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -29,9 +26,18 @@ function OnlineLearningPage() {
           </button>
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-blue-300 mb-6">Online Learning</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <MonitorSmartphone className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">Online Learning</h1>
+        </div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Access your online courses, digital resources, and virtual learning tools through Hocking College's comprehensive online learning platform.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Canvas Learning Management System */}
         <Card 
           className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl ${
@@ -114,17 +120,6 @@ function OnlineLearningPage() {
             </div>
           )}
         </Card>
-      </div>
-
-
-      <div className="mb-8">
-        <div className="flex items-center gap-4 mb-4">
-          <MonitorSmartphone className="h-8 w-8 text-blue-600" />
-          <h1 className="text-3xl font-bold text-primary">Online Learning</h1>
-        </div>
-        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-          Access your online courses, digital resources, and virtual learning tools through Hocking College's comprehensive online learning platform.
-        </p>
       </div>
 
       {/* Collapsible Sections */}

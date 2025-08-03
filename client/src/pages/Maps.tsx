@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Search, Plus, Minus, Navigation, MapPin, Users } from "lucide-react";
+import { Search, Plus, Minus, Navigation, MapPin, Users, ArrowLeft } from "lucide-react";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
 import { toast } from "../hooks/use-toast";
@@ -11,6 +11,7 @@ import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useAuth } from "../lib/auth";
 import { useSharedLocations } from "../hooks/use-shared-locations";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 // Fix for Leaflet marker icons
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -327,6 +328,8 @@ export default function Maps() {
     { id: "dining", label: "Dining" },
     { id: "parking", label: "Parking" },
   ];
+
+  const { goBack } = useBackNavigation();
 
   return (
     <div className="space-y-6 p-6 bg-white dark:bg-[#151c26] min-h-screen">

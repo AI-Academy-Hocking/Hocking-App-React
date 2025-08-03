@@ -1,13 +1,6 @@
 import express, { Express } from 'express';
 const cors = require('cors');
-<<<<<<< HEAD
 const { registerRoutes } = require('../routes');
-=======
-<<<<<<< HEAD
->>>>>>> origin/Jodian-Branch
-=======
->>>>>>> Jodian-Branch
->>>>>>> origin/Lukas-Branch
 
 const app = express();
 const port = process.env.PORT || 3001;

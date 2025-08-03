@@ -329,11 +329,6 @@ export class MemStorage implements IStorage {
     
     // Sample student tools
     await this.createStudentTool({
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> origin/Lukas-Branch
       id: "course-schedule",
       name: "Course Schedule",
       description: "View your current classes",
@@ -343,10 +338,6 @@ export class MemStorage implements IStorage {
     });
     
     await this.createStudentTool({
-<<<<<<< HEAD
-=======
->>>>>>> Jodian-Branch
->>>>>>> origin/Lukas-Branch
       id: "grades",
       name: "Grades",
       description: "Check your academic performance",
@@ -374,11 +365,6 @@ export class MemStorage implements IStorage {
     });
     
     await this.createStudentTool({
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> origin/Lukas-Branch
       id: "academic-history",
       name: "Academic History",
       description: "View your transcript",
@@ -388,10 +374,6 @@ export class MemStorage implements IStorage {
     });
     
     await this.createStudentTool({
-<<<<<<< HEAD
-=======
->>>>>>> Jodian-Branch
->>>>>>> origin/Lukas-Branch
       id: "graduation",
       name: "Graduation",
       description: "Track degree requirements",

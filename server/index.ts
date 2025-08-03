@@ -3,17 +3,10 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
 import programsRouter from './api/programs';
-<<<<<<< HEAD
 import calendarRouter from './src/routes/calendar';
-=======
 import verificationRouter from './api/verification';
 import postsRouter from './api/posts';
 import socialRouter from './api/social';
-<<<<<<< HEAD
->>>>>>> origin/Jodian-Branch
-=======
->>>>>>> Jodian-Branch
->>>>>>> origin/Lukas-Branch
 
 const app = express();
 app.use(express.json());

@@ -39,7 +39,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ical = __importStar(require("ical"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
-<<<<<<< HEAD
 // Try to import Google Calendar service, but don't fail if it's not available
 let googleCalendarService = null;
 try {
@@ -180,13 +179,20 @@ router.get('/events', async (req, res) => {
             else if (calendarType === 'activities') {
                 events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities', minDate, maxDate);
             }
+            else {
+                // Default to academic if no type specified
+                console.log('No calendar type specified, defaulting to academic');
+                events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
+            }
         }
         // Date filtering is now handled at the source (Google Calendar API or iCal parsing)
         if (timeMin || timeMax) {
             console.log(`Date filtering applied at source: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
         }
-        console.log(`Sending ${events.length} events to frontend`);
-        res.json(events);
+        // Ensure events is always an array
+        const eventsArray = events || [];
+        console.log(`Sending ${eventsArray.length} events to frontend`);
+        res.json(eventsArray);
     }
     catch (error) {
         console.error(`API Error:`, error);
@@ -194,56 +200,6 @@ router.get('/events', async (req, res) => {
             error: 'Failed to fetch calendar events',
             details: error instanceof Error ? error.message : 'Unknown error'
         });
-=======
-const router = express_1.default.Router();
-// Academic calendar URL
-const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
-// Student activities calendar URL
-const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
-async function fetchCalendarEvents(url) {
-    const response = await (0, node_fetch_1.default)(url);
-    if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
-    const icalData = await response.text();
-    const parsedEvents = ical.parseICS(icalData);
-    const events = Object.values(parsedEvents)
-        .filter(event => event.type === 'VEVENT')
-        .map(event => {
-        // Handle both Date and string for start/end
-        let startDate = event.start;
-        let endDate = event.end;
-        if (typeof startDate === 'string')
-            startDate = new Date(startDate);
-        if (typeof endDate === 'string')
-            endDate = new Date(endDate);
-        return {
-            id: event.uid || String(Math.random()),
-            title: event.summary || "No Title",
-            date: startDate ? startDate.toISOString() : new Date().toISOString(),
-            time: `${startDate ? startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) : "00:00"} - ${endDate ? endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) : "23:59"}`,
-            end: endDate ? endDate.toISOString() : (startDate ? startDate.toISOString() : new Date().toISOString()),
-            location: event.location || "No Location",
-            description: event.description || "No Description",
-        };
-    });
-    // Debug log
-    console.log(`Fetched ${events.length} events from ${url}`);
-    if (events.length > 0) {
-        console.log('First event:', events[0]);
-    }
-    return events;
-}
-// GET /api/calendar/events
-router.get('/events', async (req, res) => {
-    try {
-        const calendarType = req.query.type;
-        const calendarUrl = calendarType === 'activities' ? STUDENT_CALENDAR_URL : ACADEMIC_CALENDAR_URL;
-        const events = await fetchCalendarEvents(calendarUrl);
-        res.json(events);
-    }
-    catch (error) {
-        res.status(500).json({ error: 'Failed to fetch calendar events', details: error instanceof Error ? error.message : 'Unknown error' });
->>>>>>> origin/Jodian-Branch
     }
 });
 exports.default = router;
