@@ -13,22 +13,25 @@ interface User {
 type UserWithoutPassword = Omit<User, 'password'>;
 
 export function useSharedLocations() {
-  // Setup WebSocket connection
+  // Setup WebSocket connection - temporarily disabled to prevent errors
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const host = window.location.host || 'localhost:3000';
-  const wsUrl = `${protocol}//${host}/ws`;
-  useWebSocket(wsUrl, {
-    onMessage: (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.type === 'location_update') {
-          queryClient.setQueryData(['locations', 'shared'], data.data);
-        }
-      } catch (err) {
-        console.error('Error parsing WebSocket message:', err);
-      }
-    }
-  });
+  const host = window.location.hostname || 'localhost';
+  const port = '3001'; // Server runs on port 3001
+  const wsUrl = `${protocol}//${host}:${port}/ws`;
+  
+  // Temporarily disable WebSocket to prevent connection errors
+  // useWebSocket(wsUrl, {
+  //   onMessage: (event) => {
+  //     try {
+  //       const data = JSON.parse(event.data);
+  //       if (data.type === 'location_update') {
+  //         queryClient.setQueryData(['locations', 'shared'], data.data);
+  //       }
+  //     } catch (err) {
+  //       console.error('Error parsing WebSocket message:', err);
+  //     }
+  //   }
+  // });
 
   const queryClient = useQueryClient();
 
@@ -36,6 +39,9 @@ export function useSharedLocations() {
   const { data: locations, isLoading, error } = useQuery({
     queryKey: ['locations', 'shared'],
     queryFn: getQueryFn<UserWithoutPassword[]>({ on401: 'returnNull' }),
+    // Add fallback to prevent errors
+    retry: 1,
+    retryDelay: 1000,
   });
 
   // Update user location
@@ -58,7 +64,8 @@ export function useSharedLocations() {
       return await response.json();
     } catch (error) {
       console.error('Error updating location:', error);
-      throw error;
+      // Don't throw error, just log it to prevent UI crashes
+      return null;
     }
   }, [queryClient]);
 
@@ -67,5 +74,7 @@ export function useSharedLocations() {
     isLoading,
     error,
     updateLocation,
+    // Add server status for debugging
+    serverStatus: error ? 'error' : isLoading ? 'loading' : 'connected',
   };
 }

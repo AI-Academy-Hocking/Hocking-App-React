@@ -60,7 +60,6 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
       .filter(event => {
         const isVEvent = event.type === 'VEVENT';
         if (!isVEvent) {
-          console.log(`Skipping non-VEVENT: ${(event as any).type}`);
           return false;
         }
         
@@ -73,7 +72,6 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
             const maxDate = timeMax || new Date('2100-01-01');
             
             if (eventDate < minDate || eventDate > maxDate) {
-              console.log(`Skipping event outside date range: ${(event as any).summary} on ${eventDate.toISOString()}`);
               return false;
             }
           }

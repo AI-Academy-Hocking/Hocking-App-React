@@ -44,14 +44,36 @@ export default function Maps() {
   const [viewingSharedLocations, setViewingSharedLocations] = useState(false);
   const [userMarkers, setUserMarkers] = useState<L.Marker[]>([]);
   const [userLocationMarker, setUserLocationMarker] = useState<L.Marker | null>(null);
+  const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt' | 'unknown'>('unknown');
   const mapRef = useRef<HTMLDivElement>(null);
   const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<Building | null>(null);
+  const buildingMarkersRef = useRef<L.Marker[]>([]);
   
   const { user } = useAuth();
   const { sharedLocations, updateLocation } = useSharedLocations();
   
-  const { data: buildings } = useQuery<Building[]>({
+  // Debug user state
+  console.log('Maps component - User state:', { 
+    user: user ? { id: user.id, isGuest: user.isGuest } : null,
+    locationPermission 
+  });
+  
+  const { data: buildings = [] } = useQuery<Building[]>({
     queryKey: ['/api/buildings'],
+    queryFn: async () => {
+      try {
+        const response = await fetch('/api/buildings');
+        if (!response.ok) {
+          throw new Error('Failed to fetch buildings');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Error fetching buildings:', error);
+        return [];
+      }
+    },
   });
 
   // Add static academic buildings (including Davidson Hall)
@@ -109,7 +131,10 @@ export default function Maps() {
       building.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = activeCategory === "all" || 
       building.category === activeCategory;
-    return matchesSearch && matchesCategory;
+    const hasValidCoordinates = typeof building.lat === 'number' && typeof building.lng === 'number' && 
+      !isNaN(building.lat) && !isNaN(building.lng) && building.lat !== 0 && building.lng !== 0;
+    
+    return matchesSearch && matchesCategory && hasValidCoordinates;
   });
 
   // If the selected building is not in the filtered list, clear the selection
@@ -129,27 +154,7 @@ export default function Maps() {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(leafletMap);
       
-      // Create a custom icon for the location
-      // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
-      const locationIcon = L.icon({
-        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      });
-      
-      // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
-      const mainMarker = L.marker(location as L.LatLngExpression, { icon: locationIcon })
-        .addTo(leafletMap)
-        .bindPopup(`
-          <div class="text-center">
-            <b class="text-lg">Location</b><br>
-            <span class="text-sm">Latitude: 39.44374</span><br>
-            <span class="text-sm">Longitude: -82.22048</span>
-          </div>
-        `);
+      // No default marker - only show user location when requested
       
       setMap(leafletMap);
       
@@ -161,20 +166,27 @@ export default function Maps() {
 
   // Get and update user location
   const getUserLocation = useCallback(() => {
-    if (!user || !map) return;
+    if (!map) return;
     
     if (navigator.geolocation) {
+      // Show loading toast
+      toast({
+        title: "Getting your location...",
+        description: "Please allow location access if prompted",
+      });
+      
+      // Force permission request by calling with high accuracy
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
           
           // Update location in backend if sharing is enabled
-          if (isLocationSharing) {
+          if (isLocationSharing && user && user.id) {
             try {
               await updateLocation(user.id, latitude, longitude, true);
               toast({
-                title: "Location shared",
-                description: "Your location is now visible to other users",
+                title: "Location updated",
+                description: "Your location has been updated on the map",
               });
             } catch (error) {
               console.error('Error updating location:', error);
@@ -184,15 +196,43 @@ export default function Maps() {
                 variant: "destructive",
               });
             }
+          } else {
+            // Show success toast even if not sharing
+            toast({
+              title: "Location found",
+              description: "Your current location has been marked on the map",
+            });
           }
+          
+          // Create custom user location icon
+          const userIcon = L.divIcon({
+            className: 'user-location-marker',
+            html: '<div style="background-color: #3b82f6; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+          });
           
           // Update marker on map
           if (userLocationMarker) {
             userLocationMarker.setLatLng([latitude, longitude]);
           } else {
-            const marker = L.marker([latitude, longitude])
+            const marker = L.marker([latitude, longitude], { icon: userIcon })
               .addTo(map)
-              .bindPopup("Your location");
+              .bindPopup(`
+                <div style="min-width: 200px; font-family: system-ui, sans-serif;">
+                  <div style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 8px;">
+                    📍 Your Location
+                  </div>
+                  <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
+                    You are currently here
+                  </div>
+                  <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px;">
+                    <div>Latitude: ${latitude.toFixed(6)}</div>
+                    <div>Longitude: ${longitude.toFixed(6)}</div>
+                    <div>Updated: ${new Date().toLocaleTimeString()}</div>
+                  </div>
+                </div>
+              `);
             
             setUserLocationMarker(marker);
           }
@@ -202,11 +242,30 @@ export default function Maps() {
         },
         (error) => {
           console.error('Error getting location:', error);
+          let errorMessage = "Could not get your current location.";
+          
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Location permission denied. Please enable location access in your browser settings.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Location information is unavailable. Please try again.";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "Location request timed out. Please try again.";
+              break;
+          }
+          
           toast({
             title: "Location error",
-            description: "Could not get your current location. Please check your browser permissions.",
+            description: errorMessage,
             variant: "destructive",
           });
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 30000
         }
       );
     } else {
@@ -224,7 +283,19 @@ export default function Maps() {
     
     if (enabled) {
       getUserLocation();
-    } else if (user) {
+      
+      // Set up automatic location updates every 30 seconds
+      const locationInterval = setInterval(() => {
+        if (isLocationSharing) {
+          getUserLocation();
+        } else {
+          clearInterval(locationInterval);
+        }
+      }, 30000);
+      
+      // Clean up interval when component unmounts or sharing is disabled
+      return () => clearInterval(locationInterval);
+    } else if (user && user.id) {
       // Update user to stop sharing location
       try {
         await updateLocation(user.id, 0, 0, false);
@@ -263,53 +334,213 @@ export default function Maps() {
   useEffect(() => {
     if (!map) return;
     
-    // Clear existing markers
+    // Clear existing building markers
+    buildingMarkersRef.current.forEach(marker => {
+      map.removeLayer(marker);
+    });
+    buildingMarkersRef.current = [];
+    
+    // Add markers for all filtered buildings
+    filteredBuildings.forEach(building => {
+      // Validate that lat and lng are valid numbers
+      if (typeof building.lat === 'number' && typeof building.lng === 'number' && 
+          !isNaN(building.lat) && !isNaN(building.lng) &&
+          building.lat !== 0 && building.lng !== 0) {
+        
+        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
+          .addTo(map)
+          .bindPopup(`
+            <div style="min-width: 200px; font-family: system-ui, sans-serif;">
+              <div style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 8px;">
+                ${building.name}
+              </div>
+              <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
+                ${building.description}
+              </div>
+              <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px;">
+                <div>Category: ${building.category.charAt(0).toUpperCase() + building.category.slice(1)}</div>
+                <div>Coordinates: ${building.lat.toFixed(6)}, ${building.lng.toFixed(6)}</div>
+                <button onclick="window.dispatchEvent(new CustomEvent('showMarkerDetails', {detail: '${building.id}'}))" 
+                        style="margin-top: 8px; padding: 4px 8px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                  View Full Details
+                </button>
+              </div>
+            </div>
+          `);
+        
+        buildingMarkersRef.current.push(marker);
+        
+        // If this is the selected building, center the map on it
+        if (selectedBuildingId === building.id) {
+          map.setView([building.lat, building.lng], 18);
+        }
+      } else {
+        console.warn(`Invalid coordinates for building ${building.name}: lat=${building.lat}, lng=${building.lng}`);
+      }
+    });
+  }, [map, filteredBuildings, user, viewingSharedLocations]); // Removed sharedLocations to prevent infinite loop
+
+  // Handle shared locations separately to prevent infinite loop
+  useEffect(() => {
+    if (!map || !viewingSharedLocations) return;
+    
+    // Clear existing user markers
     userMarkers.forEach(marker => marker.remove());
     setUserMarkers([]);
     
-    map.eachLayer((layer) => {
-      if (layer instanceof L.Marker && layer !== userLocationMarker) {
-        map.removeLayer(layer);
+    // Add markers for other users if viewing shared locations
+    const newUserMarkers: L.Marker[] = [];
+    
+    sharedLocations.forEach((sharedUser: any) => {
+      // Don't show current user marker twice
+      if (user && sharedUser.id === user.id) return;
+      
+      // Make sure lat/lng are valid numbers
+      if (typeof sharedUser.lat === 'number' && typeof sharedUser.lng === 'number' && 
+          !isNaN(sharedUser.lat) && !isNaN(sharedUser.lng) &&
+          sharedUser.lat !== 0 && sharedUser.lng !== 0) {
+        // Create custom icon for other users
+        const userIcon = L.divIcon({
+          className: 'other-user-marker',
+          html: '<div style="background-color: #ef4444; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.3);"></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+        });
+        
+        const marker = L.marker([sharedUser.lat, sharedUser.lng], { icon: userIcon })
+          .addTo(map)
+          .bindPopup(`
+            <div style="min-width: 200px; font-family: system-ui, sans-serif;">
+              <div style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 8px;">
+                👤 ${sharedUser.name || sharedUser.username}
+              </div>
+              <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
+                Another user's location
+              </div>
+              <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px;">
+                <div>Last updated: ${sharedUser.lastLocationUpdate ? new Date(sharedUser.lastLocationUpdate).toLocaleTimeString() : 'Unknown'}</div>
+                <div>Latitude: ${sharedUser.lat.toFixed(6)}</div>
+                <div>Longitude: ${sharedUser.lng.toFixed(6)}</div>
+              </div>
+            </div>
+          `);
+        
+        newUserMarkers.push(marker);
       }
     });
     
-    // Add markers for filtered buildings
-    if (filteredBuildings && selectedBuildingId) {
-      const building = filteredBuildings.find(b => b.id === selectedBuildingId);
-      if (building) {
-        // Use colored icon based on building type
-        L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
-          .addTo(map)
-          .bindPopup(`<b>${building.name}</b><br>${building.description}`);
-      }
-    }
-    
-    // Add markers for other users if viewing shared locations
-    if (viewingSharedLocations) {
-      const newUserMarkers: L.Marker[] = [];
-      
-      sharedLocations.forEach((sharedUser: any) => {
-        // Don't show current user marker twice
-        if (user && sharedUser.id === user.id) return;
-        
-        // Make sure lat/lng are valid
-        if (sharedUser.lat !== null && sharedUser.lng !== null) {
-          // @ts-ignore: Property 'icon' does not exist on type 'typeof import("leaflet")'.
-          const marker = L.marker([sharedUser.lat, sharedUser.lng], {
-            icon: getMarkerIcon(sharedUser.category)
-          })
-            .addTo(map)
-            .bindPopup(`<b>${sharedUser.name || sharedUser.username}</b><br>Last updated: ${
-              sharedUser.lastLocationUpdate ? new Date(sharedUser.lastLocationUpdate).toLocaleTimeString() : 'Unknown'
-            }`);
+    setUserMarkers(newUserMarkers);
+  }, [map, sharedLocations, user, viewingSharedLocations]);
+
+  // Check location permissions on mount
+  useEffect(() => {
+    const checkPermissions = async () => {
+      try {
+        if (navigator.permissions && navigator.permissions.query) {
+          const result = await navigator.permissions.query({ name: 'geolocation' as PermissionName });
+          setLocationPermission(result.state);
           
-          newUserMarkers.push(marker);
+          result.addEventListener('change', () => {
+            setLocationPermission(result.state);
+          });
+        } else {
+          // Fallback for browsers that don't support permissions API
+          setLocationPermission('prompt');
         }
+      } catch (error) {
+        console.log('Permissions API not supported, defaulting to prompt');
+        setLocationPermission('prompt');
+      }
+    };
+    
+    checkPermissions();
+  }, []);
+
+  // Force location permission request
+  const requestLocationPermission = useCallback(() => {
+    if (!navigator.geolocation) {
+      toast({
+        title: "Location not supported",
+        description: "Geolocation is not supported by your browser",
+        variant: "destructive",
       });
-      
-      setUserMarkers(newUserMarkers);
+      return;
     }
-  }, [map, filteredBuildings, sharedLocations, user, userLocationMarker, viewingSharedLocations]);
+
+    // This will trigger the permission prompt
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocationPermission('granted');
+        toast({
+          title: "Location access granted!",
+          description: "You can now use location features",
+        });
+        // Get the actual location
+        getUserLocation();
+      },
+      (error) => {
+        console.error('Permission denied:', error);
+        setLocationPermission('denied');
+        let errorMessage = "Location access was denied.";
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Location permission denied. Please enable location access in your browser settings.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Location information is unavailable. Please try again.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Location request timed out. Please try again.";
+            break;
+        }
+        
+        toast({
+          title: "Location access denied",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0 // Force fresh location
+      }
+    );
+  }, [getUserLocation]);
+
+  // Auto-get location when component mounts and location sharing is enabled
+  useEffect(() => {
+    if (isLocationSharing && user && !user.isGuest) {
+      getUserLocation();
+    }
+  }, [isLocationSharing, user, getUserLocation]);
+
+  // Cleanup user location marker on unmount
+  useEffect(() => {
+    return () => {
+      if (userLocationMarker) {
+        userLocationMarker.remove();
+      }
+    };
+  }, [userLocationMarker]);
+
+  // Listen for marker detail events from popup buttons
+  useEffect(() => {
+    const handleMarkerDetails = (event: CustomEvent) => {
+      const buildingId = event.detail;
+      const building = filteredBuildings.find(b => b.id === buildingId);
+      if (building) {
+        setSelectedMarker(building);
+      }
+    };
+
+    window.addEventListener('showMarkerDetails', handleMarkerDetails as EventListener);
+    
+    return () => {
+      window.removeEventListener('showMarkerDetails', handleMarkerDetails as EventListener);
+    };
+  }, [filteredBuildings]);
 
   // Handle zoom in/out
   const handleZoomIn = () => {
@@ -349,7 +580,103 @@ export default function Maps() {
         
         <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a] overflow-hidden">
           {/* Map container */}
-          <div ref={mapRef} className="h-72 bg-neutral-light dark:bg-[#353e4a] relative"></div>
+          <div ref={mapRef} className="h-72 bg-neutral-light dark:bg-[#353e4a] relative">
+            {/* Location Permission Banner */}
+            {user && !user.isGuest && locationPermission === 'prompt' && (
+              <div className="absolute top-0 left-0 right-0 z-[1001] bg-yellow-500 text-white p-3 text-center">
+                <div className="flex items-center justify-center space-x-2">
+                  <MapPin className="h-4 w-4" />
+                  <span className="text-sm font-medium">Enable location access to see your position on the map</span>
+                  <Button 
+                    onClick={requestLocationPermission}
+                    size="sm"
+                    className="bg-white text-yellow-600 hover:bg-gray-100 ml-2"
+                  >
+                    Enable
+                  </Button>
+                </div>
+              </div>
+            )}
+            {/* Map controls */}
+            <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
+              <Button
+                variant="default"
+                size="sm"
+                className="w-10 h-10 p-0 rounded-full bg-white/90 hover:bg-white shadow-lg text-gray-700 hover:text-gray-900"
+                onClick={handleZoomIn}
+                title="Zoom In"
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                className="w-10 h-10 p-0 rounded-full bg-white/90 hover:bg-white shadow-lg text-gray-700 hover:text-gray-900"
+                onClick={handleZoomOut}
+                title="Zoom Out"
+              >
+                <Minus className="h-4 w-4" />
+              </Button>
+              {/* Find My Location Button - Always visible */}
+              <Button
+                variant="default"
+                size="sm"
+                className="w-10 h-10 p-0 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-lg"
+                onClick={getUserLocation}
+                title="Find My Location"
+              >
+                <Navigation className="h-4 w-4" />
+              </Button>
+              
+              {/* Location Permission Button - Show when permission is needed */}
+              {locationPermission === 'prompt' && (
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="w-10 h-10 p-0 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white shadow-lg"
+                  onClick={requestLocationPermission}
+                  title="Enable Location Access"
+                >
+                  <MapPin className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            
+            {/* Map Legend */}
+            <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 dark:bg-gray-800/95 rounded-lg p-3 shadow-lg border border-gray-200 dark:border-gray-600">
+              <div className="text-xs font-semibold mb-2 text-gray-800 dark:text-gray-200">Map Legend</div>
+              <div className="space-y-1 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full border border-white"></div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Academic</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full border border-white"></div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Housing</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-orange-500 rounded-full border border-white"></div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Dining</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-gray-500 rounded-full border border-white"></div>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Parking</span>
+                </div>
+                {user && !user.isGuest && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-blue-600 rounded-full border-2 border-white shadow-sm"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">You</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-sm"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Other Users</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
           
           {/* Map search and filters */}
           <CardContent className="p-4 border-t border-neutral-light dark:border-transparent bg-white dark:bg-[#353e4a]">
@@ -372,8 +699,8 @@ export default function Maps() {
                   size="default"
                   className={`rounded-xl text-sm ${
                     activeCategory === category.id 
-                      ? "bg-primary text-white" 
-                      : "bg-neutral-lightest text-neutral-dark"
+                      ? "bg-blue-600 text-white hover:bg-blue-700" 
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                   }`}
                   onClick={() => setActiveCategory(category.id)}
                 >
@@ -385,9 +712,72 @@ export default function Maps() {
         </Card>
       </section>
       
-      {user && !user.isGuest && (
-        <section>
-          <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Location Sharing</h2>
+      <section>
+        <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Location Services</h2>
+          
+          {/* Location Permission Status */}
+          {locationPermission === 'denied' && (
+            <Card className="border-2 border-red-600 dark:border-red-500 rounded-xl shadow-sm bg-white dark:bg-[#353e4a] mb-4">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-red-700 dark:text-red-300">Location Access Denied</h3>
+                    <p className="text-sm text-red-600 dark:text-red-400">
+                      Please enable location access in your browser settings to use location features.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          {locationPermission === 'prompt' && (
+            <Card className="border-2 border-yellow-600 dark:border-yellow-500 rounded-xl shadow-sm bg-white dark:bg-[#353e4a] mb-4">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-yellow-700 dark:text-yellow-300">Enable Location Access</h3>
+                    <p className="text-sm text-yellow-600 dark:text-yellow-400 mb-3">
+                      Allow location access to see your position on the map and share it with others.
+                    </p>
+                    <Button 
+                      onClick={requestLocationPermission}
+                      className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                    >
+                      <MapPin className="h-4 w-4 mr-2" />
+                      Enable Location Access
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          {locationPermission === 'granted' && (
+            <Card className="border-2 border-green-600 dark:border-green-500 rounded-xl shadow-sm bg-white dark:bg-[#353e4a] mb-4">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-green-700 dark:text-green-300">Location Access Granted</h3>
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      Your location services are enabled and ready to use.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          
+          <h3 className="text-lg font-heading font-semibold mb-4 text-black dark:text-blue-300">Location Sharing</h3>
           
           <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
             <div className="space-y-4">
@@ -449,7 +839,6 @@ export default function Maps() {
             </Card>
           </div>
         </section>
-      )}
       
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Building Directory</h2>
@@ -467,17 +856,43 @@ export default function Maps() {
                         <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>
                       </div>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
-                      onClick={() => {
-                        setSelectedBuildingId(building.id);
-                        if (map) map.setView([building.lat, building.lng], 18);
-                      }}
-                    >
-                      <Navigation className="h-5 w-5" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
+                        onClick={() => setSelectedMarker(building)}
+                        title="View Details"
+                      >
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
+                        onClick={() => {
+                          // Validate coordinates before navigating
+                          if (typeof building.lat === 'number' && typeof building.lng === 'number' && 
+                              !isNaN(building.lat) && !isNaN(building.lng) &&
+                              building.lat !== 0 && building.lng !== 0) {
+                            setSelectedBuildingId(building.id);
+                            if (map) map.setView([building.lat, building.lng], 18);
+                          } else {
+                            toast({
+                              title: "Invalid location",
+                              description: `${building.name} has invalid coordinates and cannot be located on the map.`,
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                        title="Center on Map"
+                      >
+                        <Navigation className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
                 </li>
               ))
@@ -487,6 +902,73 @@ export default function Maps() {
           </ul>
         </Card>
       </section>
+      
+      {/* Marker Details Overlay */}
+      {selectedMarker && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  {selectedMarker.name}
+                </h2>
+                <button
+                  onClick={() => setSelectedMarker(null)}
+                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Description
+                  </h3>
+                  <p className="mt-1 text-gray-900 dark:text-white">
+                    {selectedMarker.description}
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Category
+                  </h3>
+                  <p className="mt-1 text-gray-900 dark:text-white capitalize">
+                    {selectedMarker.category}
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                    Coordinates
+                  </h3>
+                  <p className="mt-1 text-gray-900 dark:text-white font-mono text-sm">
+                    {selectedMarker.lat.toFixed(6)}, {selectedMarker.lng.toFixed(6)}
+                  </p>
+                </div>
+                
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <Button
+                    onClick={() => {
+                      if (map) {
+                        map.setView([selectedMarker.lat, selectedMarker.lng], 18);
+                        setSelectedMarker(null);
+                      }
+                    }}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Navigation className="h-4 w-4 mr-2" />
+                    Center on Map
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

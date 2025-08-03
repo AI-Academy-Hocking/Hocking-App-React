@@ -33,7 +33,12 @@ export default function CalendarPage() {
       console.log(`\n=== FRONTEND API CALL ===`);
       console.log(`Fetching events for calendar type: ${activeCalendar}`);
       
-      const res = await fetch(`/api/calendar/events?type=${activeCalendar}`);
+      // Get current year start and end dates
+      const currentYear = new Date().getFullYear();
+      const yearStart = new Date(currentYear, 0, 1).toISOString(); // January 1st
+      const yearEnd = new Date(currentYear, 11, 31).toISOString(); // December 31st
+      
+      const res = await fetch(`/api/calendar/events?type=${activeCalendar}&timeMin=${yearStart}&timeMax=${yearEnd}`);
       console.log(`API response status: ${res.status}`);
       
       if (!res.ok) {
@@ -95,9 +100,10 @@ export default function CalendarPage() {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   
-  // Expand date range to show more events (past month to next 3 months)
-  const expandedStart = subMonths(monthStart, 1);
-  const expandedEnd = addMonths(monthEnd, 3);
+  // Show all events for the entire year (current year)
+  const currentYear = new Date().getFullYear();
+  const yearStart = new Date(currentYear, 0, 1); // January 1st of current year
+  const yearEnd = new Date(currentYear, 11, 31); // December 31st of current year
 
   console.log(`\n=== FRONTEND STATE ===`);
   console.log(`Active calendar: ${activeCalendar}`);
@@ -105,8 +111,8 @@ export default function CalendarPage() {
   console.log(`Current date: ${currentDate.toISOString()}`);
   console.log(`Month start: ${monthStart.toISOString()}`);
   console.log(`Month end: ${monthEnd.toISOString()}`);
-  console.log(`Expanded start: ${expandedStart.toISOString()}`);
-  console.log(`Expanded end: ${expandedEnd.toISOString()}`);
+  console.log(`Year start: ${yearStart.toISOString()}`);
+  console.log(`Year end: ${yearEnd.toISOString()}`);
   console.log(`Selected date: ${selectedDate?.toISOString() || 'none'}`);
 
   // Filter events based on calendar type and date range
@@ -115,8 +121,8 @@ export default function CalendarPage() {
       totalEvents: events.length,
       monthStart: monthStart.toISOString(),
       monthEnd: monthEnd.toISOString(),
-      expandedStart: expandedStart.toISOString(),
-      expandedEnd: expandedEnd.toISOString(),
+      yearStart: yearStart.toISOString(),
+      yearEnd: yearEnd.toISOString(),
       selectedDate: selectedDate?.toISOString()
     });
     
@@ -129,8 +135,8 @@ export default function CalendarPage() {
           // List view: show only events for the selected day
           return isSameDay(eventDate, selectedDate);
         }
-        // Month view: show events in the expanded date range (past month to next 3 months)
-        return eventDate >= expandedStart && eventDate <= expandedEnd;
+        // Month view: show events for the entire current year
+        return eventDate >= yearStart && eventDate <= yearEnd;
       })
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
     
@@ -147,7 +153,7 @@ export default function CalendarPage() {
 
   const getEventsForDate = (date: Date) => {
     // For calendar dots, use all events for the active calendar type
-    // This ensures dots show for all months, not just the current view
+    // This ensures dots show for all months in the current year
     return events.filter(event => {
       // Only include events for the active calendar type
       if ('calendarType' in event && (event as any).calendarType !== activeCalendar) return false;
@@ -297,6 +303,8 @@ export default function CalendarPage() {
                   calendarType="gregory"
                   showNavigation={true}
                   showNeighboringMonth={true}
+                  minDate={yearStart}
+                  maxDate={yearEnd}
                   className="mobile-calendar"
                 />
               </div>
