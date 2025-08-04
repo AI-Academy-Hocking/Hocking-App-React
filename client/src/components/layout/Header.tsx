@@ -1,19 +1,18 @@
-import * as React from "react";
+
 import { useState, useEffect } from "react";
 import { 
   Menu, Moon, Sun, LogOut, Home, Calendar, Wrench, Map, UtensilsCrossed, Shield,
   LibraryBig, MonitorSmartphone, Users, Dumbbell, Trophy, ChevronDown, ChevronRight,
-  GraduationCap, Clock, Star, Coffee, Utensils, Music, CreditCard, Info, MapPin, CalendarDays,
+  GraduationCap, Clock, Star, CreditCard, Info, MapPin, CalendarDays,
   Settings, Crown, Search, X
 } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger, SheetPortal, SheetOverlay } from "../ui/sheet";
+import { Sheet, SheetTrigger, SheetPortal } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useAuth } from "../../lib/auth";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import HawkLogo from "../../assets/HawkLogo.png";
 import { SearchBar } from "@/components/SearchBar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Badge } from "../ui/badge";
+
 import NotificationBell from "../NotificationBell";
 
 const navItems = [
@@ -67,12 +66,12 @@ interface HeaderProps {
 }
 
 export default function Header({ onMobileMenuChange }: HeaderProps) {
-  const { user, logout, isAdmin } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
   const [location, setLocation] = useLocation();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   // Mobile dropdown states
@@ -80,7 +79,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [isDiningOpen, setIsDiningOpen] = useState(false);
 
-  const isActive = (path: string) => location === path;
+
 
   // Load notifications from localStorage
   useEffect(() => {
@@ -104,7 +103,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
     localStorage.setItem('notifications', JSON.stringify(notifications));
   }, [notifications]);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+
 
   // @ts-ignore
   const addNotification = (notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
@@ -117,23 +116,11 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
     setNotifications(prev => [newNotification, ...prev]);
   };
 
-  const markAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
-  };
 
-  const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-  };
 
-  const handleNotificationClick = (notification: Notification) => {
-    markAsRead(notification.id);
-    setIsNotificationOpen(false);
-    if (notification.actionUrl) {
-      setLocation(notification.actionUrl);
-    }
-  };
+
+
+
 
   const toggleTheme = () => {
     const isDark = document.documentElement.classList.toggle('dark');
@@ -443,6 +430,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
               {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
             </button>
           </div>
+
         </div>
       </header>
     </>
