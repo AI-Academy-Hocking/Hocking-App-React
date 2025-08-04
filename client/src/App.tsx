@@ -63,6 +63,7 @@ import Events from "./pages/Events";
 
 // Wellness Features
 import WellnessTracker from "./components/wellness/WellnessTracker";
+import LearnMore from "./pages/LearnMore";
 import StudyPlanner from "./pages/StudyPlanner";
 import RoommateFinder from "./pages/RoommateFinder";
 import Wellness from "./pages/Wellness";
@@ -78,7 +79,7 @@ function Router() {
   const [location] = useLocation();
 
   const hasClickedGetStarted = localStorage.getItem('hasClickedGetStarted') === 'true';
-  const isLoginPage = location === '/' || location === '/login';
+  const isLoginPage = location === '/' || location === '/login' || location === '/learn-more';
 
   // If the user hasn't "gotten started" and they are not on the login page,
   // force them to the landing page. This is the only redirect we need for this logic.
@@ -92,6 +93,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Login} />
         <Route path="/login" component={Login} />
+        <Route path="/learn-more" component={LearnMore} />
         <Route component={NotFound} />
       </Switch>
     );

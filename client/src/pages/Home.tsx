@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
-import { Calendar, MapPin, Wrench, School, Clock, GraduationCap, ChevronDown, ChevronRight, Accessibility } from "lucide-react";
+import { Calendar, MapPin, Wrench, School, Clock, GraduationCap } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
 
@@ -12,7 +12,6 @@ import { Event } from "../../../shared/schema";
 
 export default function Home() {
   const { user } = useAuth();
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
   
   // Get today's date for filtering upcoming events
   const today = startOfToday();
@@ -78,77 +77,9 @@ export default function Home() {
 
 
 
-  // Toggle section expansion
-  const toggleSection = (sectionId: string) => {
-    setExpandedSections(prev => 
-      prev.includes(sectionId) 
-        ? prev.filter(id => id !== sectionId)
-        : [...prev, sectionId]
-    );
-  };
 
-  // Hocking College information sections
-  const hockingInfo = [
-    {
-      id: 'academics',
-      title: 'Academic Programs',
-      icon: School,
-      content: (
-        <div className="space-y-2">
-          <p className="text-gray-700 dark:text-gray-300">
-            Hocking College offers a wide range of academic programs designed to prepare students for successful careers. 
-            Our programs include natural resources, health sciences, business, and technical fields.
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <li>Natural Resources & Conservation</li>
-            <li>Health Sciences & Nursing</li>
-            <li>Business & Technology</li>
-            <li>Public Safety & Criminal Justice</li>
-            <li>Hospitality & Tourism</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'campus-life',
-      title: 'Campus Life',
-      icon: MapPin,
-      content: (
-        <div className="space-y-2">
-          <p className="text-gray-700 dark:text-gray-300">
-            Experience a vibrant campus community with modern facilities, outdoor recreation opportunities, 
-            and a supportive environment for learning and personal growth.
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <li>Modern residence halls and dining facilities</li>
-            <li>Recreation center with fitness equipment and pool</li>
-            <li>Outdoor adventure programs and activities</li>
-            <li>Student organizations and clubs</li>
-            <li>Beautiful campus in the Hocking Hills region</li>
-          </ul>
-        </div>
-      )
-    },
-    {
-      id: 'support',
-      title: 'Student Support',
-      icon: Accessibility,
-      content: (
-        <div className="space-y-2">
-          <p className="text-gray-700 dark:text-gray-300">
-            We provide comprehensive support services to help students succeed academically and personally.
-          </p>
-          <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            <li>Academic advising and tutoring services</li>
-            <li>Career counseling and job placement</li>
-            <li>Health and wellness resources</li>
-            <li>Financial aid and scholarship opportunities</li>
-            <li>Disability services and accommodations</li>
-          </ul>
-        </div>
-      )
-    }
-  ];
+
+
 
   const quickLinks = [
     { 
@@ -289,58 +220,7 @@ export default function Home() {
           </div>
         </div>
         
-        {/* Learn More About Hocking College */}
-        <div className="mt-4">
-          <div className="rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800">
-            <button
-              onClick={() => toggleSection('learn-more')}
-              className="w-full p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-between"
-            >
-              <div className="flex items-center gap-3">
-                <Accessibility className="text-blue-600 dark:text-white text-2xl h-6 w-6" />
-                <h3 className="font-bold text-gray-900 dark:text-white">Learn More About Hocking College</h3>
-              </div>
-              {expandedSections.includes('learn-more') ? (
-                <ChevronDown className="h-5 w-5 text-gray-500" />
-              ) : (
-                <ChevronRight className="h-5 w-5 text-gray-500" />
-              )}
-            </button>
-            
-            {expandedSections.includes('learn-more') && (
-              <div className="px-6 pb-6 border-t border-gray-200 dark:border-gray-700">
-                <div className="space-y-4 pt-4">
-                  {hockingInfo.map((section) => (
-                    <div key={section.id} className="border border-gray-200 dark:border-gray-600 rounded-lg">
-                      <button
-                        onClick={() => toggleSection(section.id)}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-between rounded-t-lg"
-                      >
-                        <div className="flex items-center gap-3">
-                          <section.icon className="h-5 w-5 text-blue-600" />
-                          <h4 className="font-semibold text-gray-900 dark:text-white text-lg">{section.title}</h4>
-                        </div>
-                        {expandedSections.includes(section.id) ? (
-                          <ChevronDown className="h-5 w-5 text-gray-500" />
-                        ) : (
-                          <ChevronRight className="h-5 w-5 text-gray-500" />
-                        )}
-                      </button>
-                      
-                      {expandedSections.includes(section.id) && (
-                        <div className="px-4 pb-4 border-t border-gray-200 dark:border-gray-600">
-                          <div className="pt-3">
-                            {section.content}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+
       </section>
     </div>
   );

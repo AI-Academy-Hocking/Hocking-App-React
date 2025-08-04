@@ -84,6 +84,7 @@ export default function Login() {
               
               <Button 
                 type="button" 
+                onClick={() => setLocation("/learn-more")}
                 className="w-full bg-navy-500/90 text-white py-3 text-lg rounded-xl font-semibold hover:bg-navy-600 transition shadow-md border-2 border-white/30"
               >
                 <Info className="mr-2 h-6 w-6" />
@@ -137,7 +138,7 @@ export default function Login() {
           playsInline
           className="w-full h-full object-cover"
         >
-          <source src="/src/assets/landing page.mp4" type="video/mp4" />
+          <source src="/LandingPage.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
