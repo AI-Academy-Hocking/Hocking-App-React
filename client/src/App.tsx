@@ -12,9 +12,9 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { NotificationProvider } from "@/lib/notifications";
-// import RecreationPage from "./pages/Recreation";
+import RecreationPage from "./pages/Recreation";
 import LibraryResourcesPage from "./pages/LibraryResources";
-// import OnlineLearningPage from "./pages/OnlineLearning";
+import OnlineLearningPage from "./pages/OnlineLearning";
 import StudentOrganizationsPage from "./pages/StudentOrganizations";
 import AcademicSuccessCenter from "./pages/AcademicSuccessCenter";
 import Athletics from "./pages/Athletics";
@@ -63,6 +63,9 @@ import Events from "./pages/Events";
 
 // Wellness Features
 import WellnessTracker from "./components/wellness/WellnessTracker";
+import StudyPlanner from "./pages/StudyPlanner";
+import RoommateFinder from "./pages/RoommateFinder";
+import Wellness from "./pages/Wellness";
 
 import './index.css';
 import './styles/globals.css';
@@ -105,9 +108,9 @@ function Router() {
         <Route path="/resources" component={Resources} />
         <Route path="/dining" component={DiningHall} />
         <Route path="/safety" component={CampusSafety} />
-        {/* <Route path="/recreation" component={RecreationPage} /> */}
+        <Route path="/recreation" component={RecreationPage} />
         <Route path="/library" component={LibraryResourcesPage} />
-        {/* <Route path="/online-learning" component={OnlineLearningPage} /> */}
+        <Route path="/online-learning" component={OnlineLearningPage} />
         <Route path="/student-organizations" component={StudentOrganizationsPage} />
         <Route path="/academic-success-center" component={AcademicSuccessCenter} />
         <Route path="/athletics" component={Athletics} />
@@ -154,6 +157,9 @@ function Router() {
         
         {/* Wellness Features */}
         <Route path="/wellness" component={WellnessTracker} />
+        <Route path="/study-planner" component={StudyPlanner} />
+        <Route path="/roommate-finder" component={RoommateFinder} />
+        <Route path="/wellness-page" component={Wellness} />
         
         <Route component={NotFound} />
       </Switch>

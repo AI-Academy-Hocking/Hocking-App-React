@@ -100,6 +100,9 @@ export function SearchBar({ className = '', placeholder = 'Search...' }: SearchB
     setIsOpen(false);
     setSelectedIndex(-1);
     clearSearch();
+    
+    // Dispatch a custom event to notify the header that search should be closed
+    window.dispatchEvent(new CustomEvent('searchResultClicked'));
   };
 
   const getCategoryIcon = (category: string) => {

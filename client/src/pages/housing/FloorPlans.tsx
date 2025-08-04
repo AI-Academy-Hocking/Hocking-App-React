@@ -52,7 +52,7 @@ export default function FloorPlans() {
             <div className="flex justify-center">
               <div className="max-w-4xl w-full">
                 <img 
-                  src="/downhour-north-floor-plan.png" 
+                  src="/North.png" 
                   alt="Downhour and North Suite Floor Plan"
                   className="w-full h-auto border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"
                   onError={(e) => {
@@ -109,6 +109,84 @@ export default function FloorPlans() {
                   </p>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     <p>Expected location: <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">client/public/hocking-heights-floor-plan.png</code></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case "SUM":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+                Summit Hall - Floor Plan
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Co-ed residence hall with suite-style living arrangements
+              </p>
+            </div>
+            
+            <div className="flex justify-center">
+              <div className="max-w-4xl w-full">
+                <img 
+                  src="/summit.png" 
+                  alt="Summit Hall Floor Plan"
+                  className="w-full h-auto border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <div className="hidden text-center py-12 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                  <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Floor Plan Image Not Found
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 mb-4">
+                    Please ensure the floor plan image is placed in the public folder.
+                  </p>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <p>Expected location: <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">client/public/summit.png</code></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case "SY":
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+                Sycamore Hall - Floor Plan
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Co-ed residence hall with modern amenities and comfortable living spaces
+              </p>
+            </div>
+            
+            <div className="flex justify-center">
+              <div className="max-w-4xl w-full">
+                <img 
+                  src="/Sycamore.png" 
+                  alt="Sycamore Hall Floor Plan"
+                  className="w-full h-auto border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <div className="hidden text-center py-12 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg">
+                  <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Floor Plan Image Not Found
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 mb-4">
+                    Please ensure the floor plan image is placed in the public folder.
+                  </p>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
+                    <p>Expected location: <code className="bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">client/public/sycamore.png</code></p>
                   </div>
                 </div>
               </div>

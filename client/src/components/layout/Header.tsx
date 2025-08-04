@@ -153,6 +153,26 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
     setIsSearchExpanded(false);
   };
 
+  // Close search when location changes (user navigates to a new page)
+  useEffect(() => {
+    if (isSearchExpanded) {
+      setIsSearchExpanded(false);
+    }
+  }, [location, isSearchExpanded]);
+
+  // Listen for search result clicks to close mobile search overlay
+  useEffect(() => {
+    const handleSearchResultClick = () => {
+      setIsSearchExpanded(false);
+    };
+
+    window.addEventListener('searchResultClicked', handleSearchResultClick);
+    
+    return () => {
+      window.removeEventListener('searchResultClicked', handleSearchResultClick);
+    };
+  }, []);
+
   // Only update dropdown states on initial load, not on every navigation
   useEffect(() => {
     // Only auto-open on first load if we're on a relevant page
