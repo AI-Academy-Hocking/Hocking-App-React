@@ -142,7 +142,9 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
 
   // Close search when location changes (user navigates to a new page)
   useEffect(() => {
-    if (isSearchExpanded) {
+    // Only close search if we're actually navigating to a different page
+    const currentPath = window.location.pathname + window.location.search;
+    if (isSearchExpanded && location !== currentPath && !location.includes('#')) {
       setIsSearchExpanded(false);
     }
   }, [location, isSearchExpanded]);
@@ -205,13 +207,15 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
     <>
       {/* Mobile Search Overlay */}
       {isSearchExpanded && (
-        <div className="fixed inset-0 z-[3000] bg-black/50 backdrop-blur-sm md:hidden">
-          <div className="absolute top-0 left-0 right-0 bg-blue-900 dark:bg-blue-950 p-4 shadow-lg">
+        <div className="fixed inset-0 z-[3000] bg-black/50 backdrop-blur-sm md:hidden pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 bg-blue-900 dark:bg-blue-950 p-4 shadow-lg z-[3001] pointer-events-auto">
             <div className="flex items-center gap-2">
-              <SearchBar />
+              <div className="flex-1">
+                <SearchBar />
+              </div>
               <button
                 onClick={closeSearch}
-                className="p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+                className="p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400 flex-shrink-0"
               >
                 <X className="h-5 w-5" />
               </button>

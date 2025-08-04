@@ -329,29 +329,11 @@ export class MemStorage implements IStorage {
     
     // Sample student tools
     await this.createStudentTool({
-      id: "course-schedule",
-      name: "Course Schedule",
-      description: "View your current classes",
-      category: "academic",
-      url: "#",
-      isActive: true,
-    });
-    
-    await this.createStudentTool({
-      id: "grades",
-      name: "Grades",
-      description: "Check your academic performance",
-      category: "academic",
-      url: "#",
-      isActive: true,
-    });
-    
-    await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
-      url: "#",
+      url: "/tools/academic/course-catalog",
       isActive: true,
     });
     
@@ -360,25 +342,7 @@ export class MemStorage implements IStorage {
       name: "Advising",
       description: "Connect with your advisor",
       category: "academic",
-      url: "#",
-      isActive: true,
-    });
-    
-    await this.createStudentTool({
-      id: "academic-history",
-      name: "Academic History",
-      description: "View your transcript",
-      category: "academic",
-      url: "#",
-      isActive: true,
-    });
-    
-    await this.createStudentTool({
-      id: "graduation",
-      name: "Graduation",
-      description: "Track degree requirements",
-      category: "academic",
-      url: "#",
+      url: "/tools/academic/advising",
       isActive: true,
     });
     
@@ -409,14 +373,7 @@ export class MemStorage implements IStorage {
       isActive: true,
     });
     
-    await this.createStudentTool({
-      id: "campus-resources",
-      name: "Campus Resources",
-      description: "Access campus services",
-      category: "resources",
-      url: "#",
-      isActive: true,
-    });
+
     
     await this.createStudentTool({
       id: "health-services",

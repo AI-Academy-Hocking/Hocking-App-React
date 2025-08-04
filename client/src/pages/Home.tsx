@@ -98,9 +98,9 @@ export default function Home() {
       label: "Maps & Directions" 
     },
     { 
-      href: "/tools", 
+      href: "/housing", 
       icon: GraduationCap, 
-      label: "Resources" 
+      label: "Housing" 
     },
   ];
 

@@ -3,7 +3,6 @@ import {
   Home, 
   CalendarDays, 
   Wrench, 
-  Calendar,
   Map,
   UtensilsCrossed,
   Shield,
@@ -24,7 +23,6 @@ export default function MobileNav() {
     { path: "/tools", label: "Tools", icon: Wrench },
     
     // Campus Services
-    { path: "/events", label: "Events", icon: Calendar },
     { path: "/maps", label: "Maps", icon: Map },
     { path: "/dining", label: "Dining", icon: UtensilsCrossed },
     { path: "/safety", label: "Safety", icon: Shield },

@@ -90,7 +90,7 @@ export default function NotificationBell() {
       )}
 
       {isOpen && (
-        <div className="absolute right-0 top-12 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 top-12 w-96 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -134,14 +134,14 @@ export default function NotificationBell() {
                           <div className="flex-shrink-0">
                             <span className="text-lg">{getTypeIcon(notification.type)}</span>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                          <div className="flex-1 min-w-0 overflow-hidden">
+                            <div className="flex items-start gap-2 mb-1">
+                              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 break-words flex-1">
                                 {notification.title}
                               </h4>
-                              <div className={`w-2 h-2 rounded-full ${getPriorityColor(notification.priority)}`} />
+                              <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-1 ${getPriorityColor(notification.priority)}`} />
                             </div>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 break-words">
                               {notification.message}
                             </p>
                             <div className="flex items-center justify-between">

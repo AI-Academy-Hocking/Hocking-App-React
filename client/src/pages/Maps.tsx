@@ -3,14 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Search, Plus, Minus, Navigation, MapPin, Users, ArrowLeft } from "lucide-react";
-import { Switch } from "../components/ui/switch";
-import { Label } from "../components/ui/label";
+import { Search, Plus, Minus, Navigation, MapPin, ArrowLeft } from "lucide-react";
+
 import { toast } from "../hooks/use-toast";
 import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useAuth } from "../lib/auth";
-import { useSharedLocations } from "../hooks/use-shared-locations";
+
 import { useBackNavigation } from "../hooks/use-back-navigation";
 
 // Fix for Leaflet marker icons
@@ -40,8 +39,6 @@ export default function Maps() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const [map, setMap] = useState<L.Map | null>(null);
-  const [isLocationSharing, setIsLocationSharing] = useState(false);
-  const [viewingSharedLocations, setViewingSharedLocations] = useState(false);
   const [userMarkers, setUserMarkers] = useState<L.Marker[]>([]);
   const [userLocationMarker, setUserLocationMarker] = useState<L.Marker | null>(null);
   const [locationPermission, setLocationPermission] = useState<'granted' | 'denied' | 'prompt' | 'unknown'>('unknown');
@@ -51,7 +48,6 @@ export default function Maps() {
   const buildingMarkersRef = useRef<L.Marker[]>([]);
   
   const { user } = useAuth();
-  const { sharedLocations, updateLocation } = useSharedLocations();
   
   // Debug user state
   console.log('Maps component - User state:', { 
@@ -180,29 +176,11 @@ export default function Maps() {
         async (position) => {
           const { latitude, longitude } = position.coords;
           
-          // Update location in backend if sharing is enabled
-          if (isLocationSharing && user && user.id) {
-            try {
-              await updateLocation(user.id, latitude, longitude, true);
-              toast({
-                title: "Location updated",
-                description: "Your location has been updated on the map",
-              });
-            } catch (error) {
-              console.error('Error updating location:', error);
-              toast({
-                title: "Error sharing location",
-                description: "Could not update your location",
-                variant: "destructive",
-              });
-            }
-          } else {
-            // Show success toast even if not sharing
-            toast({
-              title: "Location found",
-              description: "Your current location has been marked on the map",
-            });
-          }
+          // Show success toast
+          toast({
+            title: "Location found",
+            description: "Your current location has been marked on the map",
+          });
           
           // Create custom user location icon
           const userIcon = L.divIcon({
@@ -275,39 +253,9 @@ export default function Maps() {
         variant: "destructive",
       });
     }
-  }, [user, map, isLocationSharing, userLocationMarker, updateLocation]);
+  }, [user, map, userLocationMarker]);
   
-  // Handle location sharing toggle
-  const handleLocationSharingToggle = async (enabled: boolean) => {
-    setIsLocationSharing(enabled);
-    
-    if (enabled) {
-      getUserLocation();
-      
-      // Set up automatic location updates every 30 seconds
-      const locationInterval = setInterval(() => {
-        if (isLocationSharing) {
-          getUserLocation();
-        } else {
-          clearInterval(locationInterval);
-        }
-      }, 30000);
-      
-      // Clean up interval when component unmounts or sharing is disabled
-      return () => clearInterval(locationInterval);
-    } else if (user && user.id) {
-      // Update user to stop sharing location
-      try {
-        await updateLocation(user.id, 0, 0, false);
-        toast({
-          title: "Location sharing disabled",
-          description: "Your location is no longer shared with others",
-        });
-      } catch (error) {
-        console.error('Error updating location:', error);
-      }
-    }
-  };
+
   
   // Define colored marker icons for each building type
   const iconUrls = {
@@ -378,59 +326,9 @@ export default function Maps() {
         console.warn(`Invalid coordinates for building ${building.name}: lat=${building.lat}, lng=${building.lng}`);
       }
     });
-  }, [map, filteredBuildings, user, viewingSharedLocations]); // Removed sharedLocations to prevent infinite loop
+  }, [map, filteredBuildings, user]);
 
-  // Handle shared locations separately to prevent infinite loop
-  useEffect(() => {
-    if (!map || !viewingSharedLocations) return;
-    
-    // Clear existing user markers
-    userMarkers.forEach(marker => marker.remove());
-    setUserMarkers([]);
-    
-    // Add markers for other users if viewing shared locations
-    const newUserMarkers: L.Marker[] = [];
-    
-    sharedLocations.forEach((sharedUser: any) => {
-      // Don't show current user marker twice
-      if (user && sharedUser.id === user.id) return;
-      
-      // Make sure lat/lng are valid numbers
-      if (typeof sharedUser.lat === 'number' && typeof sharedUser.lng === 'number' && 
-          !isNaN(sharedUser.lat) && !isNaN(sharedUser.lng) &&
-          sharedUser.lat !== 0 && sharedUser.lng !== 0) {
-        // Create custom icon for other users
-        const userIcon = L.divIcon({
-          className: 'other-user-marker',
-          html: '<div style="background-color: #ef4444; width: 16px; height: 16px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.3);"></div>',
-          iconSize: [16, 16],
-          iconAnchor: [8, 8],
-        });
-        
-        const marker = L.marker([sharedUser.lat, sharedUser.lng], { icon: userIcon })
-          .addTo(map)
-          .bindPopup(`
-            <div style="min-width: 200px; font-family: system-ui, sans-serif;">
-              <div style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 8px;">
-                👤 ${sharedUser.name || sharedUser.username}
-              </div>
-              <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
-                Another user's location
-              </div>
-              <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px;">
-                <div>Last updated: ${sharedUser.lastLocationUpdate ? new Date(sharedUser.lastLocationUpdate).toLocaleTimeString() : 'Unknown'}</div>
-                <div>Latitude: ${sharedUser.lat.toFixed(6)}</div>
-                <div>Longitude: ${sharedUser.lng.toFixed(6)}</div>
-              </div>
-            </div>
-          `);
-        
-        newUserMarkers.push(marker);
-      }
-    });
-    
-    setUserMarkers(newUserMarkers);
-  }, [map, sharedLocations, user, viewingSharedLocations]);
+
 
   // Check location permissions on mount
   useEffect(() => {
@@ -509,12 +407,7 @@ export default function Maps() {
     );
   }, [getUserLocation]);
 
-  // Auto-get location when component mounts and location sharing is enabled
-  useEffect(() => {
-    if (isLocationSharing && user && !user.isGuest) {
-      getUserLocation();
-    }
-  }, [isLocationSharing, user, getUserLocation]);
+
 
   // Cleanup user location marker on unmount
   useEffect(() => {
@@ -777,67 +670,7 @@ export default function Maps() {
             </Card>
           )}
           
-          <h3 className="text-lg font-heading font-semibold mb-4 text-black dark:text-blue-300">Location Sharing</h3>
-          
-          <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <Label htmlFor="location-sharing" className="text-base font-medium">
-                    Share my location
-                  </Label>
-                </div>
-                <Switch
-                  id="location-sharing"
-                  checked={isLocationSharing}
-                  onCheckedChange={handleLocationSharingToggle}
-                />
-              </div>
-              
-              <p className="text-sm text-neutral-dark">
-                {isLocationSharing 
-                  ? "Your location is currently being shared with other users."
-                  : "Enable location sharing to let others see where you are on campus."}
-              </p>
-              
-              {isLocationSharing && (
-                <Button 
-                  variant="ghost" 
-                  size="default"
-                  className="w-full"
-                  onClick={getUserLocation}
-                >
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Update my location
-                </Button>
-              )}
-            </div>
-          </Card>
-          
-          <div className="mt-4">
-            <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-primary" />
-                  <Label htmlFor="view-shared-locations" className="text-base font-medium">
-                    View shared locations
-                  </Label>
-                </div>
-                <Switch
-                  id="view-shared-locations"
-                  checked={viewingSharedLocations}
-                  onCheckedChange={setViewingSharedLocations}
-                />
-              </div>
-              
-              <p className="text-sm text-neutral-dark mt-2">
-                {viewingSharedLocations
-                  ? `Showing ${sharedLocations.length} users on the map.`
-                  : "Enable to see other users' locations on the map."}
-              </p>
-            </Card>
-          </div>
+
         </section>
       
       <section>

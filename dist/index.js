@@ -1302,7 +1302,6 @@ async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
     const events3 = Object.values(parsedEvents).filter((event) => {
       const isVEvent = event.type === "VEVENT";
       if (!isVEvent) {
-        console.log(`Skipping non-VEVENT: ${event.type}`);
         return false;
       }
       if (timeMin || timeMax) {
@@ -1312,7 +1311,6 @@ async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
           const minDate = timeMin || /* @__PURE__ */ new Date(0);
           const maxDate = timeMax || /* @__PURE__ */ new Date("2100-01-01");
           if (eventDate < minDate || eventDate > maxDate) {
-            console.log(`Skipping event outside date range: ${event.summary} on ${eventDate.toISOString()}`);
             return false;
           }
         }

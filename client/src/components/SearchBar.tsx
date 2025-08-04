@@ -117,6 +117,7 @@ export function SearchBar({ className = '', placeholder = 'Search...' }: SearchB
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('Search input changed:', e.target.value);
     setSearchQuery(e.target.value);
     if (e.target.value) {
       setIsOpen(true);
@@ -139,7 +140,7 @@ export function SearchBar({ className = '', placeholder = 'Search...' }: SearchB
           onFocus={handleInputFocus}
           placeholder={placeholder}
           className="w-full pl-8 pr-8 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-          style={{ minWidth: 0, width: '160px', maxWidth: '200px' }}
+          style={{ minWidth: 0, width: '100%', maxWidth: 'none' }}
         />
         {searchQuery && (
           <button

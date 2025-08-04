@@ -3,10 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BookOpen, FileText, GraduationCap, UserCheck, 
-  History, School, LibraryBig, MonitorSmartphone, 
+  School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  Globe, PawPrint, DollarSign, CreditCard, Award, Heart, ArrowLeft,
-  ChevronDown, ChevronUp
+  Globe, PawPrint, DollarSign, CreditCard, Award, Heart, Briefcase
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -22,7 +21,6 @@ interface StudentTool {
 
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
-  const [isToolsExpanded, setIsToolsExpanded] = useState(false);
   
   const { data: tools } = useQuery<StudentTool[]>({
     queryKey: ['/api/student-tools'],
@@ -36,36 +34,32 @@ export default function StudentTools() {
     // Add fallback data in case API fails
     placeholderData: [
       // Academic tools
-      { id: "course-schedule", name: "Course Schedule", description: "View your current classes", category: "academic", url: "#" },
-      { id: "grades", name: "Grades", description: "Check your academic performance", category: "academic", url: "#" },
-      { id: "course-catalog", name: "Course Catalog", description: "Browse available courses", category: "academic", url: "#" },
-      { id: "advising", name: "Advising", description: "Connect with your advisor", category: "academic", url: "#" },
-      { id: "academic-history", name: "Academic History", description: "View your transcript", category: "academic", url: "#" },
-      { id: "graduation", name: "Graduation", description: "Track degree requirements", category: "academic", url: "#" },
+      { id: "course-catalog", name: "Course Catalog", description: "Browse available courses", category: "academic", url: "/tools/academic/course-catalog" },
+      { id: "advising", name: "Advising", description: "Connect with your advisor", category: "academic", url: "/tools/academic/advising" },
       // Financial tools
-      { id: "financial-aid", name: "Financial Aid", description: "View and manage your financial aid", category: "financial", url: "#" },
-      { id: "billing", name: "Billing", description: "Pay tuition and view statements", category: "financial", url: "#" },
-      { id: "scholarships", name: "Scholarships", description: "Apply for available scholarships", category: "financial", url: "#" },
+      { id: "financial-aid", name: "Financial Aid", description: "View and manage your financial aid", category: "financial", url: "/financial-aid" },
+      { id: "billing", name: "Billing", description: "Pay tuition and view statements", category: "financial", url: "/billing" },
+      { id: "scholarships", name: "Scholarships", description: "Apply for available scholarships", category: "financial", url: "/scholarships" },
       // Resources tools
-      { id: "campus-resources", name: "Campus Resources", description: "Access campus services", category: "resources", url: "#" },
-      { id: "health-services", name: "Health Services", description: "Schedule health appointments", category: "resources", url: "#" },
-      { id: "career-services", name: "Career Services", description: "Job search and career planning", category: "resources", url: "#" },
+      { id: "health-services", name: "Health Services", description: "Schedule health appointments", category: "resources", url: "/campus-health" },
+      { id: "career-services", name: "Career Services", description: "Job search and career planning", category: "resources", url: "/career-university-center" },
     ],
   });
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic') || [];
+  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
   const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
   const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
-    'course-schedule': FileText,
-    'grades': GraduationCap,
     'course-catalog': BookOpen,
     'advising': UserCheck,
-    'academic-history': History,
-    'graduation': School,
+    'financial-aid': DollarSign,
+    'billing': CreditCard,
+    'scholarships': Award,
+    'health-services': Heart,
+    'career-services': Briefcase,
     'library': LibraryBig,
     'online-learning': MonitorSmartphone,
     'student-organizations': Users,
@@ -112,6 +106,25 @@ export default function StudentTools() {
                 
                 {academicTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
+                  
+                  // Check if the URL is an internal route (starts with /)
+                  if (tool.url.startsWith('/')) {
+                    return (
+                      <Link 
+                        key={tool.id} 
+                        href={tool.url}
+                        className="flex items-center p-3 rounded-lg border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      >
+                        <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
+                        <div>
+                          <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
+                        </div>
+                      </Link>
+                    );
+                  }
+                  
+                  // External URL - use anchor tag
                   return (
                     <a 
                       key={tool.id} 
