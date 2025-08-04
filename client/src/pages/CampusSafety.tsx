@@ -1,23 +1,10 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { PhoneCall, ExternalLink, AlertTriangle, Info } from "lucide-react";
+import { PhoneCall, Shield, HeartPulse, AlertTriangle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface SafetyAlert {
-  id: number;
-  title: string;
-  content: string;
-  severity: string;
-  startDate: string;
-  endDate: string | null;
-  isActive: boolean;
-  location: string | null;
-}
+import { useBackNavigation } from "@/hooks/use-back-navigation";
 
 interface SafetyResource {
   id: number;
@@ -31,20 +18,8 @@ interface SafetyResource {
 }
 
 export default function CampusSafety() {
-  const [activeTab, setActiveTab] = useState("alerts");
   const [resourceCategory, setResourceCategory] = useState<string>("all");
-
-  // Fetch active safety alerts
-  const { data: activeAlerts = [], isLoading: alertsLoading } = useQuery({
-    queryKey: ["/api/safety/alerts", { active: true }],
-    queryFn: async () => {
-      const response = await fetch("/api/safety/alerts?active=true");
-      if (!response.ok) {
-        throw new Error("Failed to fetch safety alerts");
-      }
-      return response.json() as Promise<SafetyAlert[]>;
-    }
-  });
+  const { goBack } = useBackNavigation();
 
   // Fetch safety resources (filtered by category if selected)
   const { data: resources = [], isLoading: resourcesLoading } = useQuery({
@@ -53,7 +28,6 @@ export default function CampusSafety() {
       const url = resourceCategory !== "all" 
         ? `/api/safety/resources?category=${resourceCategory}`
         : "/api/safety/resources";
-      
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch safety resources");
@@ -67,210 +41,67 @@ export default function CampusSafety() {
     ? Array.from(new Set(resources.map(resource => resource.category)))
     : [];
 
-  // Helper function to get severity style
-  const getSeverityStyles = (severity: string) => {
-    switch (severity.toLowerCase()) {
-      case "emergency":
-        return {
-          badge: "bg-red-500 hover:bg-red-600",
-          alert: "border-red-500 bg-red-50 text-red-900",
-          icon: <AlertTriangle className="h-5 w-5 text-red-600" />
-        };
-      case "warning":
-        return {
-          badge: "bg-amber-500 hover:bg-amber-600",
-          alert: "border-amber-500 bg-amber-50 text-amber-900",
-          icon: <AlertTriangle className="h-5 w-5 text-amber-600" />
-        };
-      case "info":
-      default:
-        return {
-          badge: "bg-blue-500 hover:bg-blue-600",
-          alert: "border-blue-500 bg-blue-50 text-blue-900", 
-          icon: <Info className="h-5 w-5 text-blue-600" />
-        };
-    }
-  };
-
   return (
-    <div className="container py-6 max-w-5xl">
-      <h1 className="text-3xl font-bold mb-2">Campus Safety</h1>
-      <p className="text-muted-foreground mb-6">
-        Access emergency resources and stay updated with safety alerts
-      </p>
+    <div className="container py-6 max-w-2xl bg-white dark:bg-[#151c26] min-h-screen rounded-xl">
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
 
-      <Tabs defaultValue="alerts" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-4">
-          <TabsTrigger value="alerts" className="relative">
-            Alerts
-            {activeAlerts.length > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
-                {activeAlerts.length}
-              </span>
-            )}
-          </TabsTrigger>
-          <TabsTrigger value="resources">Resources</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="alerts" className="space-y-4">
-          {alertsLoading ? (
-            <div className="space-y-4">
-              <div className="h-24 animate-pulse rounded-lg bg-muted"></div>
-              <div className="h-24 animate-pulse rounded-lg bg-muted"></div>
-            </div>
-          ) : activeAlerts.length > 0 ? (
-            activeAlerts.map((alert) => {
-              const styles = getSeverityStyles(alert.severity);
-              return (
-                <Alert key={alert.id} className={styles.alert}>
-                  <div className="flex items-start">
-                    {styles.icon}
-                    <div className="ml-3 w-full">
-                      <div className="flex items-center justify-between">
-                        <AlertTitle className="text-lg font-semibold">
-                          {alert.title}
-                        </AlertTitle>
-                        <Badge className={styles.badge}>
-                          {alert.severity.toUpperCase()}
-                        </Badge>
-                      </div>
-                      <AlertDescription className="mt-2">
-                        <p className="mb-2">{alert.content}</p>
-                        {alert.location && (
-                          <p className="text-sm font-medium mt-2">
-                            Location: {alert.location}
-                          </p>
-                        )}
-                        <p className="text-sm text-muted-foreground mt-2">
-                          {new Date(alert.startDate).toLocaleString()}
-                        </p>
-                      </AlertDescription>
-                    </div>
-                  </div>
-                </Alert>
-              );
-            })
-          ) : (
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex flex-col items-center justify-center text-center p-6">
-                  <Info className="h-12 w-12 text-blue-500 mb-4" />
-                  <h3 className="text-xl font-medium mb-2">All Clear</h3>
-                  <p className="text-muted-foreground">
-                    There are no active safety alerts at this time.
-                  </p>
-                </div>
+      <h1 className="text-3xl font-bold mb-2 text-primary dark:text-white">Campus Safety</h1>
+      <div className="space-y-6">
+        {/* Emergency Contacts Section */}
+        <div className="border border-red-500 rounded-xl bg-neutral-100 dark:bg-[#353e4a] p-4 mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <AlertTriangle className="text-red-500 h-6 w-6" />
+            <span className="text-lg font-semibold text-red-500">Emergency Contacts</span>
+          </div>
+          <div className="space-y-3">
+            <Card className="bg-white dark:bg-[#151c26] shadow-none border border-red-500 dark:border-none rounded-xl">
+              <CardContent className="flex flex-col items-center py-4">
+                <PhoneCall className="text-red-500 h-7 w-7 mb-1" />
+                <span className="text-xs text-black dark:text-white">Emergency</span>
+                <span className="text-xl font-bold text-red-500">911</span>
               </CardContent>
             </Card>
-          )}
-        </TabsContent>
-
-        <TabsContent value="resources" className="space-y-6">
-          <div className="flex flex-wrap gap-2 mb-4">
-            <Button
-              variant={resourceCategory === "all" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setResourceCategory("all")}
-              className="rounded-full"
-            >
-              All
-            </Button>
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={resourceCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => setResourceCategory(category)}
-                className="rounded-full"
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </Button>
-            ))}
+            <Card className="bg-white dark:bg-[#151c26] shadow-none border border-blue-600 dark:border-none rounded-xl">
+              <CardContent className="flex flex-col items-center py-4">
+                <Shield className="text-blue-600 h-7 w-7 mb-1" />
+                <span className="text-xs text-black dark:text-white">Campus Security</span>
+                <span className="text-xl font-bold text-blue-600">(740) 753-7050</span>
+              </CardContent>
+            </Card>
+            <Card className="bg-white dark:bg-[#151c26] shadow-none border border-green-600 dark:border-none rounded-xl">
+              <CardContent className="flex flex-col items-center py-4">
+                <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
+                <span className="text-xs text-black dark:text-white">Health Services</span>
+                <span className="text-xl font-bold text-green-600">(740) 753-6598</span>
+              </CardContent>
+            </Card>
           </div>
+        </div>
 
-          {resourcesLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-40 animate-pulse rounded-lg bg-muted"></div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {resources.map((resource) => (
-                <Card key={resource.id} className="overflow-hidden">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="flex items-center gap-2">
-                      {resource.title}
-                      <Badge variant="outline" className="ml-2">
-                        {resource.category}
-                      </Badge>
-                    </CardTitle>
-                    <CardDescription>
-                      {resource.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-col gap-2">
-                      {resource.phoneNumber && (
-                        <a
-                          href={`tel:${resource.phoneNumber}`}
-                          className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
-                        >
-                          <PhoneCall className="h-4 w-4" />
-                          {resource.phoneNumber}
-                        </a>
-                      )}
-                      {resource.url && (
-                        <a
-                          href={resource.url?.startsWith("http") ? resource.url : `https://www.hocking.edu${resource.url}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                          Visit Website
-                        </a>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <h3 className="text-lg font-medium text-blue-800 mb-2">Emergency Contacts</h3>
-            <p className="text-blue-700 mb-3">In case of an emergency, always call 911 first.</p>
-            <Separator className="bg-blue-200 my-3" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <h4 className="font-medium text-blue-800">Campus Security</h4>
-                <a href="tel:740-753-6598" className="text-blue-700">740-753-6598</a>
-              </div>
-              <div>
-                <h4 className="font-medium text-blue-800">Health Center</h4>
-                <a href="tel:740-753-3591" className="text-blue-700">740-753-3591</a>
-              </div>
-              <div>
-                <h4 className="font-medium text-blue-800">Nelsonville Police Department</h4>
-                <a href="tel:740-753-1922" className="text-blue-700">740-753-1922</a>
-              </div>
-              <div>
-                <h4 className="font-medium text-blue-800">Anonymous Tip Line</h4>
-                <a
-                  href="https://www.hocking.edu/campus-safety#reports"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  Visit Website
-                </a>
-              </div>
-            </div>
+        {/* Safety Procedures Section */}
+        <div className="bg-neutral-100 dark:bg-[#353e4a] rounded-xl p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <Shield className="text-blue-600 h-5 w-5" />
+            <span className="text-base font-semibold text-black dark:text-blue-300">Safety Procedures</span>
           </div>
-        </TabsContent>
-      </Tabs>
+          <Separator className="bg-neutral-300 dark:bg-[#2a3240] my-3" />
+          <ul className="text-neutral-800 dark:text-white text-sm space-y-2">
+            <li>Fire Emergency: Call 911 and evacuate the building.</li>
+            <li>Medical Emergency: Call 911 or Health Services.</li>
+            <li>Report suspicious activity to Campus Security.</li>
+            <li>Follow campus alerts and instructions from authorities.</li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,20 +2,15 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import calendarRouter from "./src/routes/calendar";
 import { 
   insertUserSchema, insertEventSchema, insertBuildingSchema, 
   insertStudentToolSchema, locationUpdateSchema, 
-  insertDiscussionSchema, insertCommentSchema,
   insertSafetyAlertSchema, insertSafetyResourceSchema
-} from "@shared/schema";
+} from "../shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Register calendar routes
-  app.use("/api/calendar", calendarRouter);
-
   // Auth routes
   app.post("/api/auth/login", async (req: Request, res: Response) => {
     try {
@@ -264,210 +259,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Discussion routes
-  app.get("/api/discussions", async (req: Request, res: Response) => {
-    try {
-      const category = req.query.category as string;
-      let discussions;
-      
-      if (category && category !== 'all') {
-        discussions = await storage.getDiscussionsByCategory(category);
-      } else {
-        discussions = await storage.getDiscussions();
-      }
-      
-      // Fetch author info for each discussion
-      const discussionsWithAuthor = await Promise.all(discussions.map(async (discussion) => {
-        const author = await storage.getUser(discussion.authorId);
-        let authorInfo = { id: discussion.authorId, username: "Unknown" };
-        
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        
-        const comments = await storage.getComments(discussion.id);
-        const commentCount = comments ? comments.length : 0;
-        
-        return { ...discussion, author: authorInfo, commentCount };
-      }));
-      
-      res.status(200).json(discussionsWithAuthor);
-    } catch (error) {
-      console.error("Error fetching discussions:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  app.get("/api/discussions/:id", async (req: Request, res: Response) => {
-    try {
-      const id = parseInt(req.params.id);
-      
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      
-      const discussion = await storage.getDiscussion(id);
-      
-      if (!discussion) {
-        return res.status(404).json({ message: "Discussion not found" });
-      }
-      
-      // Get author info
-      const author = await storage.getUser(discussion.authorId);
-      let authorInfo = { id: discussion.authorId, username: "Unknown" };
-      
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      
-      res.status(200).json({ ...discussion, author: authorInfo });
-    } catch (error) {
-      console.error("Error fetching discussion:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  app.post("/api/discussions", async (req: Request, res: Response) => {
-    try {
-      const discussionData = insertDiscussionSchema.parse(req.body);
-      const newDiscussion = await storage.createDiscussion(discussionData);
-      
-      // Get author info
-      const author = await storage.getUser(newDiscussion.authorId);
-      let authorInfo = { id: newDiscussion.authorId, username: "Unknown" };
-      
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      
-      res.status(201).json({ ...newDiscussion, author: authorInfo });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      
-      console.error("Error creating discussion:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  // Comment routes
-  // Get all comments for a user
-  app.get("/api/comments", async (req: Request, res: Response) => {
-    try {
-      const comments = await storage.getAllComments();
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        
-        const discussion = await storage.getDiscussion(comment.discussionId);
-        return { 
-          ...comment, 
-          author: authorInfo,
-          discussionTitle: discussion?.title || "Unknown Discussion"
-        };
-      }));
-      
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching all comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-
-  app.get("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      
-      // Get top-level comments for the discussion
-      const comments = await storage.getComments(discussionId);
-      
-      // Fetch author info and replies for each comment
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        // Get author info
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        
-        // Get replies
-        const replies = await storage.getCommentReplies(comment.id);
-        
-        // Get author info for each reply
-        const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-          const replyAuthor = await storage.getUser(reply.authorId);
-          let replyAuthorInfo = { id: reply.authorId, username: "Unknown" };
-          
-          if (replyAuthor) {
-            const { password, ...userWithoutPassword } = replyAuthor;
-            replyAuthorInfo = { ...userWithoutPassword };
-          }
-          
-          return { ...reply, author: replyAuthorInfo };
-        }));
-        
-        return { ...comment, author: authorInfo, replies: repliesWithAuthor };
-      }));
-      
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
-  app.post("/api/discussions/:id/comments", async (req: Request, res: Response) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      
-      const commentData = insertCommentSchema.parse({
-        ...req.body,
-        discussionId
-      });
-      
-      const newComment = await storage.createComment(commentData);
-      
-      // Get author info
-      const author = await storage.getUser(newComment.authorId);
-      let authorInfo = { id: newComment.authorId, username: "Unknown" };
-      
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      
-      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      
-      console.error("Error creating comment:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  
   // Safety Alert routes
   app.get("/api/safety/alerts", async (req: Request, res: Response) => {
     try {
@@ -578,10 +369,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up WebSocket server for real-time location updates
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
   
-  wss.on('connection', (socket: WebSocket) => {
+  wss.on('connection', (socket) => {
     console.log('WebSocket client connected');
     
-    socket.on('message', async (message: string | Buffer | ArrayBuffer | Buffer[]) => {
+    socket.on('message', async (message) => {
       try {
         // Parse and process location updates from clients if needed
         console.log('Received message:', message.toString());
@@ -606,7 +397,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
     
     // Broadcast to all connected clients
-    wss.clients.forEach((client: WebSocket) => {
+    wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify({
           type: 'location_update',

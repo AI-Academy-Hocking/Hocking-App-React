@@ -1,5 +1,303 @@
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+}) : x)(function(x) {
+  if (typeof require !== "undefined") return require.apply(this, arguments);
+  throw Error('Dynamic require of "' + x + '" is not supported');
+});
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
+import path, { dirname } from "path";
+import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import { fileURLToPath } from "url";
+var __filename, __dirname, vite_config_default;
+var init_vite_config = __esm({
+  "vite.config.ts"() {
+    "use strict";
+    __filename = fileURLToPath(import.meta.url);
+    __dirname = dirname(__filename);
+    vite_config_default = defineConfig({
+      plugins: [
+        react(),
+        runtimeErrorOverlay(),
+        themePlugin(),
+        ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
+          __require("@replit/vite-plugin-cartographer").cartographer()
+        ] : []
+      ],
+      assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
+      resolve: {
+        alias: {
+          "@": path.resolve(__dirname, "client", "src"),
+          "@shared": path.resolve(__dirname, "shared"),
+          "@assets": path.resolve(__dirname, "attached_assets")
+        },
+        extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
+      },
+      root: path.resolve(__dirname, "client"),
+      build: {
+        outDir: path.resolve(__dirname, "dist/public"),
+        emptyOutDir: true,
+        sourcemap: true
+      },
+      optimizeDeps: {
+        include: ["@sinclair/typebox"],
+        esbuildOptions: {
+          target: "es2020",
+          supported: {
+            "top-level-await": true
+          }
+        }
+      },
+      server: {
+        fs: {
+          strict: false,
+          allow: ["..", "node_modules"]
+        },
+        proxy: {
+          "/api": "http://localhost:3001"
+        }
+      }
+    });
+  }
+});
+
+// server/vite.ts
+var vite_exports = {};
+__export(vite_exports, {
+  auth: () => auth,
+  db: () => db,
+  log: () => log,
+  serveStatic: () => serveStatic,
+  setupVite: () => setupVite,
+  storage: () => storage2
+});
+import express from "express";
+import fs from "fs";
+import path2, { dirname as dirname2 } from "path";
+import { fileURLToPath as fileURLToPath2 } from "url";
+import { nanoid } from "nanoid";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+function log(message, source = "express") {
+  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+async function setupVite(app3, server) {
+  const serverOptions = {
+    middlewareMode: true,
+    hmr: { server },
+    allowedHosts: true
+  };
+  const { createServer: createServer2 } = await Promise.resolve().then(() => (init_vite(), vite_exports));
+  const vite = await createServer2({
+    ...vite_config_default,
+    configFile: false,
+    server: {
+      middlewareMode: true,
+      hmr: { server },
+      allowedHosts: ["localhost"]
+    },
+    appType: "custom"
+  });
+  app3.use(vite.middlewares);
+  app3.use("*", async (req, res, next) => {
+    const url = req.originalUrl;
+    try {
+      const clientTemplate = path2.resolve(
+        __dirname2,
+        "..",
+        "client",
+        "index.html"
+      );
+      let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`
+      );
+      const page = await vite.transformIndexHtml(url, template);
+      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+    } catch (e) {
+      vite.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
+}
+function serveStatic(app3) {
+  const distPath = path2.resolve(__dirname2, "public");
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`
+    );
+  }
+  app3.use(express.static(distPath));
+  app3.use("*", (_req, res) => {
+    res.sendFile(path2.resolve(distPath, "index.html"));
+  });
+}
+var __filename2, __dirname2, firebaseConfig, app, auth, db, storage2;
+var init_vite = __esm({
+  "server/vite.ts"() {
+    "use strict";
+    init_vite_config();
+    __filename2 = fileURLToPath2(import.meta.url);
+    __dirname2 = dirname2(__filename2);
+    firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage2 = getStorage(app);
+  }
+});
+
+// server/services/googleCalendar.ts
+var googleCalendar_exports = {};
+__export(googleCalendar_exports, {
+  GoogleCalendarService: () => GoogleCalendarService,
+  googleCalendarService: () => googleCalendarService
+});
+import { google } from "googleapis";
+import { OAuth2Client } from "google-auth-library";
+import { JWT } from "google-auth-library";
+var SCOPES, CALENDAR_IDS, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_PRIVATE_KEY, GoogleCalendarService, googleCalendarService;
+var init_googleCalendar = __esm({
+  "server/services/googleCalendar.ts"() {
+    "use strict";
+    SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+    CALENDAR_IDS = {
+      academic: "c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com",
+      activities: "gabby@aiowl.org"
+      // Private calendar
+    };
+    CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+    CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+    REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+    SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+    SERVICE_ACCOUNT_PRIVATE_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+    GoogleCalendarService = class {
+      constructor() {
+        this.serviceAccountClient = null;
+        this.oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
+        if (REFRESH_TOKEN) {
+          this.oauth2Client.setCredentials({
+            refresh_token: REFRESH_TOKEN
+          });
+        }
+        if (SERVICE_ACCOUNT_EMAIL && SERVICE_ACCOUNT_PRIVATE_KEY) {
+          this.serviceAccountClient = new JWT({
+            email: SERVICE_ACCOUNT_EMAIL,
+            key: SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, "\n"),
+            scopes: SCOPES
+          });
+        }
+      }
+      async getEvents(calendarType, timeMin, timeMax) {
+        try {
+          const calendarId = CALENDAR_IDS[calendarType];
+          if (this.serviceAccountClient) {
+            console.log(`Using service account for ${calendarType} calendar`);
+            const calendar2 = google.calendar({ version: "v3", auth: this.serviceAccountClient });
+            const response2 = await calendar2.events.list({
+              calendarId,
+              timeMin: timeMin?.toISOString(),
+              timeMax: timeMax?.toISOString(),
+              singleEvents: true,
+              orderBy: "startTime",
+              maxResults: 100
+            });
+            const events4 = response2.data.items?.map((event) => ({
+              id: event.id || String(Math.random()),
+              title: event.summary || "No Title",
+              startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
+              endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
+              location: event.location || "No Location",
+              description: event.description || "No Description",
+              calendarType
+            })) || [];
+            console.log(`Fetched ${events4.length} events from Google Calendar API for ${calendarType}`);
+            return events4;
+          }
+          const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+          const response = await calendar.events.list({
+            calendarId,
+            timeMin: timeMin?.toISOString(),
+            timeMax: timeMax?.toISOString(),
+            singleEvents: true,
+            orderBy: "startTime",
+            maxResults: 100
+          });
+          const events3 = response.data.items?.map((event) => ({
+            id: event.id || String(Math.random()),
+            title: event.summary || "No Title",
+            startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
+            endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
+            location: event.location || "No Location",
+            description: event.description || "No Description",
+            calendarType
+          })) || [];
+          console.log(`Fetched ${events3.length} events from Google Calendar API for ${calendarType}`);
+          return events3;
+        } catch (error) {
+          console.error("Google Calendar API error:", error);
+          throw error;
+        }
+      }
+      // Helper method to get authorization URL for setting up OAuth
+      getAuthUrl() {
+        return this.oauth2Client.generateAuthUrl({
+          access_type: "offline",
+          scope: SCOPES,
+          prompt: "consent"
+        });
+      }
+      // Helper method to exchange authorization code for tokens
+      async getTokensFromCode(code) {
+        const { tokens } = await this.oauth2Client.getToken(code);
+        return tokens;
+      }
+    };
+    googleCalendarService = new GoogleCalendarService();
+  }
+});
+
 // server/index.ts
-import express2 from "express";
+import express6 from "express";
 
 // server/routes.ts
 import { createServer } from "http";
@@ -7,82 +305,59 @@ import { WebSocketServer, WebSocket } from "ws";
 
 // server/storage.ts
 var MemStorage = class {
-  users;
-  events;
-  buildings;
-  studentTools;
-  discussions;
-  comments;
-  safetyAlerts;
-  safetyResources;
-  currentUserId;
-  currentEventId;
-  currentBuildingId;
-  currentDiscussionId;
-  currentCommentId;
-  currentSafetyAlertId;
-  currentSafetyResourceId;
   constructor() {
     this.users = /* @__PURE__ */ new Map();
     this.events = /* @__PURE__ */ new Map();
     this.buildings = /* @__PURE__ */ new Map();
     this.studentTools = /* @__PURE__ */ new Map();
-    this.discussions = /* @__PURE__ */ new Map();
-    this.comments = /* @__PURE__ */ new Map();
     this.safetyAlerts = /* @__PURE__ */ new Map();
     this.safetyResources = /* @__PURE__ */ new Map();
-    this.currentUserId = 1;
-    this.currentEventId = 1;
-    this.currentBuildingId = 1;
-    this.currentDiscussionId = 1;
-    this.currentCommentId = 1;
-    this.currentSafetyAlertId = 1;
-    this.currentSafetyResourceId = 1;
+    this.nextUserId = 1;
+    this.nextEventId = 1;
+    this.nextBuildingId = 1;
+    this.nextSafetyAlertId = 1;
+    this.nextSafetyResourceId = 1;
     this.initializeSampleData();
   }
   // User operations
   async getUser(id) {
-    return this.users.get(id);
+    return this.users.get(id) || null;
   }
   async getUserByUsername(username) {
     return Array.from(this.users.values()).find(
       (user) => user.username.toLowerCase() === username.toLowerCase()
-    );
+    ) || null;
   }
   async createUser(insertUser) {
-    const id = this.currentUserId++;
+    const id = this.nextUserId++;
     const user = {
       ...insertUser,
       id,
-      name: insertUser.name || null,
-      email: insertUser.email || null,
-      isGuest: insertUser.isGuest !== void 0 ? insertUser.isGuest : null,
-      lat: null,
-      lng: null,
-      isLocationShared: false,
-      lastLocationUpdate: null
+      createdAt: /* @__PURE__ */ new Date(),
+      lastLogin: null,
+      location: null,
+      isSharingLocation: false,
+      isGuest: insertUser.isGuest ?? false
     };
     this.users.set(id, user);
     return user;
   }
-  async updateUserLocation(userId, locationUpdate) {
-    const user = await this.getUser(userId);
+  async updateUserLocation(id, location) {
+    const user = await this.getUser(id);
     if (!user) {
-      return void 0;
+      return null;
     }
     const updatedUser = {
       ...user,
-      lat: locationUpdate.lat,
-      lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared !== void 0 ? locationUpdate.isLocationShared : user.isLocationShared,
-      lastLocationUpdate: /* @__PURE__ */ new Date()
+      location: location.location ?? null,
+      isSharingLocation: location.isSharingLocation ?? false
     };
-    this.users.set(userId, updatedUser);
+    this.users.set(id, updatedUser);
     return updatedUser;
   }
   async getSharedLocations() {
     return Array.from(this.users.values()).filter(
-      (user) => user.isLocationShared && user.lat !== null && user.lng !== null
+      (user) => user.isSharingLocation && user.location !== null
     );
   }
   // Event operations
@@ -90,14 +365,16 @@ var MemStorage = class {
     return Array.from(this.events.values());
   }
   async getEvent(id) {
-    return this.events.get(id);
+    return this.events.get(id) || null;
   }
   async createEvent(insertEvent) {
-    const id = this.currentEventId++;
+    const id = this.nextEventId++;
     const event = {
       ...insertEvent,
       id,
-      description: insertEvent.description || null
+      createdAt: /* @__PURE__ */ new Date(),
+      isRecurring: insertEvent.isRecurring ?? false,
+      recurrencePattern: insertEvent.recurrencePattern ?? null
     };
     this.events.set(id, event);
     return event;
@@ -107,11 +384,18 @@ var MemStorage = class {
     return Array.from(this.buildings.values());
   }
   async getBuilding(id) {
-    return this.buildings.get(id);
+    return this.buildings.get(id) || null;
   }
   async createBuilding(insertBuilding) {
-    const id = this.currentBuildingId++;
-    const building = { ...insertBuilding, id };
+    const id = this.nextBuildingId++;
+    const building = {
+      ...insertBuilding,
+      id,
+      createdAt: /* @__PURE__ */ new Date(),
+      isOpen: insertBuilding.isOpen ?? true,
+      openHours: insertBuilding.openHours ?? null,
+      contactInfo: insertBuilding.contactInfo ?? null
+    };
     this.buildings.set(id, building);
     return building;
   }
@@ -120,65 +404,16 @@ var MemStorage = class {
     return Array.from(this.studentTools.values());
   }
   async getStudentTool(id) {
-    return this.studentTools.get(id);
+    return this.studentTools.get(id) || null;
   }
   async createStudentTool(tool) {
-    this.studentTools.set(tool.id, tool);
-    return tool;
-  }
-  // Discussion operations
-  async getDiscussions() {
-    return Array.from(this.discussions.values());
-  }
-  async getDiscussion(id) {
-    return this.discussions.get(id);
-  }
-  async createDiscussion(insertDiscussion) {
-    const id = this.currentDiscussionId++;
-    const discussion = {
-      ...insertDiscussion,
-      id,
+    const studentTool = {
+      ...tool,
       createdAt: /* @__PURE__ */ new Date(),
-      isPinned: insertDiscussion.isPinned || false,
-      category: insertDiscussion.category || "general"
+      isActive: tool.isActive ?? true
     };
-    this.discussions.set(id, discussion);
-    return discussion;
-  }
-  async getDiscussionsByCategory(category) {
-    return Array.from(this.discussions.values()).filter(
-      (discussion) => discussion.category === category
-    );
-  }
-  // Comment operations
-  async getAllComments() {
-    return this.comments;
-  }
-  async getComments(discussionId) {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.discussionId === discussionId && comment.parentId === null
-    );
-  }
-  async getCommentReplies(commentId) {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.parentId === commentId
-    );
-  }
-  async createComment(insertComment) {
-    const id = this.currentCommentId++;
-    const comment = {
-      ...insertComment,
-      id,
-      createdAt: /* @__PURE__ */ new Date(),
-      parentId: insertComment.parentId || null
-    };
-    this.comments.set(id, comment);
-    return comment;
-  }
-  async getUserComments(userId) {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.authorId === userId
-    );
+    this.studentTools.set(tool.id, studentTool);
+    return studentTool;
   }
   // Safety Alert operations
   async getSafetyAlerts() {
@@ -187,44 +422,41 @@ var MemStorage = class {
   async getActiveSafetyAlerts() {
     const now = /* @__PURE__ */ new Date();
     return Array.from(this.safetyAlerts.values()).filter(
-      (alert) => alert.isActive && (alert.endDate === null || alert.endDate > now)
+      (alert) => alert.isActive && (alert.expiresAt === null || alert.expiresAt > now)
     );
   }
   async getSafetyAlert(id) {
-    return this.safetyAlerts.get(id);
+    return this.safetyAlerts.get(id) || null;
   }
   async createSafetyAlert(insertAlert) {
-    const id = this.currentSafetyAlertId++;
+    const id = this.nextSafetyAlertId++;
     const alert = {
       ...insertAlert,
       id,
-      startDate: insertAlert.startDate || /* @__PURE__ */ new Date(),
-      endDate: insertAlert.endDate || null,
-      isActive: insertAlert.isActive !== void 0 ? insertAlert.isActive : true,
-      location: insertAlert.location || null
+      createdAt: /* @__PURE__ */ new Date(),
+      isActive: insertAlert.isActive ?? true,
+      expiresAt: insertAlert.expiresAt ?? null
     };
     this.safetyAlerts.set(id, alert);
     return alert;
   }
   // Safety Resource operations
   async getSafetyResources() {
-    return Array.from(this.safetyResources.values()).sort((a, b) => (a.order || 999) - (b.order || 999));
+    return Array.from(this.safetyResources.values());
   }
   async getSafetyResourcesByCategory(category) {
-    return Array.from(this.safetyResources.values()).filter((resource) => resource.category === category).sort((a, b) => (a.order || 999) - (b.order || 999));
+    return Array.from(this.safetyResources.values()).filter((resource) => resource.category === category);
   }
   async getSafetyResource(id) {
-    return this.safetyResources.get(id);
+    return this.safetyResources.get(id) || null;
   }
   async createSafetyResource(insertResource) {
-    const id = this.currentSafetyResourceId++;
+    const id = this.nextSafetyResourceId++;
     const resource = {
       ...insertResource,
       id,
-      phoneNumber: insertResource.phoneNumber || null,
-      url: insertResource.url || null,
-      icon: insertResource.icon || null,
-      order: insertResource.order || 0
+      createdAt: /* @__PURE__ */ new Date(),
+      isActive: insertResource.isActive ?? true
     };
     this.safetyResources.set(id, resource);
     return resource;
@@ -234,421 +466,347 @@ var MemStorage = class {
     await this.createUser({
       username: "admin",
       password: "password",
-      isGuest: false,
       name: "Admin User",
-      email: "admin@hocking.edu"
+      isGuest: false
     });
     await this.createUser({
       username: "student",
       password: "password",
-      isGuest: false,
       name: "Student User",
-      email: "student@hocking.edu"
+      isGuest: false
     });
     await this.createEvent({
       title: "Fall Festival",
       description: "Annual celebration with food, games, and activities for students and faculty.",
-      date: "2023-10-15",
-      time: "12:00 PM - 4:00 PM",
+      startTime: /* @__PURE__ */ new Date("2023-10-15T12:00:00"),
+      endTime: /* @__PURE__ */ new Date("2023-10-15T16:00:00"),
       location: "Student Center"
     });
     await this.createEvent({
       title: "Career Fair",
       description: "Meet with employers from around the region for internship and job opportunities.",
-      date: "2023-10-20",
-      time: "10:00 AM - 2:00 PM",
+      startTime: /* @__PURE__ */ new Date("2023-10-20T10:00:00"),
+      endTime: /* @__PURE__ */ new Date("2023-10-20T14:00:00"),
       location: "Main Hall"
     });
     await this.createEvent({
       title: "Registration Deadline",
       description: "Last day to register for Spring semester classes without late fees.",
-      date: "2023-11-05",
-      time: "11:59 PM",
+      startTime: /* @__PURE__ */ new Date("2023-11-05T23:59:00"),
+      endTime: /* @__PURE__ */ new Date("2023-11-06T00:00:00"),
       location: "For Spring Semester"
     });
     await this.createBuilding({
       name: "Main Hall",
       description: "Administrative offices, classrooms",
-      category: "academic",
-      lat: 39.5274,
-      lng: -82.4156
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "8:00 AM - 5:00 PM",
+      contactInfo: "740-753-6000"
     });
     await this.createBuilding({
       name: "Student Center",
       description: "Dining, recreation, student services",
-      category: "dining",
-      lat: 39.528,
-      lng: -82.415
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "7:00 AM - 10:00 PM",
+      contactInfo: "740-753-6100"
     });
     await this.createBuilding({
       name: "Davidson Hall",
       description: "Science labs, lecture halls",
-      category: "academic",
-      lat: 39.5268,
-      lng: -82.4162
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "8:00 AM - 6:00 PM",
+      contactInfo: "740-753-6200"
     });
     await this.createBuilding({
       name: "Library",
       description: "Books, study spaces, computer labs",
-      category: "academic",
-      lat: 39.5265,
-      lng: -82.4145
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "8:00 AM - 11:00 PM",
+      contactInfo: "740-753-6300"
     });
     await this.createBuilding({
       name: "Recreation Center",
       description: "Gym, pool, fitness classes",
-      category: "housing",
-      lat: 39.529,
-      lng: -82.417
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "6:00 AM - 10:00 PM",
+      contactInfo: "740-753-6400"
     });
     await this.createStudentTool({
       id: "course-schedule",
       name: "Course Schedule",
       description: "View your current classes",
       category: "academic",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "grades",
       name: "Grades",
       description: "Check your academic performance",
       category: "academic",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "advising",
       name: "Advising",
       description: "Connect with your advisor",
       category: "academic",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "academic-history",
       name: "Academic History",
       description: "View your transcript",
       category: "academic",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "graduation",
       name: "Graduation",
       description: "Track degree requirements",
       category: "academic",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "financial-aid",
       name: "Financial Aid",
       description: "View and manage your financial aid",
       category: "financial",
-      url: "#"
+      url: "/financial-aid",
+      isActive: true
     });
     await this.createStudentTool({
       id: "billing",
       name: "Billing",
       description: "Pay tuition and view statements",
       category: "financial",
-      url: "#"
+      url: "/billing",
+      isActive: true
     });
     await this.createStudentTool({
       id: "scholarships",
       name: "Scholarships",
       description: "Apply for available scholarships",
       category: "financial",
-      url: "#"
+      url: "/scholarships",
+      isActive: true
     });
     await this.createStudentTool({
       id: "campus-resources",
       name: "Campus Resources",
       description: "Access campus services",
       category: "resources",
-      url: "#"
+      url: "#",
+      isActive: true
     });
     await this.createStudentTool({
       id: "health-services",
-      name: "Health Services",
+      name: "Campus Health and Wellness",
       description: "Schedule health appointments",
       category: "resources",
-      url: "#"
+      url: "/campus-health",
+      isActive: true
     });
     await this.createStudentTool({
       id: "career-services",
-      name: "Career Services",
+      name: "Career & University Center",
       description: "Job search and career planning",
       category: "resources",
-      url: "#"
-    });
-    const discussion1 = await this.createDiscussion({
-      title: "Tips for new students",
-      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
-      authorId: 1,
-      category: "general",
-      isPinned: true
-    });
-    const discussion2 = await this.createDiscussion({
-      title: "Study group for Biology 101",
-      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
-      authorId: 2,
-      category: "academic"
-    });
-    const discussion3 = await this.createDiscussion({
-      title: "Campus food recommendations",
-      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
-      authorId: 1,
-      category: "social"
-    });
-    await this.createComment({
-      content: "Always check Rate My Professor before signing up for classes!",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    const comment1 = await this.createComment({
-      content: "Get involved in campus clubs early - it's the best way to make friends!",
-      authorId: 1,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    await this.createComment({
-      content: "I totally agree! I joined the hiking club and met my best friends there.",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: comment1.id
-    });
-    await this.createComment({
-      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
-      authorId: 1,
-      discussionId: discussion2.id,
-      parentId: null
-    });
-    await this.createComment({
-      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
-      authorId: 2,
-      discussionId: discussion3.id,
-      parentId: null
+      url: "/career-university-center",
+      isActive: true
     });
     await this.createSafetyAlert({
       title: "Weather Alert: Winter Storm Warning",
-      content: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
+      description: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
       severity: "warning",
-      startDate: /* @__PURE__ */ new Date(),
+      location: "All Campus",
       isActive: true,
-      location: "All Campus"
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1e3)
+      // 24 hours from now
     });
     await this.createSafetyAlert({
       title: "Planned Power Outage: Davidson Hall",
-      content: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
+      description: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
       severity: "info",
-      startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1e3),
-      // 2 days from now
-      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1e3),
-      // 3 days from now
+      location: "Davidson Hall",
       isActive: true,
-      location: "Davidson Hall"
+      expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1e3)
+      // 3 days from now
     });
     await this.createSafetyResource({
       title: "Campus Police",
       description: "24/7 emergency assistance and security services",
       category: "emergency",
-      phoneNumber: "740-753-6598",
-      icon: "shield",
-      order: 1
+      url: "#",
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Emergency Notification System",
       description: "Sign up for emergency text alerts",
       category: "emergency",
       url: "#",
-      icon: "bell",
-      order: 2
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Health Center",
       description: "Medical services for students",
       category: "health",
-      phoneNumber: "740-753-6487",
       url: "#",
-      icon: "first-aid",
-      order: 3
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Counseling Services",
       description: "Confidential mental health support",
       category: "health",
-      phoneNumber: "740-753-6789",
       url: "#",
-      icon: "heart-pulse",
-      order: 4
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Campus Escort Service",
       description: "Safe accompaniment across campus after dark",
       category: "security",
-      phoneNumber: "740-753-6123",
-      icon: "footprints",
-      order: 5
+      url: "#",
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Anonymous Tip Line",
       description: "Report suspicious activity anonymously",
       category: "security",
-      phoneNumber: "740-753-7890",
       url: "#",
-      icon: "eye-off",
-      order: 6
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Weather Updates",
       description: "Local weather forecasts and alerts",
       category: "weather",
       url: "https://weather.gov",
-      icon: "cloud",
-      order: 7
+      isActive: true
     });
     await this.createSafetyResource({
       title: "Emergency Procedures",
       description: "Step-by-step guides for emergency situations",
       category: "emergency",
       url: "#",
-      icon: "file-text",
-      order: 8
+      isActive: true
     });
   }
 };
 var storage = new MemStorage();
 
 // shared/schema.ts
-import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, boolean, timestamp, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
 var users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  isGuest: boolean("is_guest").default(false),
-  name: text("name"),
-  email: text("email"),
-  // Location fields for user on campus map
-  lat: doublePrecision("lat"),
-  lng: doublePrecision("lng"),
-  isLocationShared: boolean("is_location_shared").default(false),
-  lastLocationUpdate: timestamp("last_location_update")
+  name: text("name").notNull(),
+  isGuest: boolean("is_guest").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastLogin: timestamp("last_login"),
+  location: text("location"),
+  isSharingLocation: boolean("is_sharing_location").notNull().default(false)
 });
 var insertUserSchema = createInsertSchema(users).omit({
-  id: true
+  id: true,
+  createdAt: true,
+  lastLogin: true
 });
 var events = pgTable("events", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description"),
-  date: text("date").notNull(),
-  // YYYY-MM-DD format
-  time: text("time").notNull(),
-  // HH:MM AM/PM - HH:MM AM/PM format
-  location: text("location").notNull()
+  description: text("description").notNull(),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time").notNull(),
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isRecurring: boolean("is_recurring").notNull().default(false),
+  recurrencePattern: text("recurrence_pattern")
 });
 var insertEventSchema = createInsertSchema(events).omit({
-  id: true
+  id: true,
+  createdAt: true
 });
 var buildings = pgTable("buildings", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  category: text("category").notNull(),
-  // academic, housing, dining, parking
-  lat: doublePrecision("lat").notNull(),
-  lng: doublePrecision("lng").notNull()
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isOpen: boolean("is_open").notNull().default(true),
+  openHours: text("open_hours"),
+  contactInfo: text("contact_info")
 });
 var insertBuildingSchema = createInsertSchema(buildings).omit({
-  id: true
+  id: true,
+  createdAt: true
 });
 var studentTools = pgTable("student_tools", {
-  id: text("id").primaryKey(),
-  // e.g., course-schedule, grades
+  id: varchar("id", { length: 50 }).primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  url: text("url").notNull(),
   category: text("category").notNull(),
-  // academic, financial, resources
-  url: text("url").notNull()
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true)
 });
-var insertStudentToolSchema = createInsertSchema(studentTools);
-var discussions = pgTable("discussions", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  category: text("category").default("general"),
-  // general, academic, social, etc.
-  isPinned: boolean("is_pinned").default(false)
-});
-var insertDiscussionSchema = createInsertSchema(discussions).omit({
-  id: true,
+var insertStudentToolSchema = createInsertSchema(studentTools).omit({
   createdAt: true
-});
-var comments = pgTable("comments", {
-  id: serial("id").primaryKey(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  discussionId: integer("discussion_id").notNull(),
-  parentId: integer("parent_id"),
-  // For nested replies, null means top-level comment
-  createdAt: timestamp("created_at").defaultNow()
-});
-var insertCommentSchema = createInsertSchema(comments).omit({
-  id: true,
-  createdAt: true
-});
-var locationUpdateSchema = z.object({
-  lat: z.number(),
-  lng: z.number(),
-  isLocationShared: z.boolean().optional()
 });
 var safetyAlerts = pgTable("safety_alerts", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  content: text("content").notNull(),
+  description: text("description").notNull(),
   severity: text("severity").notNull(),
-  // critical, warning, info
-  startDate: timestamp("start_date").defaultNow().notNull(),
-  endDate: timestamp("end_date"),
-  // null means indefinite
-  isActive: boolean("is_active").default(true),
-  location: text("location")
-  // Optional affected location
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+  expiresAt: timestamp("expires_at")
 });
 var insertSafetyAlertSchema = createInsertSchema(safetyAlerts).omit({
-  id: true
+  id: true,
+  createdAt: true
 });
 var safetyResources = pgTable("safety_resources", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   category: text("category").notNull(),
-  // emergency, health, security, weather, contact
-  phoneNumber: text("phone_number"),
-  url: text("url"),
-  icon: text("icon"),
-  // Icon name for UI
-  order: integer("order").default(0)
-  // For sorting
+  url: text("url").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true)
 });
 var insertSafetyResourceSchema = createInsertSchema(safetyResources).omit({
-  id: true
+  id: true,
+  createdAt: true
+});
+var locationUpdateSchema = createInsertSchema(users).pick({
+  location: true,
+  isSharingLocation: true
 });
 
 // server/routes.ts
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-async function registerRoutes(app2) {
-  app2.post("/api/auth/login", async (req, res) => {
+async function registerRoutes(app3) {
+  app3.post("/api/auth/login", async (req, res) => {
     try {
       const { username, password } = req.body;
       if (!username || !password) {
@@ -666,7 +824,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/auth/register", async (req, res) => {
+  app3.post("/api/auth/register", async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(userData.username);
@@ -685,16 +843,16 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/events", async (_req, res) => {
+  app3.get("/api/events", async (_req, res) => {
     try {
-      const events2 = await storage.getEvents();
-      res.status(200).json(events2);
+      const events3 = await storage.getEvents();
+      res.status(200).json(events3);
     } catch (error) {
       console.error("Error fetching events:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/events/:id", async (req, res) => {
+  app3.get("/api/events/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -710,7 +868,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/events", async (req, res) => {
+  app3.post("/api/events", async (req, res) => {
     try {
       const eventData = insertEventSchema.parse(req.body);
       const newEvent = await storage.createEvent(eventData);
@@ -724,7 +882,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/buildings", async (_req, res) => {
+  app3.get("/api/buildings", async (_req, res) => {
     try {
       const buildings2 = await storage.getBuildings();
       res.status(200).json(buildings2);
@@ -733,7 +891,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/buildings/:id", async (req, res) => {
+  app3.get("/api/buildings/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -749,7 +907,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/buildings", async (req, res) => {
+  app3.post("/api/buildings", async (req, res) => {
     try {
       const buildingData = insertBuildingSchema.parse(req.body);
       const newBuilding = await storage.createBuilding(buildingData);
@@ -763,7 +921,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/student-tools", async (_req, res) => {
+  app3.get("/api/student-tools", async (_req, res) => {
     try {
       const tools = await storage.getStudentTools();
       res.status(200).json(tools);
@@ -772,7 +930,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/student-tools/:id", async (req, res) => {
+  app3.get("/api/student-tools/:id", async (req, res) => {
     try {
       const id = req.params.id;
       const tool = await storage.getStudentTool(id);
@@ -785,7 +943,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/student-tools", async (req, res) => {
+  app3.post("/api/student-tools", async (req, res) => {
     try {
       const toolData = insertStudentToolSchema.parse(req.body);
       const existingTool = await storage.getStudentTool(toolData.id);
@@ -803,7 +961,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/users/:id/location", async (req, res) => {
+  app3.post("/api/users/:id/location", async (req, res) => {
     try {
       const userId = parseInt(req.params.id);
       if (isNaN(userId)) {
@@ -826,7 +984,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/locations/shared", async (_req, res) => {
+  app3.get("/api/locations/shared", async (_req, res) => {
     try {
       const sharedLocations = await storage.getSharedLocations();
       const locationsWithoutPasswords = sharedLocations.map((user) => {
@@ -839,157 +997,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/discussions", async (req, res) => {
-    try {
-      const category = req.query.category;
-      let discussions2;
-      if (category && category !== "all") {
-        discussions2 = await storage.getDiscussionsByCategory(category);
-      } else {
-        discussions2 = await storage.getDiscussions();
-      }
-      const discussionsWithAuthor = await Promise.all(discussions2.map(async (discussion) => {
-        const author = await storage.getUser(discussion.authorId);
-        let authorInfo = { id: discussion.authorId, username: "Unknown" };
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        const comments2 = await storage.getComments(discussion.id);
-        const commentCount = comments2 ? comments2.length : 0;
-        return { ...discussion, author: authorInfo, commentCount };
-      }));
-      res.status(200).json(discussionsWithAuthor);
-    } catch (error) {
-      console.error("Error fetching discussions:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/discussions/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      const discussion = await storage.getDiscussion(id);
-      if (!discussion) {
-        return res.status(404).json({ message: "Discussion not found" });
-      }
-      const author = await storage.getUser(discussion.authorId);
-      let authorInfo = { id: discussion.authorId, username: "Unknown" };
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      res.status(200).json({ ...discussion, author: authorInfo });
-    } catch (error) {
-      console.error("Error fetching discussion:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.post("/api/discussions", async (req, res) => {
-    try {
-      const discussionData = insertDiscussionSchema.parse(req.body);
-      const newDiscussion = await storage.createDiscussion(discussionData);
-      const author = await storage.getUser(newDiscussion.authorId);
-      let authorInfo = { id: newDiscussion.authorId, username: "Unknown" };
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      res.status(201).json({ ...newDiscussion, author: authorInfo });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      console.error("Error creating discussion:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/comments", async (req, res) => {
-    try {
-      const comments2 = await storage.getAllComments();
-      const commentsWithDetails = await Promise.all(comments2.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        const discussion = await storage.getDiscussion(comment.discussionId);
-        return {
-          ...comment,
-          author: authorInfo,
-          discussionTitle: discussion?.title || "Unknown Discussion"
-        };
-      }));
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching all comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/discussions/:id/comments", async (req, res) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      const comments2 = await storage.getComments(discussionId);
-      const commentsWithDetails = await Promise.all(comments2.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        const replies = await storage.getCommentReplies(comment.id);
-        const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-          const replyAuthor = await storage.getUser(reply.authorId);
-          let replyAuthorInfo = { id: reply.authorId, username: "Unknown" };
-          if (replyAuthor) {
-            const { password, ...userWithoutPassword } = replyAuthor;
-            replyAuthorInfo = { ...userWithoutPassword };
-          }
-          return { ...reply, author: replyAuthorInfo };
-        }));
-        return { ...comment, author: authorInfo, replies: repliesWithAuthor };
-      }));
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.post("/api/discussions/:id/comments", async (req, res) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      const commentData = insertCommentSchema.parse({
-        ...req.body,
-        discussionId
-      });
-      const newComment = await storage.createComment(commentData);
-      const author = await storage.getUser(newComment.authorId);
-      let authorInfo = { id: newComment.authorId, username: "Unknown" };
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      console.error("Error creating comment:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/safety/alerts", async (req, res) => {
+  app3.get("/api/safety/alerts", async (req, res) => {
     try {
       const activeOnly = req.query.active === "true";
       const alerts = activeOnly ? await storage.getActiveSafetyAlerts() : await storage.getSafetyAlerts();
@@ -999,7 +1007,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/safety/alerts/:id", async (req, res) => {
+  app3.get("/api/safety/alerts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -1015,7 +1023,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/safety/alerts", async (req, res) => {
+  app3.post("/api/safety/alerts", async (req, res) => {
     try {
       const alertData = insertSafetyAlertSchema.parse(req.body);
       const newAlert = await storage.createSafetyAlert(alertData);
@@ -1029,7 +1037,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/safety/resources", async (req, res) => {
+  app3.get("/api/safety/resources", async (req, res) => {
     try {
       const category = req.query.category;
       const resources = category ? await storage.getSafetyResourcesByCategory(category) : await storage.getSafetyResources();
@@ -1039,7 +1047,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/safety/resources/:id", async (req, res) => {
+  app3.get("/api/safety/resources/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -1055,7 +1063,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/safety/resources", async (req, res) => {
+  app3.post("/api/safety/resources", async (req, res) => {
     try {
       const resourceData = insertSafetyResourceSchema.parse(req.body);
       const newResource = await storage.createSafetyResource(resourceData);
@@ -1069,7 +1077,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  const httpServer = createServer(app2);
+  const httpServer = createServer(app3);
   const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
   wss.on("connection", (socket) => {
     console.log("WebSocket client connected");
@@ -1102,121 +1110,1238 @@ async function registerRoutes(app2) {
   return httpServer;
 }
 
-// server/vite.ts
-import express from "express";
-import fs from "fs";
-import path2, { dirname as dirname2 } from "path";
-import { fileURLToPath as fileURLToPath2 } from "url";
-import { createServer as createViteServer, createLogger } from "vite";
+// server/index.ts
+init_vite();
+import cors from "cors";
 
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
-import path, { dirname } from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import { fileURLToPath } from "url";
-var __filename = fileURLToPath(import.meta.url);
-var __dirname = dirname(__filename);
-var vite_config_default = defineConfig({
-  plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    themePlugin(),
-    ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-      await import("@replit/vite-plugin-cartographer").then(
-        (m) => m.cartographer()
-      )
-    ] : []
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "client", "src"),
-      "@shared": path.resolve(__dirname, "shared"),
-      "@assets": path.resolve(__dirname, "attached_assets")
+// server/api/programs.ts
+import { Router } from "express";
+import fetch from "node-fetch";
+import * as cheerio from "cheerio";
+var router = Router();
+var programCache = {};
+var lastFetchTime = 0;
+var CACHE_DURATION = 24 * 60 * 60 * 1e3;
+async function fetchProgramDetails(programId) {
+  try {
+    const program = programCache[programId];
+    if (!program) {
+      console.error(`Program not found in cache: ${programId}`);
+      return null;
     }
-  },
-  root: path.resolve(__dirname, "client"),
-  build: {
-    outDir: path.resolve(__dirname, "dist/public"),
-    emptyOutDir: true
+    const url = `https://www.hocking.edu/${programId}`;
+    try {
+      console.log(`Fetching from: ${url}`);
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error(`Failed to fetch from ${url}: ${response.status}`);
+        return null;
+      }
+      const html = await response.text();
+      const $ = cheerio.load(html);
+      let description = "";
+      let courses = [];
+      let careers = [];
+      const descriptionSection = $('h2:contains("Program Description")');
+      if (descriptionSection.length) {
+        let currentElement = descriptionSection.next();
+        while (currentElement.length && !currentElement.is("h2")) {
+          const text2 = currentElement.text().trim();
+          if (text2 && !text2.includes("APPLY TO HOCKING COLLEGE")) {
+            description += text2 + " ";
+          }
+          currentElement = currentElement.next();
+        }
+      }
+      const careerSection = $('h2:contains("Career Options"), h1:contains("Career Options")');
+      if (careerSection.length) {
+        let currentElement = careerSection.next();
+        while (currentElement.length && !currentElement.is("h1, h2")) {
+          const text2 = currentElement.text().trim();
+          if (text2 && text2.length > 10 && !text2.includes("Print PDF") && !text2.includes("View PDF")) {
+            careers.push(text2);
+          }
+          currentElement = currentElement.next();
+        }
+      }
+      const courseSection = $('div:contains("Course Curriculum")');
+      if (courseSection.length) {
+        courseSection.find("li").each((_, element) => {
+          const text2 = $(element).text().trim();
+          if (text2 && text2.length > 0) {
+            courses.push(text2);
+          }
+        });
+      }
+      if (!description) {
+        $("p").each((_, element) => {
+          const text2 = $(element).text().trim();
+          if (text2.includes(program.name) && text2.length > 50) {
+            description = text2;
+            return false;
+          }
+        });
+      }
+      console.log(`Found content for ${program.name}:`, {
+        descriptionLength: description.length,
+        coursesCount: courses.length,
+        careersCount: careers.length,
+        description: description.substring(0, 100) + "..."
+        // Log first 100 chars
+      });
+      return {
+        title: program.name,
+        description: description || "Visit Hocking College's website for the latest program information.",
+        courses,
+        careers,
+        lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+      };
+    } catch (error) {
+      console.error(`Error fetching from ${url}:`, error);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error fetching program details for ${programId}:`, error);
+    return null;
+  }
+}
+async function updateProgramCache() {
+  const now = Date.now();
+  if (now - lastFetchTime < CACHE_DURATION && Object.keys(programCache).length > 0) {
+    return;
+  }
+  try {
+    const response = await fetch("https://www.hocking.edu/majors");
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    $("h4").each((_, categoryHeader) => {
+      const categoryName = $(categoryHeader).text().trim();
+      const categorySection = $(categoryHeader).next("ul");
+      if (categorySection.length && categoryName) {
+        categorySection.find("li").each((_2, program) => {
+          const programName = $(program).text().trim();
+          if (programName) {
+            const programId = programName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            if (!programCache[programId]) {
+              programCache[programId] = {
+                id: programId,
+                name: programName,
+                category: categoryName,
+                details: {
+                  title: programName,
+                  description: "Program details are being updated.",
+                  courses: [],
+                  careers: [],
+                  lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+                }
+              };
+              console.log(`Added program to cache: ${programName} (${programId})`);
+            }
+          }
+        });
+      }
+    });
+    console.log(`Cache updated with ${Object.keys(programCache).length} programs`);
+    lastFetchTime = now;
+  } catch (error) {
+    console.error("Error updating program cache:", error);
+  }
+}
+updateProgramCache();
+router.get("/", async (req, res) => {
+  await updateProgramCache();
+  res.json(Object.values(programCache));
+});
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  await updateProgramCache();
+  const program = programCache[id];
+  if (!program) {
+    return res.status(404).json({ error: "Program not found" });
+  }
+  if (!program.details) {
+    program.details = await fetchProgramDetails(id);
+  }
+  res.json(program);
+});
+var programs_default = router;
+
+// server/src/routes/calendar.ts
+import express2 from "express";
+import * as ical from "ical";
+import fetch2 from "node-fetch";
+var googleCalendarService2 = null;
+try {
+  const { googleCalendarService: service } = (init_googleCalendar(), __toCommonJS(googleCalendar_exports));
+  googleCalendarService2 = service;
+  console.log("Google Calendar service loaded successfully");
+} catch (error) {
+  console.log("Google Calendar service not available, will use iCal fallback:", error instanceof Error ? error.message : "Unknown error");
+}
+var router2 = express2.Router();
+var ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
+var STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
+  console.log(`
+=== GOOGLE CALENDAR DEBUG ===`);
+  console.log(`Fetching calendar events from: ${url}`);
+  try {
+    const response = await fetch2(url);
+    console.log(`Response status: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status} for URL: ${url}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const icalData = await response.text();
+    console.log(`Received ${icalData.length} characters of iCal data`);
+    console.log(`First 500 chars of iCal data:`, icalData.substring(0, 500));
+    const parsedEvents = ical.parseICS(icalData);
+    console.log(`Parsed ${Object.keys(parsedEvents).length} total events from iCal`);
+    const eventTypes = new Set(Object.values(parsedEvents).map((event) => event.type));
+    console.log(`Event types found:`, Array.from(eventTypes));
+    const events3 = Object.values(parsedEvents).filter((event) => {
+      const isVEvent = event.type === "VEVENT";
+      if (!isVEvent) {
+        console.log(`Skipping non-VEVENT: ${event.type}`);
+        return false;
+      }
+      if (timeMin || timeMax) {
+        const eventStart = event.start;
+        if (eventStart) {
+          const eventDate = new Date(eventStart);
+          const minDate = timeMin || /* @__PURE__ */ new Date(0);
+          const maxDate = timeMax || /* @__PURE__ */ new Date("2100-01-01");
+          if (eventDate < minDate || eventDate > maxDate) {
+            console.log(`Skipping event outside date range: ${event.summary} on ${eventDate.toISOString()}`);
+            return false;
+          }
+        }
+      }
+      return true;
+    }).map((event, index) => {
+      console.log(`
+--- Processing Event ${index + 1} ---`);
+      console.log(`Raw event data:`, JSON.stringify(event, null, 2));
+      let startDate = event.start;
+      let endDate = event.end;
+      console.log(`Original start: ${startDate} (type: ${typeof startDate})`);
+      console.log(`Original end: ${endDate} (type: ${typeof endDate})`);
+      if (typeof startDate === "string") {
+        startDate = new Date(startDate);
+        console.log(`Parsed start date: ${startDate.toISOString()}`);
+      }
+      if (typeof endDate === "string") {
+        endDate = new Date(endDate);
+        console.log(`Parsed end date: ${endDate.toISOString()}`);
+      }
+      const eventData = {
+        id: event.uid || String(Math.random()),
+        title: event.summary || "No Title",
+        startTime: startDate ? startDate.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+        endTime: endDate ? endDate.toISOString() : startDate ? startDate.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+        location: event.location || "No Location",
+        description: event.description || "No Description",
+        calendarType
+        // <-- ADD THIS LINE
+      };
+      console.log(`Final event data:`, eventData);
+      return eventData;
+    });
+    console.log(`
+=== SUMMARY ===`);
+    console.log(`Fetched ${events3.length} events from ${url}`);
+    if (events3.length > 0) {
+      console.log("First event:", events3[0]);
+      console.log("Last event:", events3[events3.length - 1]);
+      const dates = events3.map((e) => new Date(e.startTime));
+      const earliest = new Date(Math.min(...dates.map((d) => d.getTime())));
+      const latest = new Date(Math.max(...dates.map((d) => d.getTime())));
+      console.log(`Event date range: ${earliest.toISOString()} to ${latest.toISOString()}`);
+    } else {
+      console.warn("No events found in calendar!");
+    }
+    return events3;
+  } catch (error) {
+    console.error(`Error in fetchCalendarEvents:`, error);
+    throw error;
+  }
+}
+router2.get("/events", async (req, res) => {
+  console.log(`
+=== API REQUEST ===`);
+  console.log(`Query params:`, req.query);
+  try {
+    const calendarType = req.query.type;
+    const timeMin = req.query.timeMin;
+    const timeMax = req.query.timeMax;
+    console.log(`Calendar type requested: ${calendarType}`);
+    console.log(`Time range: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+    let events3;
+    if (googleCalendarService2) {
+      console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
+      try {
+        events3 = await googleCalendarService2.getEvents(
+          calendarType,
+          timeMin ? new Date(timeMin) : void 0,
+          timeMax ? new Date(timeMax) : void 0
+        );
+        console.log(`Successfully fetched ${events3.length} events via Google Calendar API`);
+      } catch (apiError) {
+        console.error("Google Calendar API failed, falling back to iCal:", apiError);
+      }
+    }
+    if (!events3) {
+      console.log(`Using iCal fallback for ${calendarType} calendar`);
+      const minDate = timeMin ? new Date(timeMin) : void 0;
+      const maxDate = timeMax ? new Date(timeMax) : void 0;
+      console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
+      if (calendarType === "academic") {
+        events3 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
+      } else if (calendarType === "activities") {
+        events3 = await fetchCalendarEvents(STUDENT_CALENDAR_URL, "activities", minDate, maxDate);
+      } else {
+        console.log("No calendar type specified, defaulting to academic");
+        events3 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
+      }
+    }
+    if (timeMin || timeMax) {
+      console.log(`Date filtering applied at source: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+    }
+    const eventsArray = events3 || [];
+    console.log(`Sending ${eventsArray.length} events to frontend`);
+    res.json(eventsArray);
+  } catch (error) {
+    console.error(`API Error:`, error);
+    res.status(500).json({
+      error: "Failed to fetch calendar events",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
   }
 });
+var calendar_default = router2;
 
-// server/vite.ts
-import { nanoid } from "nanoid";
-var __filename2 = fileURLToPath2(import.meta.url);
-var __dirname2 = dirname2(__filename2);
-var viteLogger = createLogger();
-function log(message, source = "express") {
-  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  });
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
-async function setupVite(app2, server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true
-  };
-  const vite = await createViteServer({
-    ...vite_config_default,
-    configFile: false,
-    customLogger: {
-      ...viteLogger,
-      error: (msg, options) => {
-        viteLogger.error(msg, options);
-        process.exit(1);
-      }
-    },
-    server: serverOptions,
-    appType: "custom"
-  });
-  app2.use(vite.middlewares);
-  app2.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-    try {
-      const clientTemplate = path2.resolve(
-        __dirname2,
-        "..",
-        "client",
-        "index.html"
-      );
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`
-      );
-      const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
-    } catch (e) {
-      vite.ssrFixStacktrace(e);
-      next(e);
+// server/api/verification.ts
+import express3 from "express";
+
+// server/services/emailService.ts
+import nodemailer from "nodemailer";
+var verificationRequests = /* @__PURE__ */ new Map();
+var createTransporter = () => {
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER || "hocking.social.hub@gmail.com",
+      pass: process.env.EMAIL_PASS || "your-app-password"
     }
   });
-}
-function serveStatic(app2) {
-  const distPath = path2.resolve(__dirname2, "public");
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
-    );
+};
+var sendVerificationEmail = async (user) => {
+  const requestId = `verification_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const verificationRequest = {
+    id: requestId,
+    user,
+    status: "pending",
+    createdAt: /* @__PURE__ */ new Date()
+  };
+  verificationRequests.set(requestId, verificationRequest);
+  console.log("=== VERIFICATION EMAIL WOULD BE SENT ===");
+  console.log("To: housing@hocking.edu");
+  console.log("Subject: Campus Social Hub - New User Verification Request");
+  console.log("User Details:", user);
+  console.log("Verification URL:", `${process.env.FRONTEND_URL || "http://localhost:5173"}/verify-user/${requestId}`);
+  console.log("========================================");
+  return requestId;
+};
+var verifyUser = async (requestId, action, verifiedBy) => {
+  const request = verificationRequests.get(requestId);
+  if (!request) {
+    throw new Error("Verification request not found");
   }
-  app2.use(express.static(distPath));
-  app2.use("*", (_req, res) => {
-    res.sendFile(path2.resolve(distPath, "index.html"));
+  if (request.status !== "pending") {
+    throw new Error("Verification request already processed");
+  }
+  request.status = action === "approve" ? "approved" : "rejected";
+  request.verifiedAt = /* @__PURE__ */ new Date();
+  request.verifiedBy = verifiedBy;
+  verificationRequests.set(requestId, request);
+  await sendUserNotification(request);
+  return request;
+};
+var sendUserNotification = async (request) => {
+  const transporter = createTransporter();
+  const status = request.status === "approved" ? "APPROVED" : "REJECTED";
+  const statusColor = request.status === "approved" ? "#28a745" : "#dc3545";
+  const statusIcon = request.status === "approved" ? "\u2705" : "\u274C";
+  const mailOptions = {
+    from: process.env.EMAIL_USER || "hocking.social.hub@gmail.com",
+    to: request.user.email,
+    subject: `Campus Social Hub - Account ${status}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
+          <h1 style="margin: 0;">Campus Social Hub</h1>
+          <p style="margin: 10px 0 0 0;">Account Verification ${status}</p>
+        </div>
+        
+        <div style="padding: 20px; background: #f9f9f9;">
+          <div style="text-align: center; margin: 30px 0;">
+            <div style="font-size: 48px; margin-bottom: 20px;">${statusIcon}</div>
+            <h2 style="color: ${statusColor}; margin: 0;">Your account has been ${status.toLowerCase()}!</h2>
+          </div>
+          
+          <div style="background: ${request.status === "approved" ? "#d4edda" : "#f8d7da"}; border: 1px solid ${request.status === "approved" ? "#c3e6cb" : "#f5c6cb"}; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0; color: ${request.status === "approved" ? "#155724" : "#721c24"};">
+              ${request.status === "approved" ? "Congratulations! Your Campus Social Hub account has been approved. You can now access all features of the platform." : "We regret to inform you that your Campus Social Hub account has been rejected. Please contact the housing office for more information."}
+            </p>
+          </div>
+          
+          ${request.status === "approved" ? `
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.FRONTEND_URL || "http://localhost:5173"}/housing/social" 
+                 style="background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                \u{1F680} Access Campus Social Hub
+              </a>
+            </div>
+          ` : ""}
+          
+          <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <p style="margin: 0; color: #6c757d; font-size: 14px;">
+              <strong>Verified by:</strong> ${request.verifiedBy}<br>
+              <strong>Verified on:</strong> ${request.verifiedAt?.toLocaleString()}<br>
+              <strong>Verification ID:</strong> ${request.id}
+            </p>
+          </div>
+        </div>
+        
+        <div style="background: #343a40; color: white; padding: 15px; text-align: center; font-size: 12px;">
+          <p style="margin: 0;">Hocking College Campus Social Hub - Automated Notification System</p>
+        </div>
+      </div>
+    `
+  };
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Notification email sent to user: ${request.user.email}`);
+  } catch (error) {
+    console.error("Error sending user notification:", error);
+  }
+};
+var getVerificationStatus = (requestId) => {
+  return verificationRequests.get(requestId) || null;
+};
+var getAllPendingVerifications = () => {
+  return Array.from(verificationRequests.values()).filter((req) => req.status === "pending");
+};
+
+// server/api/verification.ts
+var router3 = express3.Router();
+router3.post("/register", async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      studentId,
+      email,
+      userType,
+      dormBuilding,
+      roomNumber,
+      program,
+      username
+    } = req.body;
+    if (!firstName || !lastName || !studentId || !email || !userType || !dormBuilding || !roomNumber || !program || !username) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email format"
+      });
+    }
+    if (!["student", "faculty"].includes(userType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid user type"
+      });
+    }
+    const userData = {
+      firstName,
+      lastName,
+      studentId,
+      email,
+      userType,
+      dormBuilding,
+      roomNumber,
+      program,
+      username
+    };
+    const requestId = await sendVerificationEmail(userData);
+    res.json({
+      success: true,
+      message: "Registration submitted successfully. Verification email sent to housing office.",
+      requestId
+    });
+  } catch (error) {
+    console.error("Error in user registration:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to process registration. Please try again."
+    });
+  }
+});
+router3.post("/verify", async (req, res) => {
+  try {
+    const { requestId, action, verifiedBy } = req.body;
+    if (!requestId || !action || !verifiedBy) {
+      return res.status(400).json({
+        success: false,
+        message: "Request ID, action, and verified by are required"
+      });
+    }
+    if (!["approve", "reject"].includes(action)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid action. Must be "approve" or "reject"'
+      });
+    }
+    const result = await verifyUser(requestId, action, verifiedBy);
+    res.json({
+      success: true,
+      message: `User ${action === "approve" ? "approved" : "rejected"} successfully`,
+      verification: result
+    });
+  } catch (error) {
+    console.error("Error in user verification:", error);
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to process verification"
+    });
+  }
+});
+router3.get("/status/:requestId", (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const status = getVerificationStatus(requestId);
+    if (!status) {
+      return res.status(404).json({
+        success: false,
+        message: "Verification request not found"
+      });
+    }
+    res.json({
+      success: true,
+      verification: status
+    });
+  } catch (error) {
+    console.error("Error getting verification status:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get verification status"
+    });
+  }
+});
+router3.get("/pending", (req, res) => {
+  try {
+    const pendingVerifications = getAllPendingVerifications();
+    res.json({
+      success: true,
+      verifications: pendingVerifications
+    });
+  } catch (error) {
+    console.error("Error getting pending verifications:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get pending verifications"
+    });
+  }
+});
+var verification_default = router3;
+
+// server/api/posts.ts
+import express4 from "express";
+
+// server/services/postVerificationService.ts
+import nodemailer2 from "nodemailer";
+var postSubmissions = /* @__PURE__ */ new Map();
+var createTransporter2 = () => {
+  return nodemailer2.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER || "hocking.social.hub@gmail.com",
+      pass: process.env.EMAIL_PASS || "your-app-password"
+    }
   });
-}
+};
+var submitPostForVerification = async (postData) => {
+  const postId = `post_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const postSubmission = {
+    ...postData,
+    id: postId,
+    submittedAt: /* @__PURE__ */ new Date(),
+    status: "pending"
+  };
+  postSubmissions.set(postId, postSubmission);
+  console.log("=== POST VERIFICATION EMAIL WOULD BE SENT ===");
+  console.log("To: housing@hocking.edu");
+  console.log("Subject: Campus Social Hub - New Post Approval Request");
+  console.log("Post Details:", postData);
+  console.log("Verification URL:", `${process.env.FRONTEND_URL || "http://localhost:5173"}/verify-post/${postId}`);
+  console.log("=============================================");
+  return postId;
+};
+var verifyPost = async (postId, action, reviewedBy, rejectionReason) => {
+  const post = postSubmissions.get(postId);
+  if (!post) {
+    throw new Error("Post submission not found");
+  }
+  if (post.status !== "pending") {
+    throw new Error("Post submission already processed");
+  }
+  post.status = action === "approve" ? "approved" : "rejected";
+  post.reviewedAt = /* @__PURE__ */ new Date();
+  post.reviewedBy = reviewedBy;
+  if (action === "reject" && rejectionReason) {
+    post.rejectionReason = rejectionReason;
+  }
+  postSubmissions.set(postId, post);
+  await sendPostNotification(post);
+  if (post.status === "approved") {
+    await sendNewPostNotification(post);
+  }
+  return post;
+};
+var sendPostNotification = async (post) => {
+  const transporter = createTransporter2();
+  const status = post.status === "approved" ? "APPROVED" : "REJECTED";
+  const statusColor = post.status === "approved" ? "#28a745" : "#dc3545";
+  const statusIcon = post.status === "approved" ? "\u2705" : "\u274C";
+  const mailOptions = {
+    from: process.env.EMAIL_USER || "hocking.social.hub@gmail.com",
+    to: post.author.email,
+    subject: `Campus Social Hub - Post ${status}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
+          <h1 style="margin: 0;">Campus Social Hub</h1>
+          <p style="margin: 10px 0 0 0;">Post ${status}</p>
+        </div>
+        
+        <div style="padding: 20px; background: #f9f9f9;">
+          <div style="text-align: center; margin: 30px 0;">
+            <div style="font-size: 48px; margin-bottom: 20px;">${statusIcon}</div>
+            <h2 style="color: ${statusColor}; margin: 0;">Your post has been ${status.toLowerCase()}!</h2>
+          </div>
+          
+          <div style="background: ${post.status === "approved" ? "#d4edda" : "#f8d7da"}; border: 1px solid ${post.status === "approved" ? "#c3e6cb" : "#f5c6cb"}; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <p style="margin: 0; color: ${post.status === "approved" ? "#155724" : "#721c24"};">
+              ${post.status === "approved" ? "Your post has been approved and is now live on the Campus Social Hub!" : `Your post has been rejected.${post.rejectionReason ? ` Reason: ${post.rejectionReason}` : ""}`}
+            </p>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <h4 style="margin: 0 0 10px 0;">Post Details:</h4>
+            <p style="margin: 0;"><strong>Content:</strong> ${post.content.substring(0, 100)}${post.content.length > 100 ? "..." : ""}</p>
+            <p style="margin: 5px 0 0 0;"><strong>Type:</strong> ${post.type}</p>
+            <p style="margin: 5px 0 0 0;"><strong>Category:</strong> ${post.category}</p>
+          </div>
+          
+          ${post.status === "approved" ? `
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.FRONTEND_URL || "http://localhost:5173"}/housing/social" 
+                 style="background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                \u{1F680} View Your Post
+              </a>
+            </div>
+          ` : ""}
+          
+          <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <p style="margin: 0; color: #6c757d; font-size: 14px;">
+              <strong>Reviewed by:</strong> ${post.reviewedBy}<br>
+              <strong>Reviewed on:</strong> ${post.reviewedAt?.toLocaleString()}<br>
+              <strong>Post ID:</strong> ${post.id}
+            </p>
+          </div>
+        </div>
+        
+        <div style="background: #343a40; color: white; padding: 15px; text-align: center; font-size: 12px;">
+          <p style="margin: 0;">Hocking College Campus Social Hub - Content Moderation System</p>
+        </div>
+      </div>
+    `
+  };
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Post notification sent to author: ${post.author.email}`);
+  } catch (error) {
+    console.error("Error sending post notification:", error);
+  }
+};
+var sendNewPostNotification = async (post) => {
+  console.log(`New post approved: ${post.content.substring(0, 50)}... by ${post.author.firstName} ${post.author.lastName}`);
+  const verifiedUsers = [
+    "student1@hocking.edu",
+    "student2@hocking.edu",
+    "faculty1@hocking.edu"
+  ];
+  const transporter = createTransporter2();
+  for (const userEmail of verifiedUsers) {
+    if (userEmail === post.author.email) continue;
+    const mailOptions = {
+      from: process.env.EMAIL_USER || "hocking.social.hub@gmail.com",
+      to: userEmail,
+      subject: "\u{1F4DD} New Post on Campus Social Hub",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center;">
+            <h1 style="margin: 0;">Campus Social Hub</h1>
+            <p style="margin: 10px 0 0 0;">New Post Available</p>
+          </div>
+          
+          <div style="padding: 20px; background: #f9f9f9;">
+            <div style="text-align: center; margin: 20px 0;">
+              <div style="font-size: 48px; margin-bottom: 20px;">\u{1F4DD}</div>
+              <h2 style="color: #333; margin: 0;">New ${post.type.charAt(0).toUpperCase() + post.type.slice(1)} Post</h2>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #007bff;">
+              <p style="margin: 0; line-height: 1.6;"><strong>${post.author.firstName} ${post.author.lastName}</strong> posted:</p>
+              <p style="margin: 10px 0 0 0; color: #666;">${post.content}</p>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.FRONTEND_URL || "http://localhost:5173"}/housing/social" 
+                 style="background: #007bff; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                \u{1F680} View Post
+              </a>
+            </div>
+            
+            <div style="background: #e9ecef; padding: 15px; border-radius: 5px; margin-top: 20px;">
+              <p style="margin: 0; color: #6c757d; font-size: 14px;">
+                <strong>Category:</strong> ${post.category}<br>
+                <strong>Posted:</strong> ${post.reviewedAt?.toLocaleString()}<br>
+                <strong>Type:</strong> ${post.type}
+              </p>
+            </div>
+          </div>
+          
+          <div style="background: #343a40; color: white; padding: 15px; text-align: center; font-size: 12px;">
+            <p style="margin: 0;">Hocking College Campus Social Hub - Notification System</p>
+          </div>
+        </div>
+      `
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`New post notification sent to: ${userEmail}`);
+    } catch (error) {
+      console.error(`Error sending new post notification to ${userEmail}:`, error);
+    }
+  }
+};
+var getPostStatus = (postId) => {
+  return postSubmissions.get(postId) || null;
+};
+var getAllPendingPosts = () => {
+  return Array.from(postSubmissions.values()).filter((post) => post.status === "pending");
+};
+var getApprovedPosts = () => {
+  return Array.from(postSubmissions.values()).filter((post) => post.status === "approved");
+};
+
+// server/api/posts.ts
+var router4 = express4.Router();
+router4.post("/submit", async (req, res) => {
+  try {
+    const {
+      type,
+      content,
+      author,
+      category,
+      hashtags,
+      emoji,
+      pollOptions,
+      eventDetails,
+      image,
+      video
+    } = req.body;
+    if (!type || !content || !author || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "Type, content, author, and category are required"
+      });
+    }
+    const validTypes = ["text", "image", "video", "poll", "event", "alert"];
+    if (!validTypes.includes(type)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid post type"
+      });
+    }
+    if (!author.firstName || !author.lastName || !author.email || !author.userType) {
+      return res.status(400).json({
+        success: false,
+        message: "Author information is incomplete"
+      });
+    }
+    const postData = {
+      type,
+      content,
+      author,
+      category,
+      hashtags: hashtags || [],
+      emoji,
+      pollOptions,
+      eventDetails,
+      image,
+      video
+    };
+    const postId = await submitPostForVerification(postData);
+    res.json({
+      success: true,
+      message: "Post submitted for verification. You will be notified once it is reviewed.",
+      postId
+    });
+  } catch (error) {
+    console.error("Error in post submission:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to submit post. Please try again."
+    });
+  }
+});
+router4.post("/verify", async (req, res) => {
+  try {
+    const { postId, action, reviewedBy, rejectionReason } = req.body;
+    if (!postId || !action || !reviewedBy) {
+      return res.status(400).json({
+        success: false,
+        message: "Post ID, action, and reviewed by are required"
+      });
+    }
+    if (!["approve", "reject"].includes(action)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid action. Must be "approve" or "reject"'
+      });
+    }
+    const result = await verifyPost(postId, action, reviewedBy, rejectionReason);
+    res.json({
+      success: true,
+      message: `Post ${action === "approve" ? "approved" : "rejected"} successfully`,
+      post: result
+    });
+  } catch (error) {
+    console.error("Error in post verification:", error);
+    res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Failed to process verification"
+    });
+  }
+});
+router4.get("/status/:postId", (req, res) => {
+  try {
+    const { postId } = req.params;
+    const status = getPostStatus(postId);
+    if (!status) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found"
+      });
+    }
+    res.json({
+      success: true,
+      post: status
+    });
+  } catch (error) {
+    console.error("Error getting post status:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get post status"
+    });
+  }
+});
+router4.get("/pending", (req, res) => {
+  try {
+    const pendingPosts = getAllPendingPosts();
+    res.json({
+      success: true,
+      posts: pendingPosts
+    });
+  } catch (error) {
+    console.error("Error getting pending posts:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get pending posts"
+    });
+  }
+});
+router4.get("/approved", (req, res) => {
+  try {
+    const approvedPosts = getApprovedPosts();
+    res.json({
+      success: true,
+      posts: approvedPosts
+    });
+  } catch (error) {
+    console.error("Error getting approved posts:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get approved posts"
+    });
+  }
+});
+var posts_default = router4;
+
+// server/api/social.ts
+import express5 from "express";
+import { z } from "zod";
+var router5 = express5.Router();
+var studyGroups = /* @__PURE__ */ new Map();
+var events2 = /* @__PURE__ */ new Map();
+var userConnections = /* @__PURE__ */ new Map();
+var messages = /* @__PURE__ */ new Map();
+var StudyGroupSchema = z.object({
+  name: z.string(),
+  subject: z.string(),
+  description: z.string(),
+  maxMembers: z.number(),
+  meetingTime: z.string(),
+  meetingDays: z.array(z.string()),
+  location: z.string(),
+  difficulty: z.enum(["beginner", "intermediate", "advanced"]),
+  tags: z.array(z.string()),
+  createdBy: z.string()
+});
+var EventSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  date: z.string(),
+  time: z.string(),
+  location: z.string(),
+  maxAttendees: z.number().optional(),
+  category: z.enum(["academic", "social", "housing", "career", "wellness", "sports"]),
+  tags: z.array(z.string()),
+  organizer: z.string(),
+  isFree: z.boolean(),
+  price: z.number().optional()
+});
+var MessageSchema = z.object({
+  senderId: z.string(),
+  receiverId: z.string(),
+  content: z.string(),
+  type: z.enum(["text", "image", "file"]).default("text")
+});
+router5.get("/study-groups", async (req, res) => {
+  try {
+    const { subject, difficulty, search } = req.query;
+    let filteredGroups = Array.from(studyGroups.values());
+    if (subject && subject !== "all") {
+      filteredGroups = filteredGroups.filter((group) => group.subject === subject);
+    }
+    if (difficulty && difficulty !== "all") {
+      filteredGroups = filteredGroups.filter((group) => group.difficulty === difficulty);
+    }
+    if (search) {
+      const searchLower = search.toString().toLowerCase();
+      filteredGroups = filteredGroups.filter(
+        (group) => group.name.toLowerCase().includes(searchLower) || group.description.toLowerCase().includes(searchLower) || group.subject.toLowerCase().includes(searchLower)
+      );
+    }
+    const groupsWithStats = filteredGroups.map((group) => ({
+      ...group,
+      members: group.members?.length || 0,
+      rating: group.ratings ? group.ratings.reduce((sum, rating) => sum + rating, 0) / group.ratings.length : 0
+    }));
+    res.json(groupsWithStats);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve study groups" });
+  }
+});
+router5.post("/study-groups", async (req, res) => {
+  try {
+    const data = StudyGroupSchema.parse(req.body);
+    const newGroup = {
+      id: Date.now().toString(),
+      ...data,
+      members: [data.createdBy],
+      ratings: [],
+      createdAt: (/* @__PURE__ */ new Date()).toISOString(),
+      isActive: true
+    };
+    studyGroups.set(newGroup.id, newGroup);
+    res.json({ success: true, group: newGroup });
+  } catch (error) {
+    res.status(400).json({ error: "Invalid data format" });
+  }
+});
+router5.post("/study-groups/:groupId/join", async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const { userId } = req.body;
+    const group = studyGroups.get(groupId);
+    if (!group) {
+      return res.status(404).json({ error: "Study group not found" });
+    }
+    if (group.members.includes(userId)) {
+      return res.status(400).json({ error: "Already a member" });
+    }
+    if (group.members.length >= group.maxMembers) {
+      return res.status(400).json({ error: "Group is full" });
+    }
+    group.members.push(userId);
+    res.json({ success: true, message: "Joined study group" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to join study group" });
+  }
+});
+router5.post("/study-groups/:groupId/rate", async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const { userId, rating } = req.body;
+    const group = studyGroups.get(groupId);
+    if (!group) {
+      return res.status(404).json({ error: "Study group not found" });
+    }
+    if (!group.members.includes(userId)) {
+      return res.status(400).json({ error: "Must be a member to rate" });
+    }
+    if (!group.ratings) {
+      group.ratings = [];
+    }
+    group.ratings.push(rating);
+    res.json({ success: true, message: "Rating submitted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to submit rating" });
+  }
+});
+router5.get("/events", async (req, res) => {
+  try {
+    const { category, date, search } = req.query;
+    let filteredEvents = Array.from(events2.values());
+    if (category && category !== "all") {
+      filteredEvents = filteredEvents.filter((event) => event.category === category);
+    }
+    if (date) {
+      const targetDate = new Date(date.toString());
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventDate = new Date(event.date);
+        return eventDate.toDateString() === targetDate.toDateString();
+      });
+    }
+    if (search) {
+      const searchLower = search.toString().toLowerCase();
+      filteredEvents = filteredEvents.filter(
+        (event) => event.title.toLowerCase().includes(searchLower) || event.description.toLowerCase().includes(searchLower) || event.organizer.toLowerCase().includes(searchLower)
+      );
+    }
+    const eventsWithStats = filteredEvents.map((event) => ({
+      ...event,
+      attendees: event.attendees?.length || 0
+    }));
+    res.json(eventsWithStats);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve events" });
+  }
+});
+router5.post("/events", async (req, res) => {
+  try {
+    const data = EventSchema.parse(req.body);
+    const newEvent = {
+      id: Date.now().toString(),
+      ...data,
+      attendees: [data.organizer],
+      likes: [],
+      createdAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    events2.set(newEvent.id, newEvent);
+    res.json({ success: true, event: newEvent });
+  } catch (error) {
+    res.status(400).json({ error: "Invalid data format" });
+  }
+});
+router5.post("/events/:eventId/attend", async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const { userId } = req.body;
+    const event = events2.get(eventId);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    const isAttending = event.attendees.includes(userId);
+    if (isAttending) {
+      event.attendees = event.attendees.filter((id) => id !== userId);
+    } else {
+      if (event.maxAttendees && event.attendees.length >= event.maxAttendees) {
+        return res.status(400).json({ error: "Event is full" });
+      }
+      event.attendees.push(userId);
+    }
+    res.json({
+      success: true,
+      message: isAttending ? "Removed from event" : "Added to event",
+      isAttending: !isAttending
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update attendance" });
+  }
+});
+router5.post("/events/:eventId/like", async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const { userId } = req.body;
+    const event = events2.get(eventId);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    const isLiked = event.likes.includes(userId);
+    if (isLiked) {
+      event.likes = event.likes.filter((id) => id !== userId);
+    } else {
+      event.likes.push(userId);
+    }
+    res.json({
+      success: true,
+      message: isLiked ? "Removed like" : "Added like",
+      isLiked: !isLiked
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update like" });
+  }
+});
+router5.get("/connections/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const userConnectionsList = userConnections.get(userId) || [];
+    res.json(userConnectionsList);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve connections" });
+  }
+});
+router5.post("/connections", async (req, res) => {
+  try {
+    const { userId, targetUserId } = req.body;
+    if (!userConnections.has(userId)) {
+      userConnections.set(userId, []);
+    }
+    if (!userConnections.has(targetUserId)) {
+      userConnections.set(targetUserId, []);
+    }
+    const userConnectionsList = userConnections.get(userId);
+    const targetConnectionsList = userConnections.get(targetUserId);
+    if (userConnectionsList.includes(targetUserId)) {
+      return res.status(400).json({ error: "Already connected" });
+    }
+    userConnectionsList.push(targetUserId);
+    targetConnectionsList.push(userId);
+    res.json({ success: true, message: "Connection established" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to establish connection" });
+  }
+});
+router5.get("/messages/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { conversationId } = req.query;
+    let userMessages = Array.from(messages.values()).filter(
+      (msg) => msg.senderId === userId || msg.receiverId === userId
+    );
+    if (conversationId) {
+      userMessages = userMessages.filter(
+        (msg) => msg.conversationId === conversationId
+      );
+    }
+    const conversations = /* @__PURE__ */ new Map();
+    userMessages.forEach((message) => {
+      const otherUserId = message.senderId === userId ? message.receiverId : message.senderId;
+      const conversationKey = [userId, otherUserId].sort().join("-");
+      if (!conversations.has(conversationKey)) {
+        conversations.set(conversationKey, []);
+      }
+      conversations.get(conversationKey).push(message);
+    });
+    const conversationList = Array.from(conversations.entries()).map(([key, messages2]) => ({
+      conversationId: key,
+      messages: messages2.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+    }));
+    res.json(conversationList);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve messages" });
+  }
+});
+router5.post("/messages", async (req, res) => {
+  try {
+    const data = MessageSchema.parse(req.body);
+    const newMessage = {
+      id: Date.now().toString(),
+      ...data,
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      conversationId: [data.senderId, data.receiverId].sort().join("-")
+    };
+    messages.set(newMessage.id, newMessage);
+    res.json({ success: true, message: newMessage });
+  } catch (error) {
+    res.status(400).json({ error: "Invalid data format" });
+  }
+});
+router5.get("/roommates", async (req, res) => {
+  try {
+    const { year, dorm, sleepSchedule, studyHabits, minCompatibility } = req.query;
+    const mockRoommates = [
+      {
+        id: "1",
+        name: "Alex Johnson",
+        age: 19,
+        major: "Computer Science",
+        year: "sophomore",
+        dormPreference: "East Hall",
+        budget: "$800-1000/month",
+        lifestyle: {
+          sleepSchedule: "early",
+          studyHabits: "quiet",
+          cleanliness: "very-clean",
+          socialLevel: "moderate"
+        },
+        interests: ["Programming", "Gaming", "Music"],
+        compatibility: 95,
+        lastActive: (/* @__PURE__ */ new Date()).toISOString(),
+        bio: "Looking for a quiet roommate who values cleanliness and study time."
+      }
+      // Add more mock roommates...
+    ];
+    let filteredRoommates = mockRoommates;
+    if (year && year !== "all") {
+      filteredRoommates = filteredRoommates.filter((roommate) => roommate.year === year);
+    }
+    if (dorm && dorm !== "all") {
+      filteredRoommates = filteredRoommates.filter((roommate) => roommate.dormPreference === dorm);
+    }
+    if (sleepSchedule && sleepSchedule !== "all") {
+      filteredRoommates = filteredRoommates.filter((roommate) => roommate.lifestyle.sleepSchedule === sleepSchedule);
+    }
+    if (studyHabits && studyHabits !== "all") {
+      filteredRoommates = filteredRoommates.filter((roommate) => roommate.lifestyle.studyHabits === studyHabits);
+    }
+    if (minCompatibility) {
+      const minComp = parseInt(minCompatibility.toString());
+      filteredRoommates = filteredRoommates.filter((roommate) => roommate.compatibility >= minComp);
+    }
+    res.json(filteredRoommates);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve roommates" });
+  }
+});
+var social_default = router5;
 
 // server/index.ts
-var app = express2();
-app.use(express2.json());
-app.use(express2.urlencoded({ extended: false }));
-app.use((req, res, next) => {
+var app2 = express6();
+app2.use(express6.json());
+app2.use(express6.urlencoded({ extended: false }));
+app2.use(cors());
+app2.use("/api/calendar", calendar_default);
+app2.use((req, res, next) => {
   const start = Date.now();
   const path3 = req.path;
   let capturedJsonResponse = void 0;
@@ -1241,17 +2366,21 @@ app.use((req, res, next) => {
   next();
 });
 (async () => {
-  const server = await registerRoutes(app);
-  app.use((err, _req, res, _next) => {
+  const server = await registerRoutes(app2);
+  app2.use((err, _req, res, _next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
     res.status(status).json({ message });
     throw err;
   });
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
+  app2.use("/api/programs", programs_default);
+  app2.use("/api/verification", verification_default);
+  app2.use("/api/posts", posts_default);
+  app2.use("/api/social", social_default);
+  if (app2.get("env") === "development") {
+    await setupVite(app2, server);
   } else {
-    serveStatic(app);
+    serveStatic(app2);
   }
   const port = 3e3;
   server.listen({

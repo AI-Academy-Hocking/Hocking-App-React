@@ -1,61 +1,42 @@
-import { 
-  users, type User, type InsertUser, 
-  events, type Event, type InsertEvent, 
-  buildings, type Building, type InsertBuilding, 
-  studentTools, type StudentTool, type InsertStudentTool, 
-  discussions, type Discussion, type InsertDiscussion,
-  comments, type Comment, type InsertComment,
-  safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
-  safetyResources, type SafetyResource, type InsertSafetyResource,
-  type LocationUpdate 
+import type { 
+  User, Event, Building, StudentTool, SafetyAlert, SafetyResource,
+  InsertUser, InsertEvent, InsertBuilding, InsertStudentTool,
+  InsertSafetyAlert, InsertSafetyResource, LocationUpdate
 } from "@shared/schema";
 
-// Interface for storage operations
 export interface IStorage {
-  // User operations
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  // User methods
+  getUser(id: number): Promise<User | null>;
+  getUserByUsername(username: string): Promise<User | null>;
   createUser(user: InsertUser): Promise<User>;
-  updateUserLocation(userId: number, locationUpdate: LocationUpdate): Promise<User | undefined>;
+  updateUserLocation(id: number, location: LocationUpdate): Promise<User | null>;
   getSharedLocations(): Promise<User[]>;
   
-  // Event operations
+  // Event methods
   getEvents(): Promise<Event[]>;
-  getEvent(id: number): Promise<Event | undefined>;
+  getEvent(id: number): Promise<Event | null>;
   createEvent(event: InsertEvent): Promise<Event>;
   
-  // Building operations
+  // Building methods
   getBuildings(): Promise<Building[]>;
-  getBuilding(id: number): Promise<Building | undefined>;
+  getBuilding(id: number): Promise<Building | null>;
   createBuilding(building: InsertBuilding): Promise<Building>;
   
-  // Student Tool operations
+  // Student Tool methods
   getStudentTools(): Promise<StudentTool[]>;
-  getStudentTool(id: string): Promise<StudentTool | undefined>;
+  getStudentTool(id: string): Promise<StudentTool | null>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
   
-  // Discussion operations
-  getDiscussions(): Promise<Discussion[]>;
-  getDiscussion(id: number): Promise<Discussion | undefined>;
-  createDiscussion(discussion: InsertDiscussion): Promise<Discussion>;
-  getDiscussionsByCategory(category: string): Promise<Discussion[]>;
-  
-  // Comment operations
-  getComments(discussionId: number): Promise<Comment[]>;
-  getCommentReplies(commentId: number): Promise<Comment[]>;
-  createComment(comment: InsertComment): Promise<Comment>;
-  getUserComments(userId: number): Promise<Comment[]>;
-  
-  // Safety Alert operations
+  // Safety Alert methods
   getSafetyAlerts(): Promise<SafetyAlert[]>;
   getActiveSafetyAlerts(): Promise<SafetyAlert[]>;
-  getSafetyAlert(id: number): Promise<SafetyAlert | undefined>;
+  getSafetyAlert(id: number): Promise<SafetyAlert | null>;
   createSafetyAlert(alert: InsertSafetyAlert): Promise<SafetyAlert>;
   
-  // Safety Resource operations
+  // Safety Resource methods
   getSafetyResources(): Promise<SafetyResource[]>;
   getSafetyResourcesByCategory(category: string): Promise<SafetyResource[]>;
-  getSafetyResource(id: number): Promise<SafetyResource | undefined>;
+  getSafetyResource(id: number): Promise<SafetyResource | null>;
   createSafetyResource(resource: InsertSafetyResource): Promise<SafetyResource>;
 }
 
@@ -64,93 +45,77 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
-  private discussions: Map<number, Discussion>;
-  private comments: Map<number, Comment>;
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
-  
-  private currentUserId: number;
-  private currentEventId: number;
-  private currentBuildingId: number;
-  private currentDiscussionId: number;
-  private currentCommentId: number;
-  private currentSafetyAlertId: number;
-  private currentSafetyResourceId: number;
+  private nextUserId: number;
+  private nextEventId: number;
+  private nextBuildingId: number;
+  private nextSafetyAlertId: number;
+  private nextSafetyResourceId: number;
 
   constructor() {
     this.users = new Map();
     this.events = new Map();
     this.buildings = new Map();
     this.studentTools = new Map();
-    this.discussions = new Map();
-    this.comments = new Map();
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
-    
-    this.currentUserId = 1;
-    this.currentEventId = 1;
-    this.currentBuildingId = 1;
-    this.currentDiscussionId = 1;
-    this.currentCommentId = 1;
-    this.currentSafetyAlertId = 1;
-    this.currentSafetyResourceId = 1;
-    
+    this.nextUserId = 1;
+    this.nextEventId = 1;
+    this.nextBuildingId = 1;
+    this.nextSafetyAlertId = 1;
+    this.nextSafetyResourceId = 1;
+
     // Initialize with sample data
     this.initializeSampleData();
   }
 
   // User operations
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  async getUser(id: number): Promise<User | null> {
+    return this.users.get(id) || null;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(username: string): Promise<User | null> {
     return Array.from(this.users.values()).find(
       (user) => user.username.toLowerCase() === username.toLowerCase(),
-    );
+    ) || null;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
+    const id = this.nextUserId++;
     const user: User = { 
       ...insertUser, 
       id, 
-      name: insertUser.name || null,
-      email: insertUser.email || null,
-      isGuest: insertUser.isGuest !== undefined ? insertUser.isGuest : null,
-      lat: null,
-      lng: null,
-      isLocationShared: false,
-      lastLocationUpdate: null
+      createdAt: new Date(),
+      lastLogin: null,
+      location: null,
+      isSharingLocation: false,
+      isGuest: insertUser.isGuest ?? false
     };
     this.users.set(id, user);
     return user;
   }
   
-  async updateUserLocation(userId: number, locationUpdate: LocationUpdate): Promise<User | undefined> {
-    const user = await this.getUser(userId);
+  async updateUserLocation(id: number, location: LocationUpdate): Promise<User | null> {
+    const user = await this.getUser(id);
     
     if (!user) {
-      return undefined;
+      return null;
     }
     
     const updatedUser: User = {
       ...user,
-      lat: locationUpdate.lat,
-      lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared !== undefined 
-        ? locationUpdate.isLocationShared 
-        : user.isLocationShared,
-      lastLocationUpdate: new Date()
+      location: location.location ?? null,
+      isSharingLocation: location.isSharingLocation ?? false
     };
     
-    this.users.set(userId, updatedUser);
+    this.users.set(id, updatedUser);
     return updatedUser;
   }
   
   async getSharedLocations(): Promise<User[]> {
     return Array.from(this.users.values()).filter(
-      (user) => user.isLocationShared && user.lat !== null && user.lng !== null
+      (user) => user.isSharingLocation && user.location !== null
     );
   }
   
@@ -159,16 +124,18 @@ export class MemStorage implements IStorage {
     return Array.from(this.events.values());
   }
   
-  async getEvent(id: number): Promise<Event | undefined> {
-    return this.events.get(id);
+  async getEvent(id: number): Promise<Event | null> {
+    return this.events.get(id) || null;
   }
   
   async createEvent(insertEvent: InsertEvent): Promise<Event> {
-    const id = this.currentEventId++;
+    const id = this.nextEventId++;
     const event: Event = { 
       ...insertEvent, 
       id, 
-      description: insertEvent.description || null 
+      createdAt: new Date(),
+      isRecurring: insertEvent.isRecurring ?? false,
+      recurrencePattern: insertEvent.recurrencePattern ?? null
     };
     this.events.set(id, event);
     return event;
@@ -179,13 +146,20 @@ export class MemStorage implements IStorage {
     return Array.from(this.buildings.values());
   }
   
-  async getBuilding(id: number): Promise<Building | undefined> {
-    return this.buildings.get(id);
+  async getBuilding(id: number): Promise<Building | null> {
+    return this.buildings.get(id) || null;
   }
   
   async createBuilding(insertBuilding: InsertBuilding): Promise<Building> {
-    const id = this.currentBuildingId++;
-    const building: Building = { ...insertBuilding, id };
+    const id = this.nextBuildingId++;
+    const building: Building = { 
+      ...insertBuilding, 
+      id,
+      createdAt: new Date(),
+      isOpen: insertBuilding.isOpen ?? true,
+      openHours: insertBuilding.openHours ?? null,
+      contactInfo: insertBuilding.contactInfo ?? null
+    };
     this.buildings.set(id, building);
     return building;
   }
@@ -195,76 +169,18 @@ export class MemStorage implements IStorage {
     return Array.from(this.studentTools.values());
   }
   
-  async getStudentTool(id: string): Promise<StudentTool | undefined> {
-    return this.studentTools.get(id);
+  async getStudentTool(id: string): Promise<StudentTool | null> {
+    return this.studentTools.get(id) || null;
   }
   
   async createStudentTool(tool: InsertStudentTool): Promise<StudentTool> {
-    this.studentTools.set(tool.id, tool);
-    return tool;
-  }
-  
-  // Discussion operations
-  async getDiscussions(): Promise<Discussion[]> {
-    return Array.from(this.discussions.values());
-  }
-  
-  async getDiscussion(id: number): Promise<Discussion | undefined> {
-    return this.discussions.get(id);
-  }
-  
-  async createDiscussion(insertDiscussion: InsertDiscussion): Promise<Discussion> {
-    const id = this.currentDiscussionId++;
-    const discussion: Discussion = {
-      ...insertDiscussion,
-      id,
+    const studentTool: StudentTool = {
+      ...tool,
       createdAt: new Date(),
-      isPinned: insertDiscussion.isPinned || false,
-      category: insertDiscussion.category || "general"
+      isActive: tool.isActive ?? true
     };
-    this.discussions.set(id, discussion);
-    return discussion;
-  }
-  
-  async getDiscussionsByCategory(category: string): Promise<Discussion[]> {
-    return Array.from(this.discussions.values()).filter(
-      (discussion) => discussion.category === category
-    );
-  }
-  
-  // Comment operations
-  async getAllComments(): Promise<Comment[]> {
-    return Array.from(this.comments.values());
-  }
-
-  async getComments(discussionId: number): Promise<Comment[]> {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.discussionId === discussionId && comment.parentId === null
-    );
-  }
-  
-  async getCommentReplies(commentId: number): Promise<Comment[]> {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.parentId === commentId
-    );
-  }
-  
-  async createComment(insertComment: InsertComment): Promise<Comment> {
-    const id = this.currentCommentId++;
-    const comment: Comment = {
-      ...insertComment,
-      id,
-      createdAt: new Date(),
-      parentId: insertComment.parentId || null
-    };
-    this.comments.set(id, comment);
-    return comment;
-  }
-  
-  async getUserComments(userId: number): Promise<Comment[]> {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.authorId === userId
-    );
+    this.studentTools.set(tool.id, studentTool);
+    return studentTool;
   }
   
   // Safety Alert operations
@@ -276,23 +192,22 @@ export class MemStorage implements IStorage {
     const now = new Date();
     return Array.from(this.safetyAlerts.values()).filter(alert => 
       alert.isActive && 
-      (alert.endDate === null || alert.endDate > now)
+      (alert.expiresAt === null || alert.expiresAt > now)
     );
   }
   
-  async getSafetyAlert(id: number): Promise<SafetyAlert | undefined> {
-    return this.safetyAlerts.get(id);
+  async getSafetyAlert(id: number): Promise<SafetyAlert | null> {
+    return this.safetyAlerts.get(id) || null;
   }
   
   async createSafetyAlert(insertAlert: InsertSafetyAlert): Promise<SafetyAlert> {
-    const id = this.currentSafetyAlertId++;
+    const id = this.nextSafetyAlertId++;
     const alert: SafetyAlert = {
       ...insertAlert,
       id,
-      startDate: insertAlert.startDate || new Date(),
-      endDate: insertAlert.endDate || null,
-      isActive: insertAlert.isActive !== undefined ? insertAlert.isActive : true,
-      location: insertAlert.location || null
+      createdAt: new Date(),
+      isActive: insertAlert.isActive ?? true,
+      expiresAt: insertAlert.expiresAt ?? null
     };
     this.safetyAlerts.set(id, alert);
     return alert;
@@ -300,29 +215,25 @@ export class MemStorage implements IStorage {
   
   // Safety Resource operations
   async getSafetyResources(): Promise<SafetyResource[]> {
-    return Array.from(this.safetyResources.values())
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
+    return Array.from(this.safetyResources.values());
   }
   
   async getSafetyResourcesByCategory(category: string): Promise<SafetyResource[]> {
     return Array.from(this.safetyResources.values())
-      .filter(resource => resource.category === category)
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
+      .filter(resource => resource.category === category);
   }
   
-  async getSafetyResource(id: number): Promise<SafetyResource | undefined> {
-    return this.safetyResources.get(id);
+  async getSafetyResource(id: number): Promise<SafetyResource | null> {
+    return this.safetyResources.get(id) || null;
   }
   
   async createSafetyResource(insertResource: InsertSafetyResource): Promise<SafetyResource> {
-    const id = this.currentSafetyResourceId++;
+    const id = this.nextSafetyResourceId++;
     const resource: SafetyResource = {
       ...insertResource,
       id,
-      phoneNumber: insertResource.phoneNumber || null,
-      url: insertResource.url || null,
-      icon: insertResource.icon || null,
-      order: insertResource.order || 0
+      createdAt: new Date(),
+      isActive: insertResource.isActive ?? true
     };
     this.safetyResources.set(id, resource);
     return resource;
@@ -334,41 +245,39 @@ export class MemStorage implements IStorage {
     await this.createUser({
       username: "admin",
       password: "password",
-      isGuest: false,
       name: "Admin User",
-      email: "admin@hocking.edu",
+      isGuest: false,
     });
     
     await this.createUser({
       username: "student",
       password: "password",
-      isGuest: false,
       name: "Student User",
-      email: "student@hocking.edu",
+      isGuest: false,
     });
     
     // Sample events
     await this.createEvent({
       title: "Fall Festival",
       description: "Annual celebration with food, games, and activities for students and faculty.",
-      date: "2023-10-15",
-      time: "12:00 PM - 4:00 PM",
+      startTime: new Date("2023-10-15T12:00:00"),
+      endTime: new Date("2023-10-15T16:00:00"),
       location: "Student Center",
     });
     
     await this.createEvent({
       title: "Career Fair",
       description: "Meet with employers from around the region for internship and job opportunities.",
-      date: "2023-10-20",
-      time: "10:00 AM - 2:00 PM",
+      startTime: new Date("2023-10-20T10:00:00"),
+      endTime: new Date("2023-10-20T14:00:00"),
       location: "Main Hall",
     });
     
     await this.createEvent({
       title: "Registration Deadline",
       description: "Last day to register for Spring semester classes without late fees.",
-      date: "2023-11-05",
-      time: "11:59 PM",
+      startTime: new Date("2023-11-05T23:59:00"),
+      endTime: new Date("2023-11-06T00:00:00"),
       location: "For Spring Semester",
     });
     
@@ -376,41 +285,46 @@ export class MemStorage implements IStorage {
     await this.createBuilding({
       name: "Main Hall",
       description: "Administrative offices, classrooms",
-      category: "academic",
-      lat: 39.5274,
-      lng: -82.4156,
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "8:00 AM - 5:00 PM",
+      contactInfo: "740-753-6000",
     });
     
     await this.createBuilding({
       name: "Student Center",
       description: "Dining, recreation, student services",
-      category: "dining",
-      lat: 39.5280,
-      lng: -82.4150,
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "7:00 AM - 10:00 PM",
+      contactInfo: "740-753-6100",
     });
     
     await this.createBuilding({
       name: "Davidson Hall",
       description: "Science labs, lecture halls",
-      category: "academic",
-      lat: 39.5268,
-      lng: -82.4162,
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "8:00 AM - 6:00 PM",
+      contactInfo: "740-753-6200",
     });
     
     await this.createBuilding({
       name: "Library",
       description: "Books, study spaces, computer labs",
-      category: "academic",
-      lat: 39.5265,
-      lng: -82.4145,
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "8:00 AM - 11:00 PM",
+      contactInfo: "740-753-6300",
     });
     
     await this.createBuilding({
       name: "Recreation Center",
       description: "Gym, pool, fitness classes",
-      category: "housing",
-      lat: 39.5290,
-      lng: -82.4170,
+      location: "Main Campus",
+      isOpen: true,
+      openHours: "6:00 AM - 10:00 PM",
+      contactInfo: "740-753-6400",
     });
     
     // Sample student tools
@@ -420,6 +334,7 @@ export class MemStorage implements IStorage {
       description: "View your current classes",
       category: "academic",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -428,6 +343,7 @@ export class MemStorage implements IStorage {
       description: "Check your academic performance",
       category: "academic",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -436,6 +352,7 @@ export class MemStorage implements IStorage {
       description: "Browse available courses",
       category: "academic",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -444,6 +361,7 @@ export class MemStorage implements IStorage {
       description: "Connect with your advisor",
       category: "academic",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -452,6 +370,7 @@ export class MemStorage implements IStorage {
       description: "View your transcript",
       category: "academic",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -460,6 +379,7 @@ export class MemStorage implements IStorage {
       description: "Track degree requirements",
       category: "academic",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -467,7 +387,8 @@ export class MemStorage implements IStorage {
       name: "Financial Aid",
       description: "View and manage your financial aid",
       category: "financial",
-      url: "#",
+      url: "/financial-aid",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -475,7 +396,8 @@ export class MemStorage implements IStorage {
       name: "Billing",
       description: "Pay tuition and view statements",
       category: "financial",
-      url: "#",
+      url: "/billing",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -483,7 +405,8 @@ export class MemStorage implements IStorage {
       name: "Scholarships",
       description: "Apply for available scholarships",
       category: "financial",
-      url: "#",
+      url: "/scholarships",
+      isActive: true,
     });
     
     await this.createStudentTool({
@@ -492,101 +415,44 @@ export class MemStorage implements IStorage {
       description: "Access campus services",
       category: "resources",
       url: "#",
+      isActive: true,
     });
     
     await this.createStudentTool({
       id: "health-services",
-      name: "Health Services",
+      name: "Campus Health and Wellness",
       description: "Schedule health appointments",
       category: "resources",
-      url: "#",
+      url: "/campus-health",
+      isActive: true,
     });
     
     await this.createStudentTool({
       id: "career-services",
-      name: "Career Services",
+      name: "Career & University Center",
       description: "Job search and career planning",
       category: "resources",
-      url: "#",
-    });
-    
-    // Sample discussions
-    const discussion1 = await this.createDiscussion({
-      title: "Tips for new students",
-      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
-      authorId: 1,
-      category: "general",
-      isPinned: true
-    });
-    
-    const discussion2 = await this.createDiscussion({
-      title: "Study group for Biology 101",
-      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
-      authorId: 2,
-      category: "academic"
-    });
-    
-    const discussion3 = await this.createDiscussion({
-      title: "Campus food recommendations",
-      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
-      authorId: 1,
-      category: "social"
-    });
-    
-    // Sample comments
-    await this.createComment({
-      content: "Always check Rate My Professor before signing up for classes!",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    
-    const comment1 = await this.createComment({
-      content: "Get involved in campus clubs early - it's the best way to make friends!",
-      authorId: 1,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    
-    await this.createComment({
-      content: "I totally agree! I joined the hiking club and met my best friends there.",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: comment1.id
-    });
-    
-    await this.createComment({
-      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
-      authorId: 1,
-      discussionId: discussion2.id,
-      parentId: null
-    });
-    
-    await this.createComment({
-      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
-      authorId: 2,
-      discussionId: discussion3.id,
-      parentId: null
+      url: "/career-university-center",
+      isActive: true,
     });
     
     // Sample safety alerts
     await this.createSafetyAlert({
       title: "Weather Alert: Winter Storm Warning",
-      content: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
+      description: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
       severity: "warning",
-      startDate: new Date(),
+      location: "All Campus",
       isActive: true,
-      location: "All Campus"
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
     });
     
     await this.createSafetyAlert({
       title: "Planned Power Outage: Davidson Hall",
-      content: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
+      description: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
       severity: "info",
-      startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+      location: "Davidson Hall",
       isActive: true,
-      location: "Davidson Hall"
+      expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
     });
     
     // Sample safety resources
@@ -594,9 +460,8 @@ export class MemStorage implements IStorage {
       title: "Campus Police",
       description: "24/7 emergency assistance and security services",
       category: "emergency",
-      phoneNumber: "740-753-6598",
-      icon: "shield",
-      order: 1
+      url: "#",
+      isActive: true,
     });
     
     await this.createSafetyResource({
@@ -604,47 +469,39 @@ export class MemStorage implements IStorage {
       description: "Sign up for emergency text alerts",
       category: "emergency",
       url: "#",
-      icon: "bell",
-      order: 2
+      isActive: true,
     });
     
     await this.createSafetyResource({
       title: "Health Center",
       description: "Medical services for students",
       category: "health",
-      phoneNumber: "740-753-6487",
       url: "#",
-      icon: "first-aid",
-      order: 3
+      isActive: true,
     });
     
     await this.createSafetyResource({
       title: "Counseling Services",
       description: "Confidential mental health support",
       category: "health",
-      phoneNumber: "740-753-6789",
       url: "#",
-      icon: "heart-pulse",
-      order: 4
+      isActive: true,
     });
     
     await this.createSafetyResource({
       title: "Campus Escort Service",
       description: "Safe accompaniment across campus after dark",
       category: "security",
-      phoneNumber: "740-753-6123",
-      icon: "footprints",
-      order: 5
+      url: "#",
+      isActive: true,
     });
     
     await this.createSafetyResource({
       title: "Anonymous Tip Line",
       description: "Report suspicious activity anonymously",
       category: "security",
-      phoneNumber: "740-753-7890",
       url: "#",
-      icon: "eye-off",
-      order: 6
+      isActive: true,
     });
     
     await this.createSafetyResource({
@@ -652,8 +509,7 @@ export class MemStorage implements IStorage {
       description: "Local weather forecasts and alerts",
       category: "weather",
       url: "https://weather.gov",
-      icon: "cloud",
-      order: 7
+      isActive: true,
     });
     
     await this.createSafetyResource({
@@ -661,8 +517,7 @@ export class MemStorage implements IStorage {
       description: "Step-by-step guides for emergency situations",
       category: "emergency",
       url: "#",
-      icon: "file-text",
-      order: 8
+      isActive: true,
     });
   }
 }

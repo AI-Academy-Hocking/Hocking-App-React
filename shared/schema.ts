@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, doublePrecision, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -7,32 +7,36 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
-  isGuest: boolean("is_guest").default(false),
-  name: text("name"),
-  email: text("email"),
-  // Location fields for user on campus map
-  lat: doublePrecision("lat"),
-  lng: doublePrecision("lng"),
-  isLocationShared: boolean("is_location_shared").default(false),
-  lastLocationUpdate: timestamp("last_location_update"),
+  name: text("name").notNull(),
+  isGuest: boolean("is_guest").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastLogin: timestamp("last_login"),
+  location: text("location"),
+  isSharingLocation: boolean("is_sharing_location").notNull().default(false),
 });
 
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
+  createdAt: true,
+  lastLogin: true,
 });
 
 // Events schema
 export const events = pgTable("events", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description"),
-  date: text("date").notNull(),  // YYYY-MM-DD format
-  time: text("time").notNull(),  // HH:MM AM/PM - HH:MM AM/PM format
+  description: text("description").notNull(),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time").notNull(),
   location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isRecurring: boolean("is_recurring").notNull().default(false),
+  recurrencePattern: text("recurrence_pattern"),
 });
 
 export const insertEventSchema = createInsertSchema(events).omit({
   id: true,
+  createdAt: true,
 });
 
 // Buildings schema
@@ -40,53 +44,62 @@ export const buildings = pgTable("buildings", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  category: text("category").notNull(), // academic, housing, dining, parking
-  lat: doublePrecision("lat").notNull(),
-  lng: doublePrecision("lng").notNull(),
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isOpen: boolean("is_open").notNull().default(true),
+  openHours: text("open_hours"),
+  contactInfo: text("contact_info"),
 });
 
 export const insertBuildingSchema = createInsertSchema(buildings).omit({
   id: true,
+  createdAt: true,
 });
 
 // Student Tools schema
 export const studentTools = pgTable("student_tools", {
-  id: text("id").primaryKey(), // e.g., course-schedule, grades
+  id: varchar("id", { length: 50 }).primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  category: text("category").notNull(), // academic, financial, resources
   url: text("url").notNull(),
+  category: text("category").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
 });
 
-export const insertStudentToolSchema = createInsertSchema(studentTools);
+export const insertStudentToolSchema = createInsertSchema(studentTools).omit({
+  createdAt: true,
+});
 
-// Discussions schema
-export const discussions = pgTable("discussions", {
+// Safety Alerts schema
+export const safetyAlerts = pgTable("safety_alerts", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  category: text("category").default("general"), // general, academic, social, etc.
-  isPinned: boolean("is_pinned").default(false),
+  description: text("description").notNull(),
+  severity: text("severity").notNull(),
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+  expiresAt: timestamp("expires_at"),
 });
 
-export const insertDiscussionSchema = createInsertSchema(discussions).omit({
+export const insertSafetyAlertSchema = createInsertSchema(safetyAlerts).omit({
   id: true,
   createdAt: true,
 });
 
-// Comments schema
-export const comments = pgTable("comments", {
+// Safety Resources schema
+export const safetyResources = pgTable("safety_resources", {
   id: serial("id").primaryKey(),
-  content: text("content").notNull(),
-  authorId: integer("author_id").notNull(),
-  discussionId: integer("discussion_id").notNull(),
-  parentId: integer("parent_id"), // For nested replies, null means top-level comment
-  createdAt: timestamp("created_at").defaultNow(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(),
+  url: text("url").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
 });
 
-export const insertCommentSchema = createInsertSchema(comments).omit({
+export const insertSafetyResourceSchema = createInsertSchema(safetyResources).omit({
   id: true,
   createdAt: true,
 });
@@ -104,55 +117,16 @@ export type InsertBuilding = z.infer<typeof insertBuildingSchema>;
 export type StudentTool = typeof studentTools.$inferSelect;
 export type InsertStudentTool = z.infer<typeof insertStudentToolSchema>;
 
-export type Discussion = typeof discussions.$inferSelect;
-export type InsertDiscussion = z.infer<typeof insertDiscussionSchema>;
-
-export type Comment = typeof comments.$inferSelect;
-export type InsertComment = z.infer<typeof insertCommentSchema>;
-
-// Location update schema
-export const locationUpdateSchema = z.object({
-  lat: z.number(),
-  lng: z.number(),
-  isLocationShared: z.boolean().optional(),
-});
-
-export type LocationUpdate = z.infer<typeof locationUpdateSchema>;
-
-// Safety Alerts schema
-export const safetyAlerts = pgTable("safety_alerts", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  severity: text("severity").notNull(), // critical, warning, info
-  startDate: timestamp("start_date").defaultNow().notNull(),
-  endDate: timestamp("end_date"), // null means indefinite
-  isActive: boolean("is_active").default(true),
-  location: text("location"), // Optional affected location
-});
-
-export const insertSafetyAlertSchema = createInsertSchema(safetyAlerts).omit({
-  id: true,
-});
-
-// Safety Resources schema
-export const safetyResources = pgTable("safety_resources", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  category: text("category").notNull(), // emergency, health, security, weather, contact
-  phoneNumber: text("phone_number"),
-  url: text("url"),
-  icon: text("icon"), // Icon name for UI
-  order: integer("order").default(0), // For sorting
-});
-
-export const insertSafetyResourceSchema = createInsertSchema(safetyResources).omit({
-  id: true,
-});
-
 export type SafetyAlert = typeof safetyAlerts.$inferSelect;
 export type InsertSafetyAlert = z.infer<typeof insertSafetyAlertSchema>;
 
 export type SafetyResource = typeof safetyResources.$inferSelect;
 export type InsertSafetyResource = z.infer<typeof insertSafetyResourceSchema>;
+
+// Location update schema
+export const locationUpdateSchema = createInsertSchema(users).pick({
+  location: true,
+  isSharingLocation: true,
+});
+
+export type LocationUpdate = z.infer<typeof locationUpdateSchema>;

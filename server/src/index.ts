@@ -1,6 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import { registerRoutes } from '../routes';
+import express, { Express } from 'express';
+const cors = require('cors');
+const { registerRoutes } = require('../routes');
+
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -8,8 +9,10 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Register all API routes
-registerRoutes(app);
+// Basic route for testing
+app.get('/', (req, res) => {
+  res.json({ message: 'Hocking College Server is running!' });
+});
 
 // Start server
 app.listen(port, () => {

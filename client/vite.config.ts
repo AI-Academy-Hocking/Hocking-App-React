@@ -5,6 +5,7 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  assetsInclude: ['**/*.JPG'],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -12,11 +13,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
+      '/api': 'http://localhost:3001',
     },
   },
 }) 
