@@ -1,19 +1,146 @@
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
 }) : x)(function(x) {
   if (typeof require !== "undefined") return require.apply(this, arguments);
   throw Error('Dynamic require of "' + x + '" is not supported');
 });
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
-  if (typeof require !== "undefined") return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x + '" is not supported');
+// server/services/googleCalendar.ts
+var googleCalendar_exports = {};
+__export(googleCalendar_exports, {
+  GoogleCalendarService: () => GoogleCalendarService,
+  googleCalendarService: () => googleCalendarService
+});
+import { google } from "googleapis";
+import { OAuth2Client } from "google-auth-library";
+import { JWT } from "google-auth-library";
+var SCOPES, CALENDAR_IDS, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_PRIVATE_KEY, GoogleCalendarService, googleCalendarService;
+var init_googleCalendar = __esm({
+  "server/services/googleCalendar.ts"() {
+    "use strict";
+    SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+    CALENDAR_IDS = {
+      academic: "c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com",
+      activities: "gabby@aiowl.org"
+      // Private calendar
+    };
+    CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+    CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+    REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
+    SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+    SERVICE_ACCOUNT_PRIVATE_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+    GoogleCalendarService = class {
+      constructor() {
+        this.serviceAccountClient = null;
+        this.oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
+        if (REFRESH_TOKEN) {
+          this.oauth2Client.setCredentials({
+            refresh_token: REFRESH_TOKEN
+          });
+        }
+        if (SERVICE_ACCOUNT_EMAIL && SERVICE_ACCOUNT_PRIVATE_KEY) {
+          this.serviceAccountClient = new JWT({
+            email: SERVICE_ACCOUNT_EMAIL,
+            key: SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, "\n"),
+            scopes: SCOPES
+          });
+        }
+      }
+      async getEvents(calendarType, timeMin, timeMax) {
+        try {
+          const calendarId = CALENDAR_IDS[calendarType];
+          if (this.serviceAccountClient) {
+            console.log(`Using service account for ${calendarType} calendar`);
+            const calendar2 = google.calendar({ version: "v3", auth: this.serviceAccountClient });
+            const response2 = await calendar2.events.list({
+              calendarId,
+              timeMin: timeMin?.toISOString(),
+              timeMax: timeMax?.toISOString(),
+              singleEvents: true,
+              orderBy: "startTime",
+              maxResults: 100
+            });
+            const events3 = response2.data.items?.map((event) => ({
+              id: event.id || String(Math.random()),
+              title: event.summary || "No Title",
+              startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
+              endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
+              location: event.location || "No Location",
+              description: event.description || "No Description",
+              //
+              calendarType
+              //
+            })) || [];
+            console.log(`Fetched ${events3.length} events from Google Calendar API for ${calendarType}`);
+            return events3;
+          }
+          const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
+          const response = await calendar.events.list({
+            calendarId,
+            timeMin: timeMin?.toISOString(),
+            timeMax: timeMax?.toISOString(),
+            singleEvents: true,
+            orderBy: "startTime",
+            maxResults: 100
+          });
+          const events2 = response.data.items?.map((event) => ({
+            id: event.id || String(Math.random()),
+            title: event.summary || "No Title",
+            startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
+            endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
+            location: event.location || "No Location",
+            description: event.description || "No Description",
+            //
+            calendarType
+            //
+          })) || [];
+          console.log(`Fetched ${events2.length} events from Google Calendar API for ${calendarType}`);
+          return events2;
+        } catch (error) {
+          console.error("Google Calendar API error:", error);
+          throw error;
+        }
+      }
+      // Helper method to get authorization URL for setting up OAuth
+      getAuthUrl() {
+        return this.oauth2Client.generateAuthUrl({
+          access_type: "offline",
+          scope: SCOPES,
+          prompt: "consent"
+        });
+      }
+      // Helper method to exchange authorization code for tokens
+      async getTokensFromCode(code) {
+        const { tokens } = await this.oauth2Client.getToken(code);
+        return tokens;
+      }
+    };
+    googleCalendarService = new GoogleCalendarService();
+  }
 });
 
 // server/index.ts
-import express2 from "express";
+import express3 from "express";
 
 // server/routes.ts
 import { createServer } from "http";
@@ -26,17 +153,13 @@ var MemStorage = class {
     this.events = /* @__PURE__ */ new Map();
     this.buildings = /* @__PURE__ */ new Map();
     this.studentTools = /* @__PURE__ */ new Map();
-    this.discussions = /* @__PURE__ */ new Map();
-    this.comments = /* @__PURE__ */ new Map();
     this.safetyAlerts = /* @__PURE__ */ new Map();
     this.safetyResources = /* @__PURE__ */ new Map();
-    this.currentUserId = 1;
-    this.currentEventId = 1;
-    this.currentBuildingId = 1;
-    this.currentDiscussionId = 1;
-    this.currentCommentId = 1;
-    this.currentSafetyAlertId = 1;
-    this.currentSafetyResourceId = 1;
+    this.nextUserId = 1;
+    this.nextEventId = 1;
+    this.nextBuildingId = 1;
+    this.nextSafetyAlertId = 1;
+    this.nextSafetyResourceId = 1;
     this.initializeSampleData();
   }
   // User operations
@@ -49,7 +172,7 @@ var MemStorage = class {
     );
   }
   async createUser(insertUser) {
-    const id = this.currentUserId++;
+    const id = this.nextUserId++;
     const user = {
       ...insertUser,
       id,
@@ -64,19 +187,19 @@ var MemStorage = class {
     this.users.set(id, user);
     return user;
   }
-  async updateUserLocation(userId, locationUpdate) {
-    const user = await this.getUser(userId);
+  async updateUserLocation(id, location) {
+    const user = await this.getUser(id);
     if (!user) {
-      return void 0;
+      return null;
     }
     const updatedUser = {
       ...user,
-      lat: locationUpdate.lat,
-      lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared !== void 0 ? locationUpdate.isLocationShared : user.isLocationShared,
+      lat: location.lat,
+      lng: location.lng,
+      isLocationShared: location.isLocationShared !== void 0 ? location.isLocationShared : user.isLocationShared,
       lastLocationUpdate: /* @__PURE__ */ new Date()
     };
-    this.users.set(userId, updatedUser);
+    this.users.set(id, updatedUser);
     return updatedUser;
   }
   async getSharedLocations() {
@@ -92,7 +215,7 @@ var MemStorage = class {
     return this.events.get(id);
   }
   async createEvent(insertEvent) {
-    const id = this.currentEventId++;
+    const id = this.nextEventId++;
     const event = {
       ...insertEvent,
       id,
@@ -109,7 +232,7 @@ var MemStorage = class {
     return this.buildings.get(id);
   }
   async createBuilding(insertBuilding) {
-    const id = this.currentBuildingId++;
+    const id = this.nextBuildingId++;
     const building = { ...insertBuilding, id };
     this.buildings.set(id, building);
     return building;
@@ -125,60 +248,6 @@ var MemStorage = class {
     this.studentTools.set(tool.id, tool);
     return tool;
   }
-  // Discussion operations
-  async getDiscussions() {
-    return Array.from(this.discussions.values());
-  }
-  async getDiscussion(id) {
-    return this.discussions.get(id);
-  }
-  async createDiscussion(insertDiscussion) {
-    const id = this.currentDiscussionId++;
-    const discussion = {
-      ...insertDiscussion,
-      id,
-      createdAt: /* @__PURE__ */ new Date(),
-      isPinned: insertDiscussion.isPinned || false,
-      category: insertDiscussion.category || "general"
-    };
-    this.discussions.set(id, discussion);
-    return discussion;
-  }
-  async getDiscussionsByCategory(category) {
-    return Array.from(this.discussions.values()).filter(
-      (discussion) => discussion.category === category
-    );
-  }
-  // Comment operations
-  async getAllComments() {
-    return Array.from(this.comments.values());
-  }
-  async getComments(discussionId) {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.discussionId === discussionId && comment.parentId === null
-    );
-  }
-  async getCommentReplies(commentId) {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.parentId === commentId
-    );
-  }
-  async createComment(insertComment) {
-    const id = this.currentCommentId++;
-    const comment = {
-      ...insertComment,
-      id,
-      createdAt: /* @__PURE__ */ new Date(),
-      parentId: insertComment.parentId || null
-    };
-    this.comments.set(id, comment);
-    return comment;
-  }
-  async getUserComments(userId) {
-    return Array.from(this.comments.values()).filter(
-      (comment) => comment.authorId === userId
-    );
-  }
   // Safety Alert operations
   async getSafetyAlerts() {
     return Array.from(this.safetyAlerts.values());
@@ -193,7 +262,7 @@ var MemStorage = class {
     return this.safetyAlerts.get(id);
   }
   async createSafetyAlert(insertAlert) {
-    const id = this.currentSafetyAlertId++;
+    const id = this.nextSafetyAlertId++;
     const alert = {
       ...insertAlert,
       id,
@@ -216,7 +285,7 @@ var MemStorage = class {
     return this.safetyResources.get(id);
   }
   async createSafetyResource(insertResource) {
-    const id = this.currentSafetyResourceId++;
+    const id = this.nextSafetyResourceId++;
     const resource = {
       ...insertResource,
       id,
@@ -301,13 +370,6 @@ var MemStorage = class {
       lng: -82.417
     });
     await this.createStudentTool({
-      id: "course-schedule",
-      name: "Course Schedule",
-      description: "View your current classes",
-      category: "academic",
-      url: "#"
-    });
-    await this.createStudentTool({
       id: "grades",
       name: "Grades",
       description: "Check your academic performance",
@@ -325,13 +387,6 @@ var MemStorage = class {
       id: "advising",
       name: "Advising",
       description: "Connect with your advisor",
-      category: "academic",
-      url: "#"
-    });
-    await this.createStudentTool({
-      id: "academic-history",
-      name: "Academic History",
-      description: "View your transcript",
       category: "academic",
       url: "#"
     });
@@ -383,55 +438,6 @@ var MemStorage = class {
       description: "Job search and career planning",
       category: "resources",
       url: "#"
-    });
-    const discussion1 = await this.createDiscussion({
-      title: "Tips for new students",
-      content: "Hey everyone! I'm a sophomore here at Hocking and wanted to share some tips for new students. What advice would you give to freshmen?",
-      authorId: 1,
-      category: "general",
-      isPinned: true
-    });
-    const discussion2 = await this.createDiscussion({
-      title: "Study group for Biology 101",
-      content: "Is anyone interested in forming a study group for Biology 101? I'm struggling with some of the concepts and would love to collaborate.",
-      authorId: 2,
-      category: "academic"
-    });
-    const discussion3 = await this.createDiscussion({
-      title: "Campus food recommendations",
-      content: "What's your favorite place to eat on campus? I'm getting tired of the same options and looking for recommendations!",
-      authorId: 1,
-      category: "social"
-    });
-    await this.createComment({
-      content: "Always check Rate My Professor before signing up for classes!",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    const comment1 = await this.createComment({
-      content: "Get involved in campus clubs early - it's the best way to make friends!",
-      authorId: 1,
-      discussionId: discussion1.id,
-      parentId: null
-    });
-    await this.createComment({
-      content: "I totally agree! I joined the hiking club and met my best friends there.",
-      authorId: 2,
-      discussionId: discussion1.id,
-      parentId: comment1.id
-    });
-    await this.createComment({
-      content: "I'd be interested in joining a study group! I'm free on Tuesdays and Thursdays after 3pm.",
-      authorId: 1,
-      discussionId: discussion2.id,
-      parentId: null
-    });
-    await this.createComment({
-      content: "The Student Center has great sandwiches. Try the turkey avocado wrap!",
-      authorId: 2,
-      discussionId: discussion3.id,
-      parentId: null
     });
     await this.createSafetyAlert({
       title: "Weather Alert: Winter Storm Warning",
@@ -523,87 +529,103 @@ var MemStorage = class {
 };
 var storage = new MemStorage();
 
-// server/src/routes/calendar.ts
-import { Router } from "express";
-import ical from "ical";
-import fetch from "node-fetch";
-var router = Router();
-var CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
-router.get("/events", async (req, res) => {
-  try {
-    console.log("Attempting to fetch calendar from URL:", CALENDAR_URL);
-    const response = await fetch(CALENDAR_URL, {
-      headers: {
-        "Accept": "text/calendar",
-        "User-Agent": "Hocking-App/1.0"
-      }
-    });
-    console.log("Calendar fetch response status:", response.status);
-    console.log("Calendar fetch response headers:", Object.fromEntries(response.headers.entries()));
-    if (response.status === 403) {
-      console.error("Calendar access forbidden - check calendar sharing settings");
-      return res.status(403).json({
-        error: "Calendar access forbidden",
-        details: "Please check calendar sharing settings and ensure the calendar is publicly accessible"
-      });
-    }
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Calendar fetch failed:", errorText);
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const icalData = await response.text();
-    console.log("Received iCal data length:", icalData.length);
-    console.log("First 100 characters of iCal data:", icalData.substring(0, 100));
-    if (!icalData || icalData.includes("<!DOCTYPE")) {
-      console.error("Invalid calendar data received");
-      return res.status(400).json({
-        error: "Invalid calendar data",
-        details: "The calendar URL may be incorrect or the calendar may not be publicly accessible"
-      });
-    }
-    const parsedEvents = ical.parseICS(icalData);
-    if (!parsedEvents) {
-      throw new Error("Failed to parse calendar data");
-    }
-    const events = Object.values(parsedEvents).filter((event) => event.type === "VEVENT").map((event) => ({
-      id: event.uid || String(Math.random()),
-      title: event.summary || "No Title",
-      date: event.start?.toISOString() || (/* @__PURE__ */ new Date()).toISOString(),
-      time: `${event.start?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) || "00:00"} - ${event.end?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }) || "23:59"}`,
-      end: event.end?.toISOString() || event.start?.toISOString() || (/* @__PURE__ */ new Date()).toISOString(),
-      location: event.location || "No Location",
-      description: event.description || "No Description"
-    }));
-    console.log("Successfully parsed events:", events.length);
-    res.json(events);
-  } catch (error) {
-    console.error("Error fetching calendar:", error);
-    res.status(500).json({
-      error: "Failed to fetch calendar events",
-      details: error instanceof Error ? error.message : "Unknown error"
-    });
-  }
+// shared/schema.ts
+import { pgTable, text, serial, boolean, timestamp, varchar } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+var users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  isGuest: boolean("is_guest").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  lastLogin: timestamp("last_login"),
+  location: text("location"),
+  isSharingLocation: boolean("is_sharing_location").notNull().default(false)
 });
-var calendar_default = router;
+var insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+  lastLogin: true
+});
+var events = pgTable("events", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time").notNull(),
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isRecurring: boolean("is_recurring").notNull().default(false),
+  recurrencePattern: text("recurrence_pattern")
+});
+var insertEventSchema = createInsertSchema(events).omit({
+  id: true,
+  createdAt: true
+});
+var buildings = pgTable("buildings", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isOpen: boolean("is_open").notNull().default(true),
+  openHours: text("open_hours"),
+  contactInfo: text("contact_info")
+});
+var insertBuildingSchema = createInsertSchema(buildings).omit({
+  id: true,
+  createdAt: true
+});
+var studentTools = pgTable("student_tools", {
+  id: varchar("id", { length: 50 }).primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  url: text("url").notNull(),
+  category: text("category").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true)
+});
+var insertStudentToolSchema = createInsertSchema(studentTools).omit({
+  createdAt: true
+});
+var safetyAlerts = pgTable("safety_alerts", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  severity: text("severity").notNull(),
+  location: text("location").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+  expiresAt: timestamp("expires_at")
+});
+var insertSafetyAlertSchema = createInsertSchema(safetyAlerts).omit({
+  id: true,
+  createdAt: true
+});
+var safetyResources = pgTable("safety_resources", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  category: text("category").notNull(),
+  url: text("url").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true)
+});
+var insertSafetyResourceSchema = createInsertSchema(safetyResources).omit({
+  id: true,
+  createdAt: true
+});
+var locationUpdateSchema = createInsertSchema(users).pick({
+  location: true,
+  isSharingLocation: true
+});
 
 // server/routes.ts
-import {
-  insertUserSchema,
-  insertEventSchema,
-  insertBuildingSchema,
-  insertStudentToolSchema,
-  locationUpdateSchema,
-  insertDiscussionSchema,
-  insertCommentSchema,
-  insertSafetyAlertSchema,
-  insertSafetyResourceSchema
-} from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-async function registerRoutes(app2) {
-  app2.use("/api/calendar", calendar_default);
-  app2.post("/api/auth/login", async (req, res) => {
+async function registerRoutes(app3) {
+  app3.post("/api/auth/login", async (req, res) => {
     try {
       const { username, password } = req.body;
       if (!username || !password) {
@@ -621,7 +643,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/auth/register", async (req, res) => {
+  app3.post("/api/auth/register", async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(userData.username);
@@ -640,16 +662,16 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/events", async (_req, res) => {
+  app3.get("/api/events", async (_req, res) => {
     try {
-      const events = await storage.getEvents();
-      res.status(200).json(events);
+      const events2 = await storage.getEvents();
+      res.status(200).json(events2);
     } catch (error) {
       console.error("Error fetching events:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/events/:id", async (req, res) => {
+  app3.get("/api/events/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -665,7 +687,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/events", async (req, res) => {
+  app3.post("/api/events", async (req, res) => {
     try {
       const eventData = insertEventSchema.parse(req.body);
       const newEvent = await storage.createEvent(eventData);
@@ -679,16 +701,16 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/buildings", async (_req, res) => {
+  app3.get("/api/buildings", async (_req, res) => {
     try {
-      const buildings = await storage.getBuildings();
-      res.status(200).json(buildings);
+      const buildings2 = await storage.getBuildings();
+      res.status(200).json(buildings2);
     } catch (error) {
       console.error("Error fetching buildings:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/buildings/:id", async (req, res) => {
+  app3.get("/api/buildings/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -704,7 +726,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/buildings", async (req, res) => {
+  app3.post("/api/buildings", async (req, res) => {
     try {
       const buildingData = insertBuildingSchema.parse(req.body);
       const newBuilding = await storage.createBuilding(buildingData);
@@ -718,7 +740,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/student-tools", async (_req, res) => {
+  app3.get("/api/student-tools", async (_req, res) => {
     try {
       const tools = await storage.getStudentTools();
       res.status(200).json(tools);
@@ -727,7 +749,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/student-tools/:id", async (req, res) => {
+  app3.get("/api/student-tools/:id", async (req, res) => {
     try {
       const id = req.params.id;
       const tool = await storage.getStudentTool(id);
@@ -740,7 +762,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/student-tools", async (req, res) => {
+  app3.post("/api/student-tools", async (req, res) => {
     try {
       const toolData = insertStudentToolSchema.parse(req.body);
       const existingTool = await storage.getStudentTool(toolData.id);
@@ -758,7 +780,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/users/:id/location", async (req, res) => {
+  app3.post("/api/users/:id/location", async (req, res) => {
     try {
       const userId = parseInt(req.params.id);
       if (isNaN(userId)) {
@@ -781,7 +803,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/locations/shared", async (_req, res) => {
+  app3.get("/api/locations/shared", async (_req, res) => {
     try {
       const sharedLocations = await storage.getSharedLocations();
       const locationsWithoutPasswords = sharedLocations.map((user) => {
@@ -794,157 +816,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/discussions", async (req, res) => {
-    try {
-      const category = req.query.category;
-      let discussions;
-      if (category && category !== "all") {
-        discussions = await storage.getDiscussionsByCategory(category);
-      } else {
-        discussions = await storage.getDiscussions();
-      }
-      const discussionsWithAuthor = await Promise.all(discussions.map(async (discussion) => {
-        const author = await storage.getUser(discussion.authorId);
-        let authorInfo = { id: discussion.authorId, username: "Unknown" };
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        const comments = await storage.getComments(discussion.id);
-        const commentCount = comments ? comments.length : 0;
-        return { ...discussion, author: authorInfo, commentCount };
-      }));
-      res.status(200).json(discussionsWithAuthor);
-    } catch (error) {
-      console.error("Error fetching discussions:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/discussions/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      const discussion = await storage.getDiscussion(id);
-      if (!discussion) {
-        return res.status(404).json({ message: "Discussion not found" });
-      }
-      const author = await storage.getUser(discussion.authorId);
-      let authorInfo = { id: discussion.authorId, username: "Unknown" };
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      res.status(200).json({ ...discussion, author: authorInfo });
-    } catch (error) {
-      console.error("Error fetching discussion:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.post("/api/discussions", async (req, res) => {
-    try {
-      const discussionData = insertDiscussionSchema.parse(req.body);
-      const newDiscussion = await storage.createDiscussion(discussionData);
-      const author = await storage.getUser(newDiscussion.authorId);
-      let authorInfo = { id: newDiscussion.authorId, username: "Unknown" };
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      res.status(201).json({ ...newDiscussion, author: authorInfo });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      console.error("Error creating discussion:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/comments", async (req, res) => {
-    try {
-      const comments = await storage.getAllComments();
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        const discussion = await storage.getDiscussion(comment.discussionId);
-        return {
-          ...comment,
-          author: authorInfo,
-          discussionTitle: discussion?.title || "Unknown Discussion"
-        };
-      }));
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching all comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/discussions/:id/comments", async (req, res) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      const comments = await storage.getComments(discussionId);
-      const commentsWithDetails = await Promise.all(comments.map(async (comment) => {
-        const author = await storage.getUser(comment.authorId);
-        let authorInfo = { id: comment.authorId, username: "Unknown" };
-        if (author) {
-          const { password, ...userWithoutPassword } = author;
-          authorInfo = { ...userWithoutPassword };
-        }
-        const replies = await storage.getCommentReplies(comment.id);
-        const repliesWithAuthor = await Promise.all(replies.map(async (reply) => {
-          const replyAuthor = await storage.getUser(reply.authorId);
-          let replyAuthorInfo = { id: reply.authorId, username: "Unknown" };
-          if (replyAuthor) {
-            const { password, ...userWithoutPassword } = replyAuthor;
-            replyAuthorInfo = { ...userWithoutPassword };
-          }
-          return { ...reply, author: replyAuthorInfo };
-        }));
-        return { ...comment, author: authorInfo, replies: repliesWithAuthor };
-      }));
-      res.status(200).json(commentsWithDetails);
-    } catch (error) {
-      console.error("Error fetching comments:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.post("/api/discussions/:id/comments", async (req, res) => {
-    try {
-      const discussionId = parseInt(req.params.id);
-      if (isNaN(discussionId)) {
-        return res.status(400).json({ message: "Invalid discussion ID" });
-      }
-      const commentData = insertCommentSchema.parse({
-        ...req.body,
-        discussionId
-      });
-      const newComment = await storage.createComment(commentData);
-      const author = await storage.getUser(newComment.authorId);
-      let authorInfo = { id: newComment.authorId, username: "Unknown" };
-      if (author) {
-        const { password, ...userWithoutPassword } = author;
-        authorInfo = { ...userWithoutPassword };
-      }
-      res.status(201).json({ ...newComment, author: authorInfo, replies: [] });
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        return res.status(400).json({ message: validationError.message });
-      }
-      console.error("Error creating comment:", error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
-  app2.get("/api/safety/alerts", async (req, res) => {
+  app3.get("/api/safety/alerts", async (req, res) => {
     try {
       const activeOnly = req.query.active === "true";
       const alerts = activeOnly ? await storage.getActiveSafetyAlerts() : await storage.getSafetyAlerts();
@@ -954,7 +826,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/safety/alerts/:id", async (req, res) => {
+  app3.get("/api/safety/alerts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -970,7 +842,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/safety/alerts", async (req, res) => {
+  app3.post("/api/safety/alerts", async (req, res) => {
     try {
       const alertData = insertSafetyAlertSchema.parse(req.body);
       const newAlert = await storage.createSafetyAlert(alertData);
@@ -984,7 +856,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/safety/resources", async (req, res) => {
+  app3.get("/api/safety/resources", async (req, res) => {
     try {
       const category = req.query.category;
       const resources = category ? await storage.getSafetyResourcesByCategory(category) : await storage.getSafetyResources();
@@ -994,7 +866,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.get("/api/safety/resources/:id", async (req, res) => {
+  app3.get("/api/safety/resources/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -1010,7 +882,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app2.post("/api/safety/resources", async (req, res) => {
+  app3.post("/api/safety/resources", async (req, res) => {
     try {
       const resourceData = insertSafetyResourceSchema.parse(req.body);
       const newResource = await storage.createSafetyResource(resourceData);
@@ -1024,7 +896,7 @@ async function registerRoutes(app2) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  const httpServer = createServer(app2);
+  const httpServer = createServer(app3);
   const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
   wss.on("connection", (socket) => {
     console.log("WebSocket client connected");
@@ -1062,7 +934,6 @@ import express from "express";
 import fs from "fs";
 import path2, { dirname as dirname2 } from "path";
 import { fileURLToPath as fileURLToPath2 } from "url";
-import { createServer as createViteServer, createLogger } from "vite";
 
 // vite.config.ts
 import { defineConfig } from "vite";
@@ -1082,17 +953,20 @@ var vite_config_default = defineConfig({
       __require("@replit/vite-plugin-cartographer").cartographer()
     ] : []
   ],
+  assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
       "@shared": path.resolve(__dirname, "shared"),
       "@assets": path.resolve(__dirname, "attached_assets")
-    }
+    },
+    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
   },
   root: path.resolve(__dirname, "client"),
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
-    emptyOutDir: true
+    emptyOutDir: true,
+    sourcemap: true
   },
   optimizeDeps: {
     include: ["@sinclair/typebox"],
@@ -1105,16 +979,35 @@ var vite_config_default = defineConfig({
   },
   server: {
     fs: {
-      strict: false
+      strict: false,
+      allow: ["..", "node_modules"]
+    },
+    proxy: {
+      "/api": "http://localhost:3001"
     }
   }
 });
 
 // server/vite.ts
 import { nanoid } from "nanoid";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 var __filename2 = fileURLToPath2(import.meta.url);
 var __dirname2 = dirname2(__filename2);
-var viteLogger = createLogger();
+var firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var storage2 = getStorage(app);
 function log(message, source = "express") {
   const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -1124,27 +1017,24 @@ function log(message, source = "express") {
   });
   console.log(`${formattedTime} [${source}] ${message}`);
 }
-async function setupVite(app2, server) {
+async function setupVite(app3, server) {
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
     allowedHosts: true
   };
-  const vite = await createViteServer({
+  const viteServer = await (void 0)({
     ...vite_config_default,
     configFile: false,
-    customLogger: {
-      ...viteLogger,
-      error: (msg, options) => {
-        viteLogger.error(msg, options);
-        process.exit(1);
-      }
+    server: {
+      middlewareMode: true,
+      hmr: { server },
+      allowedHosts: ["localhost"]
     },
-    server: serverOptions,
     appType: "custom"
   });
-  app2.use(vite.middlewares);
-  app2.use("*", async (req, res, next) => {
+  app3.use(viteServer.middlewares);
+  app3.use("*", async (req, res, next) => {
     const url = req.originalUrl;
     try {
       const clientTemplate = path2.resolve(
@@ -1158,32 +1048,339 @@ async function setupVite(app2, server) {
         `src="/src/main.tsx"`,
         `src="/src/main.tsx?v=${nanoid()}"`
       );
-      const page = await vite.transformIndexHtml(url, template);
+      const page = await viteServer.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
-      vite.ssrFixStacktrace(e);
+      viteServer.ssrFixStacktrace(e);
       next(e);
     }
   });
 }
-function serveStatic(app2) {
+function serveStatic(app3) {
   const distPath = path2.resolve(__dirname2, "public");
   if (!fs.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
-  app2.use(express.static(distPath));
-  app2.use("*", (_req, res) => {
+  app3.use(express.static(distPath));
+  app3.use("*", (_req, res) => {
     res.sendFile(path2.resolve(distPath, "index.html"));
   });
 }
 
 // server/index.ts
-var app = express2();
-app.use(express2.json());
-app.use(express2.urlencoded({ extended: false }));
-app.use((req, res, next) => {
+import cors from "cors";
+
+// server/api/programs.ts
+import { Router } from "express";
+import fetch from "node-fetch";
+import * as cheerio from "cheerio";
+var router = Router();
+var programCache = {};
+var lastFetchTime = 0;
+var CACHE_DURATION = 24 * 60 * 60 * 1e3;
+async function fetchProgramDetails(programId) {
+  try {
+    const program = programCache[programId];
+    if (!program) {
+      console.error(`Program not found in cache: ${programId}`);
+      return null;
+    }
+    const url = `https://www.hocking.edu/${programId}`;
+    try {
+      console.log(`Fetching from: ${url}`);
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error(`Failed to fetch from ${url}: ${response.status}`);
+        return null;
+      }
+      const html = await response.text();
+      const $ = cheerio.load(html);
+      let description = "";
+      let courses = [];
+      let careers = [];
+      const descriptionSection = $('h2:contains("Program Description")');
+      if (descriptionSection.length) {
+        let currentElement = descriptionSection.next();
+        while (currentElement.length && !currentElement.is("h2")) {
+          const text2 = currentElement.text().trim();
+          if (text2 && !text2.includes("APPLY TO HOCKING COLLEGE")) {
+            description += text2 + " ";
+          }
+          currentElement = currentElement.next();
+        }
+      }
+      const careerSection = $('h2:contains("Career Options"), h1:contains("Career Options")');
+      if (careerSection.length) {
+        let currentElement = careerSection.next();
+        while (currentElement.length && !currentElement.is("h1, h2")) {
+          const text2 = currentElement.text().trim();
+          if (text2 && text2.length > 10 && !text2.includes("Print PDF") && !text2.includes("View PDF")) {
+            careers.push(text2);
+          }
+          currentElement = currentElement.next();
+        }
+      }
+      const courseSection = $('div:contains("Course Curriculum")');
+      if (courseSection.length) {
+        courseSection.find("li").each((_, element) => {
+          const text2 = $(element).text().trim();
+          if (text2 && text2.length > 0) {
+            courses.push(text2);
+          }
+        });
+      }
+      if (!description) {
+        $("p").each((_, element) => {
+          const text2 = $(element).text().trim();
+          if (text2.includes(program.name) && text2.length > 50) {
+            description = text2;
+            return false;
+          }
+        });
+      }
+      console.log(`Found content for ${program.name}:`, {
+        descriptionLength: description.length,
+        coursesCount: courses.length,
+        careersCount: careers.length,
+        description: description.substring(0, 100) + "..."
+        // Log first 100 chars
+      });
+      return {
+        title: program.name,
+        description: description || "Visit Hocking College's website for the latest program information.",
+        courses,
+        careers,
+        lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+      };
+    } catch (error) {
+      console.error(`Error fetching from ${url}:`, error);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error fetching program details for ${programId}:`, error);
+    return null;
+  }
+}
+async function updateProgramCache() {
+  const now = Date.now();
+  if (now - lastFetchTime < CACHE_DURATION && Object.keys(programCache).length > 0) {
+    return;
+  }
+  try {
+    const response = await fetch("https://www.hocking.edu/majors");
+    const html = await response.text();
+    const $ = cheerio.load(html);
+    $("h4").each((_, categoryHeader) => {
+      const categoryName = $(categoryHeader).text().trim();
+      const categorySection = $(categoryHeader).next("ul");
+      if (categorySection.length && categoryName) {
+        categorySection.find("li").each((_2, program) => {
+          const programName = $(program).text().trim();
+          if (programName) {
+            const programId = programName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+            if (!programCache[programId]) {
+              programCache[programId] = {
+                id: programId,
+                name: programName,
+                category: categoryName,
+                details: {
+                  title: programName,
+                  description: "Program details are being updated.",
+                  courses: [],
+                  careers: [],
+                  lastUpdated: (/* @__PURE__ */ new Date()).toISOString()
+                }
+              };
+              console.log(`Added program to cache: ${programName} (${programId})`);
+            }
+          }
+        });
+      }
+    });
+    console.log(`Cache updated with ${Object.keys(programCache).length} programs`);
+    lastFetchTime = now;
+  } catch (error) {
+    console.error("Error updating program cache:", error);
+  }
+}
+updateProgramCache();
+router.get("/", async (req, res) => {
+  await updateProgramCache();
+  res.json(Object.values(programCache));
+});
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  await updateProgramCache();
+  const program = programCache[id];
+  if (!program) {
+    return res.status(404).json({ error: "Program not found" });
+  }
+  if (!program.details) {
+    program.details = await fetchProgramDetails(id);
+  }
+  res.json(program);
+});
+var programs_default = router;
+
+// server/src/routes/calendar.ts
+import express2 from "express";
+import * as ical from "ical";
+import fetch2 from "node-fetch";
+var googleCalendarService2 = null;
+try {
+  const { googleCalendarService: service } = (init_googleCalendar(), __toCommonJS(googleCalendar_exports));
+  googleCalendarService2 = service;
+  console.log("Google Calendar service loaded successfully");
+} catch (error) {
+  console.log("Google Calendar service not available, will use iCal fallback:", error instanceof Error ? error.message : "Unknown error");
+}
+var router2 = express2.Router();
+var ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
+var STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
+  console.log(`
+=== GOOGLE CALENDAR DEBUG ===`);
+  console.log(`Fetching calendar events from: ${url}`);
+  try {
+    const response = await fetch2(url);
+    console.log(`Response status: ${response.status} ${response.statusText}`);
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status} for URL: ${url}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const icalData = await response.text();
+    console.log(`Received ${icalData.length} characters of iCal data`);
+    console.log(`First 500 chars of iCal data:`, icalData.substring(0, 500));
+    const parsedEvents = ical.parseICS(icalData);
+    console.log(`Parsed ${Object.keys(parsedEvents).length} total events from iCal`);
+    const eventTypes = new Set(Object.values(parsedEvents).map((event) => event.type));
+    console.log(`Event types found:`, Array.from(eventTypes));
+    const events2 = Object.values(parsedEvents).filter((event) => {
+      const isVEvent = event.type === "VEVENT";
+      if (!isVEvent) {
+        console.log(`Skipping non-VEVENT: ${event.type}`);
+        return false;
+      }
+      if (timeMin || timeMax) {
+        const eventStart = event.start;
+        if (eventStart) {
+          const eventDate = new Date(eventStart);
+          const minDate = timeMin || /* @__PURE__ */ new Date(0);
+          const maxDate = timeMax || /* @__PURE__ */ new Date("2100-01-01");
+          if (eventDate < minDate || eventDate > maxDate) {
+            console.log(`Skipping event outside date range: ${event.summary} on ${eventDate.toISOString()}`);
+            return false;
+          }
+        }
+      }
+      return true;
+    }).map((event, index) => {
+      console.log(`
+--- Processing Event ${index + 1} ---`);
+      console.log(`Raw event data:`, JSON.stringify(event, null, 2));
+      let startDate = event.start;
+      let endDate = event.end;
+      console.log(`Original start: ${startDate} (type: ${typeof startDate})`);
+      console.log(`Original end: ${endDate} (type: ${typeof endDate})`);
+      if (typeof startDate === "string") {
+        startDate = new Date(startDate);
+        console.log(`Parsed start date: ${startDate.toISOString()}`);
+      }
+      if (typeof endDate === "string") {
+        endDate = new Date(endDate);
+        console.log(`Parsed end date: ${endDate.toISOString()}`);
+      }
+      const eventData = {
+        id: event.uid || String(Math.random()),
+        title: event.summary || "No Title",
+        startTime: startDate ? startDate.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+        endTime: endDate ? endDate.toISOString() : startDate ? startDate.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+        location: event.location || "No Location",
+        description: event.description || "No Description",
+        calendarType
+        // <-- ADD THIS LINE
+      };
+      console.log(`Final event data:`, eventData);
+      return eventData;
+    });
+    console.log(`
+=== SUMMARY ===`);
+    console.log(`Fetched ${events2.length} events from ${url}`);
+    if (events2.length > 0) {
+      console.log("First event:", events2[0]);
+      console.log("Last event:", events2[events2.length - 1]);
+      const dates = events2.map((e) => new Date(e.startTime));
+      const earliest = new Date(Math.min(...dates.map((d) => d.getTime())));
+      const latest = new Date(Math.max(...dates.map((d) => d.getTime())));
+      console.log(`Event date range: ${earliest.toISOString()} to ${latest.toISOString()}`);
+    } else {
+      console.warn("No events found in calendar!");
+    }
+    return events2;
+  } catch (error) {
+    console.error(`Error in fetchCalendarEvents:`, error);
+    throw error;
+  }
+}
+router2.get("/events", async (req, res) => {
+  console.log(`
+=== API REQUEST ===`);
+  console.log(`Query params:`, req.query);
+  try {
+    const calendarType = req.query.type;
+    const timeMin = req.query.timeMin;
+    const timeMax = req.query.timeMax;
+    console.log(`Calendar type requested: ${calendarType}`);
+    console.log(`Time range: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+    let events2;
+    if (googleCalendarService2) {
+      console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
+      try {
+        events2 = await googleCalendarService2.getEvents(
+          calendarType,
+          timeMin ? new Date(timeMin) : void 0,
+          timeMax ? new Date(timeMax) : void 0
+        );
+        console.log(`Successfully fetched ${events2.length} events via Google Calendar API`);
+      } catch (apiError) {
+        console.error("Google Calendar API failed, falling back to iCal:", apiError);
+      }
+    }
+    if (!events2) {
+      console.log(`Using iCal fallback for ${calendarType} calendar`);
+      const minDate = timeMin ? new Date(timeMin) : void 0;
+      const maxDate = timeMax ? new Date(timeMax) : void 0;
+      console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
+      if (calendarType === "academic") {
+        events2 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
+      } else if (calendarType === "activities") {
+        events2 = await fetchCalendarEvents(STUDENT_CALENDAR_URL, "activities", minDate, maxDate);
+      }
+    }
+    if (timeMin || timeMax) {
+      console.log(`Date filtering applied at source: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+    }
+    console.log(`Sending ${events2.length} events to frontend`);
+    res.json(events2);
+  } catch (error) {
+    console.error(`API Error:`, error);
+    res.status(500).json({
+      error: "Failed to fetch calendar events",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+});
+var calendar_default = router2;
+
+// server/index.ts
+var app2 = express3();
+app2.use(express3.json());
+app2.use(express3.urlencoded({ extended: false }));
+app2.use(cors());
+app2.use("/api/calendar", calendar_default);
+app2.use((req, res, next) => {
   const start = Date.now();
   const path3 = req.path;
   let capturedJsonResponse = void 0;
@@ -1208,17 +1405,18 @@ app.use((req, res, next) => {
   next();
 });
 (async () => {
-  const server = await registerRoutes(app);
-  app.use((err, _req, res, _next) => {
+  const server = await registerRoutes(app2);
+  app2.use((err, _req, res, _next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
     res.status(status).json({ message });
     throw err;
   });
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
+  app2.use("/api/programs", programs_default);
+  if (app2.get("env") === "development") {
+    await setupVite(app2, server);
   } else {
-    serveStatic(app);
+    serveStatic(app2);
   }
   const port = 3e3;
   server.listen({
