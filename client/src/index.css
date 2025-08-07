@@ -51,3 +51,29 @@ a, .accent {
   box-shadow: 0 0 0 1.5px #fff !important;
 }
 */
+
+/* Leaflet Map Styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 16px !important;
+  line-height: 1.5 !important;
+}
+
+.leaflet-popup-tip {
+  background: white !important;
+}
+
+/* User location marker styles */
+.user-location-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.other-user-marker {
+  background: transparent !important;
+  border: none !important;
+}

@@ -1,228 +1,290 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ClipboardList, AlertTriangle, ArrowLeft } from 'lucide-react';
-import { motion } from "framer-motion";
+import { ClipboardList, AlertTriangle, CheckCircle, XCircle, ArrowLeft, Download, Printer } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
-import { useLocation } from "wouter";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 interface ChecklistItem {
   category: string;
   items: {
     name: string;
-    importance: "required" | "recommended" | "optional";
+    importance: "recommended" | "optional";
     description?: string;
+    season?: "fall" | "spring" | "both";
+    weather?: "cold" | "warm" | "rain" | "all";
   }[];
+}
+
+interface ProhibitedItem {
+  name: string;
+  description?: string;
 }
 
 const checklistItems: ChecklistItem[] = [
   {
-    category: "Necessities",
+    category: "Bedding & Linens",
     items: [
       {
-        name: "Safety Pins",
-        importance: "required"
+        name: "Twin XL Sheets & Pillowcases",
+        importance: "recommended",
+        description: "Standard dorm bed size",
+        season: "both",
+        weather: "all"
       },
       {
-        name: "Sewing Kit",
-        importance: "required"
+        name: "Twin XL Bedspread/Comforter",
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       },
       {
-        name: "Plastic Baggies",
-        importance: "required"
+        name: "Blankets",
+        importance: "recommended",
+        season: "fall",
+        weather: "cold"
       },
       {
-        name: "First Aid Kit",
-        importance: "required"
+        name: "Pillows",
+        importance: "recommended",
+        season: "both",
+        weather: "all"
       },
       {
-        name: "Medical Card",
-        importance: "required",
-        description: "If you have health insurance"
+        name: "Mattress Pad/Topper",
+        importance: "optional",
+        description: "For extra comfort",
+        season: "both",
+        weather: "all"
       },
       {
-        name: "Medicine",
-        importance: "required",
-        description: "Any prescription and over-the-counter medications you need"
+        name: "Towels & Washcloths",
+        importance: "recommended",
+        season: "both",
+        weather: "all"
+      }
+    ]
+  },
+  {
+    category: "Bathroom Essentials",
+    items: [
+      {
+        name: "Shower Curtain & Bathroom Mats",
+        importance: "recommended",
+        description: "For North, Downhour, Summit and Sycamore Halls (1 per suite)",
+        season: "both",
+        weather: "all"
+      },
+      {
+        name: "Toilet Paper",
+        importance: "recommended",
+        description: "For North, Downhour, Summit and Sycamore",
+        season: "both",
+        weather: "all"
+      },
+      {
+        name: "Shower Caddy",
+        importance: "recommended",
+        season: "both",
+        weather: "all"
+      },
+      {
+        name: "Shower Shoes/Flip Flops",
+        importance: "recommended",
+        season: "both",
+        weather: "all"
+      },
+      {
+        name: "Personal Hygiene Products",
+        importance: "recommended",
+        description: "Shampoo, soap, toothbrush, toothpaste, etc.",
+        season: "both",
+        weather: "all"
+      },
+      {
+        name: "Hair Dryer",
+        importance: "recommended",
+        season: "both",
+        weather: "all"
+      }
+    ]
+  },
+  {
+    category: "School & Study Supplies",
+    items: [
+      {
+        name: "Laptop & Charger",
+        importance: "recommended"
+      },
+      {
+        name: "Backpack",
+        importance: "recommended"
+      },
+      {
+        name: "Notebooks, Paper, Folders",
+        importance: "recommended"
+      },
+      {
+        name: "Pens, Pencils, Highlighters",
+        importance: "recommended"
+      },
+      {
+        name: "Calculator",
+        importance: "recommended"
+      },
+      {
+        name: "USB Flash Drive",
+        importance: "recommended"
+      },
+      {
+        name: "Desk Lamp",
+        importance: "recommended"
+      },
+      {
+        name: "Bulletin Board/White Board",
+        importance: "optional"
+      },
+      {
+        name: "Calendar/Planner",
+        importance: "recommended"
+      }
+    ]
+  },
+  {
+    category: "Room Organization",
+    items: [
+      {
+        name: "Storage Tubs/Bins",
+        importance: "recommended"
+      },
+      {
+        name: "Hangers",
+        importance: "recommended"
+      },
+      {
+        name: "Command Hooks/Strips",
+        importance: "recommended",
+        description: "For hanging items without damaging walls"
+      },
+      {
+        name: "Wastebasket",
+        importance: "recommended"
+      },
+      {
+        name: "Small Bookshelf",
+        importance: "optional"
+      },
+      {
+        name: "Area Rug",
+        importance: "optional"
+      }
+    ]
+  },
+  {
+    category: "Cleaning & Maintenance",
+    items: [
+      {
+        name: "Cleaning Supplies",
+        importance: "recommended",
+        description: "All-purpose cleaner, paper towels, etc."
+      },
+      {
+        name: "Broom & Mop with Bucket",
+        importance: "recommended"
       },
       {
         name: "Laundry Supplies",
-        importance: "required",
+        importance: "recommended",
         description: "Detergent, fabric softener, etc."
       },
       {
         name: "Laundry Basket/Bag",
-        importance: "required"
+        importance: "recommended"
+      }
+    ]
+  },
+  {
+    category: "Health & Safety",
+    items: [
+      {
+        name: "First Aid Kit",
+        importance: "recommended"
       },
       {
-        name: "Umbrella",
-        importance: "required"
+        name: "Prescription Medications",
+        importance: "recommended"
       },
       {
-        name: "Rain/Snow Gear",
-        importance: "required",
-        description: "Boots, coat, gloves, hat"
+        name: "Over-the-Counter Medications",
+        importance: "recommended",
+        description: "Pain relievers, cold medicine, etc."
+      },
+      {
+        name: "Medical Insurance Card",
+        importance: "recommended"
       },
       {
         name: "Flashlight",
-        importance: "required"
+        importance: "recommended"
       },
       {
         name: "Batteries",
-        importance: "required"
-      },
-      {
-        name: "Paper Towels",
-        importance: "required"
-      },
-      {
-        name: "Dishes",
-        importance: "required"
-      },
-      {
-        name: "Cups/Glasses",
-        importance: "required"
-      },
-      {
-        name: "Storage Tubs",
-        importance: "required"
-      },
-      {
-        name: "Broom & Mop with Bucket",
-        importance: "required"
-      },
-      {
-        name: "Bike/Bike Lock",
-        importance: "required"
-      },
-      {
-        name: "Personal Hygiene Products",
-        importance: "required"
-      },
-      {
-        name: "Cleaning Supplies",
-        importance: "required"
-      },
-      {
-        name: "Command Hooks/Strips",
-        importance: "required"
-      },
-      {
-        name: "Hangers",
-        importance: "required"
-      },
-      {
-        name: "Toiletries",
-        importance: "required",
-        description: "Shampoo, soap, etc."
+        importance: "recommended"
       }
     ]
   },
   {
-    category: "School Supplies",
+    category: "Weather & Transportation",
     items: [
       {
-        name: "Notepads",
-        importance: "required"
+        name: "Umbrella",
+        importance: "recommended",
+        season: "both",
+        weather: "rain"
       },
       {
-        name: "Calendar",
-        importance: "required"
+        name: "Rain Boots & Rain Jacket",
+        importance: "recommended",
+        description: "Essential for rainy days",
+        season: "both",
+        weather: "rain"
       },
       {
-        name: "Paper Clips",
-        importance: "required"
+        name: "Winter Coat & Gloves",
+        importance: "recommended",
+        description: "Heavy coat, gloves, hat, scarf",
+        season: "fall",
+        weather: "cold"
       },
       {
-        name: "Folders/Binders",
-        importance: "required"
+        name: "Snow Boots",
+        importance: "recommended",
+        description: "Waterproof boots for snow",
+        season: "fall",
+        weather: "cold"
       },
       {
-        name: "Stapler/Staples",
-        importance: "required"
+        name: "Light Jacket/Sweater",
+        importance: "recommended",
+        description: "For cool spring/fall days",
+        season: "spring",
+        weather: "warm"
       },
       {
-        name: "Rubber Bands",
-        importance: "required"
-      },
-      {
-        name: "Pens/Pencils",
-        importance: "required"
-      },
-      {
-        name: "Laptop & Supplies",
-        importance: "required",
-        description: "Required"
-      },
-      {
-        name: "Bulletin Board/White Board",
-        importance: "required"
-      },
-      {
-        name: "Sharpies",
-        importance: "required"
-      },
-      {
-        name: "Highlighters",
-        importance: "required"
-      },
-      {
-        name: "USB/Flash Drive",
-        importance: "required"
-      },
-      {
-        name: "Tape",
-        importance: "required"
-      },
-      {
-        name: "Scissors",
-        importance: "required"
-      },
-      {
-        name: "Ruler",
-        importance: "required"
-      },
-      {
-        name: "Backpack",
-        importance: "required"
-      },
-      {
-        name: "Envelope/Stamps",
-        importance: "required"
-      },
-      {
-        name: "Calculator",
-        importance: "required"
-      }
-    ]
-  },
-  {
-    category: "Room Essentials",
-    items: [
-      {
-        name: "Sheets, Pillowcases",
-        importance: "required",
-        description: "Twin XL"
-      },
-      {
-        name: "Bedspread",
-        importance: "required",
-        description: "Twin XL"
-      },
-      {
-        name: "Blankets",
-        importance: "required"
-      },
-      {
-        name: "Pillows",
-        importance: "required"
-      },
-      {
-        name: "Mattress Pad",
+        name: "Bike & Bike Lock",
         importance: "optional",
-        description: "If preferred"
-      },
+        season: "both",
+        weather: "all"
+      }
+    ]
+  },
+  {
+    category: "Kitchen & Dining",
+    items: [
       {
-        name: "Towels/Washcloths",
-        importance: "required"
+        name: "Dishes, Cups, Glasses",
+        importance: "recommended"
       },
       {
         name: "Coffee Maker/Keurig",
@@ -230,305 +292,474 @@ const checklistItems: ChecklistItem[] = [
       },
       {
         name: "Alarm Clock",
-        importance: "required",
+        importance: "recommended",
         description: "With backup battery"
-      },
-      {
-        name: "Wastebasket",
-        importance: "required"
-      },
-      {
-        name: "Desk Lamp",
-        importance: "required"
       }
     ]
   },
   {
-    category: "Bathroom Items",
+    category: "Entertainment & Personal",
     items: [
-      {
-        name: "Shower Curtain and Bathroom Mats",
-        importance: "required",
-        description: "For North and Downhour, Summit and Sycamore Halls (1 per suite)"
-      },
-      {
-        name: "Toilet Paper",
-        importance: "required",
-        description: "For North, Downhour, Summit and Sycamore"
-      },
-      {
-        name: "Shower Caddy",
-        importance: "required"
-      },
-      {
-        name: "Shower Shoes",
-        importance: "required"
-      },
-      {
-        name: "Hair Dryer",
-        importance: "required"
-      },
-      {
-        name: "Toothbrush/Toothpaste",
-        importance: "required"
-      },
-      {
-        name: "Personal Hygiene Products",
-        importance: "required"
-      }
-    ]
-  },
-  {
-    category: "Optional Items",
-    items: [
-      {
-        name: "Area Rugs",
-        importance: "optional"
-      },
       {
         name: "TV",
         importance: "optional"
       },
       {
         name: "Gaming Consoles",
-        importance: "optional",
-        description: "If applicable"
+        importance: "optional"
       },
       {
         name: "Surge Protectors",
+        importance: "recommended"
+      },
+      {
+        name: "Posters/Pictures",
         importance: "optional"
       },
       {
         name: "Over-the-door Mirror",
         importance: "optional"
-      },
-      {
-        name: "Small Bookshelves",
-        importance: "optional"
-      },
-      {
-        name: "Posters/Pictures",
-        importance: "optional"
-      }
-    ]
-  },
-  {
-    category: "Prohibited Items",
-    items: [
-      {
-        name: "TV Cable Cords (Coaxial Cables)",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Duct Tape",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Drugs/Alcohol",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Weapons",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Cooking Appliances",
-        importance: "required",
-        description: "Hot plates, single burner units, sandwich makers, crock pots, instant pots, toasters, toaster ovens, waffle makers"
-      },
-      {
-        name: "Knives",
-        importance: "required",
-        description: "Longer than 3\" (including kitchen knives)"
-      },
-      {
-        name: "Pets",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Large Furniture",
-        importance: "required",
-        description: "Including mini-fridges"
-      },
-      {
-        name: "Refrigerator",
-        importance: "required",
-        description: "Including mini-fridge"
-      },
-      {
-        name: "Microwave",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Thumbtacks",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Halogen Bulbs",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Candles",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Wax Warmers",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Incense",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Weights",
-        importance: "required",
-        description: "Please use the Student Center for exercise equipment"
-      },
-      {
-        name: "Wireless Routers",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Vapes, Tobacco Products, Cannabis",
-        importance: "required",
-        description: "Not allowed"
-      },
-      {
-        name: "Weapons",
-        importance: "required",
-        description: "Sling shots, blow guns, paintball guns, BB guns, airsoft guns, crossbows, ammunition, firearms, explosives and other weapons"
       }
     ]
   }
 ];
 
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
+const prohibitedItems: ProhibitedItem[] = [
+  {
+    name: "Cooking Appliances",
+    description: "Hot plates, single burner units, sandwich makers, crock pots, instant pots, toasters, toaster ovens, waffle makers"
+  },
+  {
+    name: "Microwave",
+    description: "Not allowed - provided by housing"
+  },
+  {
+    name: "Refrigerator/Mini-Fridge",
+    description: "Not allowed - provided by housing"
+  },
+  {
+    name: "Large Furniture",
+    description: "Including additional furniture that doesn't fit in provided space"
+  },
+  {
+    name: "Candles, Wax Warmers, Incense",
+    description: "Fire hazards are not permitted"
+  },
+  {
+    name: "Halogen Bulbs",
+    description: "Fire hazard - use LED bulbs instead"
+  },
+  {
+    name: "Thumbtacks, Duct Tape",
+    description: "Can damage walls - use Command strips instead"
+  },
+  {
+    name: "TV Cable Cords (Coaxial Cables)",
+    description: "Not needed - use streaming services"
+  },
+  {
+    name: "Wireless Routers",
+    description: "Can interfere with campus network - use provided WiFi"
+  },
+  {
+    name: "Weights/Exercise Equipment",
+    description: "Use the Student Center gym instead"
+  },
+  {
+    name: "Knives (longer than 3\")",
+    description: "Including kitchen knives - small utility knives are okay"
+  },
+  {
+    name: "Weapons",
+    description: "Firearms, ammunition, explosives, slingshots, paintball guns, BB guns, airsoft guns, crossbows, and other weapons"
+  },
+  {
+    name: "Drugs, Alcohol, Tobacco Products",
+    description: "Including vapes and cannabis products"
+  },
+  {
+    name: "Pets",
+    description: "Service animals must be pre-approved"
   }
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
+];
 
 export default function WhatToBring() {
-  const [, setLocation] = useLocation();
+  const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [selectedSeason, setSelectedSeason] = useState<"fall" | "spring" | "both">("both");
+  const [selectedWeather, setSelectedWeather] = useState<"cold" | "warm" | "rain" | "all">("all");
+
+  // Load saved progress from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('whatToBringProgress');
+    if (saved) {
+      setCheckedItems(JSON.parse(saved));
+    }
+  }, []);
+
+  // Save progress to localStorage whenever checkedItems changes
+  useEffect(() => {
+    localStorage.setItem('whatToBringProgress', JSON.stringify(checkedItems));
+  }, [checkedItems]);
+
+  const handleItemToggle = (itemId: string) => {
+    setCheckedItems(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  const resetProgress = () => {
+    setCheckedItems({});
+    localStorage.removeItem('whatToBringProgress');
+  };
+
+  const getProgressPercentage = () => {
+    const totalItems = checklistItems.reduce((acc, category) => acc + category.items.length, 0);
+    const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+    return Math.round((checkedCount / totalItems) * 100);
+  };
+
+  const printChecklist = () => {
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Hocking College - What to Bring Checklist</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; }
+              .category { margin-bottom: 20px; }
+              .category h3 { color: #2563eb; border-bottom: 2px solid #2563eb; padding-bottom: 5px; }
+              .item { margin: 5px 0; padding: 5px; }
+              .recommended { background-color: #f0f9ff; }
+              .optional { background-color: #fef3c7; }
+              .checkbox { width: 20px; height: 20px; margin-right: 10px; }
+              .season-badge { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+              .weather-badge { background: #3b82f6; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+            </style>
+          </head>
+          <body>
+            <h1>Hocking College - What to Bring Checklist</h1>
+            <p><strong>Progress:</strong> ${getProgressPercentage()}% complete</p>
+            ${checklistItems.map(category => `
+              <div class="category">
+                <h3>${category.category}</h3>
+                ${category.items
+                  .filter(item => 
+                    (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+                    (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+                  )
+                  .map(item => `
+                    <div class="item ${item.importance}">
+                      <input type="checkbox" class="checkbox" ${checkedItems[`${category.category}-${item.name}`] ? 'checked' : ''}>
+                      <strong>${item.name}</strong>
+                      ${item.season && item.season !== "both" ? `<span class="season-badge">${item.season}</span>` : ''}
+                      ${item.weather && item.weather !== "all" ? `<span class="weather-badge">${item.weather}</span>` : ''}
+                      ${item.description ? `<br><em>${item.description}</em>` : ''}
+                    </div>
+                  `).join('')}
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  };
+
+  const downloadChecklist = () => {
+    const content = `
+HOCKING COLLEGE - WHAT TO BRING CHECKLIST
+Progress: ${getProgressPercentage()}% complete
+
+${checklistItems.map(category => `
+${category.category.toUpperCase()}
+${category.items
+  .filter(item => 
+    (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+    (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+  )
+  .map(item => `[ ] ${item.name}${item.description ? ` - ${item.description}` : ''}${item.season && item.season !== "both" ? ` (${item.season})` : ''}${item.weather && item.weather !== "all" ? ` (${item.weather})` : ''}`)
+  .join('\n')}
+`).join('\n')}
+
+Generated on: ${new Date().toLocaleDateString()}
+    `;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'hocking-college-checklist.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-popover p-4">
-      <div className="max-w-6xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-6"
-      >
-        <button
-          onClick={() => setLocation('/housing')}
-          className="flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+    <div className="container mx-auto py-8 px-4 max-w-6xl">
+      <div className="flex items-center mb-6">
+        <Link 
+          href="/housing"
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Housing Services
-        </button>
-      </motion.div>
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back to Housing</span>
+        </Link>
+      </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
-        <div className="p-3 bg-primary/10 rounded-full">
-          <ClipboardList className="h-8 w-8 text-primary" />
+      <div className="mb-8">
+        <div className="flex items-center gap-4 mb-4">
+          <ClipboardList className="h-8 w-8 text-blue-600" />
+          <h1 className="text-3xl font-bold text-primary">What to Bring</h1>
         </div>
-        <div>
-          <h1 className="text-3xl font-bold">What to Bring</h1>
-          <p className="text-muted-foreground">Essential items checklist for your stay</p>
-        </div>
-      </motion.div>
+        <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+          Essential items checklist for your stay. Make sure you have everything you need for a comfortable and successful college experience.
+        </p>
+      </div>
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        {checklistItems.map((category) => (
-          <motion.div key={category.category} variants={item}>
-            <Card className={`hover-card h-full ${category.category === "Prohibited Items" ? "border-red-200" : ""}`}>
-              <CardHeader>
-                <div className="flex items-center gap-2">
-                  {category.category === "Prohibited Items" ? (
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                  ) : (
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                  )}
-                  <CardTitle>{category.category}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  {category.items.map((item) => (
-                    <li key={item.name} className="space-y-1">
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                          <span className="font-medium">{item.name}</span>
-                        </div>
-                        <Badge 
-                          variant={item.importance === "required" ? "destructive" : 
-                                 item.importance === "recommended" ? "default" : "secondary"}
-                        >
-                          {item.importance}
-                        </Badge>
-                      </div>
+      {/* Progress Bar and Controls */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between text-xl text-blue-800 dark:text-blue-200">
+          <span>Packing Progress: {getProgressPercentage()}%</span>
+          <div className="flex gap-2">
+            <Button onClick={printChecklist} variant="outline" size="sm" className="flex items-center gap-2">
+              <Printer className="h-4 w-4" />
+              Print
+            </Button>
+            <Button onClick={downloadChecklist} variant="outline" size="sm" className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Download
+            </Button>
+            <Button onClick={resetProgress} variant="outline" size="sm">
+              Reset
+            </Button>
+          </div>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div 
+            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+            style={{ width: `${getProgressPercentage()}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Season and Weather Filters */}
+      <div className="mb-8">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
+          <h3 className="text-xl text-green-800 dark:text-green-200 mb-4">Filter by Season & Weather</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Semester</h4>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="season"
+                    value="both"
+                    checked={selectedSeason === "both"}
+                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Both Semesters</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="season"
+                    value="fall"
+                    checked={selectedSeason === "fall"}
+                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Fall Only</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="season"
+                    value="spring"
+                    checked={selectedSeason === "spring"}
+                    onChange={(e) => setSelectedSeason(e.target.value as "fall" | "spring" | "both")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Spring Only</span>
+                </label>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3">Weather</h4>
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="weather"
+                    value="all"
+                    checked={selectedWeather === "all"}
+                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">All Weather</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="weather"
+                    value="cold"
+                    checked={selectedWeather === "cold"}
+                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Cold Weather</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="weather"
+                    value="rain"
+                    checked={selectedWeather === "rain"}
+                    onChange={(e) => setSelectedWeather(e.target.value as "cold" | "warm" | "rain" | "all")}
+                    className="text-green-600"
+                  />
+                  <span className="text-green-700 dark:text-green-300">Rain Gear</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Collapsible Sections */}
+      <div className="mb-8">
+        <Accordion type="single" collapsible className="border-2 border-green-600 rounded-lg">
+          {/* Recommended Items */}
+          <AccordionItem value="recommended" className="border-2 border-green-600 rounded-lg mb-4">
+            <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+              <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+                <CheckCircle className="mr-3 h-6 w-6" />
+                Recommended Items to Bring
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {checklistItems.map((category) => (
+                  <div key={category.category} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg">
+                    <h3 className="font-semibold text-green-800 dark:text-green-200 mb-3">{category.category}</h3>
+                    <ul className="space-y-3">
+                      {category.items
+                        .filter(item => 
+                          (selectedSeason === "both" || item.season === selectedSeason || item.season === "both") &&
+                          (selectedWeather === "all" || item.weather === selectedWeather || item.weather === "all")
+                        )
+                        .map((item) => {
+                          const itemId = `${category.category}-${item.name}`;
+                          return (
+                            <li key={item.name} className="space-y-1">
+                              <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-2 flex-1">
+                                  <Checkbox
+                                    checked={checkedItems[itemId] || false}
+                                    onCheckedChange={() => handleItemToggle(itemId)}
+                                    className="text-green-600"
+                                  />
+                                  <span className={`font-medium ${checkedItems[itemId] ? 'line-through text-green-600' : 'text-green-800 dark:text-green-200'}`}>
+                                    {item.name}
+                                  </span>
+                                </div>
+                                <div className="flex gap-2">
+                                  {item.season && item.season !== "both" && (
+                                    <Badge className="bg-green-200 text-green-800 text-xs">
+                                      {item.season === "fall" ? "🍂 Fall" : "🌸 Spring"}
+                                    </Badge>
+                                  )}
+                                  {item.weather && item.weather !== "all" && (
+                                    <Badge className="bg-blue-200 text-blue-800 text-xs">
+                                      {item.weather === "cold" ? "❄️ Cold" : item.weather === "rain" ? "🌧️ Rain" : "☀️ Warm"}
+                                    </Badge>
+                                  )}
+                                  <Badge 
+                                    className={item.importance === "recommended" ? "bg-green-600 text-white" : "bg-green-200 text-green-800"}
+                                  >
+                                    {item.importance}
+                                  </Badge>
+                                </div>
+                              </div>
+                              {item.description && (
+                                <p className="text-sm text-green-700 dark:text-green-300 ml-6">
+                                  {item.description}
+                                </p>
+                              )}
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* Prohibited Items */}
+          <AccordionItem value="prohibited" className="border-2 border-red-600 rounded-lg mb-4">
+            <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 px-6 py-4 hover:no-underline">
+              <div className="flex items-center text-xl text-red-800 dark:text-red-200">
+                <XCircle className="mr-3 h-6 w-6" />
+                Items NOT Allowed
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                {prohibitedItems.map((item, index) => (
+                  <div key={index} className="flex items-start gap-3 p-4 bg-red-50 dark:bg-red-900/30 rounded-lg">
+                    <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="font-medium text-red-800 dark:text-red-200">{item.name}</p>
                       {item.description && (
-                        <p className="text-sm text-muted-foreground ml-3.5">
-                          {item.description}
-                        </p>
+                        <p className="text-sm text-red-700 dark:text-red-300 mt-1">{item.description}</p>
                       )}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200"
-      >
-        <h2 className="text-xl font-semibold mb-4">Additional Notes from Hocking College Housing</h2>
-        <ul className="space-y-2 text-sm text-blue-900">
-          <li>• Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</li>
-          <li>• Regarding prohibited items: These restrictions are in place for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls, which is why cooking appliances, candles, and halogen bulbs are not permitted.</li>
-          <li>• For exercise, Hocking College has a Student Center with a gym and workout equipment for student use. Do not bring your own.</li>
-          <li>• We encourage students to connect to the internet via the wall jacks as personal routers can interfere with the network.</li>
-          <li>• If you have any questions about what to bring or not to bring, please don't hesitate to contact the Housing Office.</li>
-        </ul>
-      </motion.div>
+          {/* Important Notes */}
+          <AccordionItem value="notes" className="border-2 border-blue-600 rounded-lg">
+            <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
+              <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+                <AlertTriangle className="mr-3 h-6 w-6" />
+                Important Notes from Hocking College Housing
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6">
+              <ul className="space-y-3 text-sm text-blue-700 dark:text-blue-300">
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Furniture Provided:</strong> Hocking College provides basic furniture in each dorm room, including twin XL beds, desks and chairs, three drawer dressers, closets, microwave, and fridge for individual use.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Safety First:</strong> Prohibited items are restricted for the safety and well-being of all residents. Fire hazards are a serious concern in residence halls.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Exercise Equipment:</strong> Use the Student Center gym and workout equipment instead of bringing your own weights or exercise equipment.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Internet Access:</strong> Connect to the internet via the provided WiFi. Personal routers can interfere with the campus network.</div>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-600 mt-2 flex-shrink-0"></span>
+                  <div><strong>Questions?</strong> If you have any questions about what to bring or not to bring, please contact the Housing Office at (740) 753-6462 or <a href="mailto:housing@hocking.edu" className="text-blue-600 hover:underline">housing@hocking.edu</a>.</div>
+                </li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );

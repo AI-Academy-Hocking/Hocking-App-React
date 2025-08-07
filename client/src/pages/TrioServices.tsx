@@ -1,10 +1,8 @@
-import React from 'react';
 import { ArrowLeft, GraduationCap, Phone, Mail, FileText, Users, BookOpen, DollarSign, MapPin, Calendar, Download, Newspaper } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 
 function TrioServices() {
   const services = [

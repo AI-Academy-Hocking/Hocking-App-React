@@ -60,7 +60,6 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
       .filter(event => {
         const isVEvent = event.type === 'VEVENT';
         if (!isVEvent) {
-          console.log(`Skipping non-VEVENT: ${(event as any).type}`);
           return false;
         }
         
@@ -73,7 +72,6 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
             const maxDate = timeMax || new Date('2100-01-01');
             
             if (eventDate < minDate || eventDate > maxDate) {
-              console.log(`Skipping event outside date range: ${(event as any).summary} on ${eventDate.toISOString()}`);
               return false;
             }
           }
@@ -180,6 +178,10 @@ router.get('/events', async (req, res) => {
         events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
       } else if (calendarType === 'activities') {
         events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities', minDate, maxDate);
+      } else {
+        // Default to academic if no type specified
+        console.log('No calendar type specified, defaulting to academic');
+        events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
       }
     }
     
@@ -188,8 +190,10 @@ router.get('/events', async (req, res) => {
       console.log(`Date filtering applied at source: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
     }
     
-    console.log(`Sending ${events.length} events to frontend`);
-    res.json(events);
+    // Ensure events is always an array
+    const eventsArray = events || [];
+    console.log(`Sending ${eventsArray.length} events to frontend`);
+    res.json(eventsArray);
   } catch (error) {
     console.error(`API Error:`, error);
     res.status(500).json({ 

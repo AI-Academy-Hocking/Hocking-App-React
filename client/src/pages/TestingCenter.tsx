@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowLeft, Brain, Phone, Clock, FileText, Music, Laptop, AlertCircle, HelpCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";

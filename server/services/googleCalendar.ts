@@ -67,8 +67,7 @@ export class GoogleCalendarService {
           endTime: event.end?.dateTime || event.end?.date || new Date().toISOString(),
           location: event.location || 'No Location',
           description: event.description || 'No Description',
-          //
-          calendarType, //
+          calendarType,
         })) || [];
 
         console.log(`Fetched ${events.length} events from Google Calendar API for ${calendarType}`);
@@ -94,8 +93,7 @@ export class GoogleCalendarService {
         endTime: event.end?.dateTime || event.end?.date || new Date().toISOString(),
         location: event.location || 'No Location',
         description: event.description || 'No Description',
-        //
-        calendarType, //
+        calendarType,
       })) || [];
 
       console.log(`Fetched ${events.length} events from Google Calendar API for ${calendarType}`);

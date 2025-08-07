@@ -44,3 +44,17 @@ declare namespace gapi.client {
     }
   }
 }
+
+// Permissions API types
+interface Permissions {
+  query(permissionDesc: { name: string }): Promise<PermissionStatus>;
+}
+
+interface PermissionStatus {
+  state: 'granted' | 'denied' | 'prompt';
+  addEventListener(type: string, listener: EventListener): void;
+}
+
+interface Navigator {
+  permissions?: Permissions;
+}

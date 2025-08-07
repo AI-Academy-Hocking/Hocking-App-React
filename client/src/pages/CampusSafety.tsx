@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { PhoneCall, Shield, HeartPulse, AlertTriangle } from "lucide-react";
+import { PhoneCall, Shield, HeartPulse, AlertTriangle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useBackNavigation } from "@/hooks/use-back-navigation";
 
 interface SafetyResource {
   id: number;
@@ -18,6 +19,7 @@ interface SafetyResource {
 
 export default function CampusSafety() {
   const [resourceCategory, setResourceCategory] = useState<string>("all");
+  const { goBack } = useBackNavigation();
 
   // Fetch safety resources (filtered by category if selected)
   const { data: resources = [], isLoading: resourcesLoading } = useQuery({
@@ -41,7 +43,18 @@ export default function CampusSafety() {
 
   return (
     <div className="container py-6 max-w-2xl bg-white dark:bg-[#151c26] min-h-screen rounded-xl">
-      <h1 className="text-3xl font-bold mb-2 text-black dark:text-blue-300">Campus Safety</h1>
+      {/* Back Navigation */}
+      <div className="flex items-center mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-primary hover:text-primary-dark transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
+      <h1 className="text-3xl font-bold mb-2 text-primary dark:text-white">Campus Safety</h1>
       <div className="space-y-6">
         {/* Emergency Contacts Section */}
         <div className="border border-red-500 rounded-xl bg-neutral-100 dark:bg-[#353e4a] p-4 mb-6">
@@ -68,7 +81,7 @@ export default function CampusSafety() {
               <CardContent className="flex flex-col items-center py-4">
                 <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
                 <span className="text-xs text-black dark:text-white">Health Services</span>
-                <span className="text-xl font-bold text-green-600">(740) 753-7070</span>
+                <span className="text-xl font-bold text-green-600">(740) 753-6598</span>
               </CardContent>
             </Card>
           </div>

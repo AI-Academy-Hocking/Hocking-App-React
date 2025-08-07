@@ -152,14 +152,14 @@ export default function CareerUniversityCenter() {
                 <Phone className="h-5 w-5 text-gray-500 mt-1" />
                 <div>
                   <h3 className="font-semibold">Phone</h3>
-                  <a href={`tel:${officeInfo.phone}`} className="text-primary hover:underline">{officeInfo.phone}</a>
+                  <a href={`tel:${officeInfo.phone}`} className="text-primary ">{officeInfo.phone}</a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Mail className="h-5 w-5 text-gray-500 mt-1" />
                 <div>
                   <h3 className="font-semibold">Email</h3>
-                  <a href={`mailto:${officeInfo.email}`} className="text-primary hover:underline">{officeInfo.email}</a>
+                  <a href={`mailto:${officeInfo.email}`} className="text-primary ">{officeInfo.email}</a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -188,7 +188,7 @@ export default function CareerUniversityCenter() {
                   <div>
                     <h3 className="font-semibold">{member.name}</h3>
                     <p className="text-gray-600 text-sm">{member.title}</p>
-                    <a href={`mailto:${member.email}`} className="text-primary text-sm hover:underline">{member.email}</a>
+                    <a href={`mailto:${member.email}`} className="text-primary text-sm ">{member.email}</a>
                   </div>
                 </CardContent>
               </Card>

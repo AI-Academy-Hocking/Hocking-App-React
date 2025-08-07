@@ -1,8 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path, { dirname } from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,14 +9,6 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    themePlugin(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          require("@replit/vite-plugin-cartographer").cartographer(),
-        ]
-      : []),
   ],
   assetsInclude: ['**/*.JPG', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.webp'],
   resolve: {
@@ -33,7 +23,42 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React and related
+          'react-vendor': ['react', 'react-dom'],
+          // Large UI libraries
+          'ui-vendor': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-select',
+            '@radix-ui/react-toast',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-navigation-menu'
+          ],
+          // Calendar and date libraries
+          'calendar-vendor': [
+            'react-big-calendar',
+            'react-calendar', 
+            'date-fns',
+            'react-day-picker'
+          ],
+          // Charts and visualization
+          'chart-vendor': ['recharts'],
+          // Icons and animations
+          'visual-vendor': ['lucide-react', 'react-icons', 'framer-motion'],
+          // Utility libraries
+          'utils-vendor': ['clsx', 'class-variance-authority', 'tailwind-merge'],
+          // Form and validation
+          'form-vendor': ['react-hook-form', 'zod'],
+          // Query and state management
+          'query-vendor': ['@tanstack/react-query']
+        }
+      }
+    }
   },
   optimizeDeps: {
     include: ['@sinclair/typebox'],

@@ -5,9 +5,9 @@
   "types": "./dist/schema.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/schema.js",
+      "types": "./dist/schema.d.ts",
       "import": "./dist/schema.js",
-      "types": "./dist/schema.d.ts"
+      "require": "./dist/schema.js"
     }
   },
   "scripts": {

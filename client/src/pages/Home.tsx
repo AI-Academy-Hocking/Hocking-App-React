@@ -1,13 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
-import { Calendar, MapPin, Wrench, School, Clock } from "lucide-react";
+import { Calendar, MapPin, Wrench, School, Clock, GraduationCap } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import HockingBackground from "../components/assets/Campus.jpeg";  
-import ProgramDropdown from "@/components/ProgramDropdown";
-import { Button } from "@/components/ui/button";
+
 import { format, isAfter, startOfToday } from "date-fns";
 import { Event } from "../../../shared/schema";
 
@@ -76,10 +75,11 @@ export default function Home() {
     };
   };
 
-  const handleProgramChange = (program: string) => {
-    console.log('Selected program:', program);
-    // Add any additional program selection logic here
-  };
+
+
+
+
+
 
   const quickLinks = [
     { 
@@ -98,9 +98,9 @@ export default function Home() {
       label: "Maps & Directions" 
     },
     { 
-      href: "/resources", 
-      icon: School, 
-      label: "Resources" 
+      href: "/housing", 
+      icon: GraduationCap, 
+      label: "Housing" 
     },
   ];
 
@@ -114,7 +114,7 @@ export default function Home() {
           <img 
             src={HockingBackground} 
             alt="Hocking College Campus" 
-            className="w-full h-48 object-cover" 
+            className="w-full h-64 object-cover" 
           />
           <CardContent className="p-6">
             <div className="space-y-4">
@@ -122,9 +122,6 @@ export default function Home() {
                 Explore all that Hocking College has to offer. Access your student resources, 
                 check the academic calendar, find your way around campus, and more.
               </p>
-              <div className="w-full max-w-xs">
-                <ProgramDropdown onChange={handleProgramChange} />
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -222,6 +219,8 @@ export default function Home() {
             )}
           </div>
         </div>
+        
+
       </section>
     </div>
   );

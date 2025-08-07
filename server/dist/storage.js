@@ -3,22 +3,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.storage = exports.MemStorage = void 0;
 class MemStorage {
     constructor() {
-        this.users = new Map();
-        this.events = new Map();
-        this.buildings = new Map();
         this.studentTools = new Map();
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
         this.comments = new Map();
+=======
+>>>>>>> origin/Owen-Branch
         this.safetyAlerts = new Map();
         this.safetyResources = new Map();
         this.currentUserId = 1;
         this.currentEventId = 1;
         this.currentBuildingId = 1;
-        this.currentCommentId = 1;
         this.currentSafetyAlertId = 1;
         this.currentSafetyResourceId = 1;
+=======
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
         // Initialize with sample data
         this.initializeSampleData();
     }
+<<<<<<< HEAD
+=======
     // User operations
     async getUser(id) {
         return this.users.get(id);
@@ -32,13 +39,12 @@ class MemStorage {
             id,
             username: insertUser.username,
             password: insertUser.password,
-            name: insertUser.name ?? null,
-            email: insertUser.email ?? null,
-            isGuest: insertUser.isGuest ?? null,
-            lat: null,
-            lng: null,
-            isLocationShared: false,
-            lastLocationUpdate: null
+            name: insertUser.name,
+            isGuest: insertUser.isGuest ?? false,
+            createdAt: new Date(),
+            lastLogin: null,
+            location: insertUser.location ?? null,
+            isSharingLocation: insertUser.isSharingLocation ?? false
         };
         this.users.set(id, user);
         return user;
@@ -50,16 +56,14 @@ class MemStorage {
         }
         const updatedUser = {
             ...user,
-            lat: locationUpdate.lat,
-            lng: locationUpdate.lng,
-            isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
-            lastLocationUpdate: new Date()
+            location: locationUpdate.location ?? user.location,
+            isSharingLocation: locationUpdate.isSharingLocation ?? user.isSharingLocation
         };
         this.users.set(userId, updatedUser);
         return updatedUser;
     }
     async getSharedLocations() {
-        return Array.from(this.users.values()).filter((user) => user.isLocationShared && user.lat !== null && user.lng !== null);
+        return Array.from(this.users.values()).filter((user) => user.isSharingLocation && user.location !== null);
     }
     // Event operations
     async getEvents() {
@@ -72,11 +76,14 @@ class MemStorage {
         const id = this.currentEventId++;
         const event = {
             id,
-            date: insertEvent.date,
             title: insertEvent.title,
-            description: insertEvent.description ?? null,
-            time: insertEvent.time,
-            location: insertEvent.location
+            description: insertEvent.description,
+            startTime: insertEvent.startTime,
+            endTime: insertEvent.endTime,
+            location: insertEvent.location,
+            createdAt: new Date(),
+            isRecurring: insertEvent.isRecurring ?? false,
+            recurrencePattern: insertEvent.recurrencePattern ?? null
         };
         this.events.set(id, event);
         return event;
@@ -93,14 +100,17 @@ class MemStorage {
         const building = {
             id,
             name: insertBuilding.name,
-            lat: insertBuilding.lat,
-            lng: insertBuilding.lng,
-            description: insertBuilding.description ?? null,
-            category: insertBuilding.category
+            description: insertBuilding.description,
+            location: insertBuilding.location,
+            createdAt: new Date(),
+            isOpen: insertBuilding.isOpen ?? true,
+            openHours: insertBuilding.openHours ?? null,
+            contactInfo: insertBuilding.contactInfo ?? null
         };
         this.buildings.set(id, building);
         return building;
     }
+>>>>>>> origin/Owen-Branch
     // Student Tool operations
     async getStudentTools() {
         return Array.from(this.studentTools.values());
@@ -109,9 +119,17 @@ class MemStorage {
         return this.studentTools.get(id);
     }
     async createStudentTool(tool) {
+<<<<<<< HEAD
+        // Just store the tool as-is, don't add createdAt or isActive
         this.studentTools.set(tool.id, tool);
         return tool;
     }
+<<<<<<< HEAD
+    // Initialize with sample data
+    async initializeSampleData() {
+        // Sample student tools - only what's needed for Career & University Center
+=======
+<<<<<<< HEAD
     // Comment operations
     async getAllComments() {
         return Array.from(this.comments.values());
@@ -129,14 +147,15 @@ class MemStorage {
             discussionId: insertComment.discussionId,
             authorId: insertComment.authorId,
             content: insertComment.content,
+=======
+        const studentTool = {
+            ...tool,
+>>>>>>> origin/Owen-Branch
             createdAt: new Date(),
-            parentId: insertComment.parentId ?? null
+            isActive: tool.isActive ?? true
         };
-        this.comments.set(id, comment);
-        return comment;
-    }
-    async getUserComments(userId) {
-        return Array.from(this.comments.values()).filter((comment) => comment.authorId === userId);
+        this.studentTools.set(tool.id, studentTool);
+        return studentTool;
     }
     // Safety Alert operations
     async getSafetyAlerts() {
@@ -145,7 +164,7 @@ class MemStorage {
     async getActiveSafetyAlerts() {
         const now = new Date();
         return Array.from(this.safetyAlerts.values()).filter(alert => alert.isActive &&
-            (alert.endDate === null || alert.endDate > now));
+            (alert.expiresAt === null || alert.expiresAt > now));
     }
     async getSafetyAlert(id) {
         return this.safetyAlerts.get(id);
@@ -155,25 +174,23 @@ class MemStorage {
         const alert = {
             id,
             title: insertAlert.title,
-            content: insertAlert.content,
+            description: insertAlert.description,
             severity: insertAlert.severity,
-            startDate: insertAlert.startDate ?? new Date(),
-            endDate: insertAlert.endDate ?? null,
+            location: insertAlert.location,
+            createdAt: new Date(),
             isActive: insertAlert.isActive ?? true,
-            location: insertAlert.location ?? null
+            expiresAt: insertAlert.expiresAt ?? null
         };
         this.safetyAlerts.set(id, alert);
         return alert;
     }
     // Safety Resource operations
     async getSafetyResources() {
-        return Array.from(this.safetyResources.values())
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
+        return Array.from(this.safetyResources.values());
     }
     async getSafetyResourcesByCategory(category) {
         return Array.from(this.safetyResources.values())
-            .filter(resource => resource.category === category)
-            .sort((a, b) => (a.order || 999) - (b.order || 999));
+            .filter(resource => resource.category === category);
     }
     async getSafetyResource(id) {
         return this.safetyResources.get(id);
@@ -185,10 +202,9 @@ class MemStorage {
             title: insertResource.title,
             description: insertResource.description,
             category: insertResource.category,
-            url: insertResource.url ?? null,
-            phoneNumber: insertResource.phoneNumber ?? null,
-            icon: insertResource.icon ?? null,
-            order: insertResource.order ?? 0
+            url: insertResource.url,
+            createdAt: new Date(),
+            isActive: insertResource.isActive ?? true
         };
         this.safetyResources.set(id, resource);
         return resource;
@@ -320,11 +336,21 @@ class MemStorage {
             category: "resources",
             url: "#",
         });
+=======
+    // Initialize with sample data
+    async initializeSampleData() {
+        // Sample student tools - only what's needed for Career & University Center
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
         await this.createStudentTool({
             id: "career-services",
-            name: "Career Services",
+            name: "Career & University Center",
             description: "Job search and career planning",
             category: "resources",
+<<<<<<< HEAD
+            url: "/career-university-center",
+=======
+<<<<<<< HEAD
             url: "#",
         });
         // Sample safety alerts
@@ -390,7 +416,17 @@ class MemStorage {
             title: "Emergency Procedures",
             description: "Step-by-step guides for emergency situations",
             category: "emergency",
+<<<<<<< HEAD
             url: "#"
+=======
+            url: "#",
+            icon: "file-text",
+            order: 8
+=======
+            url: "/career-university-center",
+>>>>>>> Jodian-Branch
+>>>>>>> origin/Lukas-Branch
+>>>>>>> a62c050effdbca6d1b7a30e10c72521020a7b800
         });
     }
 }

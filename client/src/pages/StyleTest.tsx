@@ -1,8 +1,22 @@
-import React from 'react';
+import { ArrowLeft } from "lucide-react";
+import { useBackNavigation } from "../hooks/use-back-navigation";
 
 export default function StyleTest() {
+  const { goBack } = useBackNavigation();
+
   return (
     <div className="min-h-screen bg-gray-900 p-8">
+      {/* Back Navigation */}
+      <div className="max-w-4xl mx-auto mb-6">
+        <button 
+          onClick={goBack}
+          className="flex items-center text-white hover:text-gray-300 transition-colors"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          <span>Back</span>
+        </button>
+      </div>
+
       <div className="max-w-4xl mx-auto space-y-12">
         <h1 className="text-3xl font-bold text-white mb-8">Style Comparison</h1>
         

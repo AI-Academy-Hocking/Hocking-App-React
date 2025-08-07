@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function StyleExample() {
   return (
     <div className="p-8 space-y-8">

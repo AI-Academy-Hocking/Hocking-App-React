@@ -156,12 +156,12 @@ export default function CourseCatalog() {
         <CardContent>
           <div className="flex flex-col items-center space-y-6">
             <Select value={selectedSchool} onValueChange={setSelectedSchool}>
-              <SelectTrigger className="w-full md:w-[400px]">
+              <SelectTrigger className="w-full md:w-[400px] bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 shadow-md">
                 <SelectValue placeholder="Select a school" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 shadow-lg">
                 {courses.map((school) => (
-                  <SelectItem key={school.id} value={school.id}>
+                  <SelectItem key={school.id} value={school.id} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                     {school.name}
                   </SelectItem>
                 ))}
