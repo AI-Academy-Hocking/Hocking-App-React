@@ -2,12 +2,6 @@ var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
-  if (typeof require !== "undefined") return require.apply(this, arguments);
-  throw Error('Dynamic require of "' + x + '" is not supported');
-});
 var __esm = (fn, res) => function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
 };
@@ -28,9 +22,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path, { dirname } from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import { fileURLToPath } from "url";
 var __filename, __dirname, vite_config_default;
 var init_vite_config = __esm({
@@ -40,12 +32,7 @@ var init_vite_config = __esm({
     __dirname = dirname(__filename);
     vite_config_default = defineConfig({
       plugins: [
-        react(),
-        runtimeErrorOverlay(),
-        themePlugin(),
-        ...process.env.NODE_ENV !== "production" && process.env.REPL_ID !== void 0 ? [
-          __require("@replit/vite-plugin-cartographer").cartographer()
-        ] : []
+        react()
       ],
       assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
       resolve: {
@@ -537,27 +524,11 @@ var MemStorage = class {
       contactInfo: "740-753-6400"
     });
     await this.createStudentTool({
-      id: "course-schedule",
-      name: "Course Schedule",
-      description: "View your current classes",
-      category: "academic",
-      url: "#",
-      isActive: true
-    });
-    await this.createStudentTool({
-      id: "grades",
-      name: "Grades",
-      description: "Check your academic performance",
-      category: "academic",
-      url: "#",
-      isActive: true
-    });
-    await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
-      url: "#",
+      url: "/tools/academic/course-catalog",
       isActive: true
     });
     await this.createStudentTool({
@@ -565,23 +536,7 @@ var MemStorage = class {
       name: "Advising",
       description: "Connect with your advisor",
       category: "academic",
-      url: "#",
-      isActive: true
-    });
-    await this.createStudentTool({
-      id: "academic-history",
-      name: "Academic History",
-      description: "View your transcript",
-      category: "academic",
-      url: "#",
-      isActive: true
-    });
-    await this.createStudentTool({
-      id: "graduation",
-      name: "Graduation",
-      description: "Track degree requirements",
-      category: "academic",
-      url: "#",
+      url: "/tools/academic/advising",
       isActive: true
     });
     await this.createStudentTool({
@@ -606,14 +561,6 @@ var MemStorage = class {
       description: "Apply for available scholarships",
       category: "financial",
       url: "/scholarships",
-      isActive: true
-    });
-    await this.createStudentTool({
-      id: "campus-resources",
-      name: "Campus Resources",
-      description: "Access campus services",
-      category: "resources",
-      url: "#",
       isActive: true
     });
     await this.createStudentTool({
