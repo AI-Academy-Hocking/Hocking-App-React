@@ -51,7 +51,7 @@ export default function Scholarships() {
               
               <button
                 onClick={() => handleExternalLink('https://foundation.hocking.edu/scholarships')}
-                className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
+                className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 hover:from-blue-900 hover:to-blue-950 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
               >
                 <div className="flex items-center">
                   <FileText className="mr-4 h-6 w-6" />

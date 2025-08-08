@@ -177,7 +177,7 @@ const VerifyUser: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <Card className="border-2 border-blue-600 shadow-xl">
-            <CardHeader className="text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <CardHeader className="text-center bg-gradient-to-r from-blue-800 to-purple-800 dark:from-blue-600 dark:to-purple-600 text-white">
               <div className="flex justify-center mb-4">
                 <div className="p-3 bg-white/20 rounded-full">
                   <User className="h-8 w-8" />

@@ -232,7 +232,7 @@ class BiometricAuthService {
           <button id="cancel-biometric" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
             Cancel
           </button>
-          <button id="retry-biometric" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          <button id="retry-biometric" class="flex-1 px-4 py-2 bg-blue-800 dark:bg-blue-600 text-white rounded-lg hover:bg-blue-900 dark:hover:bg-blue-700">
             Try Again
           </button>
         </div>

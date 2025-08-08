@@ -237,7 +237,7 @@ export default function CalendarPage() {
             className={cn(
               "rounded-xl px-6 py-3 font-medium transition-all",
               activeCalendar === "academic" 
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                ? "bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 text-white hover:from-blue-900 hover:to-blue-950 dark:hover:from-blue-700 dark:hover:to-blue-800" 
                 : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
             )}
           >
@@ -249,7 +249,7 @@ export default function CalendarPage() {
             className={cn(
               "rounded-xl px-6 py-3 font-medium transition-all",
               activeCalendar === "activities" 
-                ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                ? "bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 text-white hover:from-blue-900 hover:to-blue-950 dark:hover:from-blue-700 dark:hover:to-blue-800" 
                 : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
             )}
           >
@@ -270,7 +270,7 @@ export default function CalendarPage() {
                 className={cn(
                   "rounded-xl px-6 py-2 font-medium transition-all",
                   view === "month" 
-                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                    ? "bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 text-white hover:from-blue-900 hover:to-blue-950 dark:hover:from-blue-700 dark:hover:to-blue-800" 
                     : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
                 )}
               >
@@ -282,7 +282,7 @@ export default function CalendarPage() {
                 className={cn(
                   "rounded-xl px-6 py-2 font-medium transition-all",
                   view === "list" 
-                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800" 
+                    ? "bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 text-white hover:from-blue-900 hover:to-blue-950 dark:hover:from-blue-700 dark:hover:to-blue-800" 
                     : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
                 )}
               >
@@ -320,7 +320,7 @@ export default function CalendarPage() {
                       return (
                         <div 
                           key={event.id}
-                          className="p-4 border-2 border-white dark:border-none rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                          className="p-4 border-2 border-blue-600 dark:border-none rounded-2xl hover:bg-blue-50 dark:hover:bg-gray-800 cursor-pointer transition-colors bg-white dark:bg-[#0f172a]"
                           onClick={() => handleEventClick(event)}
                         >
                           <div className="flex justify-between items-start mb-2">
@@ -470,7 +470,7 @@ export default function CalendarPage() {
           {upcomingEvents.slice(0, activeCalendar === "academic" ? 5 : 3).map(event => {
             const { time, end } = formatEventTime(event.startTime, event.endTime);
             return (
-              <Card key={event.id} className="p-4 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+              <Card key={event.id} className="p-4 border-2 border-blue-600 dark:border-none rounded-xl shadow-lg bg-white dark:bg-[#0f172a] hover:shadow-xl transition-shadow">
                 <div className="flex justify-between items-start mb-3">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-blue-300 line-clamp-2">
                     {event.title}
@@ -520,7 +520,7 @@ export default function CalendarPage() {
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+          <Card className="p-6 border-2 border-blue-600 dark:border-none rounded-xl shadow-lg bg-white dark:bg-[#0f172a] hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Academic Calendar</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               View important dates, deadlines, and events for the academic year.
@@ -534,7 +534,7 @@ export default function CalendarPage() {
             </Button>
           </Card>
 
-          <Card className="p-6 border-2 border-blue-500 dark:border-none rounded-xl shadow-lg bg-white dark:bg-gray-800 hover:shadow-xl transition-shadow">
+          <Card className="p-6 border-2 border-blue-600 dark:border-none rounded-xl shadow-lg bg-white dark:bg-[#0f172a] hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Activities</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Discover campus events, clubs, and activities to get involved.

@@ -159,7 +159,7 @@ export default function Home() {
                 {upcomingAcademicEvents.map(event => {
                   const { time, end } = formatEventTime(event.startTime, event.endTime);
                   return (
-                    <div key={event.id} className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                    <div key={event.id} className="p-3 border-2 border-blue-600 dark:border-none rounded-xl bg-white dark:bg-[#0f172a]">
                       <h4 className="font-semibold text-sm text-gray-900 dark:text-blue-300 mb-1 line-clamp-1">
                         {event.title}
                       </h4>
@@ -196,7 +196,7 @@ export default function Home() {
                 {upcomingActivityEvents.map(event => {
                   const { time, end } = formatEventTime(event.startTime, event.endTime);
                   return (
-                    <div key={event.id} className="p-3 border border-gray-200 dark:border-gray-600 rounded-lg">
+                    <div key={event.id} className="p-3 border-2 border-blue-600 dark:border-none rounded-xl bg-white dark:bg-[#0f172a]">
                       <h4 className="font-semibold text-sm text-gray-900 dark:text-blue-300 mb-1 line-clamp-1">
                         {event.title}
                       </h4>

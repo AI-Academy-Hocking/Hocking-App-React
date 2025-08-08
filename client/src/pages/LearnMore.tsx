@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from "wouter";
 import { Card, CardContent } from "../components/ui/card";
-import { School, MapPin, Accessibility, ChevronDown, ChevronRight, ArrowLeft } from "lucide-react";
+import { School, MapPin, Accessibility, ArrowLeft } from "lucide-react";
 import { Button } from "../components/ui/button";
 
 export default function LearnMore() {
@@ -128,7 +128,7 @@ export default function LearnMore() {
       icon: MapPin,
       content: (
         <div className="space-y-4">
-          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+          <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl">
             <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Elizabeth (Student):</h4>
             <p className="text-gray-700 dark:text-gray-300 italic">
               "Without help from TRIO, instructors, and family… instructors will help guide you to your goals and dreams."
@@ -310,20 +310,15 @@ export default function LearnMore() {
       <section className="max-w-4xl mx-auto">
         <div className="space-y-4">
           {hockingInfo.map((section) => (
-            <Card key={section.id} className="border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800">
+            <Card key={section.id} className="border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 rounded-xl">
               <button
                 onClick={() => toggleSection(section.id)}
-                className="w-full p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-between rounded-t-lg"
+                className="w-full p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center justify-between rounded-t-xl"
               >
                 <div className="flex items-center gap-3">
                   <section.icon className="h-6 w-6 text-blue-600" />
                   <h3 className="font-bold text-gray-900 dark:text-white text-xl">{section.title}</h3>
                 </div>
-                {expandedSections.includes(section.id) ? (
-                  <ChevronDown className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <ChevronRight className="h-5 w-5 text-gray-500" />
-                )}
               </button>
               
               {expandedSections.includes(section.id) && (
@@ -339,7 +334,7 @@ export default function LearnMore() {
 
         {/* Call to Action */}
         <div className="mt-8 text-center">
-          <Card className="border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-blue-50 dark:bg-blue-900/20">
+          <Card className="border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 rounded-xl">
             <CardContent className="p-6">
               <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 mb-3">
                 Ready to Get Started?
@@ -347,12 +342,12 @@ export default function LearnMore() {
               <p className="text-gray-600 dark:text-gray-300 mb-4">
                 Join the Hocking College community and begin your journey toward success.
               </p>
-              <Button
+              <button
                 onClick={handleBackToLogin}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg font-semibold"
+                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline text-lg font-semibold transition-colors"
               >
-                Return to Login
-              </Button>
+                Return to Landing Page
+              </button>
             </CardContent>
           </Card>
         </div>

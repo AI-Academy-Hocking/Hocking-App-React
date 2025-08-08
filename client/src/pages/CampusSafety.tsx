@@ -74,14 +74,14 @@ export default function CampusSafety() {
               <CardContent className="flex flex-col items-center py-4">
                 <Shield className="text-blue-600 h-7 w-7 mb-1" />
                 <span className="text-xs text-black dark:text-white">Campus Security</span>
-                <span className="text-xl font-bold text-blue-600">(740) 753-7050</span>
+                <span className="text-xl font-bold text-blue-600">(740) 753-6598</span>
               </CardContent>
             </Card>
             <Card className="bg-white dark:bg-[#151c26] shadow-none border border-green-600 dark:border-none rounded-xl">
               <CardContent className="flex flex-col items-center py-4">
                 <HeartPulse className="text-green-600 h-7 w-7 mb-1" />
                 <span className="text-xs text-black dark:text-white">Health Services</span>
-                <span className="text-xl font-bold text-green-600">(740) 753-6598</span>
+                <span className="text-xl font-bold text-green-600">(740) 753-7079</span>
               </CardContent>
             </Card>
           </div>

@@ -34,7 +34,7 @@ export default function Graduation() {
       {/* All Sections in Accordion */}
       <Accordion type="single" collapsible className="mb-8">
         {/* How to Apply for Graduation */}
-        <AccordionItem value="how-to-apply" className="border-2 border-blue-600 rounded-lg mb-4">
+        <AccordionItem value="how-to-apply" className="border-4 border-blue-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
               <UserCheck className="mr-3 h-6 w-6" />
@@ -81,7 +81,7 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Graduation Pre-Party */}
-        <AccordionItem value="graduation-pre-party" className="border-2 border-green-600 rounded-lg mb-4">
+        <AccordionItem value="graduation-pre-party" className="border-4 border-blue-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-green-800 dark:text-green-200">
               <Calendar className="mr-3 h-6 w-6" />
@@ -124,7 +124,7 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Cap & Gown Information */}
-        <AccordionItem value="cap-gown" className="border-2 border-purple-600 rounded-lg mb-4">
+        <AccordionItem value="cap-gown" className="border-4 border-blue-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
               <Award className="mr-3 h-6 w-6" />
@@ -134,21 +134,21 @@ export default function Graduation() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Standard Attire</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">All graduates receive a standard black gown and a blue and gold tassel</p>
                 </div>
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Additional Items</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">Some programs or organizations may offer additional stoles or cords (e.g., Phi Theta Kappa)</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Ordering Process</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">Gowns must be ordered by a deadline each term via an external vendor, at no additional cost</p>
                 </div>
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-lg">
+                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Pick-up</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">Pick-up typically happens at the Pre-Party or via the Career & University Center if missed</p>
                 </div>
@@ -158,7 +158,7 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Graduation Practice */}
-        <AccordionItem value="graduation-practice" className="border-2 border-orange-600 rounded-lg mb-4">
+        <AccordionItem value="graduation-practice" className="border-4 border-blue-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
               <Target className="mr-3 h-6 w-6" />
@@ -167,15 +167,15 @@ export default function Graduation() {
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
                 <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Required Attendance</h5>
                 <p className="text-sm text-orange-700 dark:text-orange-300">All students participating in the ceremony are required to attend</p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
                 <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Purpose</h5>
                 <p className="text-sm text-orange-700 dark:text-orange-300">This is to ensure smooth logistics for the ceremony</p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
                 <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Information</h5>
                 <p className="text-sm text-orange-700 dark:text-orange-300">Time, place, and expectations posted on the graduation website each term</p>
               </div>
@@ -184,7 +184,7 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* The Graduation Ceremony */}
-        <AccordionItem value="graduation-ceremony" className="border-2 border-indigo-600 rounded-lg mb-4">
+        <AccordionItem value="graduation-ceremony" className="border-4 border-blue-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
               <Star className="mr-3 h-6 w-6" />
@@ -194,21 +194,21 @@ export default function Graduation() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Details</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">The formal Commencement Ceremony is held at the end of each academic term</p>
                 </div>
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Guests Welcome</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">Family and friends are welcome to attend</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Includes</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">Speeches, graduate recognition, and live or recorded streaming</p>
                 </div>
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
+                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Schedule Updates</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">Exact dates, times, and seating arrangements updated every term</p>
                 </div>
@@ -218,7 +218,7 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Diplomas */}
-        <AccordionItem value="diplomas" className="border-2 border-teal-600 rounded-lg mb-4">
+        <AccordionItem value="diplomas" className="border-4 border-blue-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-teal-800 dark:text-teal-200">
               <FileText className="mr-3 h-6 w-6" />
@@ -228,21 +228,21 @@ export default function Graduation() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Delivery Timeline</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Mailed 6–8 weeks after final grades are posted, assuming all accounts are clear</p>
                 </div>
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Ceremony Policy</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Diplomas are not handed out during the ceremony</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Multiple Credentials</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Students earning multiple credentials will receive a diploma for each one</p>
                 </div>
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Replacements</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Replacement diplomas are available upon request with a processing fee</p>
                 </div>
@@ -252,7 +252,7 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Life After Graduation */}
-        <AccordionItem value="life-after-graduation" className="border-2 border-emerald-600 rounded-lg">
+        <AccordionItem value="life-after-graduation" className="border-4 border-blue-600 rounded-xl">
           <AccordionTrigger className="bg-emerald-50 dark:bg-emerald-900/20 px-6 py-4 hover:no-underline">
             <div className="flex items-center text-xl text-emerald-800 dark:text-emerald-200">
               <Users className="mr-3 h-6 w-6" />
@@ -288,7 +288,7 @@ export default function Graduation() {
                     <span className="text-sm text-gray-700 dark:text-gray-300">Graduate or transfer school advising</span>
                   </div>
                 </div>
-                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                <button className="bg-blue-800 dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors text-sm">
                   Career Services
                 </button>
               </div>
@@ -302,7 +302,7 @@ export default function Graduation() {
                 <p className="text-sm text-gray-700 dark:text-gray-300">
                   Work with our Transfer Resource Center to ensure your credits are transferred correctly.
                 </p>
-                <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                <button className="bg-blue-800 dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors text-sm">
                   Transfer Resources
                 </button>
               </div>
@@ -337,7 +337,7 @@ export default function Graduation() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs">
+                    <button className="bg-blue-800 dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white px-3 py-1 rounded-xl text-xs">
                       Alumni Page
                     </button>
                     <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded text-xs ml-2">
@@ -364,7 +364,7 @@ export default function Graduation() {
             </div>
 
             {/* Student Loan Repayment */}
-            <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+            <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
               <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2 flex items-center">
                 <AlertCircle className="mr-2 h-5 w-5" />
                 Student Loan Repayment Begins Soon
@@ -372,7 +372,7 @@ export default function Graduation() {
               <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
                 Stay on top of repayment timelines and options using federal resources.
               </p>
-              <button className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+              <button className="bg-blue-800 dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors text-sm">
                 Loan Repayment Help
               </button>
             </div>
@@ -412,7 +412,7 @@ export default function Graduation() {
                       <span>Available 24/7</span>
                     </div>
                   </div>
-                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                  <button className="bg-blue-800 dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors text-sm">
                     Order Official Transcript
                   </button>
                 </div>
@@ -429,7 +429,7 @@ export default function Graduation() {
                       <span>Good for personal records or unofficial reviews</span>
                     </div>
                   </div>
-                  <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg transition-colors text-sm">
+                  <button className="bg-blue-800 dark:bg-blue-600 hover:bg-blue-900 dark:hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors text-sm">
                     Transcript Info & Portal
                   </button>
                 </div>
@@ -440,7 +440,7 @@ export default function Graduation() {
       </Accordion>
 
       {/* FAQ Section */}
-      <Card className="mb-8 border-2 border-gray-600">
+      <Card className="mb-8 border-4 border-blue-600 rounded-xl">
         <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
           <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
             <BookOpen className="mr-3 h-6 w-6" />
@@ -554,7 +554,7 @@ export default function Graduation() {
                 <div className="space-y-2">
                   <p>Submit a written request (including name, DOB, student ID or SSN, address, phone, degree info), 
                   and include a $15 check or money order. Send it to:</p>
-                  <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl">
                     <p className="text-gray-700 dark:text-gray-300">
                       Registrar's Office – Diploma Requests<br />
                       3301 Hocking Parkway<br />
@@ -569,7 +569,7 @@ export default function Graduation() {
       </Card>
 
       {/* Contact Information */}
-      <Card className="border-2 border-gray-600">
+      <Card className="border-4 border-blue-600 rounded-xl">
         <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
           <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
             <Building className="mr-3 h-6 w-6" />

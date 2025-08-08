@@ -238,6 +238,47 @@ export default function DiningHall() {
         <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
           Explore our campus dining options, meal plans, weekly menus, and more. We offer a variety of delicious and nutritious options to fuel your academic success.
         </p>
+        
+        {/* Navigation Dropdown */}
+        <div className="mt-6">
+          <Select value={selectedTab} onValueChange={handleTabChange}>
+            <SelectTrigger className="w-full max-w-md mx-auto bg-white dark:bg-gray-800 border-2 border-blue-600 dark:border-gray-700 rounded-xl">
+              <SelectValue placeholder="Select a dining topic" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-gray-800 border-2 border-blue-600 dark:border-gray-700 rounded-xl">
+              <SelectItem value="hours" className="hover:bg-blue-50 dark:hover:bg-gray-700">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-blue-600" />
+                  Hours of Operation
+                </div>
+              </SelectItem>
+              <SelectItem value="meal-plans" className="hover:bg-blue-50 dark:hover:bg-gray-700">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-4 w-4 text-blue-600" />
+                  Meal Plans
+                </div>
+              </SelectItem>
+              <SelectItem value="menu" className="hover:bg-blue-50 dark:hover:bg-gray-700">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-blue-600" />
+                  Weekly Menu
+                </div>
+              </SelectItem>
+              <SelectItem value="dietary" className="hover:bg-blue-50 dark:hover:bg-gray-700">
+                <div className="flex items-center gap-2">
+                  <Info className="h-4 w-4 text-blue-600" />
+                  Dietary Information
+                </div>
+              </SelectItem>
+              <SelectItem value="locations" className="hover:bg-blue-50 dark:hover:bg-gray-700">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-blue-600" />
+                  Dining Locations
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Content Based on Selected Tab */}
