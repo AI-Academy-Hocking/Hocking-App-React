@@ -76,6 +76,7 @@ export default function Maps() {
   const staticAcademicBuildings: Building[] = [
     { id: 'davidson-hall', name: 'Davidson Hall', description: 'Academic building', category: 'academic', lat: 39.44078, lng: -82.22025 },
     { id: 'student-center', name: 'Student Center', description: 'Student Center', category: 'academic', lat: 39.44200, lng: -82.22071 },
+    { id: 'john-light', name: 'John Light', description: 'Academic building', category: 'academic', lat: 39.44380, lng: -82.22040 },
   ];
 
   // Add static housing buildings if not present
@@ -84,6 +85,8 @@ export default function Maps() {
     { id: 'downhour', name: 'DownHour Hall', description: 'Female Only Residence Hall', category: 'housing', lat: 39.44287, lng: -82.22264 },
     { id: 'summit', name: 'Summit Hall', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44839, lng: -82.22052 },
     { id: 'sycamore', name: 'Sycamore Hall', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44874, lng: -82.22119 },
+    { id: 'hocking-heights', name: 'Hocking Heights', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44250, lng: -82.22300 },
+    { id: 'oakly-hall', name: 'Oakly Hall', description: 'Residence Hall', category: 'housing', lat: 39.44400, lng: -82.22150 },
   ];
 
   // Add static dining buildings
