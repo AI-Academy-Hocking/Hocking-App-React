@@ -54,7 +54,7 @@ function RecreationPage() {
       </div>
 
       {/* Hero Image */}
-      <Card className="mb-8 overflow-hidden border-2 border-blue-600">
+      <Card className="mb-8 overflow-hidden border-2 border-blue-600 rounded-xl">
         <div className="h-64 w-full bg-gray-200 flex items-center justify-center">
           <img 
             src={studentCenterImage} 
@@ -66,50 +66,44 @@ function RecreationPage() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
+          className={`cursor-pointer animate-fadeIn rounded-xl overflow-hidden relative bg-white dark:bg-gray-800 ${
             infoExpanded 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
           onClick={() => setInfoExpanded(!infoExpanded)}
-          style={{ 
-            backgroundImage: `url(/sc-piano.JPG)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-          <div className="p-6 flex flex-col items-center relative z-10">
-            <h3 className="text-xl font-bold text-white text-center mb-2">
+          <div className="p-6 flex flex-col items-center">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-2">
               Student Center Information
             </h3>
           </div>
           
           {infoExpanded && (
-            <div className="pt-4 px-6 pb-6 relative z-10">
+            <div className="pt-4 px-6 pb-6">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Clock className="h-5 w-5 text-blue-300 flex-shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-white">Hours of Operation</p>
-                    <p className="text-gray-300">Monday – Friday: 8:00 AM – 10:00 PM</p>
-                    <p className="text-gray-300">Saturday & Sunday: 11:00 AM – 8:00 PM</p>
+                    <p className="font-medium text-gray-900 dark:text-white">Hours of Operation</p>
+                    <p className="text-gray-700 dark:text-gray-300">Monday – Friday: 8:00 AM – 10:00 PM</p>
+                    <p className="text-gray-700 dark:text-gray-300">Saturday & Sunday: 11:00 AM – 8:00 PM</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <Phone className="h-5 w-5 text-blue-300 flex-shrink-0 mt-0.5" />
+                  <Phone className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-white">Phone</p>
-                    <a href="tel:7407536535" className="text-blue-300 hover:text-blue-200 hover:underline">(740) 753-6535</a>
+                    <p className="font-medium text-gray-900 dark:text-white">Phone</p>
+                    <a href="tel:7407536535" className="text-blue-600 hover:text-blue-800 hover:underline">(740) 753-6535</a>
                   </div>
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <Mail className="h-5 w-5 text-blue-300 flex-shrink-0 mt-0.5" />
+                  <Mail className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-white">Email</p>
-                    <a href="mailto:studentcenter@hocking.edu" className="text-blue-300 hover:text-blue-200 hover:underline">studentcenter@hocking.edu</a>
+                    <p className="font-medium text-gray-900 dark:text-white">Email</p>
+                    <a href="mailto:studentcenter@hocking.edu" className="text-blue-600 hover:text-blue-800 hover:underline">studentcenter@hocking.edu</a>
                   </div>
                 </div>
               </div>
@@ -118,28 +112,22 @@ function RecreationPage() {
         </Card>
         
         <Card 
-          className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 animate-fadeIn rounded-xl overflow-hidden relative ${
+          className={`cursor-pointer animate-fadeIn rounded-xl overflow-hidden relative bg-white dark:bg-gray-800 ${
             facilitiesExpanded 
               ? 'border-2 border-blue-400 dark:border-cyan-300' 
               : 'border-2 border-blue-600 dark:border-gray-700'
           }`}
           onClick={() => setFacilitiesExpanded(!facilitiesExpanded)}
-          style={{ 
-            backgroundImage: `url(/sc-patio.JPG)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-35"></div>
-          <div className="p-6 flex flex-col items-center relative z-10">
-            <h3 className="text-xl font-bold text-white text-center mb-2">
+          <div className="p-6 flex flex-col items-center">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white text-center mb-2">
               Available Facilities
             </h3>
           </div>
           
           {facilitiesExpanded && (
-            <div className="pt-4 px-6 pb-6 relative z-10">
-              <ul className="list-disc list-inside space-y-2 pl-2 text-white">
+            <div className="pt-4 px-6 pb-6">
+              <ul className="list-disc list-inside space-y-2 pl-2 text-gray-900 dark:text-white">
                 <li>Full-size gymnasium</li>
                 <li>Fitness center with cardio and strength equipment</li>
                 <li>Student lounge with TV and recreational games</li>
@@ -158,8 +146,8 @@ function RecreationPage() {
       {/* Collapsible Sections */}
       <Accordion type="single" collapsible className="mb-8">
         {/* Hours of Operation & Contact */}
-        <AccordionItem value="hours" className="border-2 border-green-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
+        <AccordionItem value="hours" className="border-2 border-green-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
             <div className="flex items-center text-xl text-green-800 dark:text-green-200">
               <Clock className="mr-3 h-6 w-6" />
               Hours of Operation & Contact
@@ -206,8 +194,8 @@ function RecreationPage() {
         </AccordionItem>
 
         {/* Fitness Center */}
-        <AccordionItem value="fitness" className="border-2 border-purple-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
+        <AccordionItem value="fitness" className="border-2 border-purple-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
             <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
               <Dumbbell className="mr-3 h-6 w-6" />
               Fitness Center
@@ -257,8 +245,8 @@ function RecreationPage() {
         </AccordionItem>
 
         {/* Indoor Facilities */}
-        <AccordionItem value="facilities" className="border-2 border-orange-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
+        <AccordionItem value="facilities" className="border-2 border-orange-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
             <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
               <Building className="mr-3 h-6 w-6" />
               Indoor Facilities
@@ -267,21 +255,21 @@ function RecreationPage() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-4">
-                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-orange-600 rounded-xl transition-colors">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
                     <Waves className="mr-2 h-4 w-4" />
                     Indoor Pool
                   </h5>
                   <p className="text-sm text-orange-700 dark:text-orange-300">Full-size pool with diving board and lap lanes</p>
                 </div>
-                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-orange-600 rounded-xl transition-colors">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
                     <Mountain className="mr-2 h-4 w-4" />
                     Rock Climbing Wall
                   </h5>
                   <p className="text-sm text-orange-700 dark:text-orange-300">Indoor climbing wall with safety equipment</p>
                 </div>
-                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-orange-600 rounded-xl transition-colors">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
                     <Activity className="mr-2 h-4 w-4" />
                     Indoor Track
@@ -290,21 +278,21 @@ function RecreationPage() {
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-orange-600 rounded-xl transition-colors">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
                     <Users className="mr-2 h-4 w-4" />
                     Full-size Gymnasium
                   </h5>
                   <p className="text-sm text-orange-700 dark:text-orange-300">Basketball, volleyball, and indoor sports</p>
                 </div>
-                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-orange-600 rounded-xl transition-colors">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
                     <Coffee className="mr-2 h-4 w-4" />
                     Student Lounge
                   </h5>
                   <p className="text-sm text-orange-700 dark:text-orange-300">TV, games, and comfortable seating areas</p>
                 </div>
-                <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-orange-600 rounded-xl transition-colors">
                   <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2 flex items-center">
                     <BookOpen className="mr-2 h-4 w-4" />
                     Study Spaces
@@ -317,8 +305,8 @@ function RecreationPage() {
         </AccordionItem>
 
         {/* Programs & Activities */}
-        <AccordionItem value="programs" className="border-2 border-teal-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 px-6 py-4 hover:no-underline">
+        <AccordionItem value="programs" className="border-2 border-teal-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
             <div className="flex items-center text-xl text-teal-800 dark:text-teal-200">
               <Calendar className="mr-3 h-6 w-6" />
               Programs & Activities
@@ -326,15 +314,15 @@ function RecreationPage() {
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-teal-600 rounded-xl transition-colors">
                 <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Group Fitness Classes</h5>
                 <p className="text-sm text-teal-700 dark:text-teal-300">Yoga, Zumba, spinning, and strength training classes</p>
               </div>
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-teal-600 rounded-xl transition-colors">
                 <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Intramural Sports</h5>
                 <p className="text-sm text-teal-700 dark:text-teal-300">Basketball, volleyball, soccer, and flag football leagues</p>
               </div>
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-teal-600 rounded-xl transition-colors">
                 <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Outdoor Equipment Rentals</h5>
                 <p className="text-sm text-teal-700 dark:text-teal-300">Camping gear, kayaks, and outdoor recreation equipment</p>
               </div>
@@ -343,8 +331,8 @@ function RecreationPage() {
         </AccordionItem>
 
         {/* Amenities & Services */}
-        <AccordionItem value="amenities" className="border-2 border-indigo-600 rounded-lg">
-          <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 px-6 py-4 hover:no-underline">
+        <AccordionItem value="amenities" className="border-2 border-indigo-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
             <div className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
               <CheckCircle className="mr-3 h-6 w-6" />
               Amenities & Services
@@ -389,100 +377,100 @@ function RecreationPage() {
             </div>
           </AccordionContent>
         </AccordionItem>
+
+        {/* FAQ Section */}
+        <AccordionItem value="faq" className="border-2 border-gray-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl text-gray-800 dark:text-gray-200">
+              <BookOpen className="mr-3 h-6 w-6" />
+              Frequently Asked Questions (FAQ)
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <Accordion type="single" collapsible className="w-full space-y-3">
+              <AccordionItem value="membership" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+                  Do I need a membership to use the recreation center?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  No membership is required! All current Hocking College students have free access to the recreation center with their student ID.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="equipment" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+                  How do I check out equipment?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Equipment can be checked out at the front desk with your student ID. Most equipment is free, but some items may require a small deposit.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="classes" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+                  Are fitness classes included?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Yes! All group fitness classes are free for students. Check the schedule at the front desk or on our website for current class times.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="guests" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+                  Can I bring guests to the recreation center?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Students can bring one guest per visit. Guests must be accompanied by the student and may be required to sign a waiver.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="lockers" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+                  Are lockers available?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Yes, lockers are available in the locker rooms. You can bring your own lock or rent one from the front desk for a small fee.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Quick Access Links */}
+        <AccordionItem value="quick-links" className="border-2 border-gray-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl text-gray-800 dark:text-gray-200">
+              <ExternalLink className="mr-3 h-6 w-6" />
+              Quick Access Links
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <h4 className="font-semibold text-gray-900 dark:text-white">Contact</h4>
+                <div className="space-y-1 text-sm">
+                  <a href="tel:7407536535" className="text-blue-600 hover:underline block text-left">
+                    (740) 753-6535
+                  </a>
+                  <a href="mailto:studentcenter@hocking.edu" className="text-blue-600 hover:underline block text-left">
+                    studentcenter@hocking.edu
+                  </a>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-gray-900 dark:text-white">Services</h4>
+                <div className="space-y-1 text-sm">
+                  <p>Fitness Center</p>
+                  <p>Indoor Pool</p>
+                  <p>Rock Climbing</p>
+                  <p>Group Classes</p>
+                  <p>Equipment Rental</p>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
-
-      {/* FAQ Section */}
-      <Card className="mb-8 border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Frequently Asked Questions (FAQ)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="membership">
-              <AccordionTrigger className="text-left">
-                Do I need a membership to use the recreation center?
-              </AccordionTrigger>
-              <AccordionContent>
-                No membership is required! All current Hocking College students have free access to the recreation center with their student ID.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="equipment">
-              <AccordionTrigger className="text-left">
-                How do I check out equipment?
-              </AccordionTrigger>
-              <AccordionContent>
-                Equipment can be checked out at the front desk with your student ID. Most equipment is free, but some items may require a small deposit.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="classes">
-              <AccordionTrigger className="text-left">
-                Are fitness classes included?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes! All group fitness classes are free for students. Check the schedule at the front desk or on our website for current class times.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="guests">
-              <AccordionTrigger className="text-left">
-                Can I bring guests to the recreation center?
-              </AccordionTrigger>
-              <AccordionContent>
-                Students can bring one guest per visit. Guests must be accompanied by the student and may be required to sign a waiver.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="lockers">
-              <AccordionTrigger className="text-left">
-                Are lockers available?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes, lockers are available in the locker rooms. You can bring your own lock or rent one from the front desk for a small fee.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
-
-      {/* Quick Access Links */}
-      <Card className="border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <ExternalLink className="mr-3 h-6 w-6" />
-            Quick Access Links
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 dark:text-white">Contact</h4>
-              <div className="space-y-1 text-sm">
-                <a href="tel:7407536535" className="text-blue-600 hover:underline block text-left">
-                  (740) 753-6535
-                </a>
-                <a href="mailto:studentcenter@hocking.edu" className="text-blue-600 hover:underline block text-left">
-                  studentcenter@hocking.edu
-                </a>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-semibold text-gray-900 dark:text-white">Services</h4>
-              <div className="space-y-1 text-sm">
-                <p>Fitness Center</p>
-                <p>Indoor Pool</p>
-                <p>Rock Climbing</p>
-                <p>Group Classes</p>
-                <p>Equipment Rental</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
