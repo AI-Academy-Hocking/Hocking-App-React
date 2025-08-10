@@ -687,23 +687,39 @@ export default function Maps() {
             <div className="divide-y divide-gray-200 dark:divide-gray-600">
               {/* Quick Category Navigation */}
               <div className="p-4 bg-gray-50 dark:bg-gray-700/50">
-                <div className="flex flex-wrap gap-2">
-                  {categories.filter(cat => cat.id !== 'all').map((category) => {
-                    const categoryCount = filteredBuildings.filter(b => b.category === category.id).length;
-                    if (categoryCount === 0) return null;
-                    return (
-                      <Button
-                        key={category.id}
-                        variant="ghost"
-                        size="sm"
-                        className="text-xs px-3 py-1 h-auto rounded-lg bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-500 border border-gray-200 dark:border-gray-500"
-                        onClick={() => setActiveCategory(category.id)}
-                      >
-                        {category.label} ({categoryCount})
-                      </Button>
-                    );
-                  })}
-                </div>
+                            <div className="flex flex-wrap gap-2">
+              {/* Show "Go Back to All" button when a specific category is selected */}
+              {activeCategory !== "all" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs px-3 py-1 h-auto rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 border-blue-200 dark:border-blue-700 font-medium"
+                  onClick={() => setActiveCategory("all")}
+                >
+                  ← Back to All Buildings
+                </Button>
+              )}
+              
+              {categories.filter(cat => cat.id !== 'all').map((category) => {
+                const categoryCount = filteredBuildings.filter(b => b.category === category.id).length;
+                if (categoryCount === 0) return null;
+                return (
+                  <Button
+                    key={category.id}
+                    variant={activeCategory === category.id ? "default" : "ghost"}
+                    size="sm"
+                    className={`text-xs px-3 py-1 h-auto rounded-lg ${
+                      activeCategory === category.id 
+                        ? "bg-blue-600 text-white hover:bg-blue-700 border-blue-600" 
+                        : "bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-500 border border-gray-200 dark:border-gray-500"
+                    }`}
+                    onClick={() => setActiveCategory(category.id)}
+                  >
+                    {category.label} ({categoryCount})
+                  </Button>
+                );
+              })}
+            </div>
               </div>
 
               {/* Buildings by Category */}
