@@ -683,62 +683,126 @@ export default function Maps() {
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Building Directory</h2>
         
         <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
-          <ul className="">
-            {filteredBuildings.length > 0 ? (
-              filteredBuildings.map((building) => (
-                <li key={building.id} className="p-4">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      <span className="inline-block w-5 h-5 rounded-full border-2 bg-blue-600 border-blue-600 dark:bg-blue-400 dark:border-blue-400 flex-shrink-0"></span>
-                      <div>
-                        <h3 className="font-semibold text-black dark:text-blue-300">{building.name}</h3>
-                        <p className="text-sm text-neutral-dark dark:text-white">{building.description}</p>
-                      </div>
+          {filteredBuildings.length > 0 ? (
+            <div className="divide-y divide-gray-200 dark:divide-gray-600">
+              {/* Quick Category Navigation */}
+              <div className="p-4 bg-gray-50 dark:bg-gray-700/50">
+                <div className="flex flex-wrap gap-2">
+                  {categories.filter(cat => cat.id !== 'all').map((category) => {
+                    const categoryCount = filteredBuildings.filter(b => b.category === category.id).length;
+                    if (categoryCount === 0) return null;
+                    return (
+                      <Button
+                        key={category.id}
+                        variant="ghost"
+                        size="sm"
+                        className="text-xs px-3 py-1 h-auto rounded-lg bg-white dark:bg-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-500 border border-gray-200 dark:border-gray-500"
+                        onClick={() => setActiveCategory(category.id)}
+                      >
+                        {category.label} ({categoryCount})
+                      </Button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Buildings by Category */}
+              {categories.filter(cat => cat.id !== 'all').map((category) => {
+                const categoryBuildings = filteredBuildings.filter(b => b.category === category.id);
+                if (categoryBuildings.length === 0) return null;
+                
+                // Sort buildings alphabetically within each category
+                const sortedBuildings = categoryBuildings.sort((a, b) => a.name.localeCompare(b.name));
+                
+                return (
+                  <div key={category.id} className="p-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className={`inline-block w-3 h-3 rounded-full ${
+                        category.id === 'academic' ? 'bg-blue-500' :
+                        category.id === 'housing' ? 'bg-green-500' :
+                        category.id === 'dining' ? 'bg-orange-500' :
+                        'bg-gray-500'
+                      }`}></span>
+                      <h3 className="font-semibold text-gray-900 dark:text-white text-lg">
+                        {category.label} ({categoryBuildings.length})
+                      </h3>
                     </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
-                        onClick={() => setSelectedMarker(building)}
-                        title="View Details"
-                      >
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300"
-                        onClick={() => {
-                          // Validate coordinates before navigating
-                          if (typeof building.lat === 'number' && typeof building.lng === 'number' && 
-                              !isNaN(building.lat) && !isNaN(building.lng) &&
-                              building.lat !== 0 && building.lng !== 0) {
-                            setSelectedBuildingId(building.id);
-                            if (map) map.setView([building.lat, building.lng], 18);
-                          } else {
-                            toast({
-                              title: "Invalid location",
-                              description: `${building.name} has invalid coordinates and cannot be located on the map.`,
-                              variant: "destructive",
-                            });
-                          }
-                        }}
-                        title="Center on Map"
-                      >
-                        <Navigation className="h-5 w-5" />
-                      </Button>
+                    
+                    <div className="grid gap-2">
+                      {sortedBuildings.map((building) => (
+                        <div key={building.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-600/30 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600/50 transition-colors">
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <span className={`inline-block w-2 h-2 rounded-full flex-shrink-0 ${
+                              category.id === 'academic' ? 'bg-blue-500' :
+                              category.id === 'housing' ? 'bg-green-500' :
+                              category.id === 'dining' ? 'bg-orange-500' :
+                              'bg-gray-500'
+                            }`}></span>
+                            <div className="min-w-0 flex-1">
+                              <h4 className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                                {building.name}
+                              </h4>
+                              <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                                {building.description}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex gap-1 flex-shrink-0">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                              onClick={() => setSelectedMarker(building)}
+                              title="View Details"
+                            >
+                              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                              </svg>
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-8 w-8 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                              onClick={() => {
+                                // Validate coordinates before navigating
+                                if (typeof building.lat === 'number' && typeof building.lng === 'number' && 
+                                    !isNaN(building.lat) && !isNaN(building.lng) &&
+                                    building.lat !== 0 && building.lng !== 0) {
+                                  setSelectedBuildingId(building.id);
+                                  if (map) map.setView([building.lat, building.lng], 18);
+                                } else {
+                                  toast({
+                                    title: "Invalid location",
+                                    description: `${building.name} has invalid coordinates and cannot be located on the map.`,
+                                    variant: "destructive",
+                                  });
+                                }
+                              }}
+                              title="Center on Map"
+                            >
+                              <Navigation className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </li>
-              ))
-            ) : (
-              <li className="p-4 text-center text-neutral-dark">No buildings found</li>
-            )}
-          </ul>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="p-8 text-center">
+              <div className="text-gray-500 dark:text-gray-400 mb-2">
+                <svg className="mx-auto h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">No buildings found matching your search criteria.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Try adjusting your search or category filter.</p>
+            </div>
+          )}
         </Card>
       </section>
       
