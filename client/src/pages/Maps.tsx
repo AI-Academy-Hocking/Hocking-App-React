@@ -76,7 +76,12 @@ export default function Maps() {
   const staticAcademicBuildings: Building[] = [
     { id: 'davidson-hall', name: 'Davidson Hall', description: 'Academic building', category: 'academic', lat: 39.44078, lng: -82.22025 },
     { id: 'student-center', name: 'Student Center', description: 'Student Center', category: 'academic', lat: 39.44200, lng: -82.22071 },
-    { id: 'john-light', name: 'John Light', description: 'Academic building', category: 'academic', lat: 39.44380, lng: -82.22040 },
+    { id: 'shaw-hall', name: 'Shaw Hall', description: 'Academic building', category: 'academic', lat: 39.44117, lng: -82.22082 },
+    { id: 'visual-arts-center', name: 'Visual Arts Center', description: 'Visual Arts Center', category: 'academic', lat: 39.44437, lng: -82.22400 },
+    { id: 'natural-resources-building', name: 'Natural Resources Building', description: 'Natural Resources Building', category: 'academic', lat: 39.44489, lng: -82.22304 },
+    { id: 'john-light', name: 'John Light', description: 'Academic building', category: 'academic', lat: 39.44352, lng: -82.22190 },
+    { id: 'oakley-hall', name: 'Oakley Hall', description: 'Academic building', category: 'academic', lat: 39.44267, lng: -82.22137 },
+    { id: 'hocking-heights', name: 'Hocking Heights', description: 'Academic building', category: 'academic', lat: 39.44194, lng: -82.22307 },
   ];
 
   // Add static housing buildings if not present
@@ -85,8 +90,6 @@ export default function Maps() {
     { id: 'downhour', name: 'DownHour Hall', description: 'Female Only Residence Hall', category: 'housing', lat: 39.44287, lng: -82.22264 },
     { id: 'summit', name: 'Summit Hall', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44839, lng: -82.22052 },
     { id: 'sycamore', name: 'Sycamore Hall', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44874, lng: -82.22119 },
-    { id: 'hocking-heights', name: 'Hocking Heights', description: 'Co-Ed Residence Hall', category: 'housing', lat: 39.44250, lng: -82.22300 },
-    { id: 'oakly-hall', name: 'Oakly Hall', description: 'Residence Hall', category: 'housing', lat: 39.44400, lng: -82.22150 },
   ];
 
   // Add static dining buildings

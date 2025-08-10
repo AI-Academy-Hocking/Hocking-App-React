@@ -6,7 +6,7 @@ import { fileURLToPath } from "url";
 import * as vite from "vite";
 =======
 // import { createServer } from "vite";
->>>>>>> a7cb2bcac0ef753b2aa87bd9c03884d37512f935
+>>>>>>> a62c050effdbca6d1b7a30e10c72521020a7b800
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { type Server } from "http";
@@ -57,7 +57,7 @@ export async function setupVite(app: Express, server: Server) {
   const { createServer } = await import("vite");
 
   const vite = await createServer({
->>>>>>> a7cb2bcac0ef753b2aa87bd9c03884d37512f935
+>>>>>>> a62c050effdbca6d1b7a30e10c72521020a7b800
     ...viteConfig,
     configFile: false,
     server: {
@@ -68,7 +68,7 @@ export async function setupVite(app: Express, server: Server) {
     appType: "custom",
   });
 
-  app.use(vite.middlewares);
+  app.use(viteServer.middlewares);
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 
@@ -86,10 +86,10 @@ export async function setupVite(app: Express, server: Server) {
         `src="/src/main.tsx"`,
         `src="/src/main.tsx?v=${nanoid()}"`,
       );
-      const page = await vite.transformIndexHtml(url, template);
+      const page = await viteServer.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
-      vite.ssrFixStacktrace(e as Error);
+      viteServer.ssrFixStacktrace(e as Error);
       next(e);
     }
   });
