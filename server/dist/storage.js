@@ -217,39 +217,51 @@ class MemStorage {
             password: "password",
             isGuest: false,
             name: "Admin User",
+            email: "admin@hocking.edu",
         });
         await this.createUser({
             username: "student",
             password: "password",
             isGuest: false,
             name: "Student User",
+            email: "student@hocking.edu",
         });
         // No sample events - removed
         // Sample buildings
         await this.createBuilding({
             name: "Main Hall",
             description: "Administrative offices, classrooms",
-            location: "Main Campus",
+            category: "academic",
+            lat: 39.5274,
+            lng: -82.4156,
         });
         await this.createBuilding({
             name: "Student Center",
             description: "Dining, recreation, student services",
-            location: "Student Center",
+            category: "dining",
+            lat: 39.5280,
+            lng: -82.4150,
         });
         await this.createBuilding({
             name: "Davidson Hall",
             description: "Science labs, lecture halls",
-            location: "Science Complex",
+            category: "academic",
+            lat: 39.5268,
+            lng: -82.4162,
         });
         await this.createBuilding({
             name: "Library",
             description: "Books, study spaces, computer labs",
-            location: "Library Building",
+            category: "academic",
+            lat: 39.5265,
+            lng: -82.4145,
         });
         await this.createBuilding({
             name: "Recreation Center",
             description: "Gym, pool, fitness classes",
-            location: "Recreation Complex",
+            category: "housing",
+            lat: 39.529,
+            lng: -82.417
         });
         // Sample student tools
         await this.createStudentTool({
@@ -356,69 +368,85 @@ class MemStorage {
         // Sample safety alerts
         await this.createSafetyAlert({
             title: "Weather Advisory",
-            description: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
+            content: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
             severity: "warning",
-            location: "All Campus",
-            isActive: true
+            startDate: new Date(),
+            isActive: true,
+            location: "All Campus"
         });
         await this.createSafetyAlert({
             title: "Planned Power Outage: Davidson Hall",
-            description: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
+            content: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
             severity: "info",
-            location: "Davidson Hall",
+            startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+            endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
             isActive: true,
-            expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days from now
+            location: "Davidson Hall"
         });
         // Sample safety resources
         await this.createSafetyResource({
             title: "Campus Police",
             description: "24/7 emergency assistance and security services",
             category: "emergency",
-            url: "#"
+            phoneNumber: "740-753-6598",
+            icon: "shield",
+            order: 1
         });
         await this.createSafetyResource({
             title: "Emergency Notification System",
             description: "Sign up for emergency text alerts",
             category: "emergency",
-            url: "#"
+            url: "#",
+            icon: "bell",
+            order: 2
         });
         await this.createSafetyResource({
             title: "Health Center",
             description: "Medical services for students",
             category: "health",
-            url: "#"
+            phoneNumber: "740-753-6487",
+            url: "#",
+            icon: "first-aid",
+            order: 3
         });
         await this.createSafetyResource({
             title: "Counseling Services",
             description: "Confidential mental health support",
             category: "health",
-            url: "#"
+            phoneNumber: "740-753-6789",
+            url: "#",
+            icon: "heart-pulse",
+            order: 4
         });
         await this.createSafetyResource({
             title: "Campus Escort Service",
             description: "Safe accompaniment across campus after dark",
             category: "security",
-            url: "#"
+            phoneNumber: "740-753-6123",
+            icon: "footprints",
+            order: 5
         });
         await this.createSafetyResource({
             title: "Anonymous Tip Line",
             description: "Report suspicious activity anonymously",
             category: "security",
-            url: "#"
+            phoneNumber: "740-753-7890",
+            url: "#",
+            icon: "eye-off",
+            order: 6
         });
         await this.createSafetyResource({
             title: "Weather Updates",
             description: "Local weather forecasts and alerts",
             category: "weather",
-            url: "https://weather.gov"
+            url: "https://weather.gov",
+            icon: "cloud",
+            order: 7
         });
         await this.createSafetyResource({
             title: "Emergency Procedures",
             description: "Step-by-step guides for emergency situations",
             category: "emergency",
-<<<<<<< HEAD
-            url: "#"
-=======
             url: "#",
             icon: "file-text",
             order: 8
@@ -426,7 +454,6 @@ class MemStorage {
             url: "/career-university-center",
 >>>>>>> Jodian-Branch
 >>>>>>> origin/Lukas-Branch
->>>>>>> a62c050effdbca6d1b7a30e10c72521020a7b800
         });
     }
 }
