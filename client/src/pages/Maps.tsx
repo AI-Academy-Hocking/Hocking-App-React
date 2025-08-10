@@ -77,6 +77,7 @@ export default function Maps() {
     { id: 'davidson-hall', name: 'Davidson Hall', description: 'Academic building', category: 'academic', lat: 39.44078, lng: -82.22025 },
     { id: 'student-center', name: 'Student Center', description: 'Student Center', category: 'academic', lat: 39.44200, lng: -82.22071 },
     { id: 'shaw-hall', name: 'Shaw Hall', description: 'Academic building', category: 'academic', lat: 39.44117, lng: -82.22082 },
+    { id: 'visual-arts-center', name: 'Visual Arts Center', description: 'Visual Arts Center', category: 'academic', lat: 39.44436476494418, lng: -82.22233498127808 },
     { id: 'natural-resources-building', name: 'Natural Resources Building', description: 'Natural Resources Building', category: 'academic', lat: 39.44489, lng: -82.22304 },
     { id: 'john-light', name: 'John Light', description: 'Academic building', category: 'academic', lat: 39.44352, lng: -82.22190 },
     { id: 'oakley-hall', name: 'Oakley Hall', description: 'Academic building', category: 'academic', lat: 39.44267, lng: -82.22137 },
