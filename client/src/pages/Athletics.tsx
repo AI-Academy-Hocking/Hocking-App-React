@@ -274,144 +274,144 @@ function Athletics() {
           Join the Hawks and become part of our championship tradition! Compete in the NJCAA and OCCAC while pursuing your academic dreams.
         </p>
         <div className="flex flex-wrap gap-4 mb-6">
-          <Badge className="bg-blue-600 text-white px-4 py-2">NJCAA Division</Badge>
-          <Badge className="bg-green-600 text-white px-4 py-2">OCCAC Conference</Badge>
-          <Badge className="bg-purple-600 text-white px-4 py-2">Academic Excellence</Badge>
-          <Badge className="bg-orange-600 text-white px-4 py-2">Championship Contenders</Badge>
+          <Badge className="bg-blue-600 text-white px-4 py-2 rounded-[7px]">NJCAA Division</Badge>
+          <Badge className="bg-green-600 text-white px-4 py-2 rounded-[7px]">OCCAC Conference</Badge>
+          <Badge className="bg-purple-600 text-white px-4 py-2 rounded-[7px]">Academic Excellence</Badge>
+          <Badge className="bg-orange-600 text-white px-4 py-2 rounded-[7px]">Championship Contenders</Badge>
         </div>
         <Button 
           onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg rounded-xl"
         >
           Join the Hawks Today!
         </Button>
       </div>
 
-      {/* Why Join Athletics - New Motivational Section */}
-      <Card className="mb-8 border-2 border-green-600">
-        <CardHeader className="bg-green-50 dark:bg-green-900/20">
-          <CardTitle className="flex items-center text-xl text-green-800 dark:text-green-200">
-            <Star className="mr-3 h-6 w-6" />
-            Why Join Hocking Athletics?
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
+      {/* Collapsible Sections */}
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Why Join Athletics - New Motivational Section */}
+        <AccordionItem value="why-join" className="border-2 border-green-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-green-800 dark:text-green-200">
+              <Star className="mr-3 h-6 w-6" />
+              Why Join Hocking Athletics?
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center p-4">
-              <Medal className="h-12 w-12 text-green-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Championship Success</h4>
-              <p className="text-sm text-green-700 dark:text-green-300">Compete at the highest level in NJCAA and OCCAC</p>
+              <div className="text-center p-4 bg-white dark:bg-gray-800 border-2 border-green-600 rounded-xl">
+                <Medal className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Championship Success</h4>
+                <p className="text-sm text-green-700 dark:text-green-300">Compete at the highest level in NJCAA and OCCAC</p>
+              </div>
+              <div className="text-center p-4 bg-white dark:bg-gray-800 border-2 border-green-600 rounded-xl">
+                <BookOpen className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Academic Support</h4>
+                <p className="text-sm text-green-700 dark:text-green-300">Balance athletics with academic excellence</p>
+              </div>
+              <div className="text-center p-4 bg-white dark:bg-gray-800 border-2 border-green-600 rounded-xl">
+                <Users className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Team Family</h4>
+                <p className="text-sm text-green-700 dark:text-green-300">Build lifelong friendships and connections</p>
+              </div>
+              <div className="text-center p-4 bg-white dark:bg-gray-800 border-2 border-green-600 rounded-xl">
+                <Zap className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Leadership Skills</h4>
+                <p className="text-sm text-green-700 dark:text-green-300">Develop character and leadership abilities</p>
+              </div>
             </div>
-            <div className="text-center p-4">
-              <BookOpen className="h-12 w-12 text-green-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Academic Support</h4>
-              <p className="text-sm text-green-700 dark:text-green-300">Balance athletics with academic excellence</p>
-            </div>
-            <div className="text-center p-4">
-              <Users className="h-12 w-12 text-green-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Team Family</h4>
-              <p className="text-sm text-green-700 dark:text-green-300">Build lifelong friendships and connections</p>
-            </div>
-            <div className="text-center p-4">
-              <Zap className="h-12 w-12 text-green-600 mx-auto mb-3" />
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">Leadership Skills</h4>
-              <p className="text-sm text-green-700 dark:text-green-300">Develop character and leadership abilities</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* About Hocking Athletics */}
-      <Card className="mb-8 border-2 border-blue-600">
-        <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
-            <Award className="mr-3 h-6 w-6" />
-            About Hocking Athletics
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Mission & Overview</h4>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">
-                To foster athletic excellence, academic success, and community pride through a balanced approach to intercollegiate sports.
-              </p>
-              <button
-                onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-                className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-              >
-                <ExternalLink className="mr-1 h-3 w-3" />
-                About Hocking Athletics
-              </button>
+        {/* About Hocking Athletics */}
+        <AccordionItem value="about" className="border-2 border-blue-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-blue-800 dark:text-blue-200">
+              <Award className="mr-3 h-6 w-6" />
+              About Hocking Athletics
             </div>
-            <div>
-              <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Athletics Mission & Values</h4>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">
-                Our commitment to developing student-athletes who excel both on the field and in the classroom.
-              </p>
-              <button
-                onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-                className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-              >
-                <ExternalLink className="mr-1 h-3 w-3" />
-                Athletics Mission & Values
-              </button>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-xl">
+                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Mission & Overview</h4>
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                  To foster athletic excellence, academic success, and community pride through a balanced approach to intercollegiate sports.
+                </p>
+                <button
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                  className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                >
+                  <ExternalLink className="mr-1 h-3 w-3" />
+                  About Hocking Athletics
+                </button>
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-xl">
+                <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-3">Athletics Mission & Values</h4>
+                <p className="text-gray-700 dark:text-gray-300 mb-4">
+                  Our commitment to developing student-athletes who excel both on the field and in the classroom.
+                </p>
+                <button
+                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                  className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                >
+                  <ExternalLink className="mr-1 h-3 w-3" />
+                  Athletics Mission & Values
+                </button>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Athletic Staff & Coaches */}
-      <Card className="mb-8 border-2 border-teal-600">
-        <CardHeader className="bg-teal-50 dark:bg-teal-900/20">
-          <CardTitle className="flex items-center text-xl text-teal-800 dark:text-teal-200">
-            <User className="mr-3 h-6 w-6" />
-            Athletic Staff & Coaches
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            {coaches.map((coach, index) => (
-              <div key={index} className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-lg">
-                <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">{coach.name}</h5>
-                <p className="text-sm text-teal-700 dark:text-teal-300 mb-3">{coach.title}</p>
-                <div className="space-y-2">
-                  <div className="flex items-center">
-                    <Phone className="mr-2 h-4 w-4 text-teal-600" />
-                    <a href={`tel:${coach.phone}`} className="text-blue-600 hover:underline text-sm">{coach.phone}</a>
-                  </div>
-                  <div className="flex items-center">
-                    <Mail className="mr-2 h-4 w-4 text-teal-600" />
-                    <a href={`mailto:${coach.email}?subject=Interest in Hocking Athletics`} className="text-blue-600 hover:underline text-sm">{coach.email}</a>
+        <AccordionItem value="staff" className="border-2 border-teal-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-teal-800 dark:text-teal-200">
+              <User className="mr-3 h-6 w-6" />
+              Athletic Staff & Coaches
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              {coaches.map((coach, index) => (
+                <div key={index} className="p-4 bg-white dark:bg-gray-800 border-2 border-teal-600 rounded-xl">
+                  <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">{coach.name}</h5>
+                  <p className="text-sm text-teal-700 dark:text-teal-300 mb-3">{coach.title}</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center">
+                      <Phone className="mr-2 h-4 w-4 text-teal-600" />
+                      <a href={`tel:${coach.phone}`} className="text-blue-600 hover:underline text-sm">{coach.phone}</a>
+                    </div>
+                    <div className="flex items-center">
+                      <Mail className="mr-2 h-4 w-4 text-teal-600" />
+                      <a href={`mailto:${coach.email}?subject=Interest in Hocking Athletics`} className="text-blue-600 hover:underline text-sm">{coach.email}</a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 p-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
-            <p className="text-teal-800 dark:text-teal-200 mb-2">
-              For a full list of coaches and bios:
-            </p>
-            <button
-              onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-              className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
-            >
-              <ExternalLink className="mr-1 h-3 w-3" />
-              Athletics Staff Directory
-            </button>
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+            <div className="mt-4 p-4 bg-white dark:bg-gray-800 border-2 border-teal-600 rounded-xl">
+              <p className="text-teal-800 dark:text-teal-200 mb-2">
+                For a full list of coaches and bios:
+              </p>
+              <button
+                onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+              >
+                <ExternalLink className="mr-1 h-3 w-3" />
+                Athletics Staff Directory
+              </button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Contact Information */}
-      <Card className="mb-8 border-2 border-purple-600">
-        <CardHeader className="bg-purple-50 dark:bg-purple-900/20">
-          <CardTitle className="flex items-center text-xl text-purple-800 dark:text-purple-200">
-            <Building className="mr-3 h-6 w-6" />
-            Contact Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
+        <AccordionItem value="contact" className="border-2 border-purple-600 rounded-xl">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-purple-800 dark:text-purple-200">
+              <Building className="mr-3 h-6 w-6" />
+              Contact Information
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div className="flex items-center">
@@ -446,15 +446,16 @@ function Athletics() {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       {/* Sports Teams - Now in Accordion */}
       <Accordion type="single" collapsible className="mb-8">
         {/* Men's Sports */}
-        <AccordionItem value="mens-sports" className="border-2 border-blue-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+        <AccordionItem value="mens-sports" className="border-2 border-blue-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-blue-800 dark:text-blue-200">
               <Users className="mr-3 h-6 w-6" />
               Men's Sports Teams
             </div>
@@ -462,7 +463,7 @@ function Athletics() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {mensSports.map((sport, index) => (
-                <div key={index} className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg hover:shadow-md transition-shadow">
+                <div key={index} className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <h5 className="font-semibold text-blue-800 dark:text-blue-200">{sport.name}</h5>
                     <Badge className={sport.color}>{sport.season}</Badge>
@@ -490,9 +491,9 @@ function Athletics() {
         </AccordionItem>
 
         {/* Women's Sports */}
-        <AccordionItem value="womens-sports" className="border-2 border-pink-600 rounded-lg mb-4">
-          <AccordionTrigger className="bg-pink-50 dark:bg-pink-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-pink-800 dark:text-pink-200">
+        <AccordionItem value="womens-sports" className="border-2 border-pink-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-pink-800 dark:text-pink-200">
               <Users className="mr-3 h-6 w-6" />
               Women's Sports Teams
             </div>
@@ -500,7 +501,7 @@ function Athletics() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {womensSports.map((sport, index) => (
-                <div key={index} className="p-4 bg-pink-50 dark:bg-pink-900/30 rounded-lg hover:shadow-md transition-shadow">
+                <div key={index} className="p-4 bg-white dark:bg-gray-800 border-2 border-pink-600 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <h5 className="font-semibold text-pink-800 dark:text-pink-200">{sport.name}</h5>
                     <Badge className={sport.color}>{sport.season}</Badge>
@@ -528,9 +529,9 @@ function Athletics() {
         </AccordionItem>
 
         {/* Co-ed Sports */}
-        <AccordionItem value="coed-sports" className="border-2 border-green-600 rounded-lg">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+        <AccordionItem value="coed-sports" className="border-2 border-green-600 rounded-xl">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-green-800 dark:text-green-200">
               <Users className="mr-3 h-6 w-6" />
               Co-ed Sports Teams
             </div>
@@ -538,7 +539,7 @@ function Athletics() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {coedSports.map((sport, index) => (
-                <div key={index} className="p-4 bg-green-50 dark:bg-green-900/30 rounded-lg hover:shadow-md transition-shadow">
+                <div key={index} className="p-4 bg-white dark:bg-gray-800 border-2 border-green-600 rounded-xl">
                   <div className="flex items-center justify-between mb-2">
                     <h5 className="font-semibold text-green-800 dark:text-green-200">{sport.name}</h5>
                     <Badge className={sport.color}>{sport.season}</Badge>
@@ -566,176 +567,175 @@ function Athletics() {
         </AccordionItem>
       </Accordion>
 
-      {/* Schedules, Scores & News */}
-      <Card className="mb-8 border-2 border-orange-600">
-        <CardHeader className="bg-orange-50 dark:bg-orange-900/20">
-          <CardTitle className="flex items-center text-xl text-orange-800 dark:text-orange-200">
-            <Calendar className="mr-3 h-6 w-6" />
-            Schedules, Scores & News
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            Each sport's page offers access to schedules, results, rosters, and news headlines. You can also watch live events and highlights.
-          </p>
-          <div className="grid md:grid-cols-2 gap-4">
-            <button
-              onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-              className="flex items-center justify-between p-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <Newspaper className="mr-3 h-5 w-5" />
-                <span className="font-semibold">Athletics News & Headlines</span>
-              </div>
-              <ExternalLink className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-              className="flex items-center justify-between p-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors"
-            >
-              <div className="flex items-center">
-                <Ticket className="mr-3 h-5 w-5" />
-                <span className="font-semibold">Watch Live & Tickets</span>
-              </div>
-              <ExternalLink className="h-5 w-5" />
-            </button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Social Media & Media Center */}
-      <Card className="mb-8 border-2 border-indigo-600">
-        <CardHeader className="bg-indigo-50 dark:bg-indigo-900/20">
-          <CardTitle className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
-            <Facebook className="mr-3 h-6 w-6" />
-            Social Media & Media Center
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <p className="mb-4 text-gray-700 dark:text-gray-300">
-            Follow the Hawks on Facebook and social platforms for updates, photos, and live commentary.
-          </p>
-          <button
-            onClick={() => handleExternalLink('https://www.facebook.com/HockingHawks')}
-            className="flex items-center justify-between p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
-          >
-            <div className="flex items-center">
-              <Facebook className="mr-3 h-5 w-5" />
-              <span className="font-semibold">Hocking Hawks Facebook</span>
+      <Accordion type="single" collapsible className="mb-8">
+        {/* Schedules, Scores & News */}
+        <AccordionItem value="schedules" className="border-2 border-orange-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-orange-800 dark:text-orange-200">
+              <Calendar className="mr-3 h-6 w-6" />
+              Schedules, Scores & News
             </div>
-            <ExternalLink className="h-5 w-5" />
-          </button>
-        </CardContent>
-      </Card>
-
-      {/* FAQ Section */}
-      <Card className="mb-8 border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Frequently Asked Questions (FAQ)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="sports-offered">
-              <AccordionTrigger className="text-left">
-                What sports are offered?
-              </AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-2">
-                  <p><strong>Men's:</strong> baseball, basketball, cross‑country, football, golf, tennis, track & field, bowling.</p>
-                  <p><strong>Women's:</strong> basketball, cross‑country, flag football, softball, volleyball, bowling, tennis, track & field.</p>
-                  <p><strong>Co‑ed:</strong> archery, cheerleading, eSports, equestrian.</p>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              Each sport's page offers access to schedules, results, rosters, and news headlines. You can also watch live events and highlights.
+            </p>
+            <div className="grid md:grid-cols-2 gap-4">
+              <button
+                onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                className="flex items-center justify-between p-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors"
+              >
+                <div className="flex items-center">
+                  <Newspaper className="mr-3 h-5 w-5" />
+                  <span className="font-semibold">Athletics News & Headlines</span>
                 </div>
-              </AccordionContent>
+                <ExternalLink className="h-5 w-5" />
+              </button>
+              <button
+                onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                className="flex items-center justify-between p-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors"
+              >
+                <div className="flex items-center">
+                  <Ticket className="mr-3 h-5 w-5" />
+                  <span className="font-semibold">Watch Live & Tickets</span>
+                </div>
+                <ExternalLink className="h-5 w-5" />
+              </button>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="social" className="border-2 border-indigo-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-indigo-800 dark:text-indigo-200">
+              <Facebook className="mr-3 h-6 w-6" />
+              Social Media & Media Center
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <p className="mb-4 text-gray-700 dark:text-gray-300">
+              Follow the Hawks on Facebook and social platforms for updates, photos, and live commentary.
+            </p>
+            <button
+              onClick={() => handleExternalLink('https://www.facebook.com/HockingHawks')}
+              className="flex items-center justify-between p-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors"
+            >
+              <div className="flex items-center">
+                <Facebook className="mr-3 h-5 w-5" />
+                <span className="font-semibold">Hocking Hawks Facebook</span>
+              </div>
+              <ExternalLink className="h-5 w-5" />
+            </button>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="faq" className="border-2 border-gray-600 rounded-xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-gray-800 dark:text-gray-200">
+              <BookOpen className="mr-3 h-6 w-6" />
+              Frequently Asked Questions (FAQ)
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <Accordion type="single" collapsible className="w-full space-y-3">
+              <AccordionItem value="sports-offered" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+                  What sports are offered?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  <div className="space-y-2">
+                    <p><strong>Men's:</strong> baseball, basketball, cross‑country, football, golf, tennis, track & field, bowling.</p>
+                    <p><strong>Women's:</strong> basketball, cross‑country, flag football, softball, volleyball, bowling, tennis, track & field.</p>
+                    <p><strong>Co‑ed:</strong> archery, cheerleading, eSports, equestrian.</p>
+                  </div>
+                </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="conference">
-              <AccordionTrigger className="text-left">
-                What conference do the Hawks compete in?
-              </AccordionTrigger>
-              <AccordionContent>
-                They compete in the NJCAA and OCCAC.
-              </AccordionContent>
+              <AccordionItem value="conference" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+                  What conference do the Hawks compete in?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  They compete in the NJCAA and OCCAC.
+                </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="schedule-streaming">
-              <AccordionTrigger className="text-left">
-                How can I view the schedule or live stream games?
-              </AccordionTrigger>
-              <AccordionContent>
-                Visit any sport's page for full schedules, results, and live coverage links.
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-                  className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Watch Live & Tickets
-                </button>
-              </AccordionContent>
+              <AccordionItem value="schedule-streaming" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+                  How can I view the schedule or live stream games?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Visit any sport's page for full schedules, results, and live coverage links.
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                    className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
+                  >
+                    <ExternalLink className="mr-1 h-3 w-3" />
+                    Watch Live & Tickets
+                  </button>
+                </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="tickets">
-              <AccordionTrigger className="text-left">
-                How do I purchase game tickets?
-              </AccordionTrigger>
-              <AccordionContent>
-                Use the "Tickets" section on the Athletics homepage or team page.
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-                  className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Watch Live & Tickets
-                </button>
-              </AccordionContent>
+              <AccordionItem value="tickets" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+                  How do I purchase game tickets?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Use the "Tickets" section on the Athletics homepage or team page.
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                    className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
+                  >
+                    <ExternalLink className="mr-1 h-3 w-3" />
+                    Watch Live & Tickets
+                  </button>
+                </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="contact-coaches">
-              <AccordionTrigger className="text-left">
-                How can I contact coaches or staff?
-              </AccordionTrigger>
-              <AccordionContent>
-                Contact directory is listed above, or see the full directory via staff link.
-                <button
-                  onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
-                  className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Athletics Staff Directory
-                </button>
-              </AccordionContent>
+              <AccordionItem value="contact-coaches" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+                  How can I contact coaches or staff?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Contact directory is listed above, or see the full directory via staff link.
+                  <button
+                    onClick={() => handleExternalLink('https://www.hocking.edu/athletics')}
+                    className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
+                  >
+                    <ExternalLink className="mr-1 h-3 w-3" />
+                    Athletics Staff Directory
+                  </button>
+                </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="social-media">
-              <AccordionTrigger className="text-left">
-                How do I follow the Hawks on social platforms?
-              </AccordionTrigger>
-              <AccordionContent>
-                Find official updates, photos, and videos on the Hawks Facebook page.
-                <button
-                  onClick={() => handleExternalLink('https://www.facebook.com/HockingHawks')}
-                  className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
-                >
-                  <ExternalLink className="mr-1 h-3 w-3" />
-                  Hawks Facebook
-                </button>
-              </AccordionContent>
+              <AccordionItem value="social-media" className="border-2 border-gray-600 rounded-xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+                  How do I follow the Hawks on social platforms?
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-3">
+                  Find official updates, photos, and videos on the Hawks Facebook page.
+                  <button
+                    onClick={() => handleExternalLink('https://www.facebook.com/HockingHawks')}
+                    className="flex items-center text-blue-600 hover:underline mt-2 text-sm"
+                  >
+                    <ExternalLink className="mr-1 h-3 w-3" />
+                    Hawks Facebook
+                  </button>
+                </AccordionContent>
             </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
+                      </Accordion>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Quick Access Links */}
-      <Card className="border-2 border-gray-600">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <ExternalLink className="mr-3 h-6 w-6" />
-            Quick Access Links
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
+        {/* Quick Access Links */}
+        <AccordionItem value="quick-links" className="border-2 border-gray-600 rounded-xl">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-gray-800 dark:text-gray-200">
+              <ExternalLink className="mr-3 h-6 w-6" />
+              Quick Access Links
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <h4 className="font-semibold text-gray-900 dark:text-white">Feature</h4>
@@ -818,8 +818,9 @@ function Athletics() {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

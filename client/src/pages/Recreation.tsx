@@ -148,7 +148,7 @@ function RecreationPage() {
         {/* Hours of Operation & Contact */}
         <AccordionItem value="hours" className="border-2 border-green-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+            <div className="flex items-center text-xl font-bold text-green-800 dark:text-green-200">
               <Clock className="mr-3 h-6 w-6" />
               Hours of Operation & Contact
             </div>
@@ -196,7 +196,7 @@ function RecreationPage() {
         {/* Fitness Center */}
         <AccordionItem value="fitness" className="border-2 border-purple-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
+            <div className="flex items-center text-xl font-bold text-purple-800 dark:text-purple-200">
               <Dumbbell className="mr-3 h-6 w-6" />
               Fitness Center
             </div>
@@ -247,7 +247,7 @@ function RecreationPage() {
         {/* Indoor Facilities */}
         <AccordionItem value="facilities" className="border-2 border-orange-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
+            <div className="flex items-center text-xl font-bold text-orange-800 dark:text-orange-200">
               <Building className="mr-3 h-6 w-6" />
               Indoor Facilities
             </div>
@@ -307,7 +307,7 @@ function RecreationPage() {
         {/* Programs & Activities */}
         <AccordionItem value="programs" className="border-2 border-teal-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-teal-800 dark:text-teal-200">
+            <div className="flex items-center text-xl font-bold text-teal-800 dark:text-teal-200">
               <Calendar className="mr-3 h-6 w-6" />
               Programs & Activities
             </div>
@@ -333,7 +333,7 @@ function RecreationPage() {
         {/* Amenities & Services */}
         <AccordionItem value="amenities" className="border-2 border-indigo-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
+            <div className="flex items-center text-xl font-bold text-indigo-800 dark:text-indigo-200">
               <CheckCircle className="mr-3 h-6 w-6" />
               Amenities & Services
             </div>
@@ -381,7 +381,7 @@ function RecreationPage() {
         {/* FAQ Section */}
         <AccordionItem value="faq" className="border-2 border-gray-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-gray-800 dark:text-gray-200">
+            <div className="flex items-center text-xl font-bold text-gray-800 dark:text-gray-200">
               <BookOpen className="mr-3 h-6 w-6" />
               Frequently Asked Questions (FAQ)
             </div>
@@ -439,7 +439,7 @@ function RecreationPage() {
         {/* Quick Access Links */}
         <AccordionItem value="quick-links" className="border-2 border-gray-600 rounded-xl mb-4">
           <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-xl data-[state=closed]:rounded-b-xl [&>svg]:hidden">
-            <div className="flex items-center text-xl text-gray-800 dark:text-gray-200">
+            <div className="flex items-center text-xl font-bold text-gray-800 dark:text-gray-200">
               <ExternalLink className="mr-3 h-6 w-6" />
               Quick Access Links
             </div>

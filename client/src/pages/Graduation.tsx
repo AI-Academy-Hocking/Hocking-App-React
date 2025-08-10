@@ -3,7 +3,6 @@ import {
   Award, Building, Calendar, CheckCircle, BookOpen,
   UserCheck, Target, Star
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -34,9 +33,9 @@ export default function Graduation() {
       {/* All Sections in Accordion */}
       <Accordion type="single" collapsible className="mb-8">
         {/* How to Apply for Graduation */}
-        <AccordionItem value="how-to-apply" className="border-4 border-blue-600 rounded-xl mb-4">
-          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+        <AccordionItem value="how-to-apply" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-blue-800 dark:text-blue-200">
               <UserCheck className="mr-3 h-6 w-6" />
               How to Apply for Graduation
             </div>
@@ -81,9 +80,9 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Graduation Pre-Party */}
-        <AccordionItem value="graduation-pre-party" className="border-4 border-blue-600 rounded-xl mb-4">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-green-800 dark:text-green-200">
+        <AccordionItem value="graduation-pre-party" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-green-800 dark:text-green-200">
               <Calendar className="mr-3 h-6 w-6" />
               Graduation Pre-Party
             </div>
@@ -114,7 +113,7 @@ export default function Graduation() {
                 </div>
               </div>
             </div>
-            <Alert className="mt-4">
+            <Alert className="mt-4 border-2 border-blue-600 rounded-2xl">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 Details such as time and location are provided each term on the graduation webpage.
@@ -124,9 +123,9 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Cap & Gown Information */}
-        <AccordionItem value="cap-gown" className="border-4 border-blue-600 rounded-xl mb-4">
-          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-purple-800 dark:text-purple-200">
+        <AccordionItem value="cap-gown" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-purple-800 dark:text-purple-200">
               <Award className="mr-3 h-6 w-6" />
               Cap & Gown Information
             </div>
@@ -134,21 +133,21 @@ export default function Graduation() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Standard Attire</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">All graduates receive a standard black gown and a blue and gold tassel</p>
                 </div>
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Additional Items</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">Some programs or organizations may offer additional stoles or cords (e.g., Phi Theta Kappa)</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Ordering Process</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">Gowns must be ordered by a deadline each term via an external vendor, at no additional cost</p>
                 </div>
-                <div className="p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Pick-up</h5>
                   <p className="text-sm text-purple-700 dark:text-purple-300">Pick-up typically happens at the Pre-Party or via the Career & University Center if missed</p>
                 </div>
@@ -158,24 +157,24 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Graduation Practice */}
-        <AccordionItem value="graduation-practice" className="border-4 border-blue-600 rounded-xl mb-4">
-          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-orange-800 dark:text-orange-200">
+        <AccordionItem value="graduation-practice" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-orange-800 dark:text-orange-200">
               <Target className="mr-3 h-6 w-6" />
               Graduation Practice
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                 <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Required Attendance</h5>
                 <p className="text-sm text-orange-700 dark:text-orange-300">All students participating in the ceremony are required to attend</p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                 <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Purpose</h5>
                 <p className="text-sm text-orange-700 dark:text-orange-300">This is to ensure smooth logistics for the ceremony</p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl">
+              <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                 <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">Information</h5>
                 <p className="text-sm text-orange-700 dark:text-orange-300">Time, place, and expectations posted on the graduation website each term</p>
               </div>
@@ -184,9 +183,9 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* The Graduation Ceremony */}
-        <AccordionItem value="graduation-ceremony" className="border-4 border-blue-600 rounded-xl mb-4">
-          <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-indigo-800 dark:text-indigo-200">
+        <AccordionItem value="graduation-ceremony" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-indigo-800 dark:text-indigo-200">
               <Star className="mr-3 h-6 w-6" />
               The Graduation Ceremony
             </div>
@@ -194,21 +193,21 @@ export default function Graduation() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Details</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">The formal Commencement Ceremony is held at the end of each academic term</p>
                 </div>
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Guests Welcome</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">Family and friends are welcome to attend</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Ceremony Includes</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">Speeches, graduate recognition, and live or recorded streaming</p>
                 </div>
-                <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Schedule Updates</h5>
                   <p className="text-sm text-indigo-700 dark:text-indigo-300">Exact dates, times, and seating arrangements updated every term</p>
                 </div>
@@ -218,9 +217,9 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Diplomas */}
-        <AccordionItem value="diplomas" className="border-4 border-blue-600 rounded-xl mb-4">
-          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-teal-800 dark:text-teal-200">
+        <AccordionItem value="diplomas" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-teal-800 dark:text-teal-200">
               <FileText className="mr-3 h-6 w-6" />
               Diplomas
             </div>
@@ -228,21 +227,21 @@ export default function Graduation() {
           <AccordionContent className="px-6 pb-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Delivery Timeline</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Mailed 6–8 weeks after final grades are posted, assuming all accounts are clear</p>
                 </div>
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Ceremony Policy</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Diplomas are not handed out during the ceremony</p>
                 </div>
               </div>
               <div className="space-y-3">
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Multiple Credentials</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Students earning multiple credentials will receive a diploma for each one</p>
                 </div>
-                <div className="p-4 bg-teal-50 dark:bg-teal-900/30 rounded-xl">
+                <div className="p-4 bg-white dark:bg-gray-800 border-2 border-blue-600 rounded-2xl">
                   <h5 className="font-semibold text-teal-800 dark:text-teal-200 mb-2">Replacements</h5>
                   <p className="text-sm text-teal-700 dark:text-teal-300">Replacement diplomas are available upon request with a processing fee</p>
                 </div>
@@ -252,9 +251,9 @@ export default function Graduation() {
         </AccordionItem>
 
         {/* Life After Graduation */}
-        <AccordionItem value="life-after-graduation" className="border-4 border-blue-600 rounded-xl">
-          <AccordionTrigger className="bg-emerald-50 dark:bg-emerald-900/20 px-6 py-4 hover:no-underline">
-            <div className="flex items-center text-xl text-emerald-800 dark:text-emerald-200">
+        <AccordionItem value="life-after-graduation" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-emerald-800 dark:text-emerald-200">
               <Users className="mr-3 h-6 w-6" />
               Life After Graduation
             </div>
@@ -437,23 +436,22 @@ export default function Graduation() {
             </div>
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
 
-      {/* FAQ Section */}
-      <Card className="mb-8 border-4 border-blue-600 rounded-xl">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <BookOpen className="mr-3 h-6 w-6" />
-            Frequently Asked Questions (FAQ)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="requirements">
-              <AccordionTrigger className="text-left">
+        {/* FAQ Section */}
+        <AccordionItem value="faq" className="border-2 border-blue-600 rounded-2xl mb-4">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-gray-800 dark:text-gray-200">
+              <BookOpen className="mr-3 h-6 w-6" />
+              Frequently Asked Questions (FAQ)
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
+            <Accordion type="single" collapsible className="w-full space-y-3">
+                <AccordionItem value="requirements" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 What do I need to graduate this term?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 <div className="space-y-2">
                   <p>• Complete all required coursework with final grades posted</p>
                   <p>• Submit any official transfer or external transcripts</p>
@@ -462,95 +460,95 @@ export default function Graduation() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="requirements-not-met">
-              <AccordionTrigger className="text-left">
+                <AccordionItem value="requirements-not-met" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 What if I don't meet the requirements by the end of the term?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Applications submitted prematurely or with outstanding requirements will be denied. 
                 A denial letter is sent, and you'll need to reapply for the next eligible term.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="incomplete-grades">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="incomplete-grades" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 What if I receive an incomplete ("I" grade) during my final term?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Incomplete grades must be resolved before graduation. Once completed, you'll need to reapply for the current term.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="summer-courses">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="summer-courses" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 Can I participate in Commencement if I finish courses in summer?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Yes. You may walk in the term's ceremony once your graduation application is approved for that term.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="when-to-apply">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="when-to-apply" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 When should I apply for graduation?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Apply during your final term or early during priority registration. Applications are processed only for the submitted term. 
                 Delaying may postpone your ceremony participation.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="cleared-to-graduate">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="cleared-to-graduate" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 How do I know if I'm cleared to graduate?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Preliminary evaluations are completed before term-end. You'll receive either: 
                 Preliminary approval letter (on track to graduate) or Denial letter (if requirements are unmet)
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="honors-gpa">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="honors-gpa" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 What GPA is required for honors?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Graduating with a 3.5 GPA or higher earns Honors distinction.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="diploma-timeline">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="diploma-timeline" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 When will I receive my diploma?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Diplomas are mailed 6–8 weeks after final grades are posted, assuming no holds or balances remain.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="diploma-ceremony">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="diploma-ceremony" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 Are diplomas handed out at Commencement?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 No, they are mailed only.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="multiple-degrees">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="multiple-degrees" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 If I earn multiple degrees, will I get multiple diplomas?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 Yes, it is one diploma for each degree or certificate earned.
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="replacement-diploma">
-              <AccordionTrigger className="text-left">
+              <AccordionItem value="replacement-diploma" className="border-2 border-blue-600 rounded-2xl bg-white dark:bg-gray-800">
+                <AccordionTrigger className="text-left px-4 py-3 rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
                 How can I get a replacement diploma?
               </AccordionTrigger>
-              <AccordionContent>
+                <AccordionContent className="px-4 pb-3">
                 <div className="space-y-2">
                   <p>Submit a written request (including name, DOB, student ID or SSN, address, phone, degree info), 
                   and include a $15 check or money order. Send it to:</p>
@@ -564,19 +562,19 @@ export default function Graduation() {
                 </div>
               </AccordionContent>
             </AccordionItem>
-          </Accordion>
-        </CardContent>
-      </Card>
+            </Accordion>
+          </AccordionContent>
+        </AccordionItem>
 
-      {/* Contact Information */}
-      <Card className="border-4 border-blue-600 rounded-xl">
-        <CardHeader className="bg-gray-50 dark:bg-gray-900/20">
-          <CardTitle className="flex items-center text-xl text-gray-800 dark:text-gray-200">
-            <Building className="mr-3 h-6 w-6" />
-            Contact Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-6">
+        {/* Contact Information */}
+        <AccordionItem value="contact" className="border-2 border-blue-600 rounded-2xl">
+          <AccordionTrigger className="bg-white dark:bg-gray-800 px-6 py-4 hover:no-underline min-h-[80px] flex items-center rounded-t-2xl data-[state=closed]:rounded-b-2xl [&>svg]:hidden">
+            <div className="flex items-center text-xl font-bold text-gray-800 dark:text-gray-200">
+              <Building className="mr-3 h-6 w-6" />
+              Contact Information
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-6 pb-6">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h4 className="font-semibold text-gray-900 dark:text-white">Registrar's Office – Graduation Inquiries:</h4>
@@ -614,8 +612,9 @@ export default function Graduation() {
               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 } 
