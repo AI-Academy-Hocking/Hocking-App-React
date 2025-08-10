@@ -95,7 +95,6 @@ export default function Maps() {
   // Add static dining buildings
   const staticDiningBuildings: Building[] = [
     { id: 'hawks-nest', name: 'Hawks Nest', description: 'Main campus dining hall with a variety of food options.', category: 'dining', lat: 39.44341, lng: -82.22194 },
-    { id: 'diamond-dawgz', name: 'Diamond Dawgz', description: 'Quick hotdogs, burgers, fries, and ice cream.', category: 'dining', lat: 39.45925, lng: -82.23453 },
     { id: 'rhapsody', name: 'Rhapsody Restaurant', description: 'Student-run restaurant with casual fine dining and live music.', category: 'dining', lat: 39.46029, lng: -82.23170 },
   ];
 
