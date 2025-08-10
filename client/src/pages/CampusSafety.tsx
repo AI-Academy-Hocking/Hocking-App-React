@@ -101,6 +101,8 @@ export default function CampusSafety() {
             <li>Follow campus alerts and instructions from authorities.</li>
           </ul>
         </div>
+
+        
       </div>
     </div>
   );
