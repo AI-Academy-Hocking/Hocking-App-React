@@ -82,6 +82,7 @@ export default function Maps() {
     { id: 'john-light', name: 'John Light', description: 'Academic building', category: 'academic', lat: 39.44352, lng: -82.22190 },
     { id: 'oakley-hall', name: 'Oakley Hall', description: 'Academic building', category: 'academic', lat: 39.44267, lng: -82.22137 },
     { id: 'hocking-heights', name: 'Hocking Heights', description: 'Academic building', category: 'academic', lat: 39.44194, lng: -82.22307 },
+    { id: 'training-barn', name: 'Training Barn', description: 'Training Barn', category: 'academic', lat: 39.44529984717387, lng: -82.22343401606501 },
   ];
 
   // Add static housing buildings if not present
