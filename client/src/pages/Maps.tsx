@@ -102,7 +102,7 @@ export default function Maps() {
   // Add static parking buildings if not present
   const staticParkingBuildings: Building[] = [
     { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 39.44245, lng: -82.21952 },
-    { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights / Downhour Lot', description: 'Parking Lot', category: 'parking', lat: 39.44227, lng: -82.22279 },
+    { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights Lot', description: 'Parking Lot', category: 'parking', lat: 39.44227, lng: -82.22279 },
     { id: 'john-light-lot', name: 'John Light Lot', description: 'Parking Lot', category: 'parking', lat: 39.44386, lng: -82.22031 },
   ];
 
