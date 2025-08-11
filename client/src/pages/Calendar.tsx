@@ -221,7 +221,7 @@ export default function CalendarPage() {
       {/* Header */}
       <section className="max-w-6xl mx-auto text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-blue-300 mb-4">
-          Academic Calendar
+          Calendar
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-300">
           Stay up-to-date with important dates and campus events
@@ -241,7 +241,7 @@ export default function CalendarPage() {
                 : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
             )}
           >
-            Academic Calendar
+            Calendar
           </Button>
           <Button 
             variant={activeCalendar === "activities" ? "default" : "ghost"}
@@ -376,7 +376,7 @@ export default function CalendarPage() {
                     {format(selectedDate, 'EEEE, MMMM d, yyyy')}
                   </h3>
                   <div className="text-blue-100 text-sm sm:text-base">
-                    {activeCalendar === "academic" ? "Academic Calendar" : "Student Activities Calendar"}
+                    {activeCalendar === "academic" ? "Calendar" : "Student Activities Calendar"}
                   </div>
                 </div>
               </div>
@@ -521,7 +521,7 @@ export default function CalendarPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="p-6 border-2 border-blue-600 dark:border-none rounded-xl shadow-lg bg-white dark:bg-[#0f172a] hover:shadow-xl transition-shadow">
-            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Academic Calendar</h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Calendar</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               View important dates, deadlines, and events for the academic year.
             </p>
@@ -530,7 +530,7 @@ export default function CalendarPage() {
               variant="ghost"
               onClick={() => setActiveCalendar("academic")}
             >
-              View Academic Calendar
+              View Calendar
             </Button>
           </Card>
 
