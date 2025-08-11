@@ -84,6 +84,7 @@ export default function Maps() {
     { id: 'hocking-heights', name: 'Hocking Heights', description: 'Academic building', category: 'academic', lat: 39.44194, lng: -82.22307 },
     { id: 'training-barn', name: 'Training Barn', description: 'Training Barn', category: 'academic', lat: 39.44529984717387, lng: -82.22343401606501 },
     { id: 'logan-campus-energy-institute', name: 'Logan Campus/Energy Institute', description: '30140 Iles Rd, Logan, OH 43138', category: 'academic', lat: 39.55836635228117, lng: -82.45812838388986 },
+    { id: 'the-lodge', name: 'The Lodge', description: 'The Lodge', category: 'academic', lat: 39.43137161164457, lng: -82.20791962492618 },
   ];
 
   // Add static housing buildings if not present

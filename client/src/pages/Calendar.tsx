@@ -241,7 +241,7 @@ export default function CalendarPage() {
                 : "border-2 border-blue-500 dark:border-gray-700 text-blue-600 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-gray-800"
             )}
           >
-            Calendar
+            Academic Calendar
           </Button>
           <Button 
             variant={activeCalendar === "activities" ? "default" : "ghost"}
