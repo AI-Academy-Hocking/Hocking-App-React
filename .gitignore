@@ -24,3 +24,6 @@ Desktop.ini
 # Editor directories and files
 *.sublime-workspace
 *.sublime-project
+
+# TypeScript build info files
+*.tsbuildinfo
