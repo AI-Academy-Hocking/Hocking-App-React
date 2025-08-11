@@ -62,6 +62,12 @@ function Athletics() {
       title: "Head Women's Basketball Coach",
       phone: "740-753-6575",
       email: "browna4@hocking.edu"
+    },
+    {
+      name: "James Parsons",
+      title: "Head Men's Cross Country Coach",
+      phone: "(740) 753-6159",
+      email: "parsonsj42785@hocking.edu"
     }
   ];
 

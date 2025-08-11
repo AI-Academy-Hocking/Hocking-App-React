@@ -19,195 +19,6 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-var __filename, __dirname, vite_config_default;
-var init_vite_config = __esm({
-  "vite.config.ts"() {
-    "use strict";
-    __filename = fileURLToPath(import.meta.url);
-    __dirname = dirname(__filename);
-    vite_config_default = defineConfig({
-      plugins: [
-        react()
-      ],
-      assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
-      resolve: {
-        alias: {
-          "@": path.resolve(__dirname, "client", "src"),
-          "@shared": path.resolve(__dirname, "shared"),
-          "@assets": path.resolve(__dirname, "attached_assets")
-        },
-        extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
-      },
-      root: path.resolve(__dirname, "client"),
-      build: {
-        outDir: path.resolve(__dirname, "dist/public"),
-        emptyOutDir: true,
-        sourcemap: true,
-        rollupOptions: {
-          output: {
-            manualChunks: {
-              // React and related
-              "react-vendor": ["react", "react-dom"],
-              // Large UI libraries
-              "ui-vendor": [
-                "@radix-ui/react-dialog",
-                "@radix-ui/react-dropdown-menu",
-                "@radix-ui/react-select",
-                "@radix-ui/react-toast",
-                "@radix-ui/react-tabs",
-                "@radix-ui/react-accordion",
-                "@radix-ui/react-navigation-menu"
-              ],
-              // Calendar and date libraries
-              "calendar-vendor": [
-                "react-big-calendar",
-                "react-calendar",
-                "date-fns",
-                "react-day-picker"
-              ],
-              // Charts and visualization
-              "chart-vendor": ["recharts"],
-              // Icons and animations
-              "visual-vendor": ["lucide-react", "react-icons", "framer-motion"],
-              // Utility libraries
-              "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge"],
-              // Form and validation
-              "form-vendor": ["react-hook-form", "zod"],
-              // Query and state management
-              "query-vendor": ["@tanstack/react-query"]
-            }
-          }
-        }
-      },
-      optimizeDeps: {
-        include: ["@sinclair/typebox"],
-        esbuildOptions: {
-          target: "es2020",
-          supported: {
-            "top-level-await": true
-          }
-        }
-      },
-      server: {
-        fs: {
-          strict: false,
-          allow: ["..", "node_modules"]
-        },
-        proxy: {
-          "/api": "http://localhost:3001"
-        }
-      }
-    });
-  }
-});
-
-// server/vite.ts
-var vite_exports = {};
-__export(vite_exports, {
-  auth: () => auth,
-  db: () => db,
-  log: () => log,
-  serveStatic: () => serveStatic,
-  setupVite: () => setupVite,
-  storage: () => storage2
-});
-import express from "express";
-import fs from "fs";
-import path2, { dirname as dirname2 } from "path";
-import { fileURLToPath as fileURLToPath2 } from "url";
-import { nanoid } from "nanoid";
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-function log(message, source = "express") {
-  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  });
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
-async function setupVite(app3, server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true
-  };
-  const { createServer: createServer2 } = await Promise.resolve().then(() => (init_vite(), vite_exports));
-  const vite = await createServer2({
-    ...vite_config_default,
-    configFile: false,
-    server: {
-      middlewareMode: true,
-      hmr: { server },
-      allowedHosts: ["localhost"]
-    },
-    appType: "custom"
-  });
-  app3.use(vite.middlewares);
-  app3.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-    try {
-      const clientTemplate = path2.resolve(
-        __dirname2,
-        "..",
-        "client",
-        "index.html"
-      );
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`
-      );
-      const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
-    } catch (e) {
-      vite.ssrFixStacktrace(e);
-      next(e);
-    }
-  });
-}
-function serveStatic(app3) {
-  const distPath = path2.resolve(__dirname2, "public");
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
-    );
-  }
-  app3.use(express.static(distPath));
-  app3.use("*", (_req, res) => {
-    res.sendFile(path2.resolve(distPath, "index.html"));
-  });
-}
-var __filename2, __dirname2, firebaseConfig, app, auth, db, storage2;
-var init_vite = __esm({
-  "server/vite.ts"() {
-    "use strict";
-    init_vite_config();
-    __filename2 = fileURLToPath2(import.meta.url);
-    __dirname2 = dirname2(__filename2);
-    firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage2 = getStorage(app);
-  }
-});
-
 // server/services/googleCalendar.ts
 var googleCalendar_exports = {};
 __export(googleCalendar_exports, {
@@ -1092,8 +903,175 @@ async function registerRoutes(app3) {
   return httpServer;
 }
 
+// server/vite.ts
+import express from "express";
+import fs from "fs";
+import path2, { dirname as dirname2 } from "path";
+import { fileURLToPath as fileURLToPath2 } from "url";
+
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+var __filename = fileURLToPath(import.meta.url);
+var __dirname = dirname(__filename);
+var vite_config_default = defineConfig({
+  plugins: [
+    react()
+  ],
+  assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "client", "src"),
+      "@shared": path.resolve(__dirname, "shared"),
+      "@assets": path.resolve(__dirname, "attached_assets")
+    },
+    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
+  },
+  root: path.resolve(__dirname, "client"),
+  build: {
+    outDir: path.resolve(__dirname, "dist/public"),
+    emptyOutDir: true,
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React and related
+          "react-vendor": ["react", "react-dom"],
+          // Large UI libraries
+          "ui-vendor": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-select",
+            "@radix-ui/react-toast",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-navigation-menu"
+          ],
+          // Calendar and date libraries
+          "calendar-vendor": [
+            "react-big-calendar",
+            "react-calendar",
+            "date-fns",
+            "react-day-picker"
+          ],
+          // Charts and visualization
+          "chart-vendor": ["recharts"],
+          // Icons and animations
+          "visual-vendor": ["lucide-react", "react-icons", "framer-motion"],
+          // Utility libraries
+          "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge"],
+          // Form and validation
+          "form-vendor": ["react-hook-form", "zod"],
+          // Query and state management
+          "query-vendor": ["@tanstack/react-query"]
+        }
+      }
+    }
+  },
+  optimizeDeps: {
+    include: ["@sinclair/typebox"],
+    esbuildOptions: {
+      target: "es2020",
+      supported: {
+        "top-level-await": true
+      }
+    }
+  },
+  server: {
+    fs: {
+      strict: false,
+      allow: ["..", "node_modules"]
+    },
+    proxy: {
+      "/api": "http://localhost:3001"
+    }
+  }
+});
+
+// server/vite.ts
+import { nanoid } from "nanoid";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+var __filename2 = fileURLToPath2(import.meta.url);
+var __dirname2 = dirname2(__filename2);
+var firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+var app = initializeApp(firebaseConfig);
+var auth = getAuth(app);
+var db = getFirestore(app);
+var storage2 = getStorage(app);
+function log(message, source = "express") {
+  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+async function setupVite(app3, server) {
+  const serverOptions = {
+    middlewareMode: true,
+    hmr: { server },
+    allowedHosts: true
+  };
+  const viteServer = await (void 0)({
+    ...vite_config_default,
+    configFile: false,
+    server: {
+      middlewareMode: true,
+      hmr: { server },
+      allowedHosts: ["localhost"]
+    },
+    appType: "custom"
+  });
+  app3.use(viteServer.middlewares);
+  app3.use("*", async (req, res, next) => {
+    const url = req.originalUrl;
+    try {
+      const clientTemplate = path2.resolve(
+        __dirname2,
+        "..",
+        "client",
+        "index.html"
+      );
+      let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`
+      );
+      const page = await viteServer.transformIndexHtml(url, template);
+      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+    } catch (e) {
+      viteServer.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
+}
+function serveStatic(app3) {
+  const distPath = path2.resolve(__dirname2, "public");
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`
+    );
+  }
+  app3.use(express.static(distPath));
+  app3.use("*", (_req, res) => {
+    res.sendFile(path2.resolve(distPath, "index.html"));
+  });
+}
+
 // server/index.ts
-init_vite();
 import cors from "cors";
 
 // server/api/programs.ts
