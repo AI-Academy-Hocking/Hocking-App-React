@@ -36,14 +36,14 @@ export default function Scholarships() {
       <Accordion type="single" collapsible className="space-y-6">
         
         {/* Scholarship Application Portal */}
-        <AccordionItem value="apply" className="border-2 border-blue-200 dark:border-blue-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="apply" className="border-2 border-blue-600 dark:border-blue-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-6 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Award className="mr-3 h-6 w-6 text-blue-600" />
-              <span className="text-xl font-semibold text-blue-800 dark:text-blue-200">Scholarship Application Portal</span>
+              <span className="text-xl font-semibold text-blue-600 dark:text-blue-400">Scholarship Application Portal</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <p className="text-gray-700 dark:text-gray-300 text-lg">
                 Start your scholarship application process through the Hocking College Foundation portal.
@@ -51,9 +51,9 @@ export default function Scholarships() {
               
               <button
                 onClick={() => handleExternalLink('https://foundation.hocking.edu/scholarships')}
-                className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 hover:from-blue-900 hover:to-blue-950 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
+                className="flex items-center justify-between p-6 bg-gradient-to-r from-blue-800 to-blue-900 dark:from-blue-600 dark:to-blue-700 text-white rounded-xl shadow-lg w-full"
               >
-                <div className="flex items-center">
+                <div className="flex items-center justify-start w-full">
                   <FileText className="mr-4 h-6 w-6" />
                   <div className="text-left">
                     <span className="font-bold text-lg block">Start Scholarship Application</span>
@@ -67,14 +67,14 @@ export default function Scholarships() {
         </AccordionItem>
 
         {/* How to Apply */}
-        <AccordionItem value="requirements" className="border-2 border-green-200 dark:border-green-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="requirements" className="border-2 border-green-600 dark:border-green-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-6 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <UserCheck className="mr-3 h-6 w-6 text-green-600" />
-              <span className="text-xl font-semibold text-green-800 dark:text-green-200">How to Apply</span>
+              <span className="text-xl font-semibold text-green-600 dark:text-green-400">How to Apply</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <p className="text-gray-700 dark:text-gray-300 text-lg">
                 To apply, students must meet the following requirements:
@@ -82,21 +82,21 @@ export default function Scholarships() {
               
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <div className="flex items-center p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
+                  <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                     <CheckCircle className="mr-4 h-6 w-6 text-green-600" />
                     <span className="text-green-800 dark:text-green-200 font-medium">Be enrolled full-time (12+ credit hours) in a degree or certificate program</span>
                   </div>
-                  <div className="flex items-center p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
+                  <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                     <CheckCircle className="mr-4 h-6 w-6 text-green-600" />
                     <span className="text-green-800 dark:text-green-200 font-medium">Complete the FAFSA using Hocking's school code: 007598</span>
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex items-center p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
+                  <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                     <CheckCircle className="mr-4 h-6 w-6 text-green-600" />
                     <span className="text-green-800 dark:text-green-200 font-medium">Have an active class schedule</span>
                   </div>
-                  <div className="flex items-center p-4 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
+                  <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                     <CheckCircle className="mr-4 h-6 w-6 text-green-600" />
                     <span className="text-green-800 dark:text-green-200 font-medium">Submit the online scholarship application</span>
                   </div>
@@ -107,17 +107,17 @@ export default function Scholarships() {
         </AccordionItem>
 
         {/* Contact Information */}
-        <AccordionItem value="contact" className="border-2 border-purple-200 dark:border-purple-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="contact" className="border-2 border-purple-600 dark:border-purple-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-6 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Building className="mr-3 h-6 w-6 text-purple-600" />
-              <span className="text-xl font-semibold text-purple-800 dark:text-purple-200">Contact Information</span>
+              <span className="text-xl font-semibold text-purple-600 dark:text-purple-400">Contact Information</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="flex items-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-green-600 dark:border-green-400">
                   <Mail className="mr-4 h-6 w-6 text-purple-600" />
                   <div>
                     <p className="font-semibold text-purple-800 dark:text-purple-200">Foundation Office</p>
@@ -126,7 +126,7 @@ export default function Scholarships() {
                 </div>
               </div>
               <div className="space-y-6">
-                <div className="flex items-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
+                <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-green-600 dark:border-green-400">
                   <Phone className="mr-4 h-6 w-6 text-purple-600" />
                   <div>
                     <p className="font-semibold text-purple-800 dark:text-purple-200">Contact number</p>
@@ -139,35 +139,35 @@ export default function Scholarships() {
         </AccordionItem>
 
         {/* Types of Scholarships */}
-        <AccordionItem value="types" className="border-2 border-orange-200 dark:border-orange-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="types" className="border-2 border-orange-600 dark:border-orange-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-6 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Award className="mr-3 h-6 w-6 text-orange-600" />
-              <span className="text-xl font-semibold text-orange-800 dark:text-orange-200">Types of Scholarships</span>
+              <span className="text-xl font-semibold text-orange-600 dark:text-orange-400">Types of Scholarships</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
-            <div className="space-y-8">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
+            <div className="space-y-6">
               {/* Foundation Scholarships */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mr-4">
-                    <Star className="h-6 w-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
+                    <Star className="h-6 w-6 text-red-600" />
                   </div>
-                  <h4 className="font-bold text-orange-700 dark:text-orange-300 text-lg">Foundation Scholarships</h4>
+                  <h4 className="font-bold text-orange-600 dark:text-orange-400 text-lg">Foundation Scholarships</h4>
                 </div>
                 <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
                   Awarded based on financial need, academic merit, or program of study. Examples:
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
-                    <p className="text-sm text-orange-800 dark:text-orange-200 font-medium">• David S. Fraedrich (Nursing)</p>
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
+                    <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">• David S. Fraedrich (Nursing)</p>
                   </div>
-                  <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
-                    <p className="text-sm text-orange-800 dark:text-orange-200 font-medium">• Patrick Gangwer Brewing Scholarship</p>
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
+                    <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">• Patrick Gangwer Brewing Scholarship</p>
                   </div>
-                  <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800 md:col-span-2">
-                    <p className="text-sm text-orange-800 dark:text-orange-200 font-medium">• General scholarships for students in arts, health, business, and technology</p>
+                  <div className="p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400 md:col-span-2">
+                    <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">• General scholarships for students in arts, health, business, and technology</p>
                   </div>
                 </div>
               </div>
@@ -175,30 +175,30 @@ export default function Scholarships() {
               {/* Specialty Scholarships */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mr-4">
-                    <Target className="h-6 w-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
+                    <Target className="h-6 w-6 text-red-600" />
                   </div>
-                  <h4 className="font-bold text-orange-700 dark:text-orange-300 text-lg">Specialty Scholarships</h4>
+                  <h4 className="font-bold text-orange-600 dark:text-orange-400 text-lg">Specialty Scholarships</h4>
                 </div>
                 <div className="space-y-4">
-                  <div className="p-6 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                     <div className="flex items-center justify-between mb-3">
-                      <h5 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">Band & Choir Scholarship</h5>
-                      <span className="font-bold text-orange-600">Up to $1,000/semester</span>
+                      <h5 className="font-semibold text-orange-600 dark:text-orange-400 text-lg">Band & Choir Scholarship</h5>
+                      <span className="font-bold text-red-600">Up to $1,000/semester</span>
                     </div>
-                    <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">Requires MUS-1134 enrollment and audition</p>
+                    <p className="text-sm text-orange-600 dark:text-orange-400 mb-3">Requires MUS-1134 enrollment and audition</p>
                     <a href="mailto:parkj1@hocking.edu" className="text-blue-600 hover:underline text-sm font-medium">Email: parkj1@hocking.edu</a>
                   </div>
-                  <div className="p-6 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                     <div className="flex items-center justify-between mb-3">
-                      <h5 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">Presidential Scholar Award</h5>
-                      <span className="font-bold text-orange-600">GPA ≥ 3.5</span>
+                      <h5 className="font-semibold text-orange-600 dark:text-orange-400 text-lg">Presidential Scholar Award</h5>
+                      <span className="font-bold text-red-600">GPA ≥ 3.5</span>
                     </div>
-                    <p className="text-sm text-orange-700 dark:text-orange-300">Community service and full-time enrollment required</p>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">Community service and full-time enrollment required</p>
                   </div>
-                  <div className="p-6 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
-                    <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-3 text-lg">Other Specific Awards</h5>
-                    <p className="text-sm text-orange-700 dark:text-orange-300">Veteran/Military Family, Single Mother, Hearing Impaired, and other specific awards</p>
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
+                    <h5 className="font-semibold text-orange-600 dark:text-orange-400 mb-3 text-lg">Other Specific Awards</h5>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">Veteran/Military Family, Single Mother, Hearing Impaired, and other specific awards</p>
                   </div>
                 </div>
               </div>
@@ -206,17 +206,17 @@ export default function Scholarships() {
               {/* Border States Scholarship */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mr-4">
-                    <Globe className="h-6 w-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
+                    <Globe className="h-6 w-6 text-red-600" />
                   </div>
-                  <h4 className="font-bold text-orange-700 dark:text-orange-300 text-lg">Border States Scholarship</h4>
+                  <h4 className="font-bold text-orange-600 dark:text-orange-400 text-lg">Border States Scholarship</h4>
                 </div>
-                <div className="p-6 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                   <div className="flex items-center justify-between mb-3">
-                    <h5 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">$1,755/semester</h5>
-                    <span className="font-bold text-orange-600">IN, KY, MI, PA, WV</span>
+                    <h5 className="font-semibold text-orange-600 dark:text-orange-400 text-lg">$1,755/semester</h5>
+                    <span className="font-bold text-red-600">IN, KY, MI, PA, WV</span>
                   </div>
-                  <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">Must live in dorm and have a meal plan</p>
+                  <p className="text-sm text-orange-600 dark:text-orange-400 mb-3">Must live in dorm and have a meal plan</p>
                   <button
                     onClick={() => handleExternalLink('https://www.hocking.edu/tuition-and-fees')}
                     className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-sm font-medium"
@@ -230,31 +230,31 @@ export default function Scholarships() {
               {/* District Scholars Award */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mr-4">
-                    <MapPin className="h-6 w-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
+                    <MapPin className="h-6 w-6 text-red-600" />
                   </div>
-                  <h4 className="font-bold text-orange-700 dark:text-orange-300 text-lg">District Scholars Award</h4>
+                  <h4 className="font-bold text-orange-600 dark:text-orange-400 text-lg">District Scholars Award</h4>
                 </div>
-                <div className="p-6 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                   <div className="flex items-center justify-between mb-3">
-                    <h5 className="font-semibold text-orange-800 dark:text-orange-200 text-lg">$1,000/year</h5>
-                    <span className="font-bold text-orange-600">Ohio Counties</span>
+                    <h5 className="font-semibold text-orange-600 dark:text-orange-400 text-lg">$1,000/year</h5>
+                    <span className="font-bold text-red-600">Ohio Counties</span>
                   </div>
-                  <p className="text-sm text-orange-700 dark:text-orange-300 mb-3">For graduates of high schools in surrounding Ohio counties</p>
-                  <p className="text-sm text-orange-700 dark:text-orange-300">Renewable with full-time status and Satisfactory Academic Progress (SAP)</p>
+                  <p className="text-sm text-orange-600 dark:text-orange-400 mb-3">For graduates of high schools in surrounding Ohio counties</p>
+                  <p className="text-sm text-orange-600 dark:text-orange-400">Renewable with full-time status and Satisfactory Academic Progress (SAP)</p>
                 </div>
               </div>
 
               {/* Choose Ohio First Scholarship */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mr-4">
-                    <Star className="h-6 w-6 text-orange-600" />
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
+                    <Star className="h-6 w-6 text-red-600" />
                   </div>
-                  <h4 className="font-bold text-orange-700 dark:text-orange-300 text-lg">Choose Ohio First Scholarship</h4>
+                  <h4 className="font-bold text-orange-600 dark:text-orange-400 text-lg">Choose Ohio First Scholarship</h4>
                 </div>
-                <div className="p-6 bg-orange-50 dark:bg-orange-900/30 rounded-xl border border-orange-200 dark:border-orange-800">
-                  <h5 className="font-semibold text-orange-800 dark:text-orange-200 mb-3 text-lg">For Ohio residents in STEM or short-term certificate programs</h5>
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
+                  <h5 className="font-semibold text-orange-600 dark:text-orange-400 mb-3 text-lg">For Ohio residents in STEM or short-term certificate programs</h5>
                   <button
                     onClick={() => handleExternalLink('https://www.hocking.edu/financial-aid')}
                     className="flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors text-sm font-medium"
@@ -269,39 +269,39 @@ export default function Scholarships() {
         </AccordionItem>
 
         {/* Deadlines & Award Periods */}
-        <AccordionItem value="deadlines" className="border-2 border-red-200 dark:border-red-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="deadlines" className="border-2 border-red-600 dark:border-red-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-6 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Calendar className="mr-3 h-6 w-6 text-red-600" />
-              <span className="text-xl font-semibold text-red-800 dark:text-red-200">Deadlines & Award Periods</span>
+              <span className="text-xl font-semibold text-red-600 dark:text-red-400">Deadlines & Award Periods</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 bg-red-50 dark:bg-red-900/30 rounded-xl border border-red-200 dark:border-red-800">
-                  <h4 className="font-semibold text-red-800 dark:text-red-200 mb-4 flex items-center">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
+                  <h4 className="font-semibold text-red-600 dark:text-red-400 mb-4 flex items-center">
                     <Calendar className="mr-3 h-5 w-5" />
                     Application Deadlines
                   </h4>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-red-700 dark:text-red-300">Fall Semester:</span>
-                      <span className="font-semibold text-red-800 dark:text-red-200">March 1st</span>
+                      <span className="font-semibold text-red-600 dark:text-red-400">March 1st</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-red-700 dark:text-red-300">Spring Semester:</span>
-                      <span className="font-semibold text-red-800 dark:text-red-200">October 1st</span>
+                      <span className="font-semibold text-red-600 dark:text-red-400">October 1st</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-red-700 dark:text-red-300">Summer Semester:</span>
-                      <span className="font-semibold text-red-800 dark:text-red-200">February 1st</span>
+                      <span className="font-semibold text-red-600 dark:text-red-400">February 1st</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="p-6 bg-red-50 dark:bg-red-900/30 rounded-xl border border-red-200 dark:border-red-800">
-                  <h4 className="font-semibold text-red-800 dark:text-red-200 mb-4 flex items-center">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-orange-600 dark:border-orange-400">
+                  <h4 className="font-semibold text-red-600 dark:text-red-400 mb-4 flex items-center">
                     <AlertTriangle className="mr-3 h-5 w-5" />
                     Important Notes
                   </h4>
@@ -323,22 +323,22 @@ export default function Scholarships() {
         </AccordionItem>
 
         {/* Renewal Requirements */}
-        <AccordionItem value="renewal" className="border-2 border-teal-200 dark:border-teal-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="renewal" className="border-2 border-teal-600 dark:border-teal-400 rounded-2xl overflow-hidden">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-6 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <RotateCcw className="mr-3 h-6 w-6 text-teal-600" />
-              <span className="text-xl font-semibold text-teal-800 dark:text-teal-200">Renewal Requirements</span>
+              <span className="text-xl font-semibold text-teal-600 dark:text-teal-400">Renewal Requirements</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <p className="text-gray-700 dark:text-gray-300 text-lg">
                 Most scholarships require annual renewal. Students must maintain eligibility criteria to continue receiving awards.
               </p>
               
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 bg-teal-50 dark:bg-teal-900/30 rounded-xl border border-teal-200 dark:border-teal-800">
-                  <h4 className="font-semibold text-teal-800 dark:text-teal-200 mb-4 flex items-center">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-teal-600 dark:border-teal-400">
+                  <h4 className="font-semibold text-teal-600 dark:text-teal-400 mb-4 flex items-center">
                     <CheckCircle className="mr-3 h-5 w-5" />
                     Academic Requirements
                   </h4>
@@ -349,8 +349,8 @@ export default function Scholarships() {
                   </div>
                 </div>
                 
-                <div className="p-6 bg-teal-50 dark:bg-teal-900/30 rounded-xl border border-teal-200 dark:border-teal-800">
-                  <h4 className="font-semibold text-teal-800 dark:text-teal-200 mb-4 flex items-center">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-teal-600 dark:border-teal-400">
+                  <h4 className="font-semibold text-teal-600 dark:text-teal-400 mb-4 flex items-center">
                     <FileText className="mr-3 h-5 w-5" />
                     Renewal Process
                   </h4>

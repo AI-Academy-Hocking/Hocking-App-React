@@ -10,12 +10,21 @@ import {
 } from "lucide-react";
 
 // Import images properly
-import davisHallImage from "../components/assets/davishall.JPG";
-import library2Image from "../components/assets/library 2.JPG";
-import libraryBenchImage from "../components/assets/library bench.JPG";
-import libraryLoungeImage from "../components/assets/library lounge.JPG";
-import library3Image from "../components/assets/library 3.JPG";
-import scFoosballImage from "../components/assets/sc phoosbal.JPG";
+// Temporarily disabled image imports - files need to be added to assets folder
+// import davisHallImage from "../components/assets/davishall.JPG";
+// import library2Image from "../components/assets/library 2.JPG";
+// import libraryBenchImage from "../components/assets/library bench.JPG";
+// import libraryLoungeImage from "../components/assets/library lounge.JPG";
+// import library3Image from "../components/assets/library 3.JPG";
+// import scFoosballImage from "../components/assets/sc phoosbal.JPG";
+
+// Placeholder images until actual assets are added
+const davisHallImage = "";
+const library2Image = "";
+const libraryBenchImage = "";
+const libraryLoungeImage = "";
+const library3Image = "";
+const scFoosballImage = "";
 
 export default function Resources() {
   const resources = [

@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     react(),
   ],
-  assetsInclude: ['**/*.JPG', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.webp'],
+  assetsInclude: ['**/*.JPG', '**/*.jpg', '**/*.jpeg', '**/*.png', '**/*.gif', '**/*.webp', '**/*.mp4', '**/*.webm', '**/*.ogg'],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
@@ -75,7 +75,7 @@ export default defineConfig({
       allow: ['..', 'node_modules']
     },
     proxy: {
-      '/api': 'http://localhost:3001',
+      '/api': 'http://localhost:3000',
     }
   }
 });

@@ -53,14 +53,14 @@ export default function Advising() {
         </Link>
       </div>
 
-      <Card>
+      <Card className="border-2 border-blue-600 rounded-xl">
         <CardHeader className="bg-primary-light/10">
           <CardTitle className="text-2xl text-primary">Academic Advising</CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="space-y-6">
             {advisors.map((advisor, index) => (
-              <Card key={index}>
+              <Card key={index} className="border-2 border-blue-600 rounded-xl">
                 <CardContent className="pt-6">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-1">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -22,16 +22,30 @@ interface StudentTool {
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
   
-  const { data: tools } = useQuery<StudentTool[]>({
+  const { data: tools, isLoading, error, refetch } = useQuery<StudentTool[]>({
     queryKey: ['/api/student-tools'],
     queryFn: async () => {
-      const response = await fetch('/api/student-tools');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      try {
+        const response = await fetch('/api/student-tools');
+        if (!response.ok) {
+          console.warn('API failed, using fallback data');
+          throw new Error('API not available');
+        }
+        return response.json();
+      } catch (err) {
+        console.warn('Student tools API error, using fallback data:', err);
+        throw err;
       }
-      return response.json();
     },
-    // Add fallback data in case API fails
+    // Reduce retries to fail fast and use fallback data
+    retry: 1,
+    // Shorter timeout before giving up on API
+    retryDelay: 1000,
+    // Use stale data while revalidating
+    staleTime: 30000, // 30 seconds
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    // More comprehensive fallback data
     placeholderData: [
       // Academic tools
       { id: "course-catalog", name: "Course Catalog", description: "Browse available courses", category: "academic", url: "/tools/academic/course-catalog" },
@@ -45,6 +59,18 @@ export default function StudentTools() {
       { id: "career-services", name: "Career Services", description: "Job search and career planning", category: "resources", url: "/career-university-center" },
     ],
   });
+
+  // Debug and handle component state
+  useEffect(() => {
+    console.log('StudentTools component mounted');
+    console.log('- Tools data:', tools?.length || 0, 'items');
+    console.log('- Is loading:', isLoading);
+    console.log('- Error:', error?.message || 'none');
+    
+    if (error) {
+      console.warn('Using fallback data due to API error:', error.message);
+    }
+  }, [tools, error, isLoading]);
 
   // Filter tools by category
   const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
@@ -79,6 +105,40 @@ export default function StudentTools() {
     { id: 'events', label: 'Events', icon: Calendar, path: '/calendar' },
     { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
   ];
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6 bg-white dark:bg-gray-900">
+        <section>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
+          <div className="flex justify-center items-center p-8">
+            <div className="text-gray-600 dark:text-gray-400">Loading student tools...</div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Show error state with retry option
+  if (error) {
+    return (
+      <div className="space-y-6 bg-white dark:bg-gray-900">
+        <section>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
+          <div className="flex flex-col justify-center items-center p-8 space-y-4">
+            <div className="text-red-600 dark:text-red-400">Error loading student tools</div>
+            <button 
+              onClick={() => refetch()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Retry
+            </button>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
