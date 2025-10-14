@@ -80,7 +80,7 @@ export default function NotificationBell() {
         onClick={() => setIsOpen(!isOpen)}
         className={`relative ${hasNewNotifications ? 'animate-pulse' : ''}`}
       >
-        <Bell className={`h-7 w-7 text-yellow-400 ${hasNewNotifications ? 'text-yellow-300' : ''}`} />
+        <Bell className={`h-8 w-8 text-yellow-400 ${hasNewNotifications ? 'text-yellow-300' : ''}`} />
       </Button>
       
       {unreadCount > 0 && (
