@@ -36,9 +36,9 @@ export default function CareerUniversityCenter() {
       </div>
 
       {/* Quick Stats */}
-      <Card className="mb-8 border-2 border-blue-600">
+      <Card className="mb-6 border-2 border-blue-600 dark:border-blue-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
         <CardHeader className="bg-blue-50 dark:bg-blue-900/20">
-          <CardTitle className="flex items-center text-xl text-blue-800 dark:text-blue-200">
+          <CardTitle className="flex items-center text-xl text-blue-600 dark:text-blue-400">
             <Activity className="mr-3 h-6 w-6" />
             Career & University Center Quick Facts
           </CardTitle>
@@ -69,14 +69,14 @@ export default function CareerUniversityCenter() {
       <Accordion type="single" collapsible className="space-y-6">
         
         {/* Career Coaching & Advising Section */}
-        <AccordionItem value="coaching" className="border-2 border-green-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 px-6 py-4">
+        <AccordionItem value="coaching" className="mb-6 border-2 border-green-600 dark:border-green-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <UserCheck className="mr-3 h-6 w-6 text-green-600" />
-              <span className="text-xl font-semibold text-green-800 dark:text-green-200">Career Coaching & Advising</span>
+              <span className="text-xl font-semibold text-green-600 dark:text-green-400">Career Coaching & Advising</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800">
                 <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-3">1-on-1 Appointments and Drop-in Coaching</h3>
@@ -149,14 +149,14 @@ export default function CareerUniversityCenter() {
         </AccordionItem>
 
         {/* Career Closet Section */}
-        <AccordionItem value="closet" className="border-2 border-purple-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 px-6 py-4">
+        <AccordionItem value="closet" className="mb-6 border-2 border-purple-600 dark:border-purple-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <Award className="mr-3 h-6 w-6 text-purple-600" />
-              <span className="text-xl font-semibold text-purple-800 dark:text-purple-200">Career Closet</span>
+              <span className="text-xl font-semibold text-purple-600 dark:text-purple-400">Career Closet</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="p-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
                 <h3 className="text-lg font-semibold text-purple-700 dark:text-purple-300 mb-3">Free Professional Attire Resource</h3>
@@ -206,14 +206,14 @@ export default function CareerUniversityCenter() {
         </AccordionItem>
 
         {/* Job Boards & Resume Tools Section */}
-        <AccordionItem value="tools" className="border-2 border-orange-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 px-6 py-4">
+        <AccordionItem value="tools" className="mb-6 border-2 border-orange-600 dark:border-orange-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <Target className="mr-3 h-6 w-6 text-orange-600" />
-              <span className="text-xl font-semibold text-orange-800 dark:text-orange-200">Job Boards & Resume Tools</span>
+              <span className="text-xl font-semibold text-orange-600 dark:text-orange-400">Job Boards & Resume Tools</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="p-6 bg-orange-50 dark:bg-orange-900/20 rounded-xl border border-orange-200 dark:border-orange-800">
                 <h3 className="text-lg font-semibold text-orange-700 dark:text-orange-300 mb-3">Access a Variety of Tools and Platforms</h3>
@@ -272,14 +272,14 @@ export default function CareerUniversityCenter() {
         </AccordionItem>
 
         {/* Transfer & Graduate School Support */}
-        <AccordionItem value="transfer" className="border-2 border-teal-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30 px-6 py-4">
+        <AccordionItem value="transfer" className="mb-6 border-2 border-teal-600 dark:border-teal-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <GraduationCap className="mr-3 h-6 w-6 text-teal-600" />
-              <span className="text-xl font-semibold text-teal-800 dark:text-teal-200">Transfer & Graduate School Support</span>
+              <span className="text-xl font-semibold text-teal-600 dark:text-teal-400">Transfer & Graduate School Support</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="p-6 bg-teal-50 dark:bg-teal-900/20 rounded-xl border border-teal-200 dark:border-teal-800">
                 <h3 className="text-lg font-semibold text-teal-700 dark:text-teal-300 mb-3">Comprehensive Transfer Assistance</h3>
@@ -337,14 +337,14 @@ export default function CareerUniversityCenter() {
         </AccordionItem>
 
         {/* Job Fairs & Networking Events */}
-        <AccordionItem value="events" className="border-2 border-indigo-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 px-6 py-4">
+        <AccordionItem value="events" className="mb-6 border-2 border-indigo-600 dark:border-indigo-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <Calendar className="mr-3 h-6 w-6 text-indigo-600" />
-              <span className="text-xl font-semibold text-indigo-800 dark:text-indigo-200">Job Fairs & Networking Events</span>
+              <span className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">Job Fairs & Networking Events</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="p-6 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800">
                 <h3 className="text-lg font-semibold text-indigo-700 dark:text-indigo-300 mb-3">Connect with Employers and Professionals</h3>
@@ -402,14 +402,14 @@ export default function CareerUniversityCenter() {
         </AccordionItem>
 
         {/* Workshops & Training */}
-        <AccordionItem value="workshops" className="border-2 border-red-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 px-6 py-4">
+        <AccordionItem value="workshops" className="mb-6 border-2 border-red-600 dark:border-red-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <Building className="mr-3 h-6 w-6 text-red-600" />
-              <span className="text-xl font-semibold text-red-800 dark:text-red-200">Workshops & Training</span>
+              <span className="text-xl font-semibold text-red-600 dark:text-red-400">Workshops & Training</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-200 dark:border-red-800">
                 <h3 className="text-lg font-semibold text-red-700 dark:text-red-300 mb-3">Professional Development Programs</h3>
@@ -467,14 +467,14 @@ export default function CareerUniversityCenter() {
         </AccordionItem>
 
         {/* Contact Information */}
-        <AccordionItem value="contact" className="border-2 border-gray-600 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-gray-50 dark:bg-gray-900/20 hover:bg-gray-100 dark:hover:bg-gray-900/30 px-6 py-4">
+        <AccordionItem value="contact" className="mb-6 border-2 border-gray-600 dark:border-gray-400 rounded-2xl overflow-hidden bg-white dark:bg-gray-800">
+          <AccordionTrigger className="px-6 py-6 min-h-[100px] flex items-center justify-start w-full" hideChevron={true}>
             <div className="flex items-center">
               <Users2 className="mr-3 h-6 w-6 text-gray-600" />
-              <span className="text-xl font-semibold text-gray-800 dark:text-gray-200">Contact Information</span>
+              <span className="text-xl font-semibold text-gray-600 dark:text-gray-400">Contact Information</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8">
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">

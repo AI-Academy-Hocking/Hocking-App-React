@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -22,16 +22,30 @@ interface StudentTool {
 export default function StudentTools() {
   const [activeTab, setActiveTab] = useState("academic");
   
-  const { data: tools } = useQuery<StudentTool[]>({
+  const { data: tools, isLoading, error, refetch } = useQuery<StudentTool[]>({
     queryKey: ['/api/student-tools'],
     queryFn: async () => {
-      const response = await fetch('/api/student-tools');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      try {
+        const response = await fetch('/api/student-tools');
+        if (!response.ok) {
+          console.warn('API failed, using fallback data');
+          throw new Error('API not available');
+        }
+        return response.json();
+      } catch (err) {
+        console.warn('Student tools API error, using fallback data:', err);
+        throw err;
       }
-      return response.json();
     },
-    // Add fallback data in case API fails
+    // Reduce retries to fail fast and use fallback data
+    retry: 1,
+    // Shorter timeout before giving up on API
+    retryDelay: 1000,
+    // Use stale data while revalidating
+    staleTime: 30000, // 30 seconds
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    // More comprehensive fallback data
     placeholderData: [
       // Academic tools
       { id: "course-catalog", name: "Course Catalog", description: "Browse available courses", category: "academic", url: "/tools/academic/course-catalog" },
@@ -45,6 +59,18 @@ export default function StudentTools() {
       { id: "career-services", name: "Career Services", description: "Job search and career planning", category: "resources", url: "/career-university-center" },
     ],
   });
+
+  // Debug and handle component state
+  useEffect(() => {
+    console.log('StudentTools component mounted');
+    console.log('- Tools data:', tools?.length || 0, 'items');
+    console.log('- Is loading:', isLoading);
+    console.log('- Error:', error?.message || 'none');
+    
+    if (error) {
+      console.warn('Using fallback data due to API error:', error.message);
+    }
+  }, [tools, error, isLoading]);
 
   // Filter tools by category
   const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
@@ -80,6 +106,40 @@ export default function StudentTools() {
     { id: 'housing', label: 'Housing', icon: Home, path: '/housing' },
   ];
 
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6 bg-white dark:bg-gray-900">
+        <section>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
+          <div className="flex justify-center items-center p-8">
+            <div className="text-gray-600 dark:text-gray-400">Loading student tools...</div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Show error state with retry option
+  if (error) {
+    return (
+      <div className="space-y-6 bg-white dark:bg-gray-900">
+        <section>
+          <h2 className="text-xl font-heading font-semibold mb-4 text-gray-900 dark:text-white">Student Tools</h2>
+          <div className="flex flex-col justify-center items-center p-8 space-y-4">
+            <div className="text-red-600 dark:text-red-400">Error loading student tools</div>
+            <button 
+              onClick={() => refetch()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Retry
+            </button>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 bg-white dark:bg-gray-900">
       <section>
@@ -87,16 +147,16 @@ export default function StudentTools() {
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 border-b border-gray-200 dark:border-0">
-              <TabsTrigger value="academic" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Financial</TabsTrigger>
-              <TabsTrigger value="resources" className="data-[state=active]:bg-gray-700 data-[state=active]:text-white">Resources</TabsTrigger>
+            <TabsList className="grid grid-cols-3 rounded-xl">
+              <TabsTrigger value="academic" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl">Academic</TabsTrigger>
+              <TabsTrigger value="financial" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl">Financial</TabsTrigger>
+              <TabsTrigger value="resources" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl">Resources</TabsTrigger>
             </TabsList>
             
             <TabsContent value="academic" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Graduation */}
-                <Link href="/graduation" className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                <Link href="/graduation" className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
                   <GraduationCap className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Graduation</h3>
@@ -113,7 +173,7 @@ export default function StudentTools() {
                       <Link 
                         key={tool.id} 
                         href={tool.url}
-                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                       >
                         <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                         <div>
@@ -129,7 +189,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -153,7 +213,7 @@ export default function StudentTools() {
                       <Link 
                         key={tool.id} 
                         href={tool.url}
-                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                       >
                         <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                         <div>
@@ -169,7 +229,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
@@ -185,7 +245,7 @@ export default function StudentTools() {
             <TabsContent value="resources" className="p-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* International Students */}
-                <Link href="/international-students" className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                <Link href="/international-students" className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
                   <Globe className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">International Students</h3>
@@ -194,7 +254,7 @@ export default function StudentTools() {
                 </Link>
                 
                 {/* Canine Boarding & Grooming Facility */}
-                <Link href="/canine-facility" className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
+                <Link href="/canine-facility" className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition">
                   <PawPrint className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white">Canine Boarding & Grooming Facility</h3>
@@ -211,7 +271,7 @@ export default function StudentTools() {
                       <Link 
                         key={tool.id} 
                         href={tool.url}
-                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                       >
                         <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                         <div>
@@ -227,7 +287,7 @@ export default function StudentTools() {
                     <a 
                       key={tool.id} 
                       href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
+                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
                     >
                       <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
                       <div>
