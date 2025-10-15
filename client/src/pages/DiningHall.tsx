@@ -15,7 +15,6 @@ import { format, startOfWeek, addDays, addWeeks, subWeeks, isToday } from "date-
 import { useLocation } from "wouter";
 import "../styles/animations.css";
 import dining1Image from "../components/assets/dining1.jpg";
-import diamondDawgsImage from "../components/assets/DiamondDawgs.jpeg";
 import rhapsodyImage from "../components/assets/rhapsody.webp";
 
 export default function DiningHall() {
@@ -27,16 +26,13 @@ export default function DiningHall() {
   const [dietaryOptionsExpanded, setDietaryOptionsExpanded] = useState(false);
   const [allergenInfoExpanded, setAllergenInfoExpanded] = useState(false);
   const [hawksNestExpanded, setHawksNestExpanded] = useState(false);
-  const [diamondDawgzExpanded, setDiamondDawgzExpanded] = useState(false);
   const [rhapsodyExpanded, setRhapsodyExpanded] = useState(false);
   const [imageLoading, setImageLoading] = useState({
     hawksNest: true,
-    diamondDawgs: true,
     rhapsody: true
   });
   const [images, setImages] = useState({
     hawksNest: '',
-    diamondDawgs: '',
     rhapsody: ''
   });
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -49,7 +45,6 @@ export default function DiningHall() {
     setDietaryOptionsExpanded(false);
     setAllergenInfoExpanded(false);
     setHawksNestExpanded(false);
-    setDiamondDawgzExpanded(false);
     setRhapsodyExpanded(false);
   };
 
@@ -188,12 +183,10 @@ export default function DiningHall() {
     try {
       setImages({
         hawksNest: dining1Image,
-        diamondDawgs: diamondDawgsImage,
         rhapsody: rhapsodyImage
       });
       setImageLoading({
         hawksNest: false,
-        diamondDawgs: false,
         rhapsody: false
       });
     } catch (error) {
@@ -201,12 +194,10 @@ export default function DiningHall() {
       // Fallback to placeholder images
       setImages({
         hawksNest: 'https://via.placeholder.com/400x300?text=Hawks+Nest',
-        diamondDawgs: 'https://via.placeholder.com/400x300?text=Diamond+Dawgz',
         rhapsody: 'https://via.placeholder.com/400x300?text=Rhapsody'
       });
       setImageLoading({
         hawksNest: false,
-        diamondDawgs: false,
         rhapsody: false
       });
     }
@@ -631,7 +622,7 @@ export default function DiningHall() {
             <MapPin className="h-7 w-7 text-blue-600 dark:text-blue-400" />
             Campus Dining Locations
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div 
               className={`border-2 ${hawksNestExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
               onClick={() => setHawksNestExpanded(!hawksNestExpanded)}
@@ -675,51 +666,6 @@ export default function DiningHall() {
               )}
             </div>
       
-            <div 
-              className={`border-2 ${diamondDawgzExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
-              onClick={() => setDiamondDawgzExpanded(!diamondDawgzExpanded)}
-            >
-              <div className="p-6 flex flex-col items-center">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-blue-300 text-center">Diamond Dawgz</h3>
-              </div>
-              
-              {diamondDawgzExpanded && (
-                <div className="px-6 pb-6 pt-4">
-                  <div className="rounded-xl overflow-hidden border-2 border-blue-600 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 h-48 mb-4 relative group">
-                    <div className="w-full h-full flex items-center justify-center bg-blue-50 dark:bg-gray-700">
-                      {imageLoading.diamondDawgs && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80">
-                          <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
-                        </div>
-                      )}
-                      <img 
-                        src={images.diamondDawgs} 
-                        alt="Diamond Dawgz" 
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        onLoad={() => handleImageLoad('diamondDawgs')}
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://via.placeholder.com/400x300?text=Diamond+Dawgz';
-                          handleImageLoad('diamondDawgs');
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <p className="text-gray-600 dark:text-white mb-4 text-center">
-                    A convenient spot for a quick hotdog, burger, fries, or some chicken tenders, or enjoy a refreshing milkshake and ice cream.
-                  </p>
-                  <ul className="space-y-1 text-gray-600 dark:text-white text-sm">
-                    <li className="flex items-start">
-                      <span className="font-medium w-20">Location:</span>
-                      <span>185 W Canal St Nelsonville, OH 45764</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="font-medium w-20">Phone:</span>
-                      <span>(740) 753-6100</span>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
 
             <div 
               className={`border-2 ${rhapsodyExpanded ? 'border-blue-400 dark:border-cyan-300' : 'border-blue-600 dark:border-gray-700'} rounded-xl shadow-sm bg-gray-50 dark:bg-gray-700 cursor-pointer hover:shadow-xl hover:scale-105 transition-all duration-300 animate-fadeIn`}
