@@ -9,7 +9,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 
 export default function NotificationBell() {
-  const { notifications, unreadCount, markAsRead, markAllAsRead, removeNotification } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, removeNotification, clearAllNotifications } = useNotifications();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
@@ -103,6 +103,14 @@ export default function NotificationBell() {
                     className="text-xs"
                   >
                     Mark all read
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearAllNotifications}
+                    className="text-xs text-red-600 hover:text-red-700"
+                  >
+                    Clear all
                   </Button>
                   <Button
                     variant="ghost"
