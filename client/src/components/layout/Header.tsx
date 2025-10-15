@@ -225,8 +225,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
       )}
 
       <header className="bg-blue-900 dark:bg-blue-950 p-4 shadow-md">
-        <div className="flex items-center justify-between">
-          {/* Left Section: Menu + Logo */}
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Sheet open={isMenuOpen} onOpenChange={handleMenuOpenChange}>
               <SheetTrigger asChild>
@@ -406,22 +405,17 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
               alt="Hocking College Logo" 
               className="h-8 w-auto object-contain" 
             />
-          </div>
-
-          {/* Center Section: Hocking College Text */}
-          <div className="flex-1 flex justify-center">
             <h1 className="text-xl font-bold text-yellow-400 [text-shadow:_1px_1px_1px_rgb(0_0_0_/_100%)]">
               Hocking College
             </h1>
           </div>
 
-          {/* Right Section: Search + Other Controls */}
-          <div className="flex items-center gap-2">
-            {/* Desktop Search Bar */}
-            <div className="hidden md:block max-w-md mx-4">
-              <SearchBar />
-            </div>
+          {/* Desktop Search Bar */}
+          <div className="hidden md:block flex-1 max-w-md mx-4">
+            <SearchBar />
+          </div>
 
+          <div className="flex items-center gap-2">
             {/* Mobile Search Button */}
             <button
               onClick={toggleSearch}
