@@ -216,7 +216,7 @@ export default function DiningHall() {
         <Link href="/tools">
           <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
-            <span>Back to Student Tools</span>
+            <span>To Student Tools</span>
           </button>
         </Link>
       </div>
