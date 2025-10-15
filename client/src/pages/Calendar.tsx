@@ -512,43 +512,6 @@ export default function CalendarPage() {
         )}
       </section>
 
-      {/* Quick Access Cards */}
-      <section className="max-w-6xl mx-auto mt-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-heading font-semibold text-gray-900 dark:text-blue-300">
-            Quick Access
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="p-6 border-2 border-blue-600 dark:border-none rounded-xl shadow-lg bg-white dark:bg-[#0f172a] hover:shadow-xl transition-shadow">
-            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Calendar</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              View important dates, deadlines, and events for the academic year.
-            </p>
-            <Button 
-              className="w-full text-blue-600 dark:text-blue-300 bg-transparent hover:bg-transparent"
-              variant="ghost"
-              onClick={() => setActiveCalendar("academic")}
-            >
-              View Calendar
-            </Button>
-          </Card>
-
-          <Card className="p-6 border-2 border-blue-600 dark:border-none rounded-xl shadow-lg bg-white dark:bg-[#0f172a] hover:shadow-xl transition-shadow">
-            <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-blue-300">Student Activities</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Discover campus events, clubs, and activities to get involved.
-            </p>
-            <Button 
-              className="w-full text-blue-600 dark:text-blue-300 bg-transparent hover:bg-transparent"
-              variant="ghost"
-              onClick={() => setActiveCalendar("activities")}
-            >
-              Explore Activities
-            </Button>
-          </Card>
-        </div>
-      </section>
     </div>
   );
 }

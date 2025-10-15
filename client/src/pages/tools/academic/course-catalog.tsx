@@ -141,7 +141,7 @@ export default function CourseCatalog() {
   const sortedPrograms = selectedSchoolData ? [...selectedSchoolData.programs].sort((a, b) => a.name.localeCompare(b.name)) : [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 bg-gray-50 dark:bg-gray-900 min-h-screen p-6">
       <div className="flex items-center gap-4">
         <Link href="/tools">
           <ArrowLeft className="h-6 w-6" />
