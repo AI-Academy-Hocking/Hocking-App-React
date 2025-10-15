@@ -90,7 +90,7 @@ export default function NotificationBell() {
       )}
 
       {isOpen && (
-        <div className="absolute right-1/2 transform translate-x-1/2 top-12 w-96 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+        <div className="absolute left-4 right-4 top-12 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 sm:left-1/2 sm:right-auto sm:transform sm:-translate-x-1/2 sm:w-96">
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
