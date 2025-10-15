@@ -90,7 +90,7 @@ export default function NotificationBell() {
       )}
 
       {isOpen && (
-        <div className="absolute top-12 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50" style={{ right: '6px' }}>
+        <div className="absolute top-12 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50" style={{ left: '50%', transform: 'translateX(-50%)' }}>
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
