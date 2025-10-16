@@ -695,7 +695,7 @@ export default function DiningHall() {
                     />
                   </div>
                   <p className="text-gray-600 dark:text-white mb-4 text-center">
-                    Rhapsody is a student-run restaurant that offers a casual fine dining experience with live music every Friday and Saturday. Reservations are required.
+                    Rhapsody is a student-run restaurant that offers a casual fine dining experience with live music every Friday and Saturday. <span className="font-bold">Reservations are required.</span>
                   </p>
                   <ul className="space-y-1 text-sm text-gray-600 dark:text-white">
                     <li className="flex items-start">
