@@ -107,6 +107,7 @@ export default function Maps() {
     { id: 'student-center-lot', name: 'Student Center Lot', description: 'Parking Lot', category: 'parking', lat: 39.44245, lng: -82.21952 },
     { id: 'hocking-heights-downhour-lot', name: 'Hocking Heights Lot', description: 'Parking Lot', category: 'parking', lat: 39.44227, lng: -82.22279 },
     { id: 'john-light-lot', name: 'John Light Lot', description: 'Parking Lot', category: 'parking', lat: 39.44386, lng: -82.22031 },
+    { id: 'davidson-hall-lot', name: 'Davidson hall lot', description: 'Parking Lot', category: 'parking', lat: 39.44017586838585, lng: -82.21940645497249 },
   ];
 
   let allBuildings = buildings ? [...buildings] : [];
