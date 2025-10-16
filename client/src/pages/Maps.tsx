@@ -721,7 +721,7 @@ export default function Maps() {
       <section>
         <h2 className="text-xl font-heading font-semibold mb-4 text-black dark:text-blue-300">Building Directory</h2>
         
-        <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a]">
+        <Card className="border-2 border-blue-600 dark:border-transparent rounded-xl shadow-sm bg-white dark:bg-[#353e4a] overflow-hidden">
           {filteredBuildings.length > 0 ? (
             <div className="divide-y divide-gray-200 dark:divide-gray-600">
               {/* Quick Category Navigation */}
@@ -770,7 +770,7 @@ export default function Maps() {
                 const sortedBuildings = categoryBuildings.sort((a, b) => a.name.localeCompare(b.name));
                 
                 return (
-                  <div key={category.id} className="p-4">
+                  <div key={category.id} className="p-4 overflow-hidden">
                     <div className="flex items-center gap-2 mb-3">
                       <span className={`inline-block w-3 h-3 rounded-full ${
                         category.id === 'academic' ? 'bg-blue-500' :
@@ -783,27 +783,25 @@ export default function Maps() {
                       </h3>
                     </div>
                     
-                    <div className="grid gap-2">
+                    <div className="grid gap-2 overflow-hidden">
                       {sortedBuildings.map((building) => (
-                        <div key={building.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-600/30 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600/50 transition-colors">
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <span className={`inline-block w-2 h-2 rounded-full flex-shrink-0 ${
-                              category.id === 'academic' ? 'bg-blue-500' :
-                              category.id === 'housing' ? 'bg-green-500' :
-                              category.id === 'dining' ? 'bg-orange-500' :
-                              'bg-gray-500'
-                            }`}></span>
-                            <div className="min-w-0 flex-1">
-                              <h4 className="font-medium text-gray-900 dark:text-white text-sm truncate">
-                                {building.name}
-                              </h4>
-                              <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                                {building.description}
-                              </p>
-                            </div>
+                        <div key={building.id} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-600/30 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600/50 transition-colors overflow-hidden">
+                          <span className={`inline-block w-2 h-2 rounded-full flex-shrink-0 ${
+                            category.id === 'academic' ? 'bg-blue-500' :
+                            category.id === 'housing' ? 'bg-green-500' :
+                            category.id === 'dining' ? 'bg-orange-500' :
+                            'bg-gray-500'
+                          }`}></span>
+                          <div className="min-w-0 flex-1 overflow-hidden">
+                            <h4 className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                              {building.name}
+                            </h4>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
+                              {building.description}
+                            </p>
                           </div>
                           
-                          <div className="flex gap-1 flex-shrink-0">
+                          <div className="flex gap-1 flex-shrink-0 ml-2">
                             <Button 
                               variant="ghost" 
                               size="icon" 
