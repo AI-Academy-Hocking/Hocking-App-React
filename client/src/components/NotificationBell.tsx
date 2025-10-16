@@ -78,7 +78,7 @@ export default function NotificationBell() {
         variant="ghost"
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
-        className={`relative ${hasNewNotifications ? 'animate-pulse' : ''}`}
+        className={`relative ${hasNewNotifications ? 'animate-pulse' : ''} [&_svg]:!h-8 [&_svg]:!w-8`}
       >
         <Bell className={`h-8 w-8 text-yellow-400 ${hasNewNotifications ? 'text-yellow-300' : ''}`} />
       </Button>
