@@ -711,6 +711,11 @@ export default function DiningHall() {
                       <span>(5:00 PM - 9:00 PM)</span>
                     </li>
                   </ul>
+                  <div className="mt-4 text-center">
+                    <p className="text-sm text-gray-600 dark:text-white">
+                      <span className="font-medium">Phone:</span> (740) 753-5740
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
