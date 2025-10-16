@@ -2,11 +2,7 @@ import express, { type Express } from "express";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-<<<<<<< HEAD
 import * as vite from "vite";
-=======
-// import { createServer } from "vite";
->>>>>>> a62c050effdbca6d1b7a30e10c72521020a7b800
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { type Server } from "http";
@@ -50,14 +46,10 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true,
   };
 
-<<<<<<< HEAD
-  const viteServer = await vite.createServer({
-=======
   // Dynamically import createServer for ESM compatibility
   const { createServer } = await import("vite");
 
   const vite = await createServer({
->>>>>>> a62c050effdbca6d1b7a30e10c72521020a7b800
     ...viteConfig,
     configFile: false,
     server: {
@@ -68,7 +60,7 @@ export async function setupVite(app: Express, server: Server) {
     appType: "custom",
   });
 
-  app.use(viteServer.middlewares);
+  app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
     const url = req.originalUrl;
 
@@ -86,10 +78,10 @@ export async function setupVite(app: Express, server: Server) {
         `src="/src/main.tsx"`,
         `src="/src/main.tsx?v=${nanoid()}"`,
       );
-      const page = await viteServer.transformIndexHtml(url, template);
+      const page = await vite.transformIndexHtml(url, template);
       res.status(200).set({ "Content-Type": "text/html" }).end(page);
     } catch (e) {
-      viteServer.ssrFixStacktrace(e as Error);
+      vite.ssrFixStacktrace(e as Error);
       next(e);
     }
   });
