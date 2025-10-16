@@ -231,9 +231,9 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="md:hidden p-4 text-yellow-400 hover:bg-yellow-100 [text-shadow:_1px_1px_1px_rgb(0_0_0_/_100%)] [&_svg]:!h-12 [&_svg]:!w-12"
+                  className="md:hidden p-4 text-yellow-400 hover:bg-yellow-100 [text-shadow:_1px_1px_1px_rgb(0_0_0_/_100%)] [&_svg]:!h-10 [&_svg]:!w-10"
                 >
-                  <Menu className="h-12 w-12" />
+                  <Menu className="h-10 w-10" />
                 </Button>
               </SheetTrigger>
               <SheetPortal>
