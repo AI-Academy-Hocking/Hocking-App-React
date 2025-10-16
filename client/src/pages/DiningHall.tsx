@@ -83,7 +83,7 @@ export default function DiningHall() {
       {
         breakfast: "French Toast, Turkey Bacon, Yogurt Parfait",
         lunch: "Deli Sandwich Bar, Potato Chips, Pasta Salad", 
-        dinner: "Rotisserie Chicken, Mashed Potatoes, Green Beans"
+        dinner: "Wing Wednesday: Bone-in & Boneless Wings, Mashed Potatoes, Green Beans"
       },
       {
         breakfast: "Breakfast Burritos, Home Fries, Sliced Fruit",
@@ -272,6 +272,17 @@ export default function DiningHall() {
         </div>
       </div>
 
+      {/* Important Note - Moved to top */}
+      <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-blue-600 dark:border-gray-700">
+        <div className="flex items-center gap-2 mb-2">
+          <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          <span className="text-sm font-medium text-gray-900 dark:text-blue-300">Important Note</span>
+        </div>
+        <p className="text-sm text-gray-600 dark:text-white">
+          Holiday hours may vary. Check announcements for special hours during breaks and holidays.
+        </p>
+      </div>
+
       {/* Content Based on Selected Tab */}
       {selectedTab === "hours" && (
         <div 
@@ -317,16 +328,6 @@ export default function DiningHall() {
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border-2 border-blue-600 dark:border-gray-700">
-            <div className="flex items-center gap-2 mb-2">
-              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              <span className="text-sm font-medium text-gray-900 dark:text-blue-300">Important Note</span>
-            </div>
-            <p className="text-sm text-gray-600 dark:text-white">
-              Holiday hours may vary. Check announcements for special hours during breaks and holidays.
-            </p>
           </div>
         </div>
       )}
