@@ -1,6 +1,8 @@
 import { Switch, Route, useLocation, Redirect } from "wouter";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from "./components/ui/toaster";
+import ErrorBoundary from "./components/ErrorBoundary";
+import RouteWrapper from "./components/RouteWrapper";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/Login";
 import Home from "@/pages/Home";
@@ -41,7 +43,7 @@ import CourseCatalog from "./pages/tools/academic/course-catalog";
 import Graduation from "./pages/tools/academic/graduation";
 import Advising from "./pages/tools/academic/advising";
 import OfficeAdministration from "./pages/tools/academic/office-administration";
-import CareerUniversityCenter from "./pages/tools/academic/CareerUniversityCenter";
+import CareerUniversityCenter from "./pages/CareerUniversityCenter";
 import Transportation from "./pages/Transportation";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
 import Resources from "./pages/Resources";
@@ -70,13 +72,34 @@ import Wellness from "./pages/Wellness";
 
 import './index.css';
 import './styles/globals.css';
+import { useNavigationDebug } from './hooks/use-navigation-debug';
 
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Retry failed requests up to 2 times
+      retry: 2,
+      // Consider data stale after 5 minutes
+      staleTime: 5 * 60 * 1000,
+      // Keep data in cache for 10 minutes
+      gcTime: 10 * 60 * 1000,
+      // Refetch on window focus
+      refetchOnWindowFocus: false,
+      // Error handling moved to individual queries
+    },
+    mutations: {
+      // Retry failed mutations once
+      retry: 1,
+      // Error handling moved to individual mutations
+    },
+  },
+});
 
 function Router() {
   const [location] = useLocation();
+  useNavigationDebug(); // Add navigation debugging
 
   const hasClickedGetStarted = localStorage.getItem('hasClickedGetStarted') === 'true';
   const isLoginPage = location === '/' || location === '/login' || location === '/learn-more';
@@ -105,7 +128,7 @@ function Router() {
       <Switch>
         <Route path="/home" component={Home} />
         <Route path="/calendar" component={Calendar} />
-        <Route path="/tools" component={StudentTools} />
+        <Route path="/tools" component={() => <RouteWrapper routeName="Student Tools"><StudentTools /></RouteWrapper>} />
         <Route path="/maps" component={Maps} />
         <Route path="/resources" component={Resources} />
         <Route path="/dining" component={DiningHall} />
@@ -138,18 +161,17 @@ function Router() {
         <Route path="/tools/academic/graduation" component={Graduation} />
         <Route path="/tools/academic/advising" component={Advising} />
         <Route path="/tools/academic/office-administration" component={OfficeAdministration} />
-        <Route path="/tools/academic/career-university-center" component={CareerUniversityCenter} />
         <Route path="/tools/academic/:id" component={AcademicToolDetail} />
         <Route path="/transportation" component={Transportation} />
         <Route path="/settings" component={Settings} />
         <Route path="/admin/dashboard" component={AdminDashboard} />
-        <Route path="/international-students" component={InternationalStudents} />
-        <Route path="/canine-facility" component={CanineFacility} />
+        <Route path="/international-students" component={() => <RouteWrapper routeName="International Students"><InternationalStudents /></RouteWrapper>} />
+        <Route path="/canine-facility" component={() => <RouteWrapper routeName="Canine Facility"><CanineFacility /></RouteWrapper>} />
         <Route path="/graduation" component={Graduation} />
-        <Route path="/financial-aid" component={FinancialAid} />
-        <Route path="/billing" component={Billing} />
-        <Route path="/scholarships" component={Scholarships} />
-        <Route path="/campus-health" component={CampusHealth} />
+        <Route path="/financial-aid" component={() => <RouteWrapper routeName="Financial Aid"><FinancialAid /></RouteWrapper>} />
+        <Route path="/billing" component={() => <RouteWrapper routeName="Billing"><Billing /></RouteWrapper>} />
+        <Route path="/scholarships" component={() => <RouteWrapper routeName="Scholarships"><Scholarships /></RouteWrapper>} />
+        <Route path="/campus-health" component={() => <RouteWrapper routeName="Campus Health"><CampusHealth /></RouteWrapper>} />
         <Route path="/career-university-center" component={CareerUniversityCenter} />
         <Route path="/verify-user/:id" component={VerifyUser} />
         <Route path="/verify-post/:id" component={VerifyPost} />
@@ -171,13 +193,15 @@ function Router() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <NotificationProvider>
-          <Router />
-          <Toaster />
-        </NotificationProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <NotificationProvider>
+            <Router />
+            <Toaster />
+          </NotificationProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

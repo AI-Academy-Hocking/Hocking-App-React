@@ -72,7 +72,7 @@ export default function Graduation() {
         </Link>
       </div>
 
-      <Card>
+      <Card className="border-2 border-blue-600 rounded-xl">
         <CardHeader className="bg-primary-light/10">
           <CardTitle className="text-2xl text-primary">Graduation</CardTitle>
         </CardHeader>
@@ -87,7 +87,7 @@ export default function Graduation() {
             <TabsContent value="requirements">
               <div className="space-y-6">
                 {requirements.map((category, index) => (
-                  <Card key={index}>
+                  <Card key={index} className="border-2 border-blue-600 rounded-xl">
                     <CardContent className="pt-6">
                       <h3 className="text-lg font-semibold mb-4">{category.category}</h3>
                       <ul className="space-y-2">
@@ -106,7 +106,7 @@ export default function Graduation() {
 
             <TabsContent value="application">
               <div className="space-y-6">
-                <Card>
+                <Card className="border-2 border-blue-600 rounded-xl">
                   <CardContent className="pt-6">
                     <h3 className="text-lg font-semibold mb-4">Graduation Application</h3>
                     <div className="space-y-4">
@@ -133,7 +133,7 @@ export default function Graduation() {
                   </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="border-2 border-blue-600 rounded-xl">
                   <CardContent className="pt-6">
                     <h3 className="text-lg font-semibold mb-4">Graduation Resources</h3>
                     <div className="space-y-2">
@@ -155,7 +155,7 @@ export default function Graduation() {
             <TabsContent value="dates">
               <div className="space-y-6">
                 {importantDates.map((date, index) => (
-                  <Card key={index}>
+                  <Card key={index} className="border-2 border-blue-600 rounded-xl">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-4">
                         <Calendar className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />

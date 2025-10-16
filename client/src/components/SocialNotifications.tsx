@@ -1,26 +1,21 @@
-import { useEffect, useState } from "react";
-import { db, auth } from "../firebase";
-import { collection, query, where, orderBy, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { useState } from "react";
+
+interface Notification {
+  id: string;
+  text: string;
+  read: boolean;
+  createdAt?: { toDate?: () => Date };
+}
 
 export default function SocialNotifications() {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    if (!auth.currentUser) return;
-    const q = query(
-      collection(db, "notifications"),
-      where("userId", "==", auth.currentUser.uid),
-      orderBy("createdAt", "desc")
-    );
-    const unsub = onSnapshot(q, (snapshot) => {
-      setNotifications(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-    return unsub;
-  }, []);
-
-  const markAsRead = async (id) => {
-    await updateDoc(doc(db, "notifications", id), { read: true });
+  // Firebase integration disabled - component ready for future implementation
+  
+  const markAsRead = async (id: string) => {
+    // Firebase integration will be implemented here
+    console.log('Mark as read:', id);
   };
 
   const unreadCount = notifications.filter(n => !n.read).length;

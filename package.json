@@ -130,5 +130,5 @@
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
   },
-  "proxy": "http://localhost:3001"
+  "proxy": "http://localhost:3000"
 }

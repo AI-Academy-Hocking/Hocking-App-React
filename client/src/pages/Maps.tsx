@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import { Search, Plus, Minus, Navigation, MapPin, ArrowLeft } from "lucide-react";
+import { Search, Plus, Minus, Navigation, MapPin, ArrowLeft, Eye, EyeOff } from "lucide-react";
 
 import { toast } from "../hooks/use-toast";
 import * as L from "leaflet";
@@ -45,6 +45,7 @@ export default function Maps() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [selectedBuildingId, setSelectedBuildingId] = useState<string | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<Building | null>(null);
+  const [pinsVisible, setPinsVisible] = useState<boolean>(true);
   const buildingMarkersRef = useRef<L.Marker[]>([]);
   
   const { user } = useAuth();
@@ -84,6 +85,7 @@ export default function Maps() {
     { id: 'hocking-heights', name: 'Hocking Heights', description: 'Academic building', category: 'academic', lat: 39.44194, lng: -82.22307 },
     { id: 'training-barn', name: 'Training Barn', description: 'Training Barn', category: 'academic', lat: 39.44529984717387, lng: -82.22343401606501 },
     { id: 'logan-campus-energy-institute', name: 'Logan Campus/Energy Institute', description: '30140 Iles Rd, Logan, OH 43138', category: 'academic', lat: 39.55836635228117, lng: -82.45812838388986 },
+    { id: 'the-lodge', name: 'The Lodge', description: 'The Lodge', category: 'academic', lat: 39.43137161164457, lng: -82.20791962492618 },
   ];
 
   // Add static housing buildings if not present
@@ -295,45 +297,48 @@ export default function Maps() {
     });
     buildingMarkersRef.current = [];
     
-    // Add markers for all filtered buildings
-    filteredBuildings.forEach(building => {
-      // Validate that lat and lng are valid numbers
-      if (typeof building.lat === 'number' && typeof building.lng === 'number' && 
-          !isNaN(building.lat) && !isNaN(building.lng) &&
-          building.lat !== 0 && building.lng !== 0) {
-        
-        const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
-          .addTo(map)
-          .bindPopup(`
-            <div style="min-width: 200px; font-family: system-ui, sans-serif;">
-              <div style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 8px;">
-                ${building.name}
+    // Only add markers if pins are visible
+    if (pinsVisible) {
+      // Add markers for all filtered buildings
+      filteredBuildings.forEach(building => {
+        // Validate that lat and lng are valid numbers
+        if (typeof building.lat === 'number' && typeof building.lng === 'number' && 
+            !isNaN(building.lat) && !isNaN(building.lng) &&
+            building.lat !== 0 && building.lng !== 0) {
+          
+          const marker = L.marker([building.lat, building.lng], { icon: getMarkerIcon(building.category) })
+            .addTo(map)
+            .bindPopup(`
+              <div style="min-width: 200px; font-family: system-ui, sans-serif;">
+                <div style="font-weight: 600; font-size: 16px; color: #1f2937; margin-bottom: 8px;">
+                  ${building.name}
+                </div>
+                <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
+                  ${building.description}
+                </div>
+                <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px;">
+                  <div>Category: ${building.category.charAt(0).toUpperCase() + building.category.slice(1)}</div>
+                  <div>Coordinates: ${building.lat.toFixed(6)}, ${building.lng.toFixed(6)}</div>
+                  <button onclick="window.dispatchEvent(new CustomEvent('showMarkerDetails', {detail: '${building.id}'}))" 
+                          style="margin-top: 8px; padding: 4px 8px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                    View Full Details
+                  </button>
+                </div>
               </div>
-              <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
-                ${building.description}
-              </div>
-              <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 8px;">
-                <div>Category: ${building.category.charAt(0).toUpperCase() + building.category.slice(1)}</div>
-                <div>Coordinates: ${building.lat.toFixed(6)}, ${building.lng.toFixed(6)}</div>
-                <button onclick="window.dispatchEvent(new CustomEvent('showMarkerDetails', {detail: '${building.id}'}))" 
-                        style="margin-top: 8px; padding: 4px 8px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                  View Full Details
-                </button>
-              </div>
-            </div>
-          `);
-        
-        buildingMarkersRef.current.push(marker);
-        
-        // If this is the selected building, center the map on it
-        if (selectedBuildingId === building.id) {
-          map.setView([building.lat, building.lng], 18);
+            `);
+          
+          buildingMarkersRef.current.push(marker);
+          
+          // If this is the selected building, center the map on it
+          if (selectedBuildingId === building.id) {
+            map.setView([building.lat, building.lng], 18);
+          }
+        } else {
+          console.warn(`Invalid coordinates for building ${building.name}: lat=${building.lat}, lng=${building.lng}`);
         }
-      } else {
-        console.warn(`Invalid coordinates for building ${building.name}: lat=${building.lat}, lng=${building.lng}`);
-      }
-    });
-  }, [map, filteredBuildings, user]);
+      });
+    }
+  }, [map, filteredBuildings, user, pinsVisible]);
 
 
 
@@ -451,6 +456,25 @@ export default function Maps() {
     if (map) map.zoomOut();
   };
 
+  // Handle toggle pins visibility
+  const togglePinsVisibility = () => {
+    if (!map) return;
+    
+    setPinsVisible(!pinsVisible);
+    
+    if (pinsVisible) {
+      // Hide all building markers
+      buildingMarkersRef.current.forEach(marker => {
+        map.removeLayer(marker);
+      });
+    } else {
+      // Show all building markers
+      buildingMarkersRef.current.forEach(marker => {
+        marker.addTo(map);
+      });
+    }
+  };
+
   // Categories for filter buttons
   const categories = [
     { id: "all", label: "All Buildings" },
@@ -516,6 +540,20 @@ export default function Maps() {
                 title="Zoom Out"
               >
                 <Minus className="h-4 w-4" />
+              </Button>
+              {/* Hide/Show Pins Button */}
+              <Button
+                variant="default"
+                size="sm"
+                className={`w-10 h-10 p-0 rounded-full shadow-lg ${
+                  pinsVisible 
+                    ? "bg-gray-500 hover:bg-gray-600 text-white" 
+                    : "bg-green-500 hover:bg-green-600 text-white"
+                }`}
+                onClick={togglePinsVisibility}
+                title={pinsVisible ? "Hide All Pins" : "Show All Pins"}
+              >
+                {pinsVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
               {/* Find My Location Button - Always visible */}
               <Button

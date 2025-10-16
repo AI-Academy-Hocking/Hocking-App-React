@@ -38,24 +38,24 @@ export default function Billing() {
       <Accordion type="single" collapsible className="space-y-6">
         
         {/* Cashier's Office Contact */}
-        <AccordionItem value="contact" className="border-2 border-blue-200 dark:border-blue-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="contact" className="border-2 border-blue-600 dark:border-blue-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Building className="mr-3 h-6 w-6 text-blue-600" />
-              <span className="text-xl font-semibold text-blue-800 dark:text-blue-200">Hocking College Cashier's Office</span>
+              <span className="text-xl font-semibold text-blue-600 dark:text-blue-400">Hocking College Cashier's Office</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-blue-400">
                   <Phone className="mr-4 h-6 w-6 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-800 dark:text-blue-200">Phone</p>
                     <a href="tel:740-753-7029" className="text-blue-600 hover:underline font-medium">740-753-7029</a>
                   </div>
                 </div>
-                <div className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-blue-400">
                   <MapPin className="mr-4 h-6 w-6 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-800 dark:text-blue-200">Location</p>
@@ -64,7 +64,7 @@ export default function Billing() {
                 </div>
               </div>
               <div className="space-y-6">
-                <div className="flex items-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-600 dark:border-blue-400">
                   <Clock className="mr-4 h-6 w-6 text-blue-600" />
                   <div>
                     <p className="font-semibold text-blue-800 dark:text-blue-200">Hours</p>
@@ -73,7 +73,7 @@ export default function Billing() {
                 </div>
                 <button
                   onClick={() => handleExternalLink('https://www.hocking.edu/billing')}
-                  className="flex items-center justify-between p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
+                  className="flex items-center justify-between p-4 bg-blue-600 text-white rounded-xl shadow-lg w-full"
                 >
                   <div className="flex items-center">
                     <ExternalLink className="mr-3 h-5 w-5" />
@@ -87,14 +87,14 @@ export default function Billing() {
         </AccordionItem>
 
         {/* All-Inclusive Tuition Pricing */}
-        <AccordionItem value="tuition" className="border-2 border-green-200 dark:border-green-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-green-50 dark:bg-green-900/20 hover:bg-green-100 dark:hover:bg-green-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="tuition" className="border-2 border-green-600 dark:border-green-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Calculator className="mr-3 h-6 w-6 text-green-600" />
-              <span className="text-xl font-semibold text-green-800 dark:text-green-200">All-Inclusive Tuition Pricing</span>
+              <span className="text-xl font-semibold text-green-600 dark:text-green-400">All-Inclusive Tuition Pricing</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <p className="text-gray-700 dark:text-gray-300 text-lg">
                 Transparent pricing: tuition, textbooks, laptops, supplies, uniforms, health and career services are bundled, no hidden fees.
@@ -102,7 +102,7 @@ export default function Billing() {
               
               <button
                 onClick={() => handleExternalLink('https://www.hocking.edu/tuition-fees')}
-                className="flex items-center justify-between p-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
+                className="flex items-center justify-between p-6 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl shadow-lg w-full"
               >
                 <div className="flex items-center">
                   <FileText className="mr-4 h-6 w-6" />
@@ -117,16 +117,16 @@ export default function Billing() {
               <div>
                 <h4 className="font-semibold mb-4 text-gray-900 dark:text-white text-lg">Cost breakdown:</h4>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="p-6 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
-                    <h5 className="font-semibold text-green-800 dark:text-green-200 mb-3 text-lg">12–16 credit hours:</h5>
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-green-600 dark:border-green-400">
+                    <h5 className="font-semibold text-green-600 dark:text-green-400 mb-3 text-lg">12–16 credit hours:</h5>
                     <div className="space-y-2">
-                      <p className="text-green-700 dark:text-green-300 font-medium">• $2,376/semester in-state</p>
-                      <p className="text-green-700 dark:text-green-300 font-medium">• $4,630/semester out-of-state</p>
+                      <p className="text-gray-700 dark:text-gray-300 font-medium">• $2,376/semester in-state</p>
+                      <p className="text-gray-700 dark:text-gray-300 font-medium">• $4,630/semester out-of-state</p>
                     </div>
                   </div>
-                  <div className="p-6 bg-green-50 dark:bg-green-900/30 rounded-xl border border-green-200 dark:border-green-800">
-                    <h5 className="font-semibold text-green-800 dark:text-green-200 mb-3 text-lg">Under 12 hours:</h5>
-                    <p className="text-green-700 dark:text-green-300 font-medium">Pay per credit hour (e.g., $594 for 3 credits)</p>
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-green-600 dark:border-green-400">
+                    <h5 className="font-semibold text-green-600 dark:text-green-400 mb-3 text-lg">Under 12 hours:</h5>
+                    <p className="text-gray-700 dark:text-gray-300 font-medium">Pay per credit hour (e.g., $594 for 3 credits)</p>
                   </div>
                 </div>
               </div>
@@ -135,14 +135,14 @@ export default function Billing() {
         </AccordionItem>
 
         {/* Meal Plan & Residence Payments */}
-        <AccordionItem value="housing" className="border-2 border-orange-200 dark:border-orange-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="housing" className="border-2 border-orange-600 dark:border-orange-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Home className="mr-3 h-6 w-6 text-orange-600" />
-              <span className="text-xl font-semibold text-orange-800 dark:text-orange-200">Meal Plan & Residence Payments</span>
+              <span className="text-xl font-semibold text-orange-600 dark:text-orange-400">Meal Plan & Residence Payments</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <p className="text-gray-700 dark:text-gray-300 text-lg">
                 Meal plans are loaded to the HawkCard and are required for residential students.
@@ -151,7 +151,7 @@ export default function Billing() {
               <div className="grid md:grid-cols-2 gap-6">
                 <button
                   onClick={() => handleExternalLink('https://www.hocking.edu/housing-meal-plans')}
-                  className="flex items-center justify-between p-6 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  className="flex items-center justify-between p-6 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl shadow-lg"
                 >
                   <div className="flex items-center">
                     <Utensils className="mr-4 h-6 w-6" />
@@ -165,7 +165,7 @@ export default function Billing() {
                 
                 <button
                   onClick={() => handleExternalLink('https://www.hocking.edu/housing')}
-                  className="flex items-center justify-between p-6 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  className="flex items-center justify-between p-6 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-xl shadow-lg"
                 >
                   <div className="flex items-center">
                     <Home className="mr-4 h-6 w-6" />
@@ -178,7 +178,7 @@ export default function Billing() {
                 </button>
               </div>
 
-              <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-xl border border-orange-200 dark:border-orange-800">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border-2 border-orange-600 dark:border-orange-400">
                 <p className="text-orange-800 dark:text-orange-200 font-medium text-lg">
                   Housing and meal plan fees are not included in tuition and must be paid separately.
                 </p>
@@ -188,24 +188,24 @@ export default function Billing() {
         </AccordionItem>
 
         {/* Parking Permits */}
-        <AccordionItem value="parking" className="border-2 border-purple-200 dark:border-purple-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="parking" className="border-2 border-purple-600 dark:border-purple-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Car className="mr-3 h-6 w-6 text-purple-600" />
-              <span className="text-xl font-semibold text-purple-800 dark:text-purple-200">Parking Permits</span>
+              <span className="text-xl font-semibold text-purple-600 dark:text-purple-400">Parking Permits</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="grid md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl border border-purple-200 dark:border-purple-800">
+                <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-purple-600 dark:border-purple-400">
                   <div className="flex items-center">
                     <Car className="mr-3 h-5 w-5 text-purple-600" />
                     <span className="font-medium text-purple-800 dark:text-purple-200">Regular permit:</span>
                   </div>
                   <span className="font-bold text-purple-600 text-xl">$53/year</span>
                 </div>
-                <div className="flex items-center justify-between p-4 bg-purple-50 dark:bg-purple-900/30 rounded-xl border border-purple-200 dark:border-purple-800">
+                <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl border-2 border-purple-600 dark:border-purple-400">
                   <div className="flex items-center">
                     <Car className="mr-3 h-5 w-5 text-purple-600" />
                     <span className="font-medium text-purple-800 dark:text-purple-200">Reserved permit:</span>
@@ -219,7 +219,7 @@ export default function Billing() {
                 </p>
                 <button
                   onClick={() => handleExternalLink('https://www.hocking.edu/parking-permits')}
-                  className="flex items-center justify-between p-4 bg-purple-600 hover:bg-purple-700 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg w-full"
+                  className="flex items-center justify-between p-4 bg-purple-600 text-white rounded-xl shadow-lg w-full"
                 >
                   <div className="flex items-center">
                     <FileText className="mr-3 h-5 w-5" />
@@ -233,19 +233,19 @@ export default function Billing() {
         </AccordionItem>
 
         {/* Payment Methods & Options */}
-        <AccordionItem value="payment" className="border-2 border-teal-200 dark:border-teal-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-teal-50 dark:bg-teal-900/20 hover:bg-teal-100 dark:hover:bg-teal-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="payment" className="border-2 border-teal-600 dark:border-teal-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <CreditCard className="mr-3 h-6 w-6 text-teal-600" />
-              <span className="text-xl font-semibold text-teal-800 dark:text-teal-200">Payment Methods & Options</span>
+              <span className="text-xl font-semibold text-teal-600 dark:text-teal-400">Payment Methods & Options</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="grid md:grid-cols-3 gap-8">
               {/* Cash/Check */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-full flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
                     <DollarSign className="h-6 w-6 text-teal-600" />
                   </div>
                   <h4 className="font-bold text-teal-700 dark:text-teal-300 text-lg">Cash/Check</h4>
@@ -258,7 +258,7 @@ export default function Billing() {
               {/* Credit Card */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-full flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
                     <CreditCard className="h-6 w-6 text-teal-600" />
                   </div>
                   <h4 className="font-bold text-teal-700 dark:text-teal-300 text-lg">Credit Card</h4>
@@ -278,7 +278,7 @@ export default function Billing() {
               {/* Payment Plans */}
               <div className="space-y-4">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-full flex items-center justify-center mr-4">
+                  <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center mr-4">
                     <Calculator className="h-6 w-6 text-teal-600" />
                   </div>
                   <h4 className="font-bold text-teal-700 dark:text-teal-300 text-lg">Payment Plans</h4>
@@ -299,14 +299,14 @@ export default function Billing() {
         </AccordionItem>
 
         {/* Refunds & Tax Forms */}
-        <AccordionItem value="refunds" className="border-2 border-indigo-200 dark:border-indigo-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-indigo-50 dark:bg-indigo-900/20 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="refunds" className="border-2 border-indigo-600 dark:border-indigo-400 rounded-2xl overflow-hidden mb-6">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Receipt className="mr-3 h-6 w-6 text-indigo-600" />
-              <span className="text-xl font-semibold text-indigo-800 dark:text-indigo-200">Refunds & Tax Forms</span>
+              <span className="text-xl font-semibold text-indigo-600 dark:text-indigo-400">Refunds & Tax Forms</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <p className="text-gray-700 dark:text-gray-300 text-lg">
                 After tuition and fees are paid, any remaining financial aid is refunded to students. Tax forms are available for tax filing.
@@ -315,7 +315,7 @@ export default function Billing() {
               <div className="grid md:grid-cols-2 gap-6">
                 <button
                   onClick={() => handleExternalLink('https://bankmobiledisbursements.com/refundchoices/')}
-                  className="flex items-center justify-between p-6 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  className="flex items-center justify-between p-6 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-xl shadow-lg"
                 >
                   <div className="flex items-center">
                     <CreditCard className="mr-4 h-6 w-6" />
@@ -329,7 +329,7 @@ export default function Billing() {
                 
                 <button
                   onClick={() => handleExternalLink('https://www.hocking.edu/tax-forms')}
-                  className="flex items-center justify-between p-6 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+                  className="flex items-center justify-between p-6 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-xl shadow-lg"
                 >
                   <div className="flex items-center">
                     <FileText className="mr-4 h-6 w-6" />
@@ -342,7 +342,7 @@ export default function Billing() {
                 </button>
               </div>
 
-              <div className="bg-indigo-50 dark:bg-indigo-900/20 p-6 rounded-xl border border-indigo-200 dark:border-indigo-800">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border-2 border-indigo-600 dark:border-indigo-400">
                 <h4 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-3 flex items-center">
                   <AlertTriangle className="mr-3 h-5 w-5" />
                   Important Refund Information
@@ -357,17 +357,17 @@ export default function Billing() {
         </AccordionItem>
 
         {/* Important Dates & Deadlines */}
-        <AccordionItem value="deadlines" className="border-2 border-red-200 dark:border-red-800 rounded-lg overflow-hidden">
-          <AccordionTrigger className="bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 px-6 py-4">
-            <div className="flex items-center">
+        <AccordionItem value="deadlines" className="border-2 border-red-600 dark:border-red-400 rounded-2xl overflow-hidden">
+          <AccordionTrigger hideChevron={true} className="bg-white dark:bg-gray-800 px-6 py-8 min-h-[100px]">
+            <div className="flex items-center justify-start w-full">
               <Clock className="mr-3 h-6 w-6 text-red-600" />
-              <span className="text-xl font-semibold text-red-800 dark:text-red-200">Important Dates & Deadlines</span>
+              <span className="text-xl font-semibold text-red-600 dark:text-red-400">Important Dates & Deadlines</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-6 py-6 bg-white dark:bg-gray-900">
+          <AccordionContent className="px-6 py-8 bg-white dark:bg-gray-900">
             <div className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="p-6 bg-red-50 dark:bg-red-900/30 rounded-xl border border-red-200 dark:border-red-800">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-red-600 dark:border-red-400">
                   <h4 className="font-semibold text-red-800 dark:text-red-200 mb-4 flex items-center">
                     <Calendar className="mr-3 h-5 w-5" />
                     Payment Deadlines
@@ -388,7 +388,7 @@ export default function Billing() {
                   </div>
                 </div>
                 
-                <div className="p-6 bg-red-50 dark:bg-red-900/30 rounded-xl border border-red-200 dark:border-red-800">
+                <div className="p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-red-600 dark:border-red-400">
                   <h4 className="font-semibold text-red-800 dark:text-red-200 mb-4 flex items-center">
                     <AlertTriangle className="mr-3 h-5 w-5" />
                     Late Payment Fees

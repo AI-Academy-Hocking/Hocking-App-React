@@ -9,7 +9,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Separator } from './ui/separator';
 
 export default function NotificationBell() {
-  const { notifications, unreadCount, markAsRead, markAllAsRead, removeNotification } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, removeNotification, clearAllNotifications } = useNotifications();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
@@ -80,7 +80,7 @@ export default function NotificationBell() {
         onClick={() => setIsOpen(!isOpen)}
         className={`relative ${hasNewNotifications ? 'animate-pulse' : ''}`}
       >
-        <Bell className={`h-7 w-7 text-yellow-400 ${hasNewNotifications ? 'text-yellow-300' : ''}`} />
+        <Bell className={`h-8 w-8 text-yellow-400 ${hasNewNotifications ? 'text-yellow-300' : ''}`} />
       </Button>
       
       {unreadCount > 0 && (
@@ -90,7 +90,7 @@ export default function NotificationBell() {
       )}
 
       {isOpen && (
-        <div className="absolute right-0 top-12 w-96 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50">
+        <div className="absolute top-12 w-80 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50" style={{ right: '6px' }}>
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -100,9 +100,17 @@ export default function NotificationBell() {
                     variant="ghost"
                     size="sm"
                     onClick={markAllAsRead}
-                    className="text-xs"
+                    className="text-xs text-blue-600 hover:text-blue-700"
                   >
                     Mark all read
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearAllNotifications}
+                    className="text-xs text-red-600 hover:text-red-700"
+                  >
+                    Clear all
                   </Button>
                   <Button
                     variant="ghost"
