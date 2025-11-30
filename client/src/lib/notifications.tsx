@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useRef, useCallback } from 'react';
 import { Notification, NotificationSettings } from '../types/notifications';
 import NotificationService from './notificationService';
 import GlobalNotificationManager from './globalNotifications';
@@ -19,30 +19,58 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 const defaultSettings: NotificationSettings = {
   eventNotifications: true,
-  academicNotifications: true,
-  customNotifications: true,
-  systemNotifications: true,
-  emailNotifications: false,
   pushNotifications: true,
   reminderTime: 30, // 30 minutes before event
+  welcomeMessageEnabled: true,
 };
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [settings, setSettings] = useState<NotificationSettings>(defaultSettings);
   const globalManager = GlobalNotificationManager.getInstance();
+  const settingsRef = useRef<NotificationSettings>(defaultSettings);
+
+  const filterNotifications = useCallback((items: Notification[], activeSettings: NotificationSettings) => {
+    return items.filter(notification => {
+      if (!activeSettings.eventNotifications && notification.type === 'event') {
+        return false;
+      }
+      if (!activeSettings.welcomeMessageEnabled && notification.id?.startsWith('welcome-')) {
+        return false;
+      }
+      return true;
+    });
+  }, []);
+
+  const addNotification = useCallback((notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
+    const currentSettings = settingsRef.current;
+
+    if (!currentSettings.pushNotifications) {
+      return;
+    }
+
+    if (!currentSettings.eventNotifications && notification.type === 'event') {
+      return;
+    }
+
+    globalManager.addNotification(notification);
+  }, [globalManager]);
 
   // Subscribe to global notifications and set up continuous polling
   useEffect(() => {
-    const unsubscribe = globalManager.subscribe((globalNotifications) => {
+    const pushUpdates = (globalNotifications: Notification[]) => {
       console.log('NotificationContext: Received update with', globalNotifications.length, 'notifications');
-      setNotifications(globalNotifications);
+      setNotifications(filterNotifications(globalNotifications, settingsRef.current));
+    };
+
+    const unsubscribe = globalManager.subscribe((globalNotifications) => {
+      pushUpdates(globalNotifications);
     });
 
     // Listen for immediate notification updates via custom event
     const handleNotificationUpdate = (event: CustomEvent) => {
       console.log('NotificationContext: Received immediate update via custom event');
-      setNotifications(event.detail.notifications);
+      pushUpdates(event.detail.notifications);
     };
 
     window.addEventListener('notificationsUpdated', handleNotificationUpdate as EventListener);
@@ -50,7 +78,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     // Set up continuous polling to check for new notifications every 1 second
     const pollInterval = setInterval(() => {
       const currentNotifications = globalManager.getNotifications();
-      setNotifications(currentNotifications);
+      pushUpdates(currentNotifications);
     }, 1000);
 
     return () => {
@@ -66,7 +94,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     
     if (storedSettings) {
       try {
-        setSettings(JSON.parse(storedSettings));
+        const parsed = JSON.parse(storedSettings);
+        setSettings({ ...defaultSettings, ...parsed });
       } catch (error) {
         console.error('Error parsing stored settings:', error);
       }
@@ -75,14 +104,12 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   // Save settings to localStorage when they change
   useEffect(() => {
+    settingsRef.current = settings;
     localStorage.setItem('notificationSettings', JSON.stringify(settings));
     // Update notification service with new settings
     NotificationService.getInstance().initialize(addNotification, settings);
-  }, [settings]);
-
-  const addNotification = (notification: Omit<Notification, 'id' | 'timestamp' | 'read'>) => {
-    globalManager.addNotification(notification);
-  };
+    setNotifications(filterNotifications(globalManager.getNotifications(), settings));
+  }, [settings, filterNotifications, globalManager]);
 
   const markAsRead = (id: string) => {
     globalManager.markAsRead(id);

@@ -527,3 +527,9 @@ a, .accent {
 .dark ::-webkit-scrollbar-thumb:hover {
   background-color: #4b5563;
 }
+
+/* Landing/login page keeps transparent background so the hero video remains visible */
+.dark .landing-page,
+.dark .landing-page.min-h-screen {
+  background-color: transparent !important;
+}

@@ -73,9 +73,15 @@ export default function StudentTools() {
   }, [tools, error, isLoading]);
 
   // Filter tools by category
-  const academicTools = tools?.filter(tool => tool.category === 'academic' && tool.id !== 'graduation') || [];
-  const financialTools = tools?.filter(tool => tool.category === 'financial') || [];
-  const resourceTools = tools?.filter(tool => tool.category === 'resources') || [];
+  const blockedToolIds = ['course-schedule', 'academic-history', 'grades'];
+  const sanitizedTools = (tools || []).filter(tool => {
+    const normalizedId = typeof tool.id === 'string' ? tool.id.toLowerCase() : tool.id;
+    return !blockedToolIds.includes(normalizedId);
+  });
+
+  const academicTools = sanitizedTools.filter(tool => tool.category === 'academic' && tool.id !== 'graduation');
+  const financialTools = sanitizedTools.filter(tool => tool.category === 'financial');
+  const resourceTools = sanitizedTools.filter(tool => tool.category === 'resources');
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {

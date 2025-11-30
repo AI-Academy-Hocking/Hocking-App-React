@@ -1,24 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link as RouterLink } from "wouter";
 import { useNotifications } from '../lib/notifications';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Switch } from '../components/ui/switch';
 import { Label } from '../components/ui/label';
 import { Button } from '../components/ui/button';
 import { Separator } from '../components/ui/separator';
-import { Bell, Clock, Mail, Smartphone, Settings as SettingsIcon, Trash2, RefreshCw } from 'lucide-react';
+import { Bell, Clock, Smartphone, Settings as SettingsIcon, Trash2, RefreshCw } from 'lucide-react';
 import { Slider } from '../components/ui/slider';
 import { useNotificationService } from '../hooks/use-notification-service';
+import { useToast } from '../hooks/use-toast';
 
 export default function Settings() {
   const { settings, updateSettings, clearAllNotifications, notifications } = useNotifications();
   const notificationService = useNotificationService();
+  const { toast } = useToast();
+  const [isTestingEvents, setIsTestingEvents] = useState(false);
+  const [showEventToggleReminder, setShowEventToggleReminder] = useState(false);
 
   const handleSettingChange = (key: keyof typeof settings, value: boolean | number) => {
     updateSettings({ [key]: value });
+    if ((key === 'eventNotifications' || key === 'pushNotifications') && value === true) {
+      setShowEventToggleReminder(false);
+    }
   };
 
   const handleTestNotifications = async () => {
-    await notificationService.triggerEventNotifications();
+    if (!settings.eventNotifications || !settings.pushNotifications) {
+      setShowEventToggleReminder(true);
+      toast({
+        title: "Enable Event Notifications",
+        description: "Turn on event notifications and push notifications before testing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setShowEventToggleReminder(false);
+    setIsTestingEvents(true);
+    try {
+      const created = await notificationService.triggerEventNotifications();
+      if (created > 0) {
+        toast({
+          title: "Notifications Sent",
+          description: `Queued ${created} upcoming event${created > 1 ? 's' : ''}.`,
+        });
+      } else {
+        toast({
+          title: "Unable to Find Events",
+          description: (
+            <span>
+              Please try again later or{" "}
+              <RouterLink href="/calendar">
+                <a className="font-semibold underline underline-offset-2">view the calendar</a>
+              </RouterLink>{" "}
+              for full schedules.
+            </span>
+          ),
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Unable to check events",
+        description: "Please try again in a moment.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsTestingEvents(false);
+    }
   };
 
   return (
@@ -57,54 +106,6 @@ export default function Settings() {
                   onCheckedChange={(checked) => handleSettingChange('eventNotifications', checked)}
                 />
               </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="academic-notifications">Academic Notifications</Label>
-                  <p className="text-sm text-gray-500">
-                    Receive updates about academic deadlines, exams, and important dates
-                  </p>
-                </div>
-                <Switch
-                  id="academic-notifications"
-                  checked={settings.academicNotifications}
-                  onCheckedChange={(checked) => handleSettingChange('academicNotifications', checked)}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="custom-notifications">Custom Notifications</Label>
-                  <p className="text-sm text-gray-500">
-                    Receive announcements and updates from administrators
-                  </p>
-                </div>
-                <Switch
-                  id="custom-notifications"
-                  checked={settings.customNotifications}
-                  onCheckedChange={(checked) => handleSettingChange('customNotifications', checked)}
-                />
-              </div>
-
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="system-notifications">System Notifications</Label>
-                  <p className="text-sm text-gray-500">
-                    Get notified about app updates and maintenance
-                  </p>
-                </div>
-                <Switch
-                  id="system-notifications"
-                  checked={settings.systemNotifications}
-                  onCheckedChange={(checked) => handleSettingChange('systemNotifications', checked)}
-                />
-              </div>
             </div>
 
             <Separator />
@@ -129,21 +130,25 @@ export default function Settings() {
                   onCheckedChange={(checked) => handleSettingChange('pushNotifications', checked)}
                 />
               </div>
+            </div>
+
+            <Separator />
+
+            {/* General */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">General</h3>
 
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
-                  <div className="space-y-0.5">
-                    <Label htmlFor="email-notifications">Email Notifications</Label>
-                    <p className="text-sm text-gray-500">
-                      Receive notifications via email
-                    </p>
-                  </div>
+                <div className="space-y-0.5">
+                  <Label htmlFor="welcome-message">Welcome Message</Label>
+                  <p className="text-sm text-gray-500">
+                    Show the greeting notification when opening the app
+                  </p>
                 </div>
                 <Switch
-                  id="email-notifications"
-                  checked={settings.emailNotifications}
-                  onCheckedChange={(checked) => handleSettingChange('emailNotifications', checked)}
+                  id="welcome-message"
+                  checked={settings.welcomeMessageEnabled}
+                  onCheckedChange={(checked) => handleSettingChange('welcomeMessageEnabled', checked)}
                 />
               </div>
             </div>
@@ -210,8 +215,8 @@ export default function Settings() {
               
               <Separator />
               
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="space-y-0.5 md:max-w-xl">
                   <Label>Test Event Notifications</Label>
                   <p className="text-sm text-gray-500">
                     Manually check for upcoming events and create notifications
@@ -220,12 +225,18 @@ export default function Settings() {
                 <Button
                   variant="ghost"
                   onClick={handleTestNotifications}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 justify-center w-full md:w-auto"
+                  disabled={isTestingEvents}
                 >
-                  <RefreshCw className="h-4 w-4" />
-                  Check Events
+                  <RefreshCw className={`h-4 w-4 ${isTestingEvents ? 'animate-spin' : ''}`} />
+                  {isTestingEvents ? 'Checking…' : 'Check Events'}
                 </Button>
               </div>
+              {showEventToggleReminder && (
+                <p className="text-sm text-red-500">
+                  Turn on Event Notifications in the preferences above before testing.
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
