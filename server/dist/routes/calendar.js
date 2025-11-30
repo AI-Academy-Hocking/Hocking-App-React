@@ -42,7 +42,7 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 // Try to import Google Calendar service, but don't fail if it's not available
 let googleCalendarService = null;
 try {
-    const { googleCalendarService: service } = require('../../services/googleCalendar');
+    const { googleCalendarService: service } = require('../../services/googleCalendar.ts');
     googleCalendarService = service;
     console.log('Google Calendar service loaded successfully');
 }
@@ -50,10 +50,9 @@ catch (error) {
     console.log('Google Calendar service not available, will use iCal fallback:', error instanceof Error ? error.message : 'Unknown error');
 }
 const router = express_1.default.Router();
-// Academic calendar URL (public - can use iCal)
-const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
-// Student activities calendar URL (private - needs API)
-const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+// Calendar URLs from environment variables
+const ACADEMIC_CALENDAR_URL = process.env.GOOGLE_CALENDAR_ACADEMIC_URL || "https://calendar.google.com/calendar/ical/c_48553b3826989867c9512386c55643ea5e9768a4439ba027beb782cb6ad652b9%40group.calendar.google.com/public/basic.ics";
+const STUDENT_CALENDAR_URL = process.env.GOOGLE_CALENDAR_ACTIVITIES_URL || "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
 async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
     console.log(`\n=== GOOGLE CALENDAR DEBUG ===`);
     console.log(`Fetching calendar events from: ${url}`);

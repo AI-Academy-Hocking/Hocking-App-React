@@ -133,8 +133,8 @@ const VerifyUser: React.FC = () => {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-gray-600 mb-4">{error}</p>
-            <Button onClick={() => setLocation('/housing/social')}>
-              Return to Social Hub
+            <Button onClick={() => setLocation('/housing')}>
+              Return to Housing
             </Button>
           </CardContent>
         </Card>
@@ -324,11 +324,11 @@ const VerifyUser: React.FC = () => {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <Button
-                  onClick={() => setLocation('/housing/social')}
+                  onClick={() => setLocation('/housing')}
                   variant="outline"
                   className="flex-1"
                 >
-                  Return to Social Hub
+                  Return to Housing
                 </Button>
                 {!isProcessed && (
                   <Button

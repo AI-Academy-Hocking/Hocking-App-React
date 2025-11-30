@@ -1,134 +1,3 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-};
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// server/services/googleCalendar.ts
-var googleCalendar_exports = {};
-__export(googleCalendar_exports, {
-  GoogleCalendarService: () => GoogleCalendarService,
-  googleCalendarService: () => googleCalendarService
-});
-import { google } from "googleapis";
-import { OAuth2Client } from "google-auth-library";
-import { JWT } from "google-auth-library";
-var SCOPES, CALENDAR_IDS, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, SERVICE_ACCOUNT_EMAIL, SERVICE_ACCOUNT_PRIVATE_KEY, GoogleCalendarService, googleCalendarService;
-var init_googleCalendar = __esm({
-  "server/services/googleCalendar.ts"() {
-    "use strict";
-    SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
-    CALENDAR_IDS = {
-      academic: "c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com",
-      activities: "gabby@aiowl.org"
-      // Private calendar
-    };
-    CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-    CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-    REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
-    SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-    SERVICE_ACCOUNT_PRIVATE_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
-    GoogleCalendarService = class {
-      constructor() {
-        this.serviceAccountClient = null;
-        this.oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
-        if (REFRESH_TOKEN) {
-          this.oauth2Client.setCredentials({
-            refresh_token: REFRESH_TOKEN
-          });
-        }
-        if (SERVICE_ACCOUNT_EMAIL && SERVICE_ACCOUNT_PRIVATE_KEY) {
-          this.serviceAccountClient = new JWT({
-            email: SERVICE_ACCOUNT_EMAIL,
-            key: SERVICE_ACCOUNT_PRIVATE_KEY.replace(/\\n/g, "\n"),
-            scopes: SCOPES
-          });
-        }
-      }
-      async getEvents(calendarType, timeMin, timeMax) {
-        try {
-          const calendarId = CALENDAR_IDS[calendarType];
-          if (this.serviceAccountClient) {
-            console.log(`Using service account for ${calendarType} calendar`);
-            const calendar2 = google.calendar({ version: "v3", auth: this.serviceAccountClient });
-            const response2 = await calendar2.events.list({
-              calendarId,
-              timeMin: timeMin?.toISOString(),
-              timeMax: timeMax?.toISOString(),
-              singleEvents: true,
-              orderBy: "startTime",
-              maxResults: 100
-            });
-            const events4 = response2.data.items?.map((event) => ({
-              id: event.id || String(Math.random()),
-              title: event.summary || "No Title",
-              startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
-              endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
-              location: event.location || "No Location",
-              description: event.description || "No Description",
-              calendarType
-            })) || [];
-            console.log(`Fetched ${events4.length} events from Google Calendar API for ${calendarType}`);
-            return events4;
-          }
-          const calendar = google.calendar({ version: "v3", auth: this.oauth2Client });
-          const response = await calendar.events.list({
-            calendarId,
-            timeMin: timeMin?.toISOString(),
-            timeMax: timeMax?.toISOString(),
-            singleEvents: true,
-            orderBy: "startTime",
-            maxResults: 100
-          });
-          const events3 = response.data.items?.map((event) => ({
-            id: event.id || String(Math.random()),
-            title: event.summary || "No Title",
-            startTime: event.start?.dateTime || event.start?.date || (/* @__PURE__ */ new Date()).toISOString(),
-            endTime: event.end?.dateTime || event.end?.date || (/* @__PURE__ */ new Date()).toISOString(),
-            location: event.location || "No Location",
-            description: event.description || "No Description",
-            calendarType
-          })) || [];
-          console.log(`Fetched ${events3.length} events from Google Calendar API for ${calendarType}`);
-          return events3;
-        } catch (error) {
-          console.error("Google Calendar API error:", error);
-          throw error;
-        }
-      }
-      // Helper method to get authorization URL for setting up OAuth
-      getAuthUrl() {
-        return this.oauth2Client.generateAuthUrl({
-          access_type: "offline",
-          scope: SCOPES,
-          prompt: "consent"
-        });
-      }
-      // Helper method to exchange authorization code for tokens
-      async getTokensFromCode(code) {
-        const { tokens } = await this.oauth2Client.getToken(code);
-        return tokens;
-      }
-    };
-    googleCalendarService = new GoogleCalendarService();
-  }
-});
-
 // server/index.ts
 import express6 from "express";
 
@@ -136,7 +5,7 @@ import express6 from "express";
 import { createServer } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 
-// server/storage.ts
+// server/src/storage.ts
 var MemStorage = class {
   constructor() {
     this.users = /* @__PURE__ */ new Map();
@@ -145,47 +14,47 @@ var MemStorage = class {
     this.studentTools = /* @__PURE__ */ new Map();
     this.safetyAlerts = /* @__PURE__ */ new Map();
     this.safetyResources = /* @__PURE__ */ new Map();
-    this.nextUserId = 1;
-    this.nextEventId = 1;
-    this.nextBuildingId = 1;
-    this.nextSafetyAlertId = 1;
-    this.nextSafetyResourceId = 1;
+    this.currentUserId = 1;
+    this.currentEventId = 1;
+    this.currentBuildingId = 1;
+    this.currentSafetyAlertId = 1;
+    this.currentSafetyResourceId = 1;
     this.initializeSampleData();
   }
   // User operations
   async getUser(id) {
-    return this.users.get(id) || null;
+    return this.users.get(id);
   }
   async getUserByUsername(username) {
-    return Array.from(this.users.values()).find(
-      (user) => user.username.toLowerCase() === username.toLowerCase()
-    ) || null;
+    return Array.from(this.users.values()).find((user) => user.username === username);
   }
   async createUser(insertUser) {
-    const id = this.nextUserId++;
+    const id = this.currentUserId++;
     const user = {
-      ...insertUser,
       id,
+      username: insertUser.username,
+      password: insertUser.password,
+      name: insertUser.name,
+      isGuest: insertUser.isGuest ?? false,
       createdAt: /* @__PURE__ */ new Date(),
       lastLogin: null,
-      location: null,
-      isSharingLocation: false,
-      isGuest: insertUser.isGuest ?? false
+      location: insertUser.location ?? null,
+      isSharingLocation: insertUser.isSharingLocation ?? false
     };
     this.users.set(id, user);
     return user;
   }
-  async updateUserLocation(id, location) {
-    const user = await this.getUser(id);
+  async updateUserLocation(userId, locationUpdate) {
+    const user = await this.getUser(userId);
     if (!user) {
-      return null;
+      return void 0;
     }
     const updatedUser = {
       ...user,
-      location: location.location ?? null,
-      isSharingLocation: location.isSharingLocation ?? false
+      location: locationUpdate.location ?? user.location,
+      isSharingLocation: locationUpdate.isSharingLocation ?? user.isSharingLocation
     };
-    this.users.set(id, updatedUser);
+    this.users.set(userId, updatedUser);
     return updatedUser;
   }
   async getSharedLocations() {
@@ -198,13 +67,17 @@ var MemStorage = class {
     return Array.from(this.events.values());
   }
   async getEvent(id) {
-    return this.events.get(id) || null;
+    return this.events.get(id);
   }
   async createEvent(insertEvent) {
-    const id = this.nextEventId++;
+    const id = this.currentEventId++;
     const event = {
-      ...insertEvent,
       id,
+      title: insertEvent.title,
+      description: insertEvent.description,
+      startTime: insertEvent.startTime,
+      endTime: insertEvent.endTime,
+      location: insertEvent.location,
       createdAt: /* @__PURE__ */ new Date(),
       isRecurring: insertEvent.isRecurring ?? false,
       recurrencePattern: insertEvent.recurrencePattern ?? null
@@ -217,13 +90,15 @@ var MemStorage = class {
     return Array.from(this.buildings.values());
   }
   async getBuilding(id) {
-    return this.buildings.get(id) || null;
+    return this.buildings.get(id);
   }
   async createBuilding(insertBuilding) {
-    const id = this.nextBuildingId++;
+    const id = this.currentBuildingId++;
     const building = {
-      ...insertBuilding,
       id,
+      name: insertBuilding.name,
+      description: insertBuilding.description,
+      location: insertBuilding.location,
       createdAt: /* @__PURE__ */ new Date(),
       isOpen: insertBuilding.isOpen ?? true,
       openHours: insertBuilding.openHours ?? null,
@@ -237,7 +112,7 @@ var MemStorage = class {
     return Array.from(this.studentTools.values());
   }
   async getStudentTool(id) {
-    return this.studentTools.get(id) || null;
+    return this.studentTools.get(id);
   }
   async createStudentTool(tool) {
     const studentTool = {
@@ -248,6 +123,44 @@ var MemStorage = class {
     this.studentTools.set(tool.id, studentTool);
     return studentTool;
   }
+  // Comment operations - DISABLED (not in schema)
+  /*
+    async getAllComments(): Promise<Comment[]> {
+      return Array.from(this.comments.values());
+    }
+  
+    async getComments(discussionId: number): Promise<Comment[]> {
+      return Array.from(this.comments.values()).filter(
+        (comment) => comment.discussionId === discussionId && comment.parentId === null
+      );
+    }
+    
+    async getCommentReplies(commentId: number): Promise<Comment[]> {
+      return Array.from(this.comments.values()).filter(
+        (comment) => comment.parentId === commentId
+      );
+    }
+    
+    async createComment(insertComment: InsertComment): Promise<Comment> {
+      const id = this.currentCommentId++;
+      const comment: Comment = {
+        id,
+        discussionId: insertComment.discussionId,
+        authorId: insertComment.authorId,
+        content: insertComment.content,
+        createdAt: new Date(),
+        parentId: insertComment.parentId ?? null
+      };
+      this.comments.set(id, comment);
+      return comment;
+    }
+    
+    async getUserComments(userId: number): Promise<Comment[]> {
+      return Array.from(this.comments.values()).filter(
+        (comment) => comment.authorId === userId
+      );
+    }
+    */
   // Safety Alert operations
   async getSafetyAlerts() {
     return Array.from(this.safetyAlerts.values());
@@ -259,13 +172,16 @@ var MemStorage = class {
     );
   }
   async getSafetyAlert(id) {
-    return this.safetyAlerts.get(id) || null;
+    return this.safetyAlerts.get(id);
   }
   async createSafetyAlert(insertAlert) {
-    const id = this.nextSafetyAlertId++;
+    const id = this.currentSafetyAlertId++;
     const alert = {
-      ...insertAlert,
       id,
+      title: insertAlert.title,
+      description: insertAlert.description,
+      severity: insertAlert.severity,
+      location: insertAlert.location,
       createdAt: /* @__PURE__ */ new Date(),
       isActive: insertAlert.isActive ?? true,
       expiresAt: insertAlert.expiresAt ?? null
@@ -281,13 +197,16 @@ var MemStorage = class {
     return Array.from(this.safetyResources.values()).filter((resource) => resource.category === category);
   }
   async getSafetyResource(id) {
-    return this.safetyResources.get(id) || null;
+    return this.safetyResources.get(id);
   }
   async createSafetyResource(insertResource) {
-    const id = this.nextSafetyResourceId++;
+    const id = this.currentSafetyResourceId++;
     const resource = {
-      ...insertResource,
       id,
+      title: insertResource.title,
+      description: insertResource.description,
+      category: insertResource.category,
+      url: insertResource.url,
       createdAt: /* @__PURE__ */ new Date(),
       isActive: insertResource.isActive ?? true
     };
@@ -299,205 +218,194 @@ var MemStorage = class {
     await this.createUser({
       username: "admin",
       password: "password",
-      name: "Admin User",
-      isGuest: false
+      isGuest: false,
+      name: "Admin User"
     });
     await this.createUser({
       username: "student",
       password: "password",
-      name: "Student User",
-      isGuest: false
-    });
-    await this.createEvent({
-      title: "Fall Festival",
-      description: "Annual celebration with food, games, and activities for students and faculty.",
-      startTime: /* @__PURE__ */ new Date("2023-10-15T12:00:00"),
-      endTime: /* @__PURE__ */ new Date("2023-10-15T16:00:00"),
-      location: "Student Center"
-    });
-    await this.createEvent({
-      title: "Career Fair",
-      description: "Meet with employers from around the region for internship and job opportunities.",
-      startTime: /* @__PURE__ */ new Date("2023-10-20T10:00:00"),
-      endTime: /* @__PURE__ */ new Date("2023-10-20T14:00:00"),
-      location: "Main Hall"
-    });
-    await this.createEvent({
-      title: "Registration Deadline",
-      description: "Last day to register for Spring semester classes without late fees.",
-      startTime: /* @__PURE__ */ new Date("2023-11-05T23:59:00"),
-      endTime: /* @__PURE__ */ new Date("2023-11-06T00:00:00"),
-      location: "For Spring Semester"
+      isGuest: false,
+      name: "Student User"
     });
     await this.createBuilding({
       name: "Main Hall",
       description: "Administrative offices, classrooms",
-      location: "Main Campus",
-      isOpen: true,
-      openHours: "8:00 AM - 5:00 PM",
-      contactInfo: "740-753-6000"
+      location: "39.5274, -82.4156"
     });
     await this.createBuilding({
       name: "Student Center",
       description: "Dining, recreation, student services",
-      location: "Main Campus",
-      isOpen: true,
-      openHours: "7:00 AM - 10:00 PM",
-      contactInfo: "740-753-6100"
+      location: "39.5280, -82.4150"
     });
     await this.createBuilding({
       name: "Davidson Hall",
       description: "Science labs, lecture halls",
-      location: "Main Campus",
-      isOpen: true,
-      openHours: "8:00 AM - 6:00 PM",
-      contactInfo: "740-753-6200"
+      location: "39.5268, -82.4162"
     });
     await this.createBuilding({
       name: "Library",
       description: "Books, study spaces, computer labs",
-      location: "Main Campus",
-      isOpen: true,
-      openHours: "8:00 AM - 11:00 PM",
-      contactInfo: "740-753-6300"
+      location: "39.5265, -82.4145"
     });
     await this.createBuilding({
       name: "Recreation Center",
       description: "Gym, pool, fitness classes",
-      location: "Main Campus",
-      isOpen: true,
-      openHours: "6:00 AM - 10:00 PM",
-      contactInfo: "740-753-6400"
+      location: "39.529, -82.417"
+    });
+    await this.createStudentTool({
+      id: "grades",
+      name: "Grades",
+      description: "Check your academic performance",
+      category: "academic",
+      url: "#"
     });
     await this.createStudentTool({
       id: "course-catalog",
       name: "Course Catalog",
       description: "Browse available courses",
       category: "academic",
-      url: "/tools/academic/course-catalog",
-      isActive: true
+      url: "/tools/academic/course-catalog"
+    });
+    await this.createStudentTool({
+      id: "course-schedule",
+      name: "Course Schedule",
+      description: "View your current classes",
+      category: "academic",
+      url: "#"
     });
     await this.createStudentTool({
       id: "advising",
       name: "Advising",
       description: "Connect with your advisor",
       category: "academic",
-      url: "/tools/academic/advising",
-      isActive: true
+      url: "/tools/academic/advising"
+    });
+    await this.createStudentTool({
+      id: "graduation",
+      name: "Graduation",
+      description: "Apply for graduation and view commencement info",
+      category: "academic",
+      url: "/tools/academic/graduation"
+    });
+    await this.createStudentTool({
+      id: "academic-history",
+      name: "Academic History",
+      description: "View your transcript",
+      category: "academic",
+      url: "#"
+    });
+    await this.createStudentTool({
+      id: "office-administration",
+      name: "Office & Administration",
+      description: "Info on Registrar, Financial Aid, and more",
+      category: "academic",
+      url: "/tools/academic/office-administration"
+    });
+    await this.createStudentTool({
+      id: "career-university-center",
+      name: "Career & University Center",
+      description: "Career counseling, job fairs, and transfer services",
+      category: "academic",
+      url: "/tools/academic/career-university-center"
     });
     await this.createStudentTool({
       id: "financial-aid",
       name: "Financial Aid",
       description: "View and manage your financial aid",
       category: "financial",
-      url: "/financial-aid",
-      isActive: true
+      url: "#"
     });
     await this.createStudentTool({
       id: "billing",
       name: "Billing",
       description: "Pay tuition and view statements",
       category: "financial",
-      url: "/billing",
-      isActive: true
+      url: "#"
     });
     await this.createStudentTool({
-      id: "scholarships",
-      name: "Scholarships",
-      description: "Apply for available scholarships",
-      category: "financial",
-      url: "/scholarships",
-      isActive: true
+      id: "campus-resources",
+      name: "Campus Resources",
+      description: "Access campus services",
+      category: "resources",
+      url: "#"
     });
     await this.createStudentTool({
       id: "health-services",
-      name: "Campus Health and Wellness",
+      name: "Health Services",
       description: "Schedule health appointments",
       category: "resources",
-      url: "/campus-health",
-      isActive: true
+      url: "#"
     });
     await this.createStudentTool({
       id: "career-services",
-      name: "Career & University Center",
+      name: "Career Services",
       description: "Job search and career planning",
       category: "resources",
-      url: "/career-university-center",
-      isActive: true
+      url: "#"
     });
     await this.createSafetyAlert({
-      title: "Weather Alert: Winter Storm Warning",
+      title: "Weather Advisory",
       description: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
       severity: "warning",
-      location: "All Campus",
       isActive: true,
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1e3)
-      // 24 hours from now
+      location: "All Campus"
     });
     await this.createSafetyAlert({
       title: "Planned Power Outage: Davidson Hall",
       description: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
       severity: "info",
-      location: "Davidson Hall",
-      isActive: true,
-      expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1e3)
+      expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1e3),
       // 3 days from now
+      isActive: true,
+      location: "Davidson Hall"
     });
     await this.createSafetyResource({
       title: "Campus Police",
-      description: "24/7 emergency assistance and security services",
+      description: "24/7 emergency assistance and security services (Phone: 740-753-6598)",
       category: "emergency",
-      url: "#",
-      isActive: true
+      url: "tel:740-753-6598"
     });
     await this.createSafetyResource({
       title: "Emergency Notification System",
       description: "Sign up for emergency text alerts",
       category: "emergency",
-      url: "#",
-      isActive: true
+      url: "#"
     });
     await this.createSafetyResource({
       title: "Health Center",
-      description: "Medical services for students",
+      description: "Medical services for students (Phone: 740-753-6487)",
       category: "health",
-      url: "#",
-      isActive: true
+      url: "#"
     });
     await this.createSafetyResource({
       title: "Counseling Services",
-      description: "Confidential mental health support",
+      description: "Confidential mental health support (Phone: 740-753-6789)",
       category: "health",
-      url: "#",
-      isActive: true
+      url: "#"
     });
     await this.createSafetyResource({
       title: "Campus Escort Service",
-      description: "Safe accompaniment across campus after dark",
+      description: "Safe accompaniment across campus after dark (Phone: 740-753-6123)",
       category: "security",
-      url: "#",
-      isActive: true
+      url: "tel:740-753-6123"
     });
     await this.createSafetyResource({
       title: "Anonymous Tip Line",
-      description: "Report suspicious activity anonymously",
+      description: "Report suspicious activity anonymously (Phone: 740-753-7890)",
       category: "security",
-      url: "#",
-      isActive: true
+      url: "#"
     });
     await this.createSafetyResource({
       title: "Weather Updates",
       description: "Local weather forecasts and alerts",
       category: "weather",
-      url: "https://weather.gov",
-      isActive: true
+      url: "https://weather.gov"
     });
     await this.createSafetyResource({
       title: "Emergency Procedures",
       description: "Step-by-step guides for emergency situations",
       category: "emergency",
-      url: "#",
-      isActive: true
+      url: "#"
     });
   }
 };
@@ -598,8 +506,8 @@ var locationUpdateSchema = createInsertSchema(users).pick({
 // server/routes.ts
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
-async function registerRoutes(app3) {
-  app3.post("/api/auth/login", async (req, res) => {
+async function registerRoutes(app2) {
+  app2.post("/api/auth/login", async (req, res) => {
     try {
       const { username, password } = req.body;
       if (!username || !password) {
@@ -617,7 +525,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/auth/register", async (req, res) => {
+  app2.post("/api/auth/register", async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(userData.username);
@@ -636,7 +544,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/events", async (_req, res) => {
+  app2.get("/api/events", async (_req, res) => {
     try {
       const events3 = await storage.getEvents();
       res.status(200).json(events3);
@@ -645,7 +553,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/events/:id", async (req, res) => {
+  app2.get("/api/events/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -661,7 +569,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/events", async (req, res) => {
+  app2.post("/api/events", async (req, res) => {
     try {
       const eventData = insertEventSchema.parse(req.body);
       const newEvent = await storage.createEvent(eventData);
@@ -675,7 +583,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/buildings", async (_req, res) => {
+  app2.get("/api/buildings", async (_req, res) => {
     try {
       const buildings2 = await storage.getBuildings();
       res.status(200).json(buildings2);
@@ -684,7 +592,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/buildings/:id", async (req, res) => {
+  app2.get("/api/buildings/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -700,7 +608,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/buildings", async (req, res) => {
+  app2.post("/api/buildings", async (req, res) => {
     try {
       const buildingData = insertBuildingSchema.parse(req.body);
       const newBuilding = await storage.createBuilding(buildingData);
@@ -714,7 +622,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/student-tools", async (_req, res) => {
+  app2.get("/api/student-tools", async (_req, res) => {
     try {
       const tools = await storage.getStudentTools();
       res.status(200).json(tools);
@@ -723,7 +631,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/student-tools/:id", async (req, res) => {
+  app2.get("/api/student-tools/:id", async (req, res) => {
     try {
       const id = req.params.id;
       const tool = await storage.getStudentTool(id);
@@ -736,7 +644,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/student-tools", async (req, res) => {
+  app2.post("/api/student-tools", async (req, res) => {
     try {
       const toolData = insertStudentToolSchema.parse(req.body);
       const existingTool = await storage.getStudentTool(toolData.id);
@@ -754,7 +662,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/users/:id/location", async (req, res) => {
+  app2.post("/api/users/:id/location", async (req, res) => {
     try {
       const userId = parseInt(req.params.id);
       if (isNaN(userId)) {
@@ -777,7 +685,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/locations/shared", async (_req, res) => {
+  app2.get("/api/locations/shared", async (_req, res) => {
     try {
       const sharedLocations = await storage.getSharedLocations();
       const locationsWithoutPasswords = sharedLocations.map((user) => {
@@ -790,7 +698,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/safety/alerts", async (req, res) => {
+  app2.get("/api/safety/alerts", async (req, res) => {
     try {
       const activeOnly = req.query.active === "true";
       const alerts = activeOnly ? await storage.getActiveSafetyAlerts() : await storage.getSafetyAlerts();
@@ -800,7 +708,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/safety/alerts/:id", async (req, res) => {
+  app2.get("/api/safety/alerts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -816,7 +724,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/safety/alerts", async (req, res) => {
+  app2.post("/api/safety/alerts", async (req, res) => {
     try {
       const alertData = insertSafetyAlertSchema.parse(req.body);
       const newAlert = await storage.createSafetyAlert(alertData);
@@ -830,7 +738,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/safety/resources", async (req, res) => {
+  app2.get("/api/safety/resources", async (req, res) => {
     try {
       const category = req.query.category;
       const resources = category ? await storage.getSafetyResourcesByCategory(category) : await storage.getSafetyResources();
@@ -840,7 +748,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.get("/api/safety/resources/:id", async (req, res) => {
+  app2.get("/api/safety/resources/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
@@ -856,7 +764,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  app3.post("/api/safety/resources", async (req, res) => {
+  app2.post("/api/safety/resources", async (req, res) => {
     try {
       const resourceData = insertSafetyResourceSchema.parse(req.body);
       const newResource = await storage.createSafetyResource(resourceData);
@@ -870,7 +778,7 @@ async function registerRoutes(app3) {
       res.status(500).json({ message: "Internal server error" });
     }
   });
-  const httpServer = createServer(app3);
+  const httpServer = createServer(app2);
   const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
   wss.on("connection", (socket) => {
     console.log("WebSocket client connected");
@@ -920,7 +828,7 @@ var vite_config_default = defineConfig({
   plugins: [
     react()
   ],
-  assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp"],
+  assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp", "**/*.mp4", "**/*.webm", "**/*.ogg"],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
@@ -985,31 +893,15 @@ var vite_config_default = defineConfig({
       allow: ["..", "node_modules"]
     },
     proxy: {
-      "/api": "http://localhost:3001"
+      "/api": "http://localhost:3000"
     }
   }
 });
 
 // server/vite.ts
 import { nanoid } from "nanoid";
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
 var __filename2 = fileURLToPath2(import.meta.url);
 var __dirname2 = dirname2(__filename2);
-var firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-var app = initializeApp(firebaseConfig);
-var auth = getAuth(app);
-var db = getFirestore(app);
-var storage2 = getStorage(app);
 function log(message, source = "express") {
   const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -1019,7 +911,7 @@ function log(message, source = "express") {
   });
   console.log(`${formattedTime} [${source}] ${message}`);
 }
-async function setupVite(app3, server) {
+async function setupVite(app2, server) {
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
@@ -1035,8 +927,8 @@ async function setupVite(app3, server) {
     },
     appType: "custom"
   });
-  app3.use(viteServer.middlewares);
-  app3.use("*", async (req, res, next) => {
+  app2.use(viteServer.middlewares);
+  app2.use("*", async (req, res, next) => {
     const url = req.originalUrl;
     try {
       const clientTemplate = path2.resolve(
@@ -1058,15 +950,55 @@ async function setupVite(app3, server) {
     }
   });
 }
-function serveStatic(app3) {
+function serveStatic(app2) {
   const distPath = path2.resolve(__dirname2, "public");
   if (!fs.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
-  app3.use(express.static(distPath));
-  app3.use("*", (_req, res) => {
+  app2.get("*.mp4", (req, res) => {
+    const videoPath = path2.join(distPath, req.path);
+    if (fs.existsSync(videoPath)) {
+      const stat = fs.statSync(videoPath);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = end - start + 1;
+        const file = fs.createReadStream(videoPath, { start, end });
+        const head = {
+          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": "video/mp4"
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+      } else {
+        const head = {
+          "Content-Length": fileSize,
+          "Content-Type": "video/mp4",
+          "Accept-Ranges": "bytes"
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(videoPath).pipe(res);
+      }
+    } else {
+      res.status(404).send("Video not found");
+    }
+  });
+  app2.use(express.static(distPath, {
+    setHeaders: (res, filepath) => {
+      if (filepath.endsWith(".mp4")) {
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "public, max-age=0");
+      }
+    }
+  }));
+  app2.use("*", (_req, res) => {
     res.sendFile(path2.resolve(distPath, "index.html"));
   });
 }
@@ -1228,23 +1160,100 @@ var programs_default = router;
 
 // server/src/routes/calendar.ts
 import express2 from "express";
-import * as ical from "ical";
 import fetch2 from "node-fetch";
-var googleCalendarService2 = null;
-try {
-  const { googleCalendarService: service } = (init_googleCalendar(), __toCommonJS(googleCalendar_exports));
-  googleCalendarService2 = service;
-  console.log("Google Calendar service loaded successfully");
-} catch (error) {
-  console.log("Google Calendar service not available, will use iCal fallback:", error instanceof Error ? error.message : "Unknown error");
-}
+import { createRequire } from "module";
+console.log("Calendar service initialized - using public iCal URLs");
+var require2 = createRequire(import.meta.url);
+var ical = require2("ical");
 var router2 = express2.Router();
-var ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
-var STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
-async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
+var eventStorage = /* @__PURE__ */ new Map();
+var STORAGE_DURATION = 24 * 60 * 60 * 1e3;
+var FETCH_INTERVAL = 60 * 60 * 1e3;
+var FETCH_COOLDOWN = 5 * 60 * 1e3;
+var CALENDAR_TYPES = {
+  academic: { url: "", key: "academic_all" },
+  activities: { url: "", key: "activities_all" }
+};
+function initializeStorage() {
+  CALENDAR_TYPES.academic.url = process.env.GOOGLE_CALENDAR_ACADEMIC_URL || "https://calendar.google.com/calendar/ical/c_48553b3826989867c9512386c55643ea5e9768a4439ba027beb782cb6ad652b9%40group.calendar.google.com/public/basic.ics";
+  CALENDAR_TYPES.activities.url = process.env.GOOGLE_CALENDAR_ACTIVITIES_URL || "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
+}
+function getStoredEvents(calendarType) {
+  const key = `${calendarType}_all`;
+  const stored = eventStorage.get(key);
+  if (!stored) return null;
+  const age = Date.now() - stored.timestamp;
+  const ageMinutes = Math.floor(age / 1e3 / 60);
+  if (age < STORAGE_DURATION) {
+    console.log(`\u2713 Serving stored events for ${calendarType} (age: ${ageMinutes} minutes, ${stored.data.length} events)`);
+    return stored.data;
+  }
+  console.log(`\u26A0\uFE0F Stored events for ${calendarType} are stale (age: ${ageMinutes} minutes)`);
+  return null;
+}
+function setStoredEvents(calendarType, data) {
+  const key = `${calendarType}_all`;
+  eventStorage.set(key, {
+    data,
+    timestamp: Date.now(),
+    lastFetchAttempt: Date.now()
+  });
+  console.log(`\u2713 Stored ${data.length} events for ${calendarType}`);
+}
+function shouldFetchNow(calendarType) {
+  const key = `${calendarType}_all`;
+  const stored = eventStorage.get(key);
+  if (!stored) {
+    console.log(`\u{1F504} No stored events for ${calendarType} - will fetch`);
+    return true;
+  }
+  const timeSinceLastFetch = Date.now() - stored.lastFetchAttempt;
+  const timeSinceStorage = Date.now() - stored.timestamp;
+  if (timeSinceLastFetch < FETCH_COOLDOWN) {
+    const waitMinutes = Math.ceil((FETCH_COOLDOWN - timeSinceLastFetch) / 1e3 / 60);
+    console.log(`\u23F3 Rate limit cooldown - wait ${waitMinutes} more minutes before fetching ${calendarType}`);
+    return false;
+  }
+  if (timeSinceStorage >= FETCH_INTERVAL) {
+    const ageMinutes = Math.floor(timeSinceStorage / 1e3 / 60);
+    console.log(`\u{1F504} Events for ${calendarType} are ${ageMinutes} minutes old - will fetch fresh data`);
+    return true;
+  }
+  return false;
+}
+function markFetchAttempt(calendarType) {
+  const key = `${calendarType}_all`;
+  const stored = eventStorage.get(key);
+  if (stored) {
+    stored.lastFetchAttempt = Date.now();
+  }
+}
+initializeStorage();
+async function backgroundRefreshEvents() {
+  console.log("\n\u{1F504} Background job: Refreshing calendar events...");
+  for (const [type, config] of Object.entries(CALENDAR_TYPES)) {
+    try {
+      if (shouldFetchNow(type)) {
+        console.log(`Fetching ${type} events...`);
+        markFetchAttempt(type);
+        const events3 = await fetchCalendarEvents(config.url, type);
+        setStoredEvents(type, events3);
+      } else {
+        console.log(`Skipping ${type} - using cached data`);
+      }
+    } catch (error) {
+      console.error(`Error refreshing ${type} events:`, error);
+    }
+  }
+  console.log("\u2713 Background refresh complete\n");
+}
+setInterval(backgroundRefreshEvents, 30 * 60 * 1e3);
+setTimeout(backgroundRefreshEvents, 1e4);
+async function fetchCalendarEvents(url, calendarType) {
   console.log(`
-=== GOOGLE CALENDAR DEBUG ===`);
-  console.log(`Fetching calendar events from: ${url}`);
+=== FETCHING FROM GOOGLE ===`);
+  console.log(`URL: ${url}`);
+  console.log(`Type: ${calendarType}`);
   try {
     const response = await fetch2(url);
     console.log(`Response status: ${response.status} ${response.statusText}`);
@@ -1254,29 +1263,11 @@ async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
     }
     const icalData = await response.text();
     console.log(`Received ${icalData.length} characters of iCal data`);
-    console.log(`First 500 chars of iCal data:`, icalData.substring(0, 500));
     const parsedEvents = ical.parseICS(icalData);
     console.log(`Parsed ${Object.keys(parsedEvents).length} total events from iCal`);
     const eventTypes = new Set(Object.values(parsedEvents).map((event) => event.type));
     console.log(`Event types found:`, Array.from(eventTypes));
-    const events3 = Object.values(parsedEvents).filter((event) => {
-      const isVEvent = event.type === "VEVENT";
-      if (!isVEvent) {
-        return false;
-      }
-      if (timeMin || timeMax) {
-        const eventStart = event.start;
-        if (eventStart) {
-          const eventDate = new Date(eventStart);
-          const minDate = timeMin || /* @__PURE__ */ new Date(0);
-          const maxDate = timeMax || /* @__PURE__ */ new Date("2100-01-01");
-          if (eventDate < minDate || eventDate > maxDate) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }).map((event, index) => {
+    const events3 = Object.values(parsedEvents).filter((event) => event.type === "VEVENT").map((event, index) => {
       console.log(`
 --- Processing Event ${index + 1} ---`);
       console.log(`Raw event data:`, JSON.stringify(event, null, 2));
@@ -1326,52 +1317,69 @@ async function fetchCalendarEvents(url, calendarType, timeMin, timeMax) {
 }
 router2.get("/events", async (req, res) => {
   console.log(`
-=== API REQUEST ===`);
+=== CLIENT REQUEST ===`);
   console.log(`Query params:`, req.query);
   try {
-    const calendarType = req.query.type;
+    const calendarType = req.query.type || "academic";
     const timeMin = req.query.timeMin;
     const timeMax = req.query.timeMax;
-    console.log(`Calendar type requested: ${calendarType}`);
-    console.log(`Time range: ${timeMin || "no start"} to ${timeMax || "no end"}`);
-    let events3;
-    if (googleCalendarService2) {
-      console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
-      try {
-        events3 = await googleCalendarService2.getEvents(
-          calendarType,
-          timeMin ? new Date(timeMin) : void 0,
-          timeMax ? new Date(timeMax) : void 0
-        );
-        console.log(`Successfully fetched ${events3.length} events via Google Calendar API`);
-      } catch (apiError) {
-        console.error("Google Calendar API failed, falling back to iCal:", apiError);
+    console.log(`Calendar type: ${calendarType}, Time range: ${timeMin || "none"} to ${timeMax || "none"}`);
+    let events3 = getStoredEvents(calendarType);
+    if (!events3 && shouldFetchNow(calendarType)) {
+      console.log(`\u{1F4E5} First request for ${calendarType} - fetching from Google...`);
+      markFetchAttempt(calendarType);
+      const config = CALENDAR_TYPES[calendarType];
+      if (config) {
+        try {
+          events3 = await fetchCalendarEvents(config.url, calendarType);
+          setStoredEvents(calendarType, events3);
+        } catch (error) {
+          console.error(`Error fetching ${calendarType} events:`, error);
+          events3 = [];
+        }
       }
     }
     if (!events3) {
-      console.log(`Using iCal fallback for ${calendarType} calendar`);
-      const minDate = timeMin ? new Date(timeMin) : void 0;
-      const maxDate = timeMax ? new Date(timeMax) : void 0;
-      console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
-      if (calendarType === "academic") {
-        events3 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
-      } else if (calendarType === "activities") {
-        events3 = await fetchCalendarEvents(STUDENT_CALENDAR_URL, "activities", minDate, maxDate);
-      } else {
-        console.log("No calendar type specified, defaulting to academic");
-        events3 = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, "academic", minDate, maxDate);
-      }
+      console.log(`\u26A0\uFE0F No events available for ${calendarType}`);
+      events3 = [];
     }
+    let filteredEvents = events3;
     if (timeMin || timeMax) {
-      console.log(`Date filtering applied at source: ${timeMin || "no start"} to ${timeMax || "no end"}`);
+      const minDate = timeMin ? new Date(timeMin) : null;
+      const maxDate = timeMax ? new Date(timeMax) : null;
+      filteredEvents = filteredEvents.filter((event) => {
+        const eventStart = new Date(event.startTime);
+        if (minDate && eventStart < minDate) return false;
+        if (maxDate && eventStart > maxDate) return false;
+        return true;
+      });
+      console.log(`Filtered from ${events3.length} to ${filteredEvents.length} events (${timeMin || "any"} to ${timeMax || "any"})`);
     }
-    const eventsArray = events3 || [];
-    console.log(`Sending ${eventsArray.length} events to frontend`);
-    res.json(eventsArray);
+    console.log(`\u{1F4E4} Sending ${filteredEvents.length} events to client`);
+    res.json(filteredEvents);
   } catch (error) {
     console.error(`API Error:`, error);
     res.status(500).json({
       error: "Failed to fetch calendar events",
+      details: error instanceof Error ? error.message : "Unknown error"
+    });
+  }
+});
+router2.post("/refresh", async (req, res) => {
+  console.log("\n\u{1F504} Manual refresh requested");
+  try {
+    eventStorage.clear();
+    console.log("\u2713 Cleared event storage");
+    await backgroundRefreshEvents();
+    res.json({
+      success: true,
+      message: "Calendar events refreshed successfully",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString()
+    });
+  } catch (error) {
+    console.error("Error refreshing calendar:", error);
+    res.status(500).json({
+      error: "Failed to refresh calendar events",
       details: error instanceof Error ? error.message : "Unknown error"
     });
   }
@@ -2293,13 +2301,77 @@ router5.get("/roommates", async (req, res) => {
 });
 var social_default = router5;
 
+// server/middleware/security.ts
+var store = {};
+function rateLimit(windowMs, max) {
+  return (req, res, next) => {
+    const key = req.ip || "unknown";
+    const now = Date.now();
+    if (store[key] && store[key].resetTime < now) {
+      delete store[key];
+    }
+    if (!store[key]) {
+      store[key] = {
+        count: 1,
+        resetTime: now + windowMs
+      };
+    } else {
+      store[key].count++;
+    }
+    if (store[key].count > max) {
+      return res.status(429).json({
+        error: "Too many requests, please try again later."
+      });
+    }
+    next();
+  };
+}
+function securityHeaders(req, res, next) {
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.removeHeader("X-Powered-By");
+  next();
+}
+function setupSecurity(app2) {
+  app2.use(securityHeaders);
+  app2.use("/api/", rateLimit(15 * 60 * 1e3, 100));
+  app2.use("/api/auth/", rateLimit(15 * 60 * 1e3, 5));
+  app2.use("/api/verification/", rateLimit(15 * 60 * 1e3, 10));
+}
+
+// server/utils/errorHandler.ts
+function errorHandler(err, req, res, next) {
+  const statusCode = err.statusCode || 500;
+  const isOperational = err.isOperational || false;
+  console.error("Error:", {
+    message: err.message,
+    stack: process.env.NODE_ENV === "development" ? err.stack : void 0,
+    url: req.url,
+    method: req.method
+  });
+  const message = process.env.NODE_ENV === "production" && !isOperational ? "Internal server error" : err.message;
+  res.status(statusCode).json({
+    error: message,
+    ...process.env.NODE_ENV === "development" && { stack: err.stack }
+  });
+}
+
 // server/index.ts
-var app2 = express6();
-app2.use(express6.json());
-app2.use(express6.urlencoded({ extended: false }));
-app2.use(cors());
-app2.use("/api/calendar", calendar_default);
-app2.use((req, res, next) => {
+var app = express6();
+setupSecurity(app);
+app.use(express6.json());
+app.use(express6.urlencoded({ extended: false }));
+var corsOrigin = process.env.CORS_ORIGIN || (process.env.NODE_ENV === "production" ? "https://your-production-domain.com" : "http://localhost:5173");
+app.use(cors({
+  origin: corsOrigin,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+app.use("/api/calendar", calendar_default);
+app.use((req, res, next) => {
   const start = Date.now();
   const path3 = req.path;
   let capturedJsonResponse = void 0;
@@ -2324,23 +2396,26 @@ app2.use((req, res, next) => {
   next();
 });
 (async () => {
-  const server = await registerRoutes(app2);
-  app2.use((err, _req, res, _next) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    res.status(status).json({ message });
-    throw err;
+  const server = await registerRoutes(app);
+  app.use(errorHandler);
+  app.get("/health", (_req, res) => {
+    res.status(200).json({
+      status: "ok",
+      timestamp: (/* @__PURE__ */ new Date()).toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV
+    });
   });
-  app2.use("/api/programs", programs_default);
-  app2.use("/api/verification", verification_default);
-  app2.use("/api/posts", posts_default);
-  app2.use("/api/social", social_default);
-  if (app2.get("env") === "development") {
-    await setupVite(app2, server);
+  app.use("/api/programs", programs_default);
+  app.use("/api/verification", verification_default);
+  app.use("/api/posts", posts_default);
+  app.use("/api/social", social_default);
+  if (app.get("env") === "development") {
+    await setupVite(app, server);
   } else {
-    serveStatic(app2);
+    serveStatic(app);
   }
-  const port = 3e3;
+  const port = process.env.PORT || 3e3;
   server.listen({
     port,
     host: "0.0.0.0"

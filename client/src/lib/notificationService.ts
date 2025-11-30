@@ -1,11 +1,11 @@
 import { Event } from '../../../shared/schema';
-import { addMinutes, isBefore, isAfter } from 'date-fns';
+import { addMinutes, isBefore, isAfter, isWithinInterval, addDays } from 'date-fns';
 
 class NotificationService {
   private static instance: NotificationService;
-  private checkInterval: number | null = null;
   private addNotification: ((notification: any) => void) | null = null;
   private settings: any = null;
+  private lastProcessedEvents: Set<string> = new Set();
 
   static getInstance(): NotificationService {
     if (!NotificationService.instance) {
@@ -17,89 +17,54 @@ class NotificationService {
   initialize(addNotification: (notification: any) => void, settings: any) {
     this.addNotification = addNotification;
     this.settings = settings;
-    this.startEventChecking();
+    // No automatic checking - we'll be called explicitly with event data
   }
 
-  private startEventChecking() {
-    // Check for upcoming events every minute
-    this.checkInterval = setInterval(() => {
-      this.checkUpcomingEvents();
-    }, 60000); // 1 minute
+  // Called from Calendar page with already-loaded events
+  processUpcomingEvents(events: Event[]) {
+    if (!this.addNotification || !this.settings || !events || events.length === 0) {
+      return;
+    }
 
-    // Also check immediately
-    this.checkUpcomingEvents();
-  }
+    const now = new Date();
+    const nextWeek = addDays(now, 7);
 
-  private async checkUpcomingEvents() {
-    if (!this.addNotification || !this.settings) return;
+    // Filter to upcoming events in the next 7 days
+    const upcomingEvents = events
+      .filter(event => {
+        const eventStart = new Date(event.startTime);
+        return eventStart >= now && eventStart <= nextWeek;
+      })
+      .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())
+      .slice(0, 3); // Get top 3 most recent
 
-    try {
-      // Fetch upcoming events for the next week
-      const now = new Date();
-      const timeMin = now.toISOString();
-      const timeMax = addMinutes(now, 7 * 24 * 60).toISOString(); // Check next week
-
-      // Fetch events for both academic and activities calendars
-      const academicResponse = await fetch(`/api/calendar/events?type=academic&timeMin=${timeMin}&timeMax=${timeMax}`);
-      const activitiesResponse = await fetch(`/api/calendar/events?type=activities&timeMin=${timeMin}&timeMax=${timeMax}`);
+    // Process each upcoming event
+    upcomingEvents.forEach(event => {
+      const notificationKey = `upcoming_event_${event.id}`;
       
-      let allEvents: Event[] = [];
-      
-      if (academicResponse.ok) {
-        const academicEvents = await academicResponse.json();
-        allEvents = allEvents.concat(academicEvents);
+      // Only notify if we haven't already notified about this event
+      if (!this.lastProcessedEvents.has(notificationKey) && this.addNotification) {
+        this.addNotification({
+          title: `Upcoming: ${event.title}`,
+          message: `${new Date(event.startTime).toLocaleDateString()} at ${new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+          type: 'event',
+          priority: 'medium',
+          eventId: event.id.toString(),
+          eventDate: new Date(event.startTime),
+          actionUrl: `/calendar`,
+        });
+
+        this.lastProcessedEvents.add(notificationKey);
       }
-      
-      if (activitiesResponse.ok) {
-        const activitiesEvents = await activitiesResponse.json();
-        allEvents = allEvents.concat(activitiesEvents);
-      }
-      
-      console.log('Fetched upcoming events for notifications:', allEvents.length);
-      this.processEvents(allEvents, 'event');
-    } catch (error) {
-      console.error('Error checking upcoming events:', error);
+    });
+
+    // Clean up old processed events (keep last 100)
+    if (this.lastProcessedEvents.size > 100) {
+      const toKeep = Array.from(this.lastProcessedEvents).slice(-100);
+      this.lastProcessedEvents = new Set(toKeep);
     }
   }
 
-  private processEvents(events: Event[], type: 'academic' | 'event') {
-    if (!this.addNotification || !this.settings) return;
-
-    const now = new Date();
-    console.log('Processing events for notifications:', events.length);
-
-    events.forEach(event => {
-      if (!event.startTime || !event.endTime) return;
-
-      const eventStart = new Date(event.startTime);
-      const timeUntilEvent = eventStart.getTime() - now.getTime();
-      const minutesUntilEvent = Math.floor(timeUntilEvent / (1000 * 60));
-
-      // Only create notifications for events in the next week
-      if (minutesUntilEvent > 0 && minutesUntilEvent <= 7 * 24 * 60) {
-        // Check if we've already sent a notification for this event
-        const notificationKey = `event_reminder_${event.id}`;
-        const hasNotified = localStorage.getItem(notificationKey);
-        
-        if (!hasNotified && this.addNotification) {
-          console.log('Creating notification for event:', event.title);
-          
-          this.addNotification({
-            title: `Upcoming Event: ${event.title}`,
-            message: `${event.title} is coming up. ${event.location && event.location !== 'No Location' ? `Location: ${event.location}` : ''}`,
-            type: 'event',
-            priority: 'medium',
-            eventId: event.id.toString(),
-            eventDate: eventStart,
-            actionUrl: `/calendar`,
-          });
-
-          // Mark as notified
-          localStorage.setItem(notificationKey, 'true');
-        }
-      }
-    });
-  }
 
   // Method to send custom notifications from admin
   sendCustomNotification(notification: {

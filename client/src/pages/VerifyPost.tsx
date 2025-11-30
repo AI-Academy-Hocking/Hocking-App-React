@@ -436,11 +436,11 @@ const VerifyPost: React.FC = () => {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <Button
-                  onClick={() => setLocation('/housing/social')}
+                  onClick={() => setLocation('/housing')}
                   variant="outline"
                   className="flex-1"
                 >
-                  Return to Social Hub
+                  Return to Housing
                 </Button>
                 {!isProcessed && (
                   <Button

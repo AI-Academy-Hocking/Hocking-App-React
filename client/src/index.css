@@ -30,9 +30,9 @@ html {
 }
 
 [data-theme="dark"], .dark {
-  --color-background: #1f2937;   /* Matching gray-800 for seamless look */
-  --color-text: #ffffff;         /* White text */
-  border-color: var(--color-border);
+  --color-background: #0f172a;   /* Dark navy (matches Home page popover) */
+  --color-text: #d1d5db;         /* Gray-300 for body text */
+  border-color: #374151;         /* Gray-700 for borders */
 }
 
 body {
@@ -45,6 +45,12 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Dark mode text color - background handled by MainLayout/individual pages */
+.dark body,
+.dark html {
+  color: #d1d5db;
 }
 a, .accent {
   color: var(--color-accent);

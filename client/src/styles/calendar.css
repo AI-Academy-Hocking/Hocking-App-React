@@ -21,15 +21,21 @@
   line-height: 1.5;
 }
 
+/* Hide decade view button - we don't want 10-year view */
+.react-calendar__navigation button[disabled] {
+  display: none !important;
+}
+
 /* Navigation */
 .react-calendar__navigation {
   display: flex;
-  height: 60px;
+  height: 70px;
   margin-bottom: 0;
   background: #1e40af;
   border: none;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  padding: 0 8px;
 }
 
 .dark .react-calendar__navigation {
@@ -121,7 +127,7 @@
 }
 
 .react-calendar__navigation__label {
-  flex-grow: 1;
+  flex-grow: 2;
   text-align: center;
   font-size: 18px;
   font-weight: 600;
@@ -129,7 +135,16 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.react-calendar__navigation__label__labelText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Month View */
@@ -194,9 +209,9 @@
 }
 
 .dark .mobile-calendar .react-calendar__tile {
-  background: #0f172a !important;
-  border: none !important;
-  color: white !important;
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
+  color: #e2e8f0 !important;
 }
 
 /* Prevent border doubling on edges */
@@ -285,7 +300,59 @@
 .dark .mobile-calendar .react-calendar__month-view__days__day--neighboringMonth {
   color: #6b7280 !important;
   background: #0f172a !important;
-  border: none !important;
+  border: 1px solid #334155 !important;
+}
+
+/* Year View Styles */
+.react-calendar__year-view,
+.react-calendar__decade-view {
+  background: white;
+  padding: 20px;
+}
+
+.dark .react-calendar__year-view,
+.dark .react-calendar__decade-view {
+  background: #0f172a;
+}
+
+.react-calendar__year-view__months,
+.react-calendar__decade-view__years {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.react-calendar__year-view__months__month,
+.react-calendar__decade-view__years__year {
+  background: white !important;
+  border: 2px solid #3b82f6 !important;
+  color: #1f2937 !important;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.dark .react-calendar__year-view__months__month,
+.dark .react-calendar__decade-view__years__year {
+  background: #1e293b !important;
+  border: 2px solid #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.react-calendar__year-view__months__month:hover,
+.react-calendar__decade-view__years__year:hover {
+  background: #dbeafe !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dark .react-calendar__year-view__months__month:hover,
+.dark .react-calendar__decade-view__years__year:hover {
+  background: #334155 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Event Indicators - Make them more prominent */

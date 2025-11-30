@@ -59,10 +59,10 @@ function TrioServices() {
   ];
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 dark:bg-popover min-h-screen">
       <div className="flex items-center mb-6">
         <Link href="/academic-success">
-          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
+          <button className="flex items-center text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Academic Success Center</span>
           </button>
@@ -70,15 +70,15 @@ function TrioServices() {
       </div>
 
       <div className="flex items-center gap-4 mb-8">
-        <GraduationCap className="h-8 w-8 text-blue-600" />
-        <h1 className="text-3xl font-bold text-primary">TRIO Student Support Services</h1>
+        <GraduationCap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+        <h1 className="text-3xl font-bold text-primary dark:text-blue-300">TRIO Student Support Services</h1>
       </div>
 
-      <Card className="mb-8">
-        <CardHeader className="bg-primary-light/10">
-          <CardTitle className="text-xl">Our Mission</CardTitle>
+      <Card className="mb-8 dark:bg-gray-800 dark:border-gray-700">
+        <CardHeader className="bg-primary-light/10 dark:bg-gray-700">
+          <CardTitle className="text-xl dark:text-blue-300">Our Mission</CardTitle>
         </CardHeader>
-        <CardContent className="pt-4">
+        <CardContent className="pt-4 dark:text-gray-300">
           <p className="text-lg mb-4">
             The mission of the TRIO Student Support Services program at Hocking College is to provide student-centered support, 
             thus increasing persistence, retention, and graduation rates to individuals who are first-generation and/or income 

@@ -288,7 +288,7 @@ export default function Login() {
           muted
           playsInline
         >
-          <source src="LandingPage.mp4" type="video/mp4" />
+          <source src="/LandingPage.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>

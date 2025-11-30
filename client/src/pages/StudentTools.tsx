@@ -147,10 +147,10 @@ export default function StudentTools() {
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 rounded-xl">
-              <TabsTrigger value="academic" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl">Financial</TabsTrigger>
-              <TabsTrigger value="resources" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-xl">Resources</TabsTrigger>
+            <TabsList className="grid grid-cols-3 rounded-xl dark:bg-gray-700">
+              <TabsTrigger value="academic" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:text-gray-300 dark:data-[state=active]:bg-blue-700 rounded-xl">Academic</TabsTrigger>
+              <TabsTrigger value="financial" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:text-gray-300 dark:data-[state=active]:bg-blue-700 rounded-xl">Financial</TabsTrigger>
+              <TabsTrigger value="resources" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:text-gray-300 dark:data-[state=active]:bg-blue-700 rounded-xl">Resources</TabsTrigger>
             </TabsList>
             
             <TabsContent value="academic" className="p-4">

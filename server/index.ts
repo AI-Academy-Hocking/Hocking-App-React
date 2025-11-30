@@ -7,11 +7,30 @@ import calendarRouter from './src/routes/calendar';
 import verificationRouter from './api/verification';
 import postsRouter from './api/posts';
 import socialRouter from './api/social';
+import { setupSecurity } from './middleware/security';
+import { errorHandler } from './utils/errorHandler';
 
 const app = express();
+
+// Security middleware first
+setupSecurity(app);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+
+// CORS configuration with environment variable
+const corsOrigin = process.env.CORS_ORIGIN || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://your-production-domain.com' 
+    : 'http://localhost:5173');
+
+app.use(cors({
+  origin: corsOrigin,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use('/api/calendar', calendarRouter);
 
 app.use((req, res, next) => {
@@ -47,12 +66,17 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+  // Use improved error handler
+  app.use(errorHandler);
 
-    res.status(status).json({ message });
-    throw err;
+  // Health check endpoint
+  app.get('/health', (_req, res) => {
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV 
+    });
   });
 
   // API Routes

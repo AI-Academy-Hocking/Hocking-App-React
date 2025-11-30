@@ -99,17 +99,17 @@ export default function ProgramDetails() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 dark:bg-popover min-h-screen">
       <div className="flex items-center gap-4">
         <Link href="/home">
-          <Button variant="ghost" className="gap-2">
+          <Button variant="ghost" className="gap-2 dark:text-blue-400 dark:hover:text-blue-300">
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold">{program.name}</h1>
-          <p className="text-sm text-gray-500">{program.category}</p>
+          <h1 className="text-2xl font-bold dark:text-blue-300">{program.name}</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{program.category}</p>
         </div>
       </div>
 

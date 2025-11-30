@@ -3,7 +3,6 @@ import {
   events, type Event, type InsertEvent, 
   buildings, type Building, type InsertBuilding, 
   studentTools, type StudentTool, type InsertStudentTool, 
-  comments, type Comment, type InsertComment,
   safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
   safetyResources, type SafetyResource, type InsertSafetyResource,
   type LocationUpdate 
@@ -33,12 +32,12 @@ export interface IStorage {
   getStudentTool(id: string): Promise<StudentTool | undefined>;
   createStudentTool(tool: InsertStudentTool): Promise<StudentTool>;
   
-  // Comment operations
-  getComments(discussionId: number): Promise<Comment[]>;
-  getCommentReplies(commentId: number): Promise<Comment[]>;
-  createComment(comment: InsertComment): Promise<Comment>;
-  getUserComments(userId: number): Promise<Comment[]>;
-  getAllComments(): Promise<Comment[]>;
+  // Comment operations - DISABLED (not in schema)
+  // getComments(discussionId: number): Promise<Comment[]>;
+  // getCommentReplies(commentId: number): Promise<Comment[]>;
+  // createComment(comment: InsertComment): Promise<Comment>;
+  // getUserComments(userId: number): Promise<Comment[]>;
+  // getAllComments(): Promise<Comment[]>;
   
   // Safety Alert operations
   getSafetyAlerts(): Promise<SafetyAlert[]>;
@@ -58,14 +57,14 @@ export class MemStorage implements IStorage {
   private events: Map<number, Event>;
   private buildings: Map<number, Building>;
   private studentTools: Map<string, StudentTool>;
-  private comments: Map<number, Comment>;
+  // private comments: Map<number, Comment>; // DISABLED - not in schema
   private safetyAlerts: Map<number, SafetyAlert>;
   private safetyResources: Map<number, SafetyResource>;
   
   private currentUserId: number;
   private currentEventId: number;
   private currentBuildingId: number;
-  private currentCommentId: number;
+  // private currentCommentId: number; // DISABLED - not in schema
   private currentSafetyAlertId: number;
   private currentSafetyResourceId: number;
 
@@ -74,14 +73,14 @@ export class MemStorage implements IStorage {
     this.events = new Map();
     this.buildings = new Map();
     this.studentTools = new Map();
-    this.comments = new Map();
+    // this.comments = new Map(); // DISABLED - not in schema
     this.safetyAlerts = new Map();
     this.safetyResources = new Map();
     
     this.currentUserId = 1;
     this.currentEventId = 1;
     this.currentBuildingId = 1;
-    this.currentCommentId = 1;
+    // this.currentCommentId = 1; // DISABLED - not in schema
     this.currentSafetyAlertId = 1;
     this.currentSafetyResourceId = 1;
     
@@ -104,13 +103,12 @@ export class MemStorage implements IStorage {
       id,
       username: insertUser.username,
       password: insertUser.password,
-      name: insertUser.name ?? null,
-      email: insertUser.email ?? null,
-      isGuest: insertUser.isGuest ?? null,
-      lat: null,
-      lng: null,
-      isLocationShared: false,
-      lastLocationUpdate: null
+      name: insertUser.name,
+      isGuest: insertUser.isGuest ?? false,
+      createdAt: new Date(),
+      lastLogin: null,
+      location: insertUser.location ?? null,
+      isSharingLocation: insertUser.isSharingLocation ?? false
     };
     this.users.set(id, user);
     return user;
@@ -125,10 +123,8 @@ export class MemStorage implements IStorage {
     
     const updatedUser: User = {
       ...user,
-      lat: locationUpdate.lat,
-      lng: locationUpdate.lng,
-      isLocationShared: locationUpdate.isLocationShared ?? user.isLocationShared,
-      lastLocationUpdate: new Date()
+      location: locationUpdate.location ?? user.location,
+      isSharingLocation: locationUpdate.isSharingLocation ?? user.isSharingLocation
     };
     
     this.users.set(userId, updatedUser);
@@ -137,7 +133,7 @@ export class MemStorage implements IStorage {
   
   async getSharedLocations(): Promise<User[]> {
     return Array.from(this.users.values()).filter(
-      (user) => user.isLocationShared && user.lat !== null && user.lng !== null
+      (user) => user.isSharingLocation && user.location !== null
     );
   }
   
@@ -154,11 +150,14 @@ export class MemStorage implements IStorage {
     const id = this.currentEventId++;
     const event: Event = {
       id,
-      date: insertEvent.date,
       title: insertEvent.title,
-      description: insertEvent.description ?? null,
-      time: insertEvent.time,
-      location: insertEvent.location
+      description: insertEvent.description,
+      startTime: insertEvent.startTime,
+      endTime: insertEvent.endTime,
+      location: insertEvent.location,
+      createdAt: new Date(),
+      isRecurring: insertEvent.isRecurring ?? false,
+      recurrencePattern: insertEvent.recurrencePattern ?? null
     };
     this.events.set(id, event);
     return event;
@@ -178,10 +177,12 @@ export class MemStorage implements IStorage {
     const building: Building = {
       id,
       name: insertBuilding.name,
-      lat: insertBuilding.lat,
-      lng: insertBuilding.lng,
-      description: insertBuilding.description ?? null,
-      category: insertBuilding.category
+      description: insertBuilding.description,
+      location: insertBuilding.location,
+      createdAt: new Date(),
+      isOpen: insertBuilding.isOpen ?? true,
+      openHours: insertBuilding.openHours ?? null,
+      contactInfo: insertBuilding.contactInfo ?? null
     };
     this.buildings.set(id, building);
     return building;
@@ -197,11 +198,17 @@ export class MemStorage implements IStorage {
   }
   
   async createStudentTool(tool: InsertStudentTool): Promise<StudentTool> {
-    this.studentTools.set(tool.id, tool);
-    return tool;
+    const studentTool: StudentTool = {
+      ...tool,
+      createdAt: new Date(),
+      isActive: tool.isActive ?? true
+    };
+    this.studentTools.set(tool.id, studentTool);
+    return studentTool;
   }
   
-  // Comment operations
+  // Comment operations - DISABLED (not in schema)
+  /*
   async getAllComments(): Promise<Comment[]> {
     return Array.from(this.comments.values());
   }
@@ -237,6 +244,7 @@ export class MemStorage implements IStorage {
       (comment) => comment.authorId === userId
     );
   }
+  */
   
   // Safety Alert operations
   async getSafetyAlerts(): Promise<SafetyAlert[]> {
@@ -247,7 +255,7 @@ export class MemStorage implements IStorage {
     const now = new Date();
     return Array.from(this.safetyAlerts.values()).filter(alert => 
       alert.isActive && 
-      (alert.endDate === null || alert.endDate > now)
+      (alert.expiresAt === null || alert.expiresAt > now)
     );
   }
   
@@ -260,12 +268,12 @@ export class MemStorage implements IStorage {
     const alert: SafetyAlert = {
       id,
       title: insertAlert.title,
-      content: insertAlert.content,
+      description: insertAlert.description,
       severity: insertAlert.severity,
-      startDate: insertAlert.startDate ?? new Date(),
-      endDate: insertAlert.endDate ?? null,
+      location: insertAlert.location,
+      createdAt: new Date(),
       isActive: insertAlert.isActive ?? true,
-      location: insertAlert.location ?? null
+      expiresAt: insertAlert.expiresAt ?? null
     };
     this.safetyAlerts.set(id, alert);
     return alert;
@@ -273,14 +281,12 @@ export class MemStorage implements IStorage {
   
   // Safety Resource operations
   async getSafetyResources(): Promise<SafetyResource[]> {
-    return Array.from(this.safetyResources.values())
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
+    return Array.from(this.safetyResources.values());
   }
   
   async getSafetyResourcesByCategory(category: string): Promise<SafetyResource[]> {
     return Array.from(this.safetyResources.values())
-      .filter(resource => resource.category === category)
-      .sort((a, b) => (a.order || 999) - (b.order || 999));
+      .filter(resource => resource.category === category);
   }
   
   async getSafetyResource(id: number): Promise<SafetyResource | undefined> {
@@ -294,10 +300,9 @@ export class MemStorage implements IStorage {
       title: insertResource.title,
       description: insertResource.description,
       category: insertResource.category,
-      url: insertResource.url ?? null,
-      phoneNumber: insertResource.phoneNumber ?? null,
-      icon: insertResource.icon ?? null,
-      order: insertResource.order ?? 0
+      url: insertResource.url,
+      createdAt: new Date(),
+      isActive: insertResource.isActive ?? true
     };
     this.safetyResources.set(id, resource);
     return resource;
@@ -310,16 +315,14 @@ export class MemStorage implements IStorage {
       username: "admin",
       password: "password",
       isGuest: false,
-      name: "Admin User",
-      email: "admin@hocking.edu",
+      name: "Admin User"
     });
     
     await this.createUser({
       username: "student",
       password: "password",
       isGuest: false,
-      name: "Student User",
-      email: "student@hocking.edu",
+      name: "Student User"
     });
     
     // No sample events - removed
@@ -328,41 +331,31 @@ export class MemStorage implements IStorage {
     await this.createBuilding({
       name: "Main Hall",
       description: "Administrative offices, classrooms",
-      category: "academic",
-      lat: 39.5274,
-      lng: -82.4156,
+      location: "39.5274, -82.4156"
     });
     
     await this.createBuilding({
       name: "Student Center",
       description: "Dining, recreation, student services",
-      category: "dining",
-      lat: 39.5280,
-      lng: -82.4150,
+      location: "39.5280, -82.4150"
     });
     
     await this.createBuilding({
       name: "Davidson Hall",
       description: "Science labs, lecture halls",
-      category: "academic",
-      lat: 39.5268,
-      lng: -82.4162,
+      location: "39.5268, -82.4162"
     });
     
     await this.createBuilding({
       name: "Library",
       description: "Books, study spaces, computer labs",
-      category: "academic",
-      lat: 39.5265,
-      lng: -82.4145,
+      location: "39.5265, -82.4145"
     });
     
     await this.createBuilding({
       name: "Recreation Center",
       description: "Gym, pool, fitness classes",
-      category: "housing",
-      lat: 39.529,
-      lng: -82.417
+      location: "39.529, -82.417"
     });
     
     // Sample student tools
@@ -473,19 +466,17 @@ export class MemStorage implements IStorage {
     // Sample safety alerts
     await this.createSafetyAlert({
       title: "Weather Advisory",
-      content: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
+      description: "A winter storm warning is in effect for our area from 6pm today until 6am tomorrow. Expect heavy snowfall and icy conditions. Please use caution when traveling and allow extra time for your commute.",
       severity: "warning",
-      startDate: new Date(),
       isActive: true,
       location: "All Campus"
     });
     
     await this.createSafetyAlert({
       title: "Planned Power Outage: Davidson Hall",
-      content: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
+      description: "There will be a planned power outage in Davidson Hall on Saturday from 8am to 12pm for electrical system maintenance. Plan accordingly and please avoid this building during this time.",
       severity: "info",
-      startDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
-      endDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+      expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
       isActive: true,
       location: "Davidson Hall"
     });
@@ -493,77 +484,58 @@ export class MemStorage implements IStorage {
     // Sample safety resources
     await this.createSafetyResource({
       title: "Campus Police",
-      description: "24/7 emergency assistance and security services",
+      description: "24/7 emergency assistance and security services (Phone: 740-753-6598)",
       category: "emergency",
-      phoneNumber: "740-753-6598",
-      icon: "shield",
-      order: 1
+      url: "tel:740-753-6598"
     });
     
     await this.createSafetyResource({
       title: "Emergency Notification System",
       description: "Sign up for emergency text alerts",
       category: "emergency",
-      url: "#",
-      icon: "bell",
-      order: 2
+      url: "#"
     });
     
     await this.createSafetyResource({
       title: "Health Center",
-      description: "Medical services for students",
+      description: "Medical services for students (Phone: 740-753-6487)",
       category: "health",
-      phoneNumber: "740-753-6487",
-      url: "#",
-      icon: "first-aid",
-      order: 3
+      url: "#"
     });
     
     await this.createSafetyResource({
       title: "Counseling Services",
-      description: "Confidential mental health support",
+      description: "Confidential mental health support (Phone: 740-753-6789)",
       category: "health",
-      phoneNumber: "740-753-6789",
-      url: "#",
-      icon: "heart-pulse",
-      order: 4
+      url: "#"
     });
     
     await this.createSafetyResource({
       title: "Campus Escort Service",
-      description: "Safe accompaniment across campus after dark",
+      description: "Safe accompaniment across campus after dark (Phone: 740-753-6123)",
       category: "security",
-      phoneNumber: "740-753-6123",
-      icon: "footprints",
-      order: 5
+      url: "tel:740-753-6123"
     });
     
     await this.createSafetyResource({
       title: "Anonymous Tip Line",
-      description: "Report suspicious activity anonymously",
+      description: "Report suspicious activity anonymously (Phone: 740-753-7890)",
       category: "security",
-      phoneNumber: "740-753-7890",
-      url: "#",
-      icon: "eye-off",
-      order: 6
+      url: "#"
     });
     
     await this.createSafetyResource({
       title: "Weather Updates",
       description: "Local weather forecasts and alerts",
       category: "weather",
-      url: "https://weather.gov",
-      icon: "cloud",
-      order: 7
+      url: "https://weather.gov"
     });
     
     await this.createSafetyResource({
       title: "Emergency Procedures",
       description: "Step-by-step guides for emergency situations",
       category: "emergency",
-      url: "#",
-      icon: "file-text",
-      order: 8
+      url: "#"
     });
   }
 }

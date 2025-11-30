@@ -85,6 +85,8 @@ const housingOptions: HousingOption[] = [
     category: "resources",
     priority: "required"
   },
+  // DISABLED - Social media feature not approved
+  /*
   {
     title: "Campus Social Hub",
     icon: <MessageSquare className="h-8 w-8" />,
@@ -93,6 +95,7 @@ const housingOptions: HousingOption[] = [
     category: "social",
     priority: "optional"
   },
+  */
   {
     title: "Campus Life & Activities",
     icon: <PartyPopper className="h-8 w-8" />,

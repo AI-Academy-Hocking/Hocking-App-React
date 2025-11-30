@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors = require('cors');
-const { registerRoutes } = require('../routes');
+const { registerRoutes } = require('./routes');
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3001;
 // Middleware
