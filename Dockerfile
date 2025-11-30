@@ -10,7 +10,7 @@ COPY server/package*.json ./server/
 COPY shared/package*.json ./shared/
 
 # Install dependencies
-RUN npm ci --production=true
+RUN npm ci --production=false
 
 # Copy source code
 COPY . .

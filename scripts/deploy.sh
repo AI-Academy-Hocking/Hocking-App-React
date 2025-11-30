@@ -15,7 +15,7 @@ fi
 
 # Install dependencies
 echo "📦 Installing dependencies..."
-npm ci --production=true
+npm ci --production=false
 
 # Run type checking
 echo "🔍 Type checking..."
