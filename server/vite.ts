@@ -2,7 +2,7 @@ import express, { type Express } from "express";
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import * as vite from "vite";
+type ViteModule = typeof import("vite");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { type Server } from "http";
@@ -55,7 +55,16 @@ export function log(message: string, source = "express") {
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
+let viteModule: ViteModule | null = null;
+const loadVite = async () => {
+  if (!viteModule) {
+    viteModule = await import("vite");
+  }
+  return viteModule;
+};
+
 export async function setupVite(app: Express, server: Server) {
+  const vite = await loadVite();
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },

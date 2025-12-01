@@ -1,3 +1,236 @@
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+var __filename, __dirname, vite_config_default;
+var init_vite_config = __esm({
+  "vite.config.ts"() {
+    "use strict";
+    __filename = fileURLToPath(import.meta.url);
+    __dirname = dirname(__filename);
+    vite_config_default = defineConfig({
+      plugins: [
+        react()
+      ],
+      assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp", "**/*.mp4", "**/*.webm", "**/*.ogg"],
+      resolve: {
+        alias: {
+          "@": path.resolve(__dirname, "client", "src"),
+          "@shared": path.resolve(__dirname, "shared"),
+          "@assets": path.resolve(__dirname, "attached_assets")
+        },
+        extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
+      },
+      root: path.resolve(__dirname, "client"),
+      build: {
+        outDir: path.resolve(__dirname, "dist/public"),
+        emptyOutDir: true,
+        sourcemap: true,
+        rollupOptions: {
+          output: {
+            manualChunks: {
+              // React and related
+              "react-vendor": ["react", "react-dom"],
+              // Large UI libraries
+              "ui-vendor": [
+                "@radix-ui/react-dialog",
+                "@radix-ui/react-dropdown-menu",
+                "@radix-ui/react-select",
+                "@radix-ui/react-toast",
+                "@radix-ui/react-tabs",
+                "@radix-ui/react-accordion",
+                "@radix-ui/react-navigation-menu"
+              ],
+              // Calendar and date libraries
+              "calendar-vendor": [
+                "react-big-calendar",
+                "react-calendar",
+                "date-fns",
+                "react-day-picker"
+              ],
+              // Charts and visualization
+              "chart-vendor": ["recharts"],
+              // Icons and animations
+              "visual-vendor": ["lucide-react", "react-icons", "framer-motion"],
+              // Utility libraries
+              "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge"],
+              // Form and validation
+              "form-vendor": ["react-hook-form", "zod"],
+              // Query and state management
+              "query-vendor": ["@tanstack/react-query"]
+            }
+          }
+        }
+      },
+      optimizeDeps: {
+        include: ["@sinclair/typebox"],
+        esbuildOptions: {
+          target: "es2020",
+          supported: {
+            "top-level-await": true
+          }
+        }
+      },
+      server: {
+        fs: {
+          strict: false,
+          allow: ["..", "node_modules"]
+        },
+        proxy: {
+          "/api": "http://localhost:3000"
+        }
+      }
+    });
+  }
+});
+
+// server/vite.ts
+var vite_exports = {};
+__export(vite_exports, {
+  auth: () => auth,
+  db: () => db,
+  log: () => log,
+  serveStatic: () => serveStatic,
+  setupVite: () => setupVite,
+  storage: () => storage2
+});
+import express from "express";
+import fs from "fs";
+import path2, { dirname as dirname2 } from "path";
+import { fileURLToPath as fileURLToPath2 } from "url";
+import { nanoid } from "nanoid";
+function log(message, source = "express") {
+  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+async function setupVite(app2, server) {
+  const vite = await loadVite();
+  const serverOptions = {
+    middlewareMode: true,
+    hmr: { server },
+    allowedHosts: true
+  };
+  const viteServer = await vite.createServer({
+    ...vite_config_default,
+    configFile: false,
+    server: {
+      middlewareMode: true,
+      hmr: { server },
+      allowedHosts: ["localhost"]
+    },
+    appType: "custom"
+  });
+  app2.use(viteServer.middlewares);
+  app2.use("*", async (req, res, next) => {
+    const url = req.originalUrl;
+    try {
+      const clientTemplate = path2.resolve(
+        __dirname2,
+        "..",
+        "client",
+        "index.html"
+      );
+      let template = await fs.promises.readFile(clientTemplate, "utf-8");
+      template = template.replace(
+        `src="/src/main.tsx"`,
+        `src="/src/main.tsx?v=${nanoid()}"`
+      );
+      const page = await viteServer.transformIndexHtml(url, template);
+      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+    } catch (e) {
+      viteServer.ssrFixStacktrace(e);
+      next(e);
+    }
+  });
+}
+function serveStatic(app2) {
+  const distPath = path2.resolve(__dirname2, "public");
+  if (!fs.existsSync(distPath)) {
+    throw new Error(
+      `Could not find the build directory: ${distPath}, make sure to build the client first`
+    );
+  }
+  app2.get("*.mp4", (req, res) => {
+    const videoPath = path2.join(distPath, req.path);
+    if (fs.existsSync(videoPath)) {
+      const stat = fs.statSync(videoPath);
+      const fileSize = stat.size;
+      const range = req.headers.range;
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-");
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+        const chunksize = end - start + 1;
+        const file = fs.createReadStream(videoPath, { start, end });
+        const head = {
+          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+          "Accept-Ranges": "bytes",
+          "Content-Length": chunksize,
+          "Content-Type": "video/mp4"
+        };
+        res.writeHead(206, head);
+        file.pipe(res);
+      } else {
+        const head = {
+          "Content-Length": fileSize,
+          "Content-Type": "video/mp4",
+          "Accept-Ranges": "bytes"
+        };
+        res.writeHead(200, head);
+        fs.createReadStream(videoPath).pipe(res);
+      }
+    } else {
+      res.status(404).send("Video not found");
+    }
+  });
+  app2.use(express.static(distPath, {
+    setHeaders: (res, filepath) => {
+      if (filepath.endsWith(".mp4")) {
+        res.setHeader("Accept-Ranges", "bytes");
+        res.setHeader("Cache-Control", "public, max-age=0");
+      }
+    }
+  }));
+  app2.use("*", (_req, res) => {
+    res.sendFile(path2.resolve(distPath, "index.html"));
+  });
+}
+var __filename2, __dirname2, auth, db, storage2, viteModule, loadVite;
+var init_vite = __esm({
+  "server/vite.ts"() {
+    "use strict";
+    init_vite_config();
+    __filename2 = fileURLToPath2(import.meta.url);
+    __dirname2 = dirname2(__filename2);
+    auth = null;
+    db = null;
+    storage2 = null;
+    viteModule = null;
+    loadVite = async () => {
+      if (!viteModule) {
+        viteModule = await Promise.resolve().then(() => (init_vite(), vite_exports));
+      }
+      return viteModule;
+    };
+  }
+});
+
 // server/index.ts
 import express6 from "express";
 
@@ -811,199 +1044,8 @@ async function registerRoutes(app2) {
   return httpServer;
 }
 
-// server/vite.ts
-import express from "express";
-import fs from "fs";
-import path2, { dirname as dirname2 } from "path";
-import { fileURLToPath as fileURLToPath2 } from "url";
-
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-var __filename = fileURLToPath(import.meta.url);
-var __dirname = dirname(__filename);
-var vite_config_default = defineConfig({
-  plugins: [
-    react()
-  ],
-  assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp", "**/*.mp4", "**/*.webm", "**/*.ogg"],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "client", "src"),
-      "@shared": path.resolve(__dirname, "shared"),
-      "@assets": path.resolve(__dirname, "attached_assets")
-    },
-    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
-  },
-  root: path.resolve(__dirname, "client"),
-  build: {
-    outDir: path.resolve(__dirname, "dist/public"),
-    emptyOutDir: true,
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // React and related
-          "react-vendor": ["react", "react-dom"],
-          // Large UI libraries
-          "ui-vendor": [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-select",
-            "@radix-ui/react-toast",
-            "@radix-ui/react-tabs",
-            "@radix-ui/react-accordion",
-            "@radix-ui/react-navigation-menu"
-          ],
-          // Calendar and date libraries
-          "calendar-vendor": [
-            "react-big-calendar",
-            "react-calendar",
-            "date-fns",
-            "react-day-picker"
-          ],
-          // Charts and visualization
-          "chart-vendor": ["recharts"],
-          // Icons and animations
-          "visual-vendor": ["lucide-react", "react-icons", "framer-motion"],
-          // Utility libraries
-          "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge"],
-          // Form and validation
-          "form-vendor": ["react-hook-form", "zod"],
-          // Query and state management
-          "query-vendor": ["@tanstack/react-query"]
-        }
-      }
-    }
-  },
-  optimizeDeps: {
-    include: ["@sinclair/typebox"],
-    esbuildOptions: {
-      target: "es2020",
-      supported: {
-        "top-level-await": true
-      }
-    }
-  },
-  server: {
-    fs: {
-      strict: false,
-      allow: ["..", "node_modules"]
-    },
-    proxy: {
-      "/api": "http://localhost:3000"
-    }
-  }
-});
-
-// server/vite.ts
-import { nanoid } from "nanoid";
-var __filename2 = fileURLToPath2(import.meta.url);
-var __dirname2 = dirname2(__filename2);
-function log(message, source = "express") {
-  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  });
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
-async function setupVite(app2, server) {
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true
-  };
-  const viteServer = await (void 0)({
-    ...vite_config_default,
-    configFile: false,
-    server: {
-      middlewareMode: true,
-      hmr: { server },
-      allowedHosts: ["localhost"]
-    },
-    appType: "custom"
-  });
-  app2.use(viteServer.middlewares);
-  app2.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-    try {
-      const clientTemplate = path2.resolve(
-        __dirname2,
-        "..",
-        "client",
-        "index.html"
-      );
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`
-      );
-      const page = await viteServer.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
-    } catch (e) {
-      viteServer.ssrFixStacktrace(e);
-      next(e);
-    }
-  });
-}
-function serveStatic(app2) {
-  const distPath = path2.resolve(__dirname2, "public");
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
-    );
-  }
-  app2.get("*.mp4", (req, res) => {
-    const videoPath = path2.join(distPath, req.path);
-    if (fs.existsSync(videoPath)) {
-      const stat = fs.statSync(videoPath);
-      const fileSize = stat.size;
-      const range = req.headers.range;
-      if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-        const chunksize = end - start + 1;
-        const file = fs.createReadStream(videoPath, { start, end });
-        const head = {
-          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": chunksize,
-          "Content-Type": "video/mp4"
-        };
-        res.writeHead(206, head);
-        file.pipe(res);
-      } else {
-        const head = {
-          "Content-Length": fileSize,
-          "Content-Type": "video/mp4",
-          "Accept-Ranges": "bytes"
-        };
-        res.writeHead(200, head);
-        fs.createReadStream(videoPath).pipe(res);
-      }
-    } else {
-      res.status(404).send("Video not found");
-    }
-  });
-  app2.use(express.static(distPath, {
-    setHeaders: (res, filepath) => {
-      if (filepath.endsWith(".mp4")) {
-        res.setHeader("Accept-Ranges", "bytes");
-        res.setHeader("Cache-Control", "public, max-age=0");
-      }
-    }
-  }));
-  app2.use("*", (_req, res) => {
-    res.sendFile(path2.resolve(distPath, "index.html"));
-  });
-}
-
 // server/index.ts
+init_vite();
 import cors from "cors";
 
 // server/api/programs.ts
