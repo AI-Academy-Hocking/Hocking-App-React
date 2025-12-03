@@ -1,7 +1,17 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
+
+// Simple log function to avoid importing vite module in production
+function log(message: string, source = "express") {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
 import programsRouter from './api/programs';
 import calendarRouter from './src/routes/calendar';
 import verificationRouter from './api/verification';
@@ -88,9 +98,13 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  if (process.env.NODE_ENV !== "production") {
+    // Dynamically import vite module only in development
+    const { setupVite } = await import("./vite.js");
     await setupVite(app, server);
   } else {
+    // Import serveStatic for production
+    const { serveStatic } = await import("./static.js");
     serveStatic(app);
   }
 

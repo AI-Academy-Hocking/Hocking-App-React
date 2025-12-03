@@ -1,6 +1,7 @@
 {
   "name": "hocking-app-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend server for Hocking App",
   "main": "dist/index.js",
   "scripts": {

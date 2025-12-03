@@ -6,10 +6,8 @@ const config: CapacitorConfig = {
   webDir: 'dist/public',
   server: {
     androidScheme: 'https',
-    // For development, you can set a URL here
-    // url: 'http://localhost:5173',
-    // For production, leave it empty to use the bundled app
-    cleartext: false
+    // Allow HTTP connections for development (10.0.2.2 = host machine from emulator)
+    cleartext: true
   },
   plugins: {
     SplashScreen: {

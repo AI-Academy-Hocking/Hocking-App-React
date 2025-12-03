@@ -6,8 +6,8 @@ import { createRequire } from 'module';
 console.log('Calendar service initialized - using public iCal URLs');
 
 // Use require() for CommonJS module to avoid ESM compatibility issues
-const require = createRequire(import.meta.url);
-const ical = require('ical');
+const _require = createRequire(import.meta.url);
+const ical = _require('ical');
 
 type CalendarEvent = {
   type: 'VEVENT';
@@ -165,8 +165,8 @@ async function fetchCalendarEvents(url: string, calendarType: string) {
     console.log(`Event types found:`, Array.from(eventTypes));
 
     const events = Object.values(parsedEvents)
-      .filter(event => event.type === 'VEVENT')
-      .map((event, index) => {
+      .filter((event: any) => event.type === 'VEVENT')
+      .map((event: any, index: number) => {
         console.log(`\n--- Processing Event ${index + 1} ---`);
         console.log(`Raw event data:`, JSON.stringify(event, null, 2));
         

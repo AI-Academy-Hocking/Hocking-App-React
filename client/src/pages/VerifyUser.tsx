@@ -7,6 +7,7 @@ import { CheckCircle, XCircle, Clock, User, Building, Mail, Calendar, AlertTrian
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { useBackNavigation } from "../hooks/use-back-navigation";
+import { getApiHost } from "@/services/api";
 
 interface VerificationRequest {
   id: string;
@@ -50,7 +51,7 @@ const VerifyUser: React.FC = () => {
 
   const fetchVerificationStatus = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/verification/status/${id}`);
+      const response = await fetch(`http://${getApiHost()}:3000/api/verification/status/${id}`);
       const data = await response.json();
 
       if (data.success) {
@@ -70,7 +71,7 @@ const VerifyUser: React.FC = () => {
 
     setProcessing(true);
     try {
-      const response = await fetch('http://localhost:3000/api/verification/verify', {
+      const response = await fetch(`http://${getApiHost()}:3000/api/verification/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

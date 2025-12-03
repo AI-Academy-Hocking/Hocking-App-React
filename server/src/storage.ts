@@ -6,7 +6,7 @@ import {
   safetyAlerts, type SafetyAlert, type InsertSafetyAlert,
   safetyResources, type SafetyResource, type InsertSafetyResource,
   type LocationUpdate 
-} from "@shared/schema";
+} from "../../shared/schema.js";
 
 // Interface for storage operations
 export interface IStorage {

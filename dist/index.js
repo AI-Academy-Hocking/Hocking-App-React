@@ -1,238 +1,5 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-};
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-
-// vite.config.ts
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
-var __filename, __dirname, vite_config_default;
-var init_vite_config = __esm({
-  "vite.config.ts"() {
-    "use strict";
-    __filename = fileURLToPath(import.meta.url);
-    __dirname = dirname(__filename);
-    vite_config_default = defineConfig({
-      plugins: [
-        react()
-      ],
-      assetsInclude: ["**/*.JPG", "**/*.jpg", "**/*.jpeg", "**/*.png", "**/*.gif", "**/*.webp", "**/*.mp4", "**/*.webm", "**/*.ogg"],
-      resolve: {
-        alias: {
-          "@": path.resolve(__dirname, "client", "src"),
-          "@shared": path.resolve(__dirname, "shared"),
-          "@assets": path.resolve(__dirname, "attached_assets")
-        },
-        extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json"]
-      },
-      root: path.resolve(__dirname, "client"),
-      build: {
-        outDir: path.resolve(__dirname, "dist/public"),
-        emptyOutDir: true,
-        sourcemap: true,
-        rollupOptions: {
-          output: {
-            manualChunks: {
-              // React and related
-              "react-vendor": ["react", "react-dom"],
-              // Large UI libraries
-              "ui-vendor": [
-                "@radix-ui/react-dialog",
-                "@radix-ui/react-dropdown-menu",
-                "@radix-ui/react-select",
-                "@radix-ui/react-toast",
-                "@radix-ui/react-tabs",
-                "@radix-ui/react-accordion",
-                "@radix-ui/react-navigation-menu"
-              ],
-              // Calendar and date libraries
-              "calendar-vendor": [
-                "react-big-calendar",
-                "react-calendar",
-                "date-fns",
-                "react-day-picker"
-              ],
-              // Charts and visualization
-              "chart-vendor": ["recharts"],
-              // Icons and animations
-              "visual-vendor": ["lucide-react", "react-icons", "framer-motion"],
-              // Utility libraries
-              "utils-vendor": ["clsx", "class-variance-authority", "tailwind-merge"],
-              // Form and validation
-              "form-vendor": ["react-hook-form", "zod"],
-              // Query and state management
-              "query-vendor": ["@tanstack/react-query"]
-            }
-          }
-        }
-      },
-      optimizeDeps: {
-        include: ["@sinclair/typebox"],
-        esbuildOptions: {
-          target: "es2020",
-          supported: {
-            "top-level-await": true
-          }
-        }
-      },
-      server: {
-        fs: {
-          strict: false,
-          allow: ["..", "node_modules"]
-        },
-        proxy: {
-          "/api": "http://localhost:3000"
-        }
-      }
-    });
-  }
-});
-
-// server/vite.ts
-var vite_exports = {};
-__export(vite_exports, {
-  auth: () => auth,
-  db: () => db,
-  log: () => log,
-  serveStatic: () => serveStatic,
-  setupVite: () => setupVite,
-  storage: () => storage2
-});
-import express from "express";
-import fs from "fs";
-import path2, { dirname as dirname2 } from "path";
-import { fileURLToPath as fileURLToPath2 } from "url";
-import { nanoid } from "nanoid";
-function log(message, source = "express") {
-  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true
-  });
-  console.log(`${formattedTime} [${source}] ${message}`);
-}
-async function setupVite(app2, server) {
-  const vite = await loadVite();
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true
-  };
-  const viteServer = await vite.createServer({
-    ...vite_config_default,
-    configFile: false,
-    server: {
-      middlewareMode: true,
-      hmr: { server },
-      allowedHosts: ["localhost"]
-    },
-    appType: "custom"
-  });
-  app2.use(viteServer.middlewares);
-  app2.use("*", async (req, res, next) => {
-    const url = req.originalUrl;
-    try {
-      const clientTemplate = path2.resolve(
-        __dirname2,
-        "..",
-        "client",
-        "index.html"
-      );
-      let template = await fs.promises.readFile(clientTemplate, "utf-8");
-      template = template.replace(
-        `src="/src/main.tsx"`,
-        `src="/src/main.tsx?v=${nanoid()}"`
-      );
-      const page = await viteServer.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
-    } catch (e) {
-      viteServer.ssrFixStacktrace(e);
-      next(e);
-    }
-  });
-}
-function serveStatic(app2) {
-  const distPath = path2.resolve(__dirname2, "public");
-  if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`
-    );
-  }
-  app2.get("*.mp4", (req, res) => {
-    const videoPath = path2.join(distPath, req.path);
-    if (fs.existsSync(videoPath)) {
-      const stat = fs.statSync(videoPath);
-      const fileSize = stat.size;
-      const range = req.headers.range;
-      if (range) {
-        const parts = range.replace(/bytes=/, "").split("-");
-        const start = parseInt(parts[0], 10);
-        const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-        const chunksize = end - start + 1;
-        const file = fs.createReadStream(videoPath, { start, end });
-        const head = {
-          "Content-Range": `bytes ${start}-${end}/${fileSize}`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": chunksize,
-          "Content-Type": "video/mp4"
-        };
-        res.writeHead(206, head);
-        file.pipe(res);
-      } else {
-        const head = {
-          "Content-Length": fileSize,
-          "Content-Type": "video/mp4",
-          "Accept-Ranges": "bytes"
-        };
-        res.writeHead(200, head);
-        fs.createReadStream(videoPath).pipe(res);
-      }
-    } else {
-      res.status(404).send("Video not found");
-    }
-  });
-  app2.use(express.static(distPath, {
-    setHeaders: (res, filepath) => {
-      if (filepath.endsWith(".mp4")) {
-        res.setHeader("Accept-Ranges", "bytes");
-        res.setHeader("Cache-Control", "public, max-age=0");
-      }
-    }
-  }));
-  app2.use("*", (_req, res) => {
-    res.sendFile(path2.resolve(distPath, "index.html"));
-  });
-}
-var __filename2, __dirname2, auth, db, storage2, viteModule, loadVite;
-var init_vite = __esm({
-  "server/vite.ts"() {
-    "use strict";
-    init_vite_config();
-    __filename2 = fileURLToPath2(import.meta.url);
-    __dirname2 = dirname2(__filename2);
-    auth = null;
-    db = null;
-    storage2 = null;
-    viteModule = null;
-    loadVite = async () => {
-      if (!viteModule) {
-        viteModule = await Promise.resolve().then(() => (init_vite(), vite_exports));
-      }
-      return viteModule;
-    };
-  }
-});
-
 // server/index.ts
-import express6 from "express";
+import express5 from "express";
 
 // server/routes.ts
 import { createServer } from "http";
@@ -1045,7 +812,6 @@ async function registerRoutes(app2) {
 }
 
 // server/index.ts
-init_vite();
 import cors from "cors";
 
 // server/api/programs.ts
@@ -1201,13 +967,13 @@ router.get("/:id", async (req, res) => {
 var programs_default = router;
 
 // server/src/routes/calendar.ts
-import express2 from "express";
+import express from "express";
 import fetch2 from "node-fetch";
 import { createRequire } from "module";
 console.log("Calendar service initialized - using public iCal URLs");
-var require2 = createRequire(import.meta.url);
-var ical = require2("ical");
-var router2 = express2.Router();
+var _require = createRequire(import.meta.url);
+var ical = _require("ical");
+var router2 = express.Router();
 var eventStorage = /* @__PURE__ */ new Map();
 var STORAGE_DURATION = 24 * 60 * 60 * 1e3;
 var FETCH_INTERVAL = 60 * 60 * 1e3;
@@ -1429,7 +1195,7 @@ router2.post("/refresh", async (req, res) => {
 var calendar_default = router2;
 
 // server/api/verification.ts
-import express3 from "express";
+import express2 from "express";
 
 // server/services/emailService.ts
 import nodemailer from "nodemailer";
@@ -1542,7 +1308,7 @@ var getAllPendingVerifications = () => {
 };
 
 // server/api/verification.ts
-var router3 = express3.Router();
+var router3 = express2.Router();
 router3.post("/register", async (req, res) => {
   try {
     const {
@@ -1669,7 +1435,7 @@ router3.get("/pending", (req, res) => {
 var verification_default = router3;
 
 // server/api/posts.ts
-import express4 from "express";
+import express3 from "express";
 
 // server/services/postVerificationService.ts
 import nodemailer2 from "nodemailer";
@@ -1860,7 +1626,7 @@ var getApprovedPosts = () => {
 };
 
 // server/api/posts.ts
-var router4 = express4.Router();
+var router4 = express3.Router();
 router4.post("/submit", async (req, res) => {
   try {
     const {
@@ -2004,9 +1770,9 @@ router4.get("/approved", (req, res) => {
 var posts_default = router4;
 
 // server/api/social.ts
-import express5 from "express";
+import express4 from "express";
 import { z } from "zod";
-var router5 = express5.Router();
+var router5 = express4.Router();
 var studyGroups = /* @__PURE__ */ new Map();
 var events2 = /* @__PURE__ */ new Map();
 var userConnections = /* @__PURE__ */ new Map();
@@ -2389,23 +2155,32 @@ function errorHandler(err, req, res, next) {
   const isOperational = err.isOperational || false;
   console.error("Error:", {
     message: err.message,
-    stack: process.env.NODE_ENV === "development" ? err.stack : void 0,
+    stack: false ? err.stack : void 0,
     url: req.url,
     method: req.method
   });
-  const message = process.env.NODE_ENV === "production" && !isOperational ? "Internal server error" : err.message;
+  const message = !isOperational ? "Internal server error" : err.message;
   res.status(statusCode).json({
     error: message,
-    ...process.env.NODE_ENV === "development" && { stack: err.stack }
+    ...false
   });
 }
 
 // server/index.ts
-var app = express6();
+function log(message, source = "express") {
+  const formattedTime = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
+var app = express5();
 setupSecurity(app);
-app.use(express6.json());
-app.use(express6.urlencoded({ extended: false }));
-var corsOrigin = process.env.CORS_ORIGIN || (process.env.NODE_ENV === "production" ? "https://your-production-domain.com" : "http://localhost:5173");
+app.use(express5.json());
+app.use(express5.urlencoded({ extended: false }));
+var corsOrigin = process.env.CORS_ORIGIN || (true ? "https://your-production-domain.com" : "http://localhost:5173");
 app.use(cors({
   origin: corsOrigin,
   credentials: true,
@@ -2415,7 +2190,7 @@ app.use(cors({
 app.use("/api/calendar", calendar_default);
 app.use((req, res, next) => {
   const start = Date.now();
-  const path3 = req.path;
+  const path = req.path;
   let capturedJsonResponse = void 0;
   const originalResJson = res.json;
   res.json = function(bodyJson, ...args) {
@@ -2424,8 +2199,8 @@ app.use((req, res, next) => {
   };
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path3.startsWith("/api")) {
-      let logLine = `${req.method} ${path3} ${res.statusCode} in ${duration}ms`;
+    if (path.startsWith("/api")) {
+      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
@@ -2445,16 +2220,18 @@ app.use((req, res, next) => {
       status: "ok",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       uptime: process.uptime(),
-      environment: process.env.NODE_ENV
+      environment: "production"
     });
   });
   app.use("/api/programs", programs_default);
   app.use("/api/verification", verification_default);
   app.use("/api/posts", posts_default);
   app.use("/api/social", social_default);
-  if (app.get("env") === "development") {
+  if (false) {
+    const { setupVite } = await null;
     await setupVite(app, server);
   } else {
+    const { serveStatic } = await import("./static.js");
     serveStatic(app);
   }
   const port = process.env.PORT || 3e3;

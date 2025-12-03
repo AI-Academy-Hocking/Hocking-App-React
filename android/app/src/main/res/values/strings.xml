@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Hocking App</string>
+    <string name="title_activity_main">Hocking App</string>
+    <string name="package_name">edu.hocking.app</string>
+    <string name="custom_url_scheme">edu.hocking.app</string>
+</resources>

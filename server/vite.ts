@@ -6,7 +6,6 @@ type ViteModule = typeof import("vite");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import { type Server } from "http";
-import viteConfig from "../vite.config";
 import { nanoid } from "nanoid";
 
 // FIREBASE DISABLED - Social media feature not approved
@@ -65,11 +64,8 @@ const loadVite = async () => {
 
 export async function setupVite(app: Express, server: Server) {
   const vite = await loadVite();
-  const serverOptions = {
-    middlewareMode: true,
-    hmr: { server },
-    allowedHosts: true,
-  };
+  // Dynamically import vite config only in development
+  const viteConfig = (await import("../vite.config")).default;
 
   const viteServer = await vite.createServer({
     ...viteConfig,

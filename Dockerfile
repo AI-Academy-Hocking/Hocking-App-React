@@ -1,5 +1,5 @@
 # Multi-stage build for production
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN npm run build:client
 RUN npm run build:server
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
