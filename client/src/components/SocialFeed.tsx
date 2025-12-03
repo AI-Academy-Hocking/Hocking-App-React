@@ -1,6 +1,9 @@
+// DISABLED - Social media feature not approved
+// Uncomment when feature is approved
+
 import { useEffect, useState } from "react";
-import { db, auth } from "../lib/firebase";
-import { collection, query, orderBy, onSnapshot, updateDoc, doc as firestoreDoc, arrayUnion, QueryDocumentSnapshot, DocumentData, QuerySnapshot } from "firebase/firestore";
+// import { db, auth } from "../lib/firebase";
+// import { collection, query, orderBy, onSnapshot, updateDoc, doc as firestoreDoc, arrayUnion, QueryDocumentSnapshot, DocumentData, QuerySnapshot } from "firebase/firestore";
 
 interface Comment {
   userId: string;
@@ -19,6 +22,8 @@ interface Post {
 
 export default function SocialFeed() {
   const [posts, setPosts] = useState<Post[]>([]);
+  
+  /* FIREBASE CODE - DISABLED
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const unsub = onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
@@ -31,17 +36,22 @@ export default function SocialFeed() {
     const postRef = firestoreDoc(db, "posts", postId);
     await updateDoc(postRef, { likes: arrayUnion(auth.currentUser?.uid) });
   };
+  */
 
   return (
     <div className="space-y-6 max-w-xl mx-auto">
+      <div className="text-center text-gray-500 p-8">
+        Social media feature is currently disabled.
+      </div>
+      {/* DISABLED
       {posts.map((post) => (
         <div key={post.id} className="border rounded p-4">
           <p>{post.content}</p>
           {post.mediaUrl && <img src={post.mediaUrl} alt="" style={{ maxWidth: 300 }} />}
           <button onClick={() => handleLike(post.id)} className="text-blue-600">Like ({post.likes.length})</button>
-          {/* Add comments, share, etc. */}
         </div>
       ))}
+      */}
     </div>
   );
 } 

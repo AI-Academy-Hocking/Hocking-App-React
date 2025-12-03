@@ -139,7 +139,7 @@ export default function RoommateFinder() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 dark:bg-popover min-h-screen">
       <RoommateFinderComponent
         roommates={roommates}
         onLikeRoommate={handleLikeRoommate}

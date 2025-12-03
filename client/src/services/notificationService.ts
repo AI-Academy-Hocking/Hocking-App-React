@@ -163,11 +163,16 @@ class NotificationService {
         pushNotification.close();
         
         // Navigate to appropriate page based on notification type
+        // DISABLED - Social media feature not approved
+        /*
         if (notification.data?.postId) {
           window.location.href = `/housing/social?post=${notification.data.postId}`;
         } else {
           window.location.href = '/housing/social';
         }
+        */
+        // Redirect to home instead
+        window.location.href = '/home';
       };
     } catch (error) {
       console.error('Error sending push notification:', error);

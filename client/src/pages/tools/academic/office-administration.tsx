@@ -197,27 +197,27 @@ export default function OfficeAdministration() {
   }, []);
 
   return (
-    <div ref={containerRef} className="max-w-4xl mx-auto py-8 px-4">
+    <div ref={containerRef} className="max-w-4xl mx-auto py-8 px-4 dark:bg-popover min-h-screen">
       <div className="mb-8">
-        <h1 className="text-3xl font-heading font-bold mb-2">Office & Administration</h1>
-        <p className="text-gray-600">Select an office or service below to view detailed information, contact details, and available services.</p>
+        <h1 className="text-3xl font-heading font-bold mb-2 dark:text-blue-300">Office & Administration</h1>
+        <p className="text-gray-600 dark:text-gray-300">Select an office or service below to view detailed information, contact details, and available services.</p>
       </div>
 
-      <Accordion type="single" collapsible className="w-full space-y-4" value={openAccordion} onValueChange={handleAccordionChange}>
+      <Accordion type="single" collapsible className="w-full space-y-4 dark:text-gray-300" value={openAccordion} onValueChange={handleAccordionChange}>
         {offices.map((office) => (
-          <AccordionItem key={office.id} value={office.id} className="border rounded-lg">
-            <AccordionTrigger className="px-6 py-4 hover:no-underline">
+          <AccordionItem key={office.id} value={office.id} className="border rounded-lg dark:border-gray-700 dark:bg-gray-800">
+            <AccordionTrigger className="px-6 py-4 hover:no-underline dark:text-gray-200">
               <div className="flex items-center gap-4 w-full">
                 <div className={`rounded-full p-2 ${office.iconBg}`}>
                   {office.icon}
                 </div>
                 <div className="flex-1 text-left">
-                  <h3 className={`text-lg font-semibold ${office.color}`}>{office.name}</h3>
-                  <p className="text-sm text-gray-600">{office.description}</p>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-blue-300">{office.name}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{office.description}</p>
                 </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent className="px-6 pb-6">
+            <AccordionContent className="px-6 pb-6 dark:text-gray-300">
               <div className="space-y-6">
                 {/* Contact Information */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -228,16 +228,16 @@ export default function OfficeAdministration() {
                       <span>{office.location}</span>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-4 w-4 text-gray-500" />
+                      <Phone className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                       <span className="font-medium">Phone:</span>
-                      <a href={`tel:${office.phone.replace(/[^\d]/g, "")}`} className="text-primary ">
+                      <a href={`tel:${office.phone.replace(/[^\d]/g, "")}`} className="text-primary dark:text-blue-400 hover:underline">
                         {office.phone}
                       </a>
                     </div>
                     <div className="flex items-center gap-2 text-sm">
-                      <Mail className="h-4 w-4 text-gray-500" />
+                      <Mail className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                       <span className="font-medium">Email:</span>
-                      <a href={`mailto:${office.email}`} className="text-primary ">
+                      <a href={`mailto:${office.email}`} className="text-primary dark:text-blue-400 hover:underline">
                         {office.email}
                       </a>
                     </div>
@@ -245,12 +245,12 @@ export default function OfficeAdministration() {
                   
                   <div className="space-y-3">
                     <div className="flex items-start gap-2 text-sm">
-                      <Clock className="h-4 w-4 text-gray-500 mt-0.5" />
+                      <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400 mt-0.5" />
                       <div>
                         <span className="font-medium">Office Hours:</span>
                         <ul className="mt-1 space-y-1">
                           {office.hours.map((h, i) => (
-                            <li key={i} className="text-gray-600">
+                            <li key={i} className="text-gray-600 dark:text-gray-400">
                               {h.days} <span className="font-mono">{h.time}</span>
                             </li>
                           ))}
@@ -263,12 +263,12 @@ export default function OfficeAdministration() {
                 {/* Services */}
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <Briefcase className="h-4 w-4 text-gray-500" />
-                    <h4 className="font-semibold text-gray-900">Services Offered</h4>
+                    <Briefcase className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                    <h4 className="font-semibold text-gray-900 dark:text-blue-300">Services Offered</h4>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {office.services.map((service, i) => (
-                      <span key={i} className="bg-gray-100 border border-gray-300 text-sm px-3 py-1 rounded-full text-gray-700">
+                      <span key={i} className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-sm px-3 py-1 rounded-full text-gray-700 dark:text-gray-300">
                         {service}
                       </span>
                     ))}
@@ -278,15 +278,15 @@ export default function OfficeAdministration() {
                 {/* Staff */}
                 <div>
                   <div className="flex items-center gap-2 mb-3">
-                    <Users className="h-4 w-4 text-gray-500" />
-                    <h4 className="font-semibold text-gray-900">Key Staff</h4>
+                    <Users className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                    <h4 className="font-semibold text-gray-900 dark:text-blue-300">Key Staff</h4>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {office.staff.map((person, i) => (
-                      <div key={i} className="bg-gray-50 rounded-lg p-3 border">
-                        <div className="font-semibold text-gray-900 text-sm">{person.name}</div>
-                        <div className="text-xs text-gray-600 mb-1">{person.title}</div>
-                        <a href={`mailto:${person.email}`} className="text-primary text-xs ">
+                      <div key={i} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 border dark:border-gray-600">
+                        <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{person.name}</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">{person.title}</div>
+                        <a href={`mailto:${person.email}`} className="text-primary dark:text-blue-400 text-xs hover:underline">
                           {person.email}
                         </a>
                       </div>

@@ -1,16 +1,13 @@
 import express from 'express';
-import * as ical from 'ical';
 import fetch from 'node-fetch';
+import { createRequire } from 'module';
 
-// Try to import Google Calendar service, but don't fail if it's not available
-let googleCalendarService: any = null;
-try {
-  const { googleCalendarService: service } = require('../../services/googleCalendar');
-  googleCalendarService = service;
-  console.log('Google Calendar service loaded successfully');
-} catch (error) {
-  console.log('Google Calendar service not available, will use iCal fallback:', error instanceof Error ? error.message : 'Unknown error');
-}
+// Using iCal public URLs for calendar events (no authentication required)
+console.log('Calendar service initialized - using public iCal URLs');
+
+// Use require() for CommonJS module to avoid ESM compatibility issues
+const _require = createRequire(import.meta.url);
+const ical = _require('ical');
 
 type CalendarEvent = {
   type: 'VEVENT';
@@ -24,15 +21,128 @@ type CalendarEvent = {
 
 const router = express.Router();
 
-// Academic calendar URL (public - can use iCal)
-const ACADEMIC_CALENDAR_URL = "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
+// ============================================================================
+// PERSISTENT EVENT STORAGE - Single source of truth for all clients
+// ============================================================================
+// This ensures only the server fetches from Google, not each client
+const eventStorage = new Map<string, { data: any[], timestamp: number, lastFetchAttempt: number }>();
+const STORAGE_DURATION = 24 * 60 * 60 * 1000; // 24 hours - events are valid for a day
+const FETCH_INTERVAL = 60 * 60 * 1000; // Fetch every 1 hour
+const FETCH_COOLDOWN = 5 * 60 * 1000; // 5 minutes between fetch attempts (rate limit protection)
 
-// Student activities calendar URL (private - needs API)
-const STUDENT_CALENDAR_URL = "https://calendar.google.com/calendar/ical/gabby%40aiowl.org/private-69bad1405fa24c9e808cf441b3acadf2/basic.ics";
+// Initialize storage for both calendar types
+const CALENDAR_TYPES = {
+  academic: { url: '', key: 'academic_all' },
+  activities: { url: '', key: 'activities_all' }
+};
 
-async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: Date, timeMax?: Date) {
-  console.log(`\n=== GOOGLE CALENDAR DEBUG ===`);
-  console.log(`Fetching calendar events from: ${url}`);
+function initializeStorage() {
+  CALENDAR_TYPES.academic.url = process.env.GOOGLE_CALENDAR_ACADEMIC_URL || 
+    "https://calendar.google.com/calendar/ical/c_48553b3826989867c9512386c55643ea5e9768a4439ba027beb782cb6ad652b9%40group.calendar.google.com/public/basic.ics";
+  CALENDAR_TYPES.activities.url = process.env.GOOGLE_CALENDAR_ACTIVITIES_URL || 
+    "https://calendar.google.com/calendar/ical/c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03%40group.calendar.google.com/public/basic.ics";
+}
+
+function getStoredEvents(calendarType: string): any[] | null {
+  const key = `${calendarType}_all`;
+  const stored = eventStorage.get(key);
+  
+  if (!stored) return null;
+  
+  const age = Date.now() - stored.timestamp;
+  const ageMinutes = Math.floor(age / 1000 / 60);
+  
+  if (age < STORAGE_DURATION) {
+    console.log(`✓ Serving stored events for ${calendarType} (age: ${ageMinutes} minutes, ${stored.data.length} events)`);
+    return stored.data;
+  }
+  
+  console.log(`⚠️ Stored events for ${calendarType} are stale (age: ${ageMinutes} minutes)`);
+  return null;
+}
+
+function setStoredEvents(calendarType: string, data: any[]) {
+  const key = `${calendarType}_all`;
+  eventStorage.set(key, {
+    data,
+    timestamp: Date.now(),
+    lastFetchAttempt: Date.now()
+  });
+  console.log(`✓ Stored ${data.length} events for ${calendarType}`);
+}
+
+function shouldFetchNow(calendarType: string): boolean {
+  const key = `${calendarType}_all`;
+  const stored = eventStorage.get(key);
+  
+  if (!stored) {
+    console.log(`🔄 No stored events for ${calendarType} - will fetch`);
+    return true;
+  }
+  
+  const timeSinceLastFetch = Date.now() - stored.lastFetchAttempt;
+  const timeSinceStorage = Date.now() - stored.timestamp;
+  
+  // Don't fetch if we tried recently (rate limit protection)
+  if (timeSinceLastFetch < FETCH_COOLDOWN) {
+    const waitMinutes = Math.ceil((FETCH_COOLDOWN - timeSinceLastFetch) / 1000 / 60);
+    console.log(`⏳ Rate limit cooldown - wait ${waitMinutes} more minutes before fetching ${calendarType}`);
+    return false;
+  }
+  
+  // Fetch if data is older than fetch interval
+  if (timeSinceStorage >= FETCH_INTERVAL) {
+    const ageMinutes = Math.floor(timeSinceStorage / 1000 / 60);
+    console.log(`🔄 Events for ${calendarType} are ${ageMinutes} minutes old - will fetch fresh data`);
+    return true;
+  }
+  
+  return false;
+}
+
+function markFetchAttempt(calendarType: string) {
+  const key = `${calendarType}_all`;
+  const stored = eventStorage.get(key);
+  if (stored) {
+    stored.lastFetchAttempt = Date.now();
+  }
+}
+
+// Initialize storage and start background refresh
+initializeStorage();
+
+// Background job: Refresh events every hour
+async function backgroundRefreshEvents() {
+  console.log('\n🔄 Background job: Refreshing calendar events...');
+  
+  for (const [type, config] of Object.entries(CALENDAR_TYPES)) {
+    try {
+      if (shouldFetchNow(type)) {
+        console.log(`Fetching ${type} events...`);
+        markFetchAttempt(type);
+        const events = await fetchCalendarEvents(config.url, type);
+        setStoredEvents(type, events);
+      } else {
+        console.log(`Skipping ${type} - using cached data`);
+      }
+    } catch (error) {
+      console.error(`Error refreshing ${type} events:`, error);
+    }
+  }
+  
+  console.log('✓ Background refresh complete\n');
+}
+
+// Run background job every 30 minutes
+setInterval(backgroundRefreshEvents, 30 * 60 * 1000);
+
+// Initial fetch on server startup (after a delay to not block startup)
+setTimeout(backgroundRefreshEvents, 10000); // Wait 10 seconds after server starts
+
+async function fetchCalendarEvents(url: string, calendarType: string) {
+  console.log(`\n=== FETCHING FROM GOOGLE ===`);
+  console.log(`URL: ${url}`);
+  console.log(`Type: ${calendarType}`);
   
   try {
     const response = await fetch(url);
@@ -46,9 +156,7 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
     const icalData = await response.text();
     console.log(`Received ${icalData.length} characters of iCal data`);
     
-    // Log first 500 characters to see the structure
-    console.log(`First 500 chars of iCal data:`, icalData.substring(0, 500));
-    
+    // Use ical.parseICS (loaded via require, so it has proper context)
     const parsedEvents = ical.parseICS(icalData);
     console.log(`Parsed ${Object.keys(parsedEvents).length} total events from iCal`);
     
@@ -57,29 +165,8 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
     console.log(`Event types found:`, Array.from(eventTypes));
 
     const events = Object.values(parsedEvents)
-      .filter(event => {
-        const isVEvent = event.type === 'VEVENT';
-        if (!isVEvent) {
-          return false;
-        }
-        
-        // Filter by date range if specified
-        if (timeMin || timeMax) {
-          const eventStart = (event as any).start;
-          if (eventStart) {
-            const eventDate = new Date(eventStart);
-            const minDate = timeMin || new Date(0);
-            const maxDate = timeMax || new Date('2100-01-01');
-            
-            if (eventDate < minDate || eventDate > maxDate) {
-              return false;
-            }
-          }
-        }
-        
-        return true;
-      })
-      .map((event, index) => {
+      .filter((event: any) => event.type === 'VEVENT')
+      .map((event: any, index: number) => {
         console.log(`\n--- Processing Event ${index + 1} ---`);
         console.log(`Raw event data:`, JSON.stringify(event, null, 2));
         
@@ -137,67 +224,94 @@ async function fetchCalendarEvents(url: string, calendarType: string, timeMin?: 
 
 // GET /api/calendar/events
 router.get('/events', async (req, res) => {
-  console.log(`\n=== API REQUEST ===`);
+  console.log(`\n=== CLIENT REQUEST ===`);
   console.log(`Query params:`, req.query);
   
   try {
-    const calendarType = req.query.type as string;
-    const timeMin = req.query.timeMin as string; // Optional: filter events from this date
-    const timeMax = req.query.timeMax as string; // Optional: filter events until this date
+    const calendarType = (req.query.type as string) || 'academic';
+    const timeMin = req.query.timeMin as string;
+    const timeMax = req.query.timeMax as string;
     
-    console.log(`Calendar type requested: ${calendarType}`);
-    console.log(`Time range: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
+    console.log(`Calendar type: ${calendarType}, Time range: ${timeMin || 'none'} to ${timeMax || 'none'}`);
     
-    let events;
+    // ALWAYS serve from storage first (single source of truth for all clients)
+    let events = getStoredEvents(calendarType);
     
-    // Try Google Calendar API first if available
-    if (googleCalendarService) {
-      console.log(`Attempting to use Google Calendar API for ${calendarType} calendar`);
-      try {
-        events = await googleCalendarService.getEvents(
-          calendarType as 'academic' | 'activities',
-          timeMin ? new Date(timeMin) : undefined,
-          timeMax ? new Date(timeMax) : undefined
-        );
-        console.log(`Successfully fetched ${events.length} events via Google Calendar API`);
-      } catch (apiError) {
-        console.error('Google Calendar API failed, falling back to iCal:', apiError);
-        // Continue to iCal fallback
+    // If no stored events, try to fetch immediately (first request scenario)
+    if (!events && shouldFetchNow(calendarType)) {
+      console.log(`📥 First request for ${calendarType} - fetching from Google...`);
+      markFetchAttempt(calendarType);
+      
+      const config = CALENDAR_TYPES[calendarType as keyof typeof CALENDAR_TYPES];
+      if (config) {
+        try {
+          events = await fetchCalendarEvents(config.url, calendarType);
+          setStoredEvents(calendarType, events);
+        } catch (error) {
+          console.error(`Error fetching ${calendarType} events:`, error);
+          events = []; // Return empty array on error
+        }
       }
     }
     
-    // If Google Calendar API failed or is not available, use iCal
+    // If still no events, return empty array
     if (!events) {
-      console.log(`Using iCal fallback for ${calendarType} calendar`);
-      const minDate = timeMin ? new Date(timeMin) : undefined;
-      const maxDate = timeMax ? new Date(timeMax) : undefined;
-      
-      console.log(`iCal date filtering: minDate=${minDate?.toISOString()}, maxDate=${maxDate?.toISOString()}`);
-      
-      if (calendarType === 'academic') {
-        events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
-      } else if (calendarType === 'activities') {
-        events = await fetchCalendarEvents(STUDENT_CALENDAR_URL, 'activities', minDate, maxDate);
-      } else {
-        // Default to academic if no type specified
-        console.log('No calendar type specified, defaulting to academic');
-        events = await fetchCalendarEvents(ACADEMIC_CALENDAR_URL, 'academic', minDate, maxDate);
-      }
+      console.log(`⚠️ No events available for ${calendarType}`);
+      events = [];
     }
     
-    // Date filtering is now handled at the source (Google Calendar API or iCal parsing)
+    // Filter by date range if specified
+    let filteredEvents = events;
+    
+    // Apply client-requested date filtering
     if (timeMin || timeMax) {
-      console.log(`Date filtering applied at source: ${timeMin || 'no start'} to ${timeMax || 'no end'}`);
+      const minDate = timeMin ? new Date(timeMin) : null;
+      const maxDate = timeMax ? new Date(timeMax) : null;
+      
+      filteredEvents = filteredEvents.filter(event => {
+        const eventStart = new Date(event.startTime);
+        
+        if (minDate && eventStart < minDate) return false;
+        if (maxDate && eventStart > maxDate) return false;
+        
+        return true;
+      });
+      
+      console.log(`Filtered from ${events.length} to ${filteredEvents.length} events (${timeMin || 'any'} to ${timeMax || 'any'})`);
     }
     
-    // Ensure events is always an array
-    const eventsArray = events || [];
-    console.log(`Sending ${eventsArray.length} events to frontend`);
-    res.json(eventsArray);
+    console.log(`📤 Sending ${filteredEvents.length} events to client`);
+    res.json(filteredEvents);
   } catch (error) {
     console.error(`API Error:`, error);
     res.status(500).json({ 
       error: 'Failed to fetch calendar events', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    });
+  }
+});
+
+// POST /api/calendar/refresh - Force refresh calendar data
+router.post('/refresh', async (req, res) => {
+  console.log('\n🔄 Manual refresh requested');
+  
+  try {
+    // Clear all stored events to force fresh fetch
+    eventStorage.clear();
+    console.log('✓ Cleared event storage');
+    
+    // Trigger immediate background refresh
+    await backgroundRefreshEvents();
+    
+    res.json({ 
+      success: true, 
+      message: 'Calendar events refreshed successfully',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error refreshing calendar:', error);
+    res.status(500).json({ 
+      error: 'Failed to refresh calendar events', 
       details: error instanceof Error ? error.message : 'Unknown error' 
     });
   }

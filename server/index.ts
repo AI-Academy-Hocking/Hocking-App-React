@@ -1,17 +1,46 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
+
+// Simple log function to avoid importing vite module in production
+function log(message: string, source = "express") {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
 import programsRouter from './api/programs';
 import calendarRouter from './src/routes/calendar';
 import verificationRouter from './api/verification';
 import postsRouter from './api/posts';
 import socialRouter from './api/social';
+import { setupSecurity } from './middleware/security';
+import { errorHandler } from './utils/errorHandler';
 
 const app = express();
+
+// Security middleware first
+setupSecurity(app);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+
+// CORS configuration with environment variable
+const corsOrigin = process.env.CORS_ORIGIN || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://your-production-domain.com' 
+    : 'http://localhost:5173');
+
+app.use(cors({
+  origin: corsOrigin,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use('/api/calendar', calendarRouter);
 
 app.use((req, res, next) => {
@@ -47,12 +76,17 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+  // Use improved error handler
+  app.use(errorHandler);
 
-    res.status(status).json({ message });
-    throw err;
+  // Health check endpoint
+  app.get('/health', (_req, res) => {
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV 
+    });
   });
 
   // API Routes
@@ -64,9 +98,13 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
+  if (process.env.NODE_ENV !== "production") {
+    // Dynamically import vite module only in development
+    const { setupVite } = await import("./vite.js");
     await setupVite(app, server);
   } else {
+    // Import serveStatic for production
+    const { serveStatic } = await import("./static.js");
     serveStatic(app);
   }
 

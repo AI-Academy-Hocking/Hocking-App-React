@@ -37,10 +37,10 @@ export default function AcademicToolDetail() {
   }, [params?.id]);
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 dark:bg-popover min-h-screen">
       <div className="flex items-center mb-6">
         <Link href="/tools">
-          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
+          <button className="flex items-center text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
           </button>

@@ -8,6 +8,7 @@ import { CheckCircle, XCircle, Clock, FileText, Image, Video, BarChart3, Calenda
 import { motion } from "framer-motion";
 import { toast } from "@/hooks/use-toast";
 import { useBackNavigation } from "../hooks/use-back-navigation";
+import { getApiHost } from "@/services/api";
 
 interface PostSubmission {
   id: string;
@@ -63,7 +64,7 @@ const VerifyPost: React.FC = () => {
 
   const fetchPostStatus = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/status/${id}`);
+      const response = await fetch(`http://${getApiHost()}:3000/api/posts/status/${id}`);
       const data = await response.json();
 
       if (data.success) {
@@ -92,7 +93,7 @@ const VerifyPost: React.FC = () => {
 
     setProcessing(true);
     try {
-      const response = await fetch('http://localhost:3000/api/posts/verify', {
+      const response = await fetch(`http://${getApiHost()}:3000/api/posts/verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -436,11 +437,11 @@ const VerifyPost: React.FC = () => {
               {/* Action Buttons */}
               <div className="flex gap-4">
                 <Button
-                  onClick={() => setLocation('/housing/social')}
+                  onClick={() => setLocation('/housing')}
                   variant="outline"
                   className="flex-1"
                 >
-                  Return to Social Hub
+                  Return to Housing
                 </Button>
                 {!isProcessed && (
                   <Button

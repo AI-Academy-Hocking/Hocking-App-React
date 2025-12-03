@@ -1,16 +1,11 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+import express from 'express';
 const cors = require('cors');
 const { registerRoutes } = require('../routes');
-const app = (0, express_1.default)();
+const app = express();
 const port = process.env.PORT || 3001;
 // Middleware
 app.use(cors());
-app.use(express_1.default.json());
+app.use(express.json());
 // Basic route for testing
 app.get('/', (req, res) => {
     res.json({ message: 'Hocking College Server is running!' });

@@ -6,7 +6,7 @@ export default function NotFound() {
   const { goBack } = useBackNavigation();
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-popover">
       {/* Back Navigation */}
       <div className="absolute top-6 left-6">
         <button 

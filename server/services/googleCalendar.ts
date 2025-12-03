@@ -5,17 +5,19 @@ import { Event } from '../../shared/schema';
 
 // Google Calendar API configuration
 const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+
+// Calendar IDs from environment variables
 const CALENDAR_IDS = {
-  academic: 'c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com',
-  activities: 'gabby@aiowl.org' // Private calendar
+  academic: process.env.GOOGLE_CALENDAR_ACADEMIC_ID || 'c_2f3ba38d9128bf58be13ba960fcb919f3205c2644137cd26a32f0bb7d2d3cf03@group.calendar.google.com',
+  activities: process.env.GOOGLE_CALENDAR_ACTIVITIES_ID || 'gabby@aiowl.org'
 };
 
-// You'll need to set these environment variables
+// OAuth2 credentials
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 
-// Service Account credentials (easier alternative)
+// Service Account credentials (recommended for production)
 const SERVICE_ACCOUNT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
 const SERVICE_ACCOUNT_PRIVATE_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
 

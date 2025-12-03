@@ -5,13 +5,26 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx server/index.ts",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
-    "start": "cross-env NODE_ENV=production PORT=3000 node dist/index.js",
+    "build:server": "esbuild server/index.ts server/static.ts --platform=node --packages=external --bundle --format=esm --splitting --outdir=dist --define:process.env.NODE_ENV=\\\"production\\\"",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start:dev": "tsx server/index.ts",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit generate && drizzle-kit migrate",
+    "docker:build": "docker build -t hocking-app .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env hocking-app",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "deploy": "bash scripts/deploy.sh",
+    "health": "bash scripts/health-check.sh"
   },
   "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^3.9.1",
@@ -59,6 +72,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "date-fns": "^3.6.0",
     "drizzle-orm": "^0.39.1",
@@ -126,9 +140,6 @@
     "tsx": "^4.19.4",
     "typescript": "^5.6.3",
     "vite": "^5.4.14"
-  },
-  "optionalDependencies": {
-    "bufferutil": "^4.0.8"
   },
   "proxy": "http://localhost:3000"
 }

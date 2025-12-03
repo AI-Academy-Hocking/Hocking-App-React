@@ -1,4 +1,38 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// Detect the appropriate API host based on environment
+export const getApiHost = () => {
+  // Production URL (set in .env or environment)
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL.replace(/\/api\/?$/, '').replace(/^https?:\/\//, '');
+  }
+  
+  // Check if running on Android (Capacitor)
+  const isAndroid = typeof navigator !== 'undefined' && 
+    /android/i.test(navigator.userAgent);
+  
+  // Android emulator uses 10.0.2.2 to reach host's localhost
+  return isAndroid ? '10.0.2.2' : 'localhost';
+};
+
+export const getApiBaseUrl = () => {
+  // Check if we have a production environment variable set
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // Check if we're on a deployed site (not localhost)
+  if (typeof window !== 'undefined' && 
+      !window.location.hostname.includes('localhost') &&
+      !window.location.hostname.includes('10.0.2.2')) {
+    // Use relative URL on deployed sites (same origin)
+    return '/api';
+  }
+  
+  // Local development
+  const host = getApiHost();
+  return `http://${host}:3000/api`;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 class ApiService {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {

@@ -165,6 +165,23 @@ class GlobalNotificationManager {
   hasNewNotificationsSince(timestamp: number): boolean {
     return this.lastUpdateTime > timestamp;
   }
+
+  removeNotificationsByType(type: Notification['type']): void {
+    const initialLength = this.notifications.length;
+    this.notifications = this.notifications.filter(notification => notification.type !== type);
+
+    if (this.notifications.length === initialLength) {
+      return;
+    }
+
+    this.lastUpdateTime = Date.now();
+    this.saveNotifications();
+    this.notifyListeners();
+
+    window.dispatchEvent(new CustomEvent('notificationsUpdated', {
+      detail: { notifications: this.notifications, timestamp: this.lastUpdateTime }
+    }));
+  }
 }
 
 export default GlobalNotificationManager; 

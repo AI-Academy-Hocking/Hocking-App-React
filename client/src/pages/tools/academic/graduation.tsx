@@ -62,10 +62,10 @@ export default function Graduation() {
   const [activeTab, setActiveTab] = useState("requirements");
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 dark:bg-popover min-h-screen">
       <div className="flex items-center mb-6">
         <Link href="/tools">
-          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
+          <button className="flex items-center text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Student Tools</span>
           </button>
@@ -78,10 +78,10 @@ export default function Graduation() {
         </CardHeader>
         <CardContent className="pt-6">
           <Tabs defaultValue="requirements" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 mb-4">
-              <TabsTrigger value="requirements">Requirements</TabsTrigger>
-              <TabsTrigger value="application">Application</TabsTrigger>
-              <TabsTrigger value="dates">Important Dates</TabsTrigger>
+            <TabsList className="grid grid-cols-3 mb-4 dark:bg-gray-700">
+              <TabsTrigger value="requirements" className="dark:text-gray-300 dark:data-[state=active]:bg-blue-700 dark:data-[state=active]:text-white">Requirements</TabsTrigger>
+              <TabsTrigger value="application" className="dark:text-gray-300 dark:data-[state=active]:bg-blue-700 dark:data-[state=active]:text-white">Application</TabsTrigger>
+              <TabsTrigger value="dates" className="dark:text-gray-300 dark:data-[state=active]:bg-blue-700 dark:data-[state=active]:text-white">Important Dates</TabsTrigger>
             </TabsList>
 
             <TabsContent value="requirements">

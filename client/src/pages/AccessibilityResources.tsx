@@ -77,10 +77,10 @@ function AccessibilityResources() {
   ];
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 dark:bg-popover min-h-screen">
       <div className="flex items-center mb-6">
         <Link href="/academic-success">
-          <button className="flex items-center text-primary hover:text-primary-dark transition-colors">
+          <button className="flex items-center text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
             <ArrowLeft className="h-5 w-5 mr-2" />
             <span>Back to Academic Success Center</span>
           </button>
@@ -88,23 +88,23 @@ function AccessibilityResources() {
       </div>
 
       <div className="flex items-center gap-4 mb-8">
-        <Accessibility className="h-8 w-8 text-blue-600" />
-        <h1 className="text-3xl font-bold text-primary">Accessibility Resources</h1>
+        <Accessibility className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+        <h1 className="text-3xl font-bold text-primary dark:text-blue-300">Accessibility Resources</h1>
       </div>
 
-      <Alert className="mb-6">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
+      <Alert className="mb-6 dark:bg-gray-800 dark:border-gray-700">
+        <AlertCircle className="h-4 w-4 dark:text-blue-400" />
+        <AlertDescription className="dark:text-gray-300">
           We're here to help! Contact our office to discuss your specific needs and learn about available accommodations.
         </AlertDescription>
       </Alert>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <Card>
-          <CardHeader className="bg-primary-light/10">
-            <CardTitle className="text-xl">Contact Information</CardTitle>
+        <Card className="dark:bg-gray-800 dark:border-gray-700">
+          <CardHeader className="bg-primary-light/10 dark:bg-gray-700">
+            <CardTitle className="text-xl dark:text-blue-300">Contact Information</CardTitle>
           </CardHeader>
-          <CardContent className="pt-4">
+          <CardContent className="pt-4 dark:text-gray-300">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Phone className="h-5 w-5 text-blue-600" />

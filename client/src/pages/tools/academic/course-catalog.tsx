@@ -146,7 +146,7 @@ export default function CourseCatalog() {
         <Link href="/tools">
           <ArrowLeft className="h-6 w-6" />
         </Link>
-        <h1 className="text-2xl font-heading font-semibold">Course Catalog</h1>
+        <h1 className="text-2xl font-heading font-semibold dark:text-blue-300">Course Catalog</h1>
       </div>
 
       <Card>
@@ -170,7 +170,7 @@ export default function CourseCatalog() {
 
             {selectedSchoolData && (
               <div className="w-full space-y-4">
-                <h2 className="text-xl font-semibold text-center mb-4 flex items-center justify-center gap-2">
+                <h2 className="text-xl font-semibold text-center mb-4 flex items-center justify-center gap-2 dark:text-blue-300">
                   {(() => {
                     const Icon = schoolIcons[selectedSchoolData.icon as keyof typeof schoolIcons] || GraduationCap;
                     return <Icon className="text-primary h-7 w-7" />;
@@ -179,11 +179,11 @@ export default function CourseCatalog() {
                 </h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   {sortedPrograms.map((program, index) => (
-                    <Card key={index} className="bg-white border-none shadow-md shadow-gray-200 rounded-xl">
-                      <CardContent className="pt-6 pb-6">
+                    <Card key={index} className="bg-white dark:bg-gray-800 border-none shadow-md shadow-gray-200 dark:shadow-none rounded-xl dark:border dark:border-gray-700">
+                      <CardContent className="pt-6 pb-6 dark:text-gray-300">
                         <div className="flex items-center gap-3 mb-2">
                           <BookOpen className="text-primary h-6 w-6" />
-                          <span className="font-bold text-lg text-black">{program.name}</span>
+                          <span className="font-bold text-lg text-black dark:text-blue-300">{program.name}</span>
                         </div>
                         <p className="text-sm text-gray-700 mb-4">{program.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">

@@ -14,6 +14,7 @@ import CampusSafety from "./pages/CampusSafety";
 import MainLayout from "@/components/layout/MainLayout";
 import { AuthProvider } from "@/lib/auth";
 import { NotificationProvider } from "@/lib/notifications";
+import { DarkModeProvider } from "@/lib/darkMode";
 import RecreationPage from "./pages/Recreation";
 import LibraryResourcesPage from "./pages/LibraryResources";
 import OnlineLearningPage from "./pages/OnlineLearning";
@@ -31,7 +32,8 @@ import Contact from "./pages/housing/Contact";
 import Handbook from "./pages/housing/Handbook";
 import Pricing from "./pages/housing/Pricing";
 import Activities from "./pages/housing/Activities";
-import Social from "./pages/housing/Social";
+// DISABLED - Social media feature not approved
+// import Social from "./pages/housing/Social";
 import Contract from "./pages/housing/Contract";
 import FloorPlans from "./pages/housing/FloorPlans";
 import Tutoring from "./pages/Tutoring";
@@ -149,7 +151,8 @@ function Router() {
         <Route path="/housing/handbook" component={Handbook} />
         <Route path="/housing/pricing" component={Pricing} />
         <Route path="/housing/activities" component={Activities} />
-        <Route path="/housing/social" component={Social} />
+        {/* DISABLED - Social media feature not approved */}
+        {/* <Route path="/housing/social" component={Social} /> */}
         <Route path="/housing/contract" component={Contract} />
         <Route path="/housing/floor-plans" component={FloorPlans} />
         <Route path="/tutoring" component={Tutoring} />
@@ -194,14 +197,16 @@ function Router() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <NotificationProvider>
-            <Router />
-            <Toaster />
-          </NotificationProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+      <DarkModeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <NotificationProvider>
+              <Router />
+              <Toaster />
+            </NotificationProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </DarkModeProvider>
     </ErrorBoundary>
   );
 }

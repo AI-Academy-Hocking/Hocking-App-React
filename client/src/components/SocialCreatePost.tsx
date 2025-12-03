@@ -1,7 +1,10 @@
+// DISABLED - Social media feature not approved
+// Uncomment when feature is approved
+
 import { useState, FormEvent, ChangeEvent } from "react";
-import { db, storage, auth } from "../lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// import { db, storage, auth } from "../lib/firebase";
+// import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Filter } from "bad-words";
 
 export default function SocialCreatePost() {
@@ -13,10 +16,10 @@ export default function SocialCreatePost() {
 
   const handlePost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
+    setError("Social media feature is currently disabled.");
+    setLoading(false);
     
+    /* FIREBASE CODE - DISABLED
     try {
       // Filter out bad words like Roblox
       const filter = new Filter();
@@ -48,6 +51,7 @@ export default function SocialCreatePost() {
     } finally {
       setLoading(false);
     }
+    */
   };
 
   const handleMediaChange = (e: ChangeEvent<HTMLInputElement>) => {

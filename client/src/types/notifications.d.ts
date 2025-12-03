@@ -13,12 +13,9 @@ export interface Notification {
 
 export interface NotificationSettings {
   eventNotifications: boolean;
-  academicNotifications: boolean;
-  customNotifications: boolean;
-  systemNotifications: boolean;
-  emailNotifications: boolean;
   pushNotifications: boolean;
   reminderTime: number; // minutes before event
+  welcomeMessageEnabled: boolean;
 }
 
 export interface AdminNotification {

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from "@/components/ui/skeleton";
+import { getApiHost } from "@/services/api";
 
 interface ProgramDetails {
   id: string;
@@ -27,7 +28,7 @@ export default function ProgramDetails() {
     queryKey: ['program', programId],
     queryFn: async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/programs/${programId}`);
+        const response = await fetch(`http://${getApiHost()}:3000/api/programs/${programId}`);
         if (!response.ok) {
           console.error('Program fetch failed:', await response.text());
           throw new Error('Program not found');
@@ -99,17 +100,17 @@ export default function ProgramDetails() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 dark:bg-popover min-h-screen">
       <div className="flex items-center gap-4">
         <Link href="/home">
-          <Button variant="ghost" className="gap-2">
+          <Button variant="ghost" className="gap-2 dark:text-blue-400 dark:hover:text-blue-300">
             <ArrowLeft className="h-4 w-4" />
             Back to Home
           </Button>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold">{program.name}</h1>
-          <p className="text-sm text-gray-500">{program.category}</p>
+          <h1 className="text-2xl font-bold dark:text-blue-300">{program.name}</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{program.category}</p>
         </div>
       </div>
 

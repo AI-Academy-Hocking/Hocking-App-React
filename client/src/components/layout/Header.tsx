@@ -419,7 +419,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
             {/* Mobile Search Button */}
             <button
               onClick={toggleSearch}
-              className="md:hidden p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+              className="md:hidden p-2 rounded-full bg-white/20 hover:bg-white/40 dark:bg-transparent dark:hover:bg-white/20 transition text-yellow-400"
               aria-label="Search"
             >
               <Search className="h-5 w-5" />
@@ -428,7 +428,7 @@ export default function Header({ onMobileMenuChange }: HeaderProps) {
             <NotificationBell />
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full bg-white/20 hover:bg-white/40 transition text-yellow-400"
+              className="p-2 rounded-full bg-white/20 hover:bg-white/40 dark:bg-transparent dark:hover:bg-white/20 transition text-yellow-400"
               aria-label="Toggle light/dark mode"
             >
               {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}

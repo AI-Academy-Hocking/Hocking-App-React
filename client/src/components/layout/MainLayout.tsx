@@ -43,24 +43,24 @@ export default function MainLayout({ children }: MainLayoutProps) {
   // Show loading state while checking authentication
   if (!isAuthenticated || !user) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="flex h-screen items-center justify-center dark:bg-popover">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary dark:border-blue-400"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen dark:bg-popover">
       {/* Desktop Sidebar */}
       <Sidebar />
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden transition-all duration-300">
+      <div className="flex-1 flex flex-col overflow-hidden transition-all duration-300 dark:bg-popover">
         {/* Header */}
         <Header onMobileMenuChange={setIsMobileMenuOpen} />
         
         {/* Main Content Area */}
-        <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4">
+        <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4 dark:bg-popover dark:text-gray-300">
           {children}
         </main>
         

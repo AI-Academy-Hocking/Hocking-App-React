@@ -10,11 +10,13 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Crown, User, Info } from "lucide-react";
+import { useNotifications } from "../lib/notifications";
 
 export default function Login() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { guestLogin, login } = useAuth();
+  const { settings: notificationSettings } = useNotifications();
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminCredentials, setAdminCredentials] = useState({
     username: '',
@@ -146,10 +148,12 @@ export default function Login() {
     
     localStorage.setItem('hasClickedGetStarted', 'true');
     guestLogin(); // Authenticate as guest user
-    toast({
-      title: "Welcome",
-      description: "Let's get started with your Hocking College experience",
-    });
+    if (notificationSettings.welcomeMessageEnabled) {
+      toast({
+        title: "Welcome",
+        description: "Let's get started with your Hocking College experience",
+      });
+    }
     setLocation("/home");
   };
 
@@ -196,13 +200,13 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen">
-      <Card className="w-full max-w-md p-8 bg-white/30 rounded-xl shadow-lg border border-white/30 z-10">
+    <div className="landing-page flex-1 flex flex-col items-center justify-center p-4 md:p-8 min-h-screen">
+      <Card className="w-full max-w-md p-8 bg-white/30 dark:bg-black/60 rounded-xl shadow-lg dark:shadow-2xl border border-white/30 dark:border-white/10 backdrop-blur-md z-10">
         <CardContent className="p-0">
           <div className="text-center space-y-6">
             <div>
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-white/60 to-white/40 rounded-full blur-xl transform scale-125"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/40 via-white/60 to-white/40 dark:from-black/30 dark:via-black/50 dark:to-black/30 rounded-full blur-xl transform scale-125"></div>
                 <img 
                   src={HockingLogo}
                   alt="Hocking College Logo" 
@@ -242,7 +246,7 @@ export default function Login() {
             </div>
 
             {showAdminLogin && (
-              <div className="mt-4 p-4 bg-white/10 rounded-lg border border-white/20">
+              <div className="mt-4 p-4 bg-white/10 dark:bg-black/40 rounded-lg border border-white/20 dark:border-white/10">
                 <form onSubmit={handleAdminLogin} className="space-y-3">
                   <div>
                     <Label htmlFor="username" className="text-white text-sm">Username</Label>
@@ -288,7 +292,7 @@ export default function Login() {
           muted
           playsInline
         >
-          <source src="LandingPage.mp4" type="video/mp4" />
+          <source src="/LandingPage.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
