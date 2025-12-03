@@ -2227,12 +2227,16 @@ app.use((req, res, next) => {
   app.use("/api/verification", verification_default);
   app.use("/api/posts", posts_default);
   app.use("/api/social", social_default);
+  console.log(`[Server] NODE_ENV: ${"production"}`);
+  console.log(`[Server] Starting in ${true ? "PRODUCTION" : "DEVELOPMENT"} mode`);
   if (false) {
     const { setupVite } = await null;
     await setupVite(app, server);
   } else {
+    console.log("[Server] Loading static file server...");
     const { serveStatic } = await import("./static.js");
     serveStatic(app);
+    console.log("[Server] Static file server loaded");
   }
   const port = process.env.PORT || 3e3;
   server.listen({

@@ -98,14 +98,19 @@ app.use((req, res, next) => {
   // importantly only setup vite in development and after
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
+  console.log(`[Server] NODE_ENV: ${process.env.NODE_ENV}`);
+  console.log(`[Server] Starting in ${process.env.NODE_ENV === "production" ? "PRODUCTION" : "DEVELOPMENT"} mode`);
+  
   if (process.env.NODE_ENV !== "production") {
     // Dynamically import vite module only in development
     const { setupVite } = await import("./vite.js");
     await setupVite(app, server);
   } else {
     // Import serveStatic for production
+    console.log("[Server] Loading static file server...");
     const { serveStatic } = await import("./static.js");
     serveStatic(app);
+    console.log("[Server] Static file server loaded");
   }
 
  

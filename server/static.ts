@@ -8,12 +8,27 @@ const __dirname = dirname(__filename);
 
 export function serveStatic(app: Express) {
   const distPath = path.resolve(__dirname, "public");
+  
+  console.log(`[Static] __dirname: ${__dirname}`);
+  console.log(`[Static] Looking for public files at: ${distPath}`);
+  console.log(`[Static] Directory exists: ${fs.existsSync(distPath)}`);
 
   if (!fs.existsSync(distPath)) {
-    throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
-    );
+    console.error(`[Static] ERROR: Build directory not found at ${distPath}`);
+    console.log(`[Static] Current directory contents:`, fs.readdirSync(__dirname));
+    
+    // Don't crash - serve a fallback message
+    app.use("*", (_req, res) => {
+      res.status(503).json({ 
+        error: "Application is starting...",
+        details: `Build directory not found: ${distPath}`,
+        dirname: __dirname
+      });
+    });
+    return;
   }
+  
+  console.log(`[Static] Found ${fs.readdirSync(distPath).length} files in public directory`);
 
   // Special handling for video files to prevent caching errors
   app.get('*.mp4', (req, res) => {
