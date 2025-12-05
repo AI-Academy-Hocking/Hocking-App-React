@@ -5,7 +5,7 @@ import {
   BookOpen, FileText, GraduationCap, UserCheck, 
   School, LibraryBig, MonitorSmartphone, 
   Users, Dumbbell, Utensils, Calendar, Home, Trophy,
-  Globe, PawPrint, DollarSign, CreditCard, Award, Heart, Briefcase
+  Globe, PawPrint, Heart, Briefcase
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -50,10 +50,6 @@ export default function StudentTools() {
       // Academic tools
       { id: "course-catalog", name: "Course Catalog", description: "Browse available courses", category: "academic", url: "/tools/academic/course-catalog" },
       { id: "advising", name: "Advising", description: "Connect with your advisor", category: "academic", url: "/tools/academic/advising" },
-      // Financial tools
-      { id: "financial-aid", name: "Financial Aid", description: "View and manage your financial aid", category: "financial", url: "/financial-aid" },
-      { id: "billing", name: "Billing", description: "Pay tuition and view statements", category: "financial", url: "/billing" },
-      { id: "scholarships", name: "Scholarships", description: "Apply for available scholarships", category: "financial", url: "/scholarships" },
       // Resources tools
       { id: "health-services", name: "Health Services", description: "Schedule health appointments", category: "resources", url: "/campus-health" },
       { id: "career-services", name: "Career Services", description: "Job search and career planning", category: "resources", url: "/career-university-center" },
@@ -80,16 +76,12 @@ export default function StudentTools() {
   });
 
   const academicTools = sanitizedTools.filter(tool => tool.category === 'academic' && tool.id !== 'graduation');
-  const financialTools = sanitizedTools.filter(tool => tool.category === 'financial');
   const resourceTools = sanitizedTools.filter(tool => tool.category === 'resources');
 
   // Map of icons to use for tools
   const toolIcons: Record<string, any> = {
     'course-catalog': BookOpen,
     'advising': UserCheck,
-    'financial-aid': DollarSign,
-    'billing': CreditCard,
-    'scholarships': Award,
     'health-services': Heart,
     'career-services': Briefcase,
     'library': LibraryBig,
@@ -153,9 +145,8 @@ export default function StudentTools() {
         
         <Card className="p-6 border-2 border-blue-600 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-800">
           <Tabs defaultValue="academic" value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-3 rounded-xl dark:bg-gray-700">
+            <TabsList className="grid grid-cols-2 rounded-xl dark:bg-gray-700">
               <TabsTrigger value="academic" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:text-gray-300 dark:data-[state=active]:bg-blue-700 rounded-xl">Academic</TabsTrigger>
-              <TabsTrigger value="financial" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:text-gray-300 dark:data-[state=active]:bg-blue-700 rounded-xl">Financial</TabsTrigger>
               <TabsTrigger value="resources" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white dark:text-gray-300 dark:data-[state=active]:bg-blue-700 rounded-xl">Resources</TabsTrigger>
             </TabsList>
             
@@ -171,46 +162,6 @@ export default function StudentTools() {
                 </Link>
                 
                 {academicTools.map((tool) => {
-                  const Icon = toolIcons[tool.id] || FileText;
-                  
-                  // Check if the URL is an internal route (starts with /)
-                  if (tool.url.startsWith('/')) {
-                    return (
-                      <Link 
-                        key={tool.id} 
-                        href={tool.url}
-                        className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
-                      >
-                        <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
-                        <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
-                        </div>
-                      </Link>
-                    );
-                  }
-                  
-                  // External URL - use anchor tag
-                  return (
-                    <a 
-                      key={tool.id} 
-                      href={tool.url} 
-                      className="flex items-center p-3 rounded-xl border-2 border-blue-600 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-900 hover:bg-neutral-lightest dark:hover:bg-gray-800 transition"
-                    >
-                      <Icon className="text-gray-900 dark:text-white mr-3 h-5 w-5" />
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{tool.name}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">{tool.description}</p>
-                      </div>
-                    </a>
-                  );
-                })}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="financial" className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {financialTools.map((tool) => {
                   const Icon = toolIcons[tool.id] || FileText;
                   
                   // Check if the URL is an internal route (starts with /)

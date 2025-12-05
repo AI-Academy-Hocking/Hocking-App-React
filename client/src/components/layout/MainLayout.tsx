@@ -50,23 +50,25 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }
 
   return (
-    <div className="flex h-screen dark:bg-popover">
-      {/* Desktop Sidebar */}
-      <Sidebar />
-      
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden transition-all duration-300 dark:bg-popover">
-        {/* Header */}
-        <Header onMobileMenuChange={setIsMobileMenuOpen} />
+    <div className="flex flex-col h-[100dvh] h-screen dark:bg-popover">
+      <div className="flex flex-1 min-h-0">
+        {/* Desktop Sidebar */}
+        <Sidebar />
         
-        {/* Main Content Area */}
-        <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4 dark:bg-popover dark:text-gray-300">
-          {children}
-        </main>
-        
-        {/* Mobile Navigation */}
-        <MobileNav />
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden transition-all duration-300 dark:bg-popover">
+          {/* Header */}
+          <Header onMobileMenuChange={setIsMobileMenuOpen} />
+          
+          {/* Main Content Area - takes remaining space, scrollable */}
+          <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4 dark:bg-popover dark:text-gray-300">
+            {children}
+          </main>
+        </div>
       </div>
+      
+      {/* Mobile Navigation - fixed at bottom, outside the flex container */}
+      <MobileNav />
     </div>
   );
 }
