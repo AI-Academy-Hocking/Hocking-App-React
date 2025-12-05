@@ -14,8 +14,10 @@ import { useState, useEffect } from "react";
 import { format, startOfWeek, addDays, addWeeks, subWeeks, isToday } from "date-fns";
 import { useLocation } from "wouter";
 import "../styles/animations.css";
-import dining1Image from "../components/assets/dining1.JPG";
-import rhapsodyImage from "../components/assets/rhapsody.webp";
+
+// Use public URLs for large images instead of bundling them
+const dining1Image = "/images/dining1.jpg";
+const rhapsodyImage = "/images/rhapsody.webp";
 
 export default function DiningHall() {
   const [location, setLocation] = useLocation();

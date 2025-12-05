@@ -13,7 +13,7 @@ export function useNavigationDebug() {
       console.log(`⏱️ Page load timing:`, {
         domContentLoaded: timing.domContentLoadedEventEnd - timing.domContentLoadedEventStart,
         loadComplete: timing.loadEventEnd - timing.loadEventStart,
-        total: timing.loadEventEnd - timing.navigationStart
+        total: timing.loadEventEnd - timing.startTime
       });
     }
   }, [location]);
