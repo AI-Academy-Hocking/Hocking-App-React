@@ -1,3 +1,2 @@
-*.mp4* filter=lfs diff=lfs merge=lfs -text
-client/src/assets/AI[[:space:]]Project[[:space:]]rough[[:space:]]cut.mp4 filter=lfs diff=lfs merge=lfs -text
-*[[:space:]]filter=lfs[[:space:]]diff=lfs[[:space:]]merge=lfs[[:space:]]-text filter=lfs diff=lfs merge=lfs -text
+# Remove LFS tracking - Railway doesn't support LFS well
+# Videos will be committed directly
