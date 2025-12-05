@@ -30,11 +30,11 @@ export default function MobileNav() {
   ];
 
   return (
-    <nav className="md:hidden flex-shrink-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-t border-gray-200 dark:border-gray-700 shadow-lg" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      <div className="flex justify-evenly px-2 py-1">
+    <nav className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+      <div className="flex justify-evenly px-1 py-1.5">
         {navItems.map((item) => (
           <Link key={item.path} href={item.path}>
-            <a className={`flex flex-col items-center py-2 px-2 min-w-0 transition-colors duration-200 rounded-lg ${
+            <a className={`flex flex-col items-center py-1.5 px-1.5 min-w-0 transition-colors duration-200 rounded-lg ${
               isActive(item.path) 
                 ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' 
                 : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700'
@@ -45,6 +45,8 @@ export default function MobileNav() {
           </Link>
         ))}
       </div>
+      {/* Safe area padding for devices with home indicator */}
+      <div className="h-[env(safe-area-inset-bottom)]" />
     </nav>
   );
 }

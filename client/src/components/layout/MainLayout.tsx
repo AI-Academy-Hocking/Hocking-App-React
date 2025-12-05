@@ -50,25 +50,30 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }
 
   return (
-    <div className="flex flex-col h-[100dvh] h-screen dark:bg-popover">
-      <div className="flex flex-1 min-h-0">
-        {/* Desktop Sidebar */}
+    <div className="fixed inset-0 flex flex-col dark:bg-popover">
+      {/* Desktop Sidebar - absolute on desktop */}
+      <div className="hidden md:block md:fixed md:inset-y-0 md:left-0 md:w-64 md:z-50">
         <Sidebar />
-        
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden transition-all duration-300 dark:bg-popover">
-          {/* Header */}
-          <Header onMobileMenuChange={setIsMobileMenuOpen} />
-          
-          {/* Main Content Area - takes remaining space, scrollable */}
-          <main ref={mainContentRef} className="flex-1 overflow-y-auto p-4 dark:bg-popover dark:text-gray-300">
-            {children}
-          </main>
-        </div>
       </div>
       
-      {/* Mobile Navigation - fixed at bottom, outside the flex container */}
-      <MobileNav />
+      {/* Main wrapper - offset for sidebar on desktop */}
+      <div className="flex flex-col flex-1 min-h-0 md:ml-64">
+        {/* Header - fixed height */}
+        <Header onMobileMenuChange={setIsMobileMenuOpen} />
+        
+        {/* Main Content Area - scrollable, with bottom padding for mobile nav */}
+        <main 
+          ref={mainContentRef} 
+          className="flex-1 overflow-y-auto p-4 pb-20 md:pb-4 dark:bg-popover dark:text-gray-300"
+        >
+          {children}
+        </main>
+      </div>
+      
+      {/* Mobile Navigation - fixed at actual bottom */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50">
+        <MobileNav />
+      </div>
     </div>
   );
 }
