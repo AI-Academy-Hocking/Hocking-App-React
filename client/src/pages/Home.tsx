@@ -5,7 +5,8 @@ import { Card, CardContent } from "../components/ui/card";
 import { Skeleton } from "../components/ui/skeleton";
 import { Calendar, MapPin, Wrench, School, Clock, GraduationCap } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import HockingBackground from "../components/assets/Campus.jpeg";  
+// Use image from public folder for better performance
+const HockingBackground = "/images/Hocking-College.jpg";  
 
 import { format, isAfter, startOfToday } from "date-fns";
 import { Event } from "../../../shared/schema";
