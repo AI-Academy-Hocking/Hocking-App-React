@@ -48,7 +48,6 @@ import OfficeAdministration from "./pages/tools/academic/office-administration";
 import CareerUniversityCenter from "./pages/CareerUniversityCenter";
 import Transportation from "./pages/Transportation";
 import AcademicToolDetail from "./pages/tools/academic/[id]";
-import Resources from "./pages/Resources";
 import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
 
@@ -132,7 +131,6 @@ function Router() {
         <Route path="/calendar" component={Calendar} />
         <Route path="/tools" component={() => <RouteWrapper routeName="Student Tools"><StudentTools /></RouteWrapper>} />
         <Route path="/maps" component={Maps} />
-        <Route path="/resources" component={Resources} />
         <Route path="/dining" component={DiningHall} />
         <Route path="/safety" component={CampusSafety} />
         <Route path="/recreation" component={RecreationPage} />
